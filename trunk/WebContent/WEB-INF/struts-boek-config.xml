@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Copyright 2009 Hans Beemsterboer
+
+This file is part of the TechyTax program.
+
+TechyTax is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+TechyTax is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TechyTax; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ -->
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+                               "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+	<!-- Form Beans -->
+	<form-beans>
+		<form-bean name="kostForm" type="org.techytax.struts.form.KostForm" />
+		<form-bean name="balansForm" type="org.techytax.struts.form.BalansForm" />
+		<form-bean name="kostensoortForm" type="org.techytax.struts.form.KostensoortForm" />
+		<form-bean name="kostmatchForm" type="org.techytax.struts.form.KostmatchForm" />			
+	</form-beans>
+
+	<!-- Global Exceptions -->
+	<global-exceptions></global-exceptions>
+
+	<!-- Global Forwards -->
+	<global-forwards>
+		<forward name="error" path="error.jsp" />
+		<forward name="login" path="index.jsp" />
+	</global-forwards>
+
+	<!-- Action Mappings -->
+	<action-mappings>
+		<action path="/getKostLijst"
+			type="org.techytax.struts.action.GetKostLijstAction">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/getKostLijstResultaat.jsp">
+			</forward>
+		</action>
+		<action path="/getKostensoortLijst"
+			type="org.techytax.struts.action.GetKostensoortLijstAction">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/getKostensoortLijstResultaat.jsp">
+			</forward>
+		</action>		
+		<action path="/getKostLijstWithForm"
+			type="org.techytax.struts.action.GetKostLijstWithFormAction" name="balansForm"
+			scope="session">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/getKostLijstResultaat.jsp">
+			</forward>
+			<forward name="grafiek"
+				path="/WEB-INF/jsp/boek/grafiek/xy_chart.jsp">
+			</forward>
+			<forward name="fiscaal"
+				path="/WEB-INF/jsp/boek/fiscaal/overzicht.jsp">
+			</forward>
+			<forward name="error"
+				path="/WEB-INF/jsp/boek/getKostLijstResultaat.jsp">
+			</forward>		
+		</action>
+		<action path="/updateKost" type="org.techytax.struts.action.UpdateKostAction"
+			name="kostForm" scope="request">
+			<forward name="success" path="/getKostLijstWithForm.do"></forward>
+		</action>
+		<action path="/editKost" name="kostForm"
+			type="org.techytax.struts.action.EditKostAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editKost.jsp">
+			</forward>
+		</action>
+		<action path="/newKost" type="org.techytax.struts.action.NewKostAction"
+			scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/insertKost.jsp">
+			</forward>
+		</action>
+		<action path="/insertKost" type="org.techytax.struts.action.InsertKostAction"
+			name="kostForm" scope="request">
+			<forward name="success" path="/getKostLijst.do"></forward>
+		</action>
+		<action path="/updateKostensoort" type="org.techytax.struts.action.UpdateKostensoortAction"
+			name="kostensoortForm" scope="request">
+			<forward name="success" path="/getKostensoortLijst.do"></forward>
+		</action>
+		<action path="/editKostensoort" name="kostensoortForm"
+			type="org.techytax.struts.action.EditKostensoortAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editKostensoort.jsp">
+			</forward>
+		</action>
+		<action path="/newKostensoort" type="org.techytax.struts.action.NewKostensoortAction"
+			scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/insertKostensoort.jsp">
+			</forward>
+		</action>
+		<action path="/insertKostensoort" type="org.techytax.struts.action.InsertKostensoortAction"
+			name="kostensoortForm">
+			<forward name="success" path="/getKostensoortLijst.do"></forward>
+		</action>
+		<action path="/updateKostmatch" type="org.techytax.struts.action.UpdateKostmatchAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>
+		<action path="/updateBtwmatch" type="org.techytax.struts.action.UpdateBtwmatchAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>		
+		<action path="/editKostmatch" name="kostmatchForm"
+			type="org.techytax.struts.action.EditKostmatchAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editKostmatch.jsp">
+			</forward>
+		</action>
+		<action path="/editBtwmatch" name="kostmatchForm"
+			type="org.techytax.struts.action.EditBtwmatchAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editBtwmatch.jsp">
+			</forward>
+		</action>		
+		<action path="/newKostmatch" type="org.techytax.struts.action.NewKostmatchAction"
+			scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/insertKostmatch.jsp">
+			</forward>
+		</action>
+		<action path="/insertKostmatch" type="org.techytax.struts.action.InsertKostmatchAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>			
+		<action path="/laadKostLijst"
+			forward="/WEB-INF/jsp/boek/laadGegevens.jsp" />
+		<action path="/uploadFile"
+			type="org.techytax.struts.action.UploadFileAction">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/getInlaadResultaat.jsp">
+			</forward>
+		</action>
+		<action path="/afschrijvenKost"
+			type="org.techytax.struts.action.AfschrijvenKostAction">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/getInlaadResultaat.jsp">
+			</forward>
+		</action>		
+		<action path="/insertKostLijst"
+			type="org.techytax.struts.action.InsertKostLijstAction">
+			<forward name="success" path="/getKostLijst.do"></forward>
+		</action>
+		<action path="/insertActiva"
+			type="org.techytax.struts.action.InsertActivaAction">
+			<forward name="success"
+				path="/getKostLijst.do">
+			</forward>
+		</action>			
+	</action-mappings>
+	<message-resources parameter="properties.messages_nl" />
+	<message-resources parameter="properties.messages_en" />
+	<message-resources parameter="properties.messages_en_US" />	
+	<message-resources parameter="properties.messages" />
+</struts-config>

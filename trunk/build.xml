@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<project name="TechyTax" default="install" basedir=".">
+    <property file="tomcat.properties"/>
+    <property name="tomcat.home" value="/usr/share/tomcat6"/>
+    <property name="webapp.name" value="TechyTax"/>
+    <property name="webapp.war" value="${webapp.name}.war"/>		
+    <taskdef file="tomcatTasks.properties">
+        <classpath>
+            <pathelement path="/usr/share/java/tomcat6/catalina-ant.jar"/>
+        </classpath>
+    </taskdef>
+    <target name="install" description="Install application in Tomcat" depends="create, stop, remove">
+        <deploy url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"
+         path="/${webapp.name}"
+         war="file:${webapp.war}"/>
+    </target>
+    
+    <target name="remove" description="Remove application in Tomcat">
+        <undeploy url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"
+         path="/${webapp.name}"/>
+    </target>
+    
+    <target name="reload" description="Reload application in Tomcat">
+        <reload url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"
+         path="/${webapp.name}"/>
+    </target>
+    
+    <target name="start" description="Start Tomcat application">
+        <start url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"
+         path="/${webapp.name}"/>
+    </target>
+    
+    <target name="stop" description="Stop Tomcat application">
+        <stop url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"
+         path="/${webapp.name}"/>
+    </target>
+    
+    <target name="list" description="List Tomcat applications">
+        <list url="${tomcat.manager.url}"
+         username="${tomcat.username}"
+         password="${tomcat.password}"/>
+    </target>
+    
+
+    <target name="unpack">
+        <unwar src="${webapp.war}" dest="${webapp.name}"/>
+    </target>
+    <target name="create">
+        <war destfile="${webapp.war}" webxml="WebContent/WEB-INF/web.xml" update="true">
+            <classes dir="WebContent/WEB-INF/classes"/>
+            <fileset dir="WebContent">
+                <exclude name="WEB-INF/web.xml"/>
+            </fileset>
+        </war>
+    </target>
+</project>
