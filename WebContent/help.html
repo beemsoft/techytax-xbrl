@@ -1,39 +1,47 @@
-<h1>Installation Instructions</h1>
-<h2>Required software</h2>
+<h4 class="section">Installation Instructions</h4>
+<h4>Required software</h4>
+<div class="margins"/>
+<p>
 The following software is required on your system:
+</p>
 <ul>
 <li>Java 1.6</li>
 <li>Tomcat 6.0</li>
 <li>MySQL 5.0</li>
 <li>MySQL Java Connector</li>
 </ul>
-<h2>Installation instructions</h2>
-<h3>Tomcat server</h3>
+</div>
+<h4>Installation instructions</h4>
+<div class="margins"/>
 <ul>
 <li>Place the Java Connector in the Tomcat lib directory.</li>
 <li>Add a user with 'admin' role to the Tomcat user database.</li>
 <li>Start the Tomcat server.</li>
 </ul>
-<h3>Database configuration</h3>
+</div>
+<h4>Database configuration</h4>
+<div class="margins"/>
 <ul>
 <li>In your database, create schema 'techytax'.</li>
 <li>Create a user, 'techy', with select, insert and update privileges.</li>
-<li>Look in the TechyTax/sql directory
-<ul>
+<li>Look in the TechyTax/sql directory</li>
 <li>Import the database structure: <code>mysql -uroot &lt; create_db.sql</code></li>
 <li>Import the cost type table: <code>mysql -uroot &lt; kostensoort_data.sql</code></li>
 <li>Import the balance tables: <code>mysql -uroot &lt; balance_data.sql</code></li>
 </ul>
-</li>
-</ul>
-<h3>Program configuration</h3>
+</div>
+<h4>Program configuration</h4>
+<div class="margins"/>
 <ul>
 <li>Place a copy of techytax.properties in your home directory.</li>
 <li>Edit the start date of your administration.</li>
 </ul>
-<h3>Program test</h3>
+</div>
+<h4>Program test</h4>
+<div class="margins"/>
 <ul>
 <li>Check te URL: http://localhost:8080/TechyTax</li>
 <li>Select an option in the menu.</li>
 <li>Log on with the admin user.</li>
 </ul>
+</div
