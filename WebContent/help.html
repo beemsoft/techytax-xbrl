@@ -22,8 +22,9 @@ The following software is required on your system:
 <h4>Database configuration</h4>
 <div class="margins"/>
 <ul>
-<li>In your database, create schema 'techytax'.</li>
-<li>Create a user, 'techy', with select, insert and update privileges.</li>
+<li>In your database, create schema 'techytax': <code>create database techytax;</code></li>
+<li>Create a user, 'techy': <code>create user techy@localhost;</code></li>
+<li>Give this user select, insert and update privileges: <code>grant select, insert, update on techytax.* to techy;</code></li>
 <li>Look in the TechyTax/sql directory</li>
 <li>Import the database structure: <code>mysql -uroot &lt; create_db.sql</code></li>
 <li>Import the cost type table: <code>mysql -uroot &lt; kostensoort_data.sql</code></li>
