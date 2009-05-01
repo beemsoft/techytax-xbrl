@@ -25,6 +25,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td id="navigationCell" valign="top">
 
 		<div class="margins">
+		<h4><bean:message key="program.title" /></h4>
+		<p>
+		(Rev. @version@)
+		</p>	
+		</td>		
 		<div id="links"><html:link href="index.jsp">
 			<bean:message key="menu.welcome" />
 			<span><bean:message key="menu.welcome.descr" /></span>
