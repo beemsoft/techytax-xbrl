@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<p><bean:message key="welcome.intro" /></p>
 		<p><bean:message key="welcome.security"/></p>
 		<p><a href="help.html"/><bean:message key="welcome.install"/></a></p>		
+		<p><a href="releasenotes.html"/><bean:message key="welcome.release"/></a></p>		
 		</td>
 	</tr>
 </table>
