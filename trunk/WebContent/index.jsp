@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%
 	if (request.getParameter("logoff") != null) {
 		session.invalidate();
-		response.sendRedirect("http://localhost:8080"
+		response.sendRedirect("http://www.techytax.org/TechyTax/"
 				+ request.getContextPath());
 		return;
 	}
