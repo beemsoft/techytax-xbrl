@@ -102,6 +102,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (23,25) ORDER BY
 		datum asc
 	</select>
+	<select id="getPrivateExpenses" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT id, amount as bedrag, is_incoming as isIncoming, datum, description as omschrijving FROM
+		private_expenses WHERE datum &gt;= ? AND datum &lt;= ? ORDER BY
+		datum asc
+	</select>	
 	<select id="getBelastingKosten" parameterMap="periodeMap"
 		resultClass="int">
 		SELECT sum(bedrag) FROM

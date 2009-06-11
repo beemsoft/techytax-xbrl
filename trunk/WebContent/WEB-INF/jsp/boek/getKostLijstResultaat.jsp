@@ -57,6 +57,7 @@ var cal13 = new CalendarPopup();
 			<html:radio property="balansSoort" value="reiskostenBalans"><bean:message key="overview.travel"/></html:radio>
 			<html:radio property="balansSoort" value="investeringen"><bean:message key="overview.invest"/></html:radio>
 			<html:radio property="balansSoort" value="afschrijvingen"><bean:message key="overview.depreciation"/></html:radio>			
+			<html:radio property="balansSoort" value="private"><bean:message key="overview.private"/></html:radio>			
 			</td>
 		</tr>
 		<tr>
@@ -67,6 +68,49 @@ var cal13 = new CalendarPopup();
 </html:form>
 <html:errors/>
 
+<%
+		if (balansForm != null && balansForm.getBalansSoort() != null) {
+			if (balansForm.getBalansSoort().equals("private")) {
+%>
+<table cellspacing="0" border="1" class="overviewTable">
+	<tr>
+		<th><bean:message key="label.id"/></th>
+		<th width="10%"><bean:message key="label.date"/></th>
+		<th width="10%"><bean:message key="label.amount"/></th>
+		<th>In</th>
+		<th><bean:message key="label.descr"/></th>
+	</tr>
+
+	<%
+			if (res != null) {
+			for (int i = 0; i < res.size(); i++) {
+
+				Kost obj = null;
+				obj = (Kost) res.get(i);
+				if (obj != null) {
+					String incoming = "-";
+					if (obj.isIncoming()) {
+						incoming = "+";
+					}					
+	%>
+
+	<tr valign="top">
+		<td><a href="editKost.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
+		<td><%=obj.getDatum()%></td>
+		<td align="right"><%=obj.getBedrag()%></td>
+		<td><%=incoming%></td>
+		<td><%=obj.getOmschrijving()%></td>
+	</tr>
+	<%
+			}
+
+			}
+		}
+	%>
+</table>
+<%
+			} else {
+%>
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
 		<th><bean:message key="label.id"/></th>
@@ -101,6 +145,10 @@ var cal13 = new CalendarPopup();
 		}
 	%>
 </table>
+<%
+			}
+		}
+%>
 
 
 <%
