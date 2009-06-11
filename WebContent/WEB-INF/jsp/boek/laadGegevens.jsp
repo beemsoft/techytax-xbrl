@@ -22,9 +22,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <h4><bean:message key="load.data"/></h4>
 <div class="margins">
-<form name="AddData" action="<%=request.getContextPath()%>/uploadFile.do" method="post" enctype="multipart/form-data">
-<input type="file" name="datafile">
-<input type="submit" name="AddData" value="<bean:message key="load.data"/>" />
-</form>
+<html:form action="/uploadFile.do" method="post" enctype="multipart/form-data">
+<html:radio property="type" value="private"><bean:message key="label.private"/></html:radio>
+<html:radio property="type" value="business"><bean:message key="label.business"/></html:radio>
+<br>
+<html:file property="theFile"/>
+<html:submit/>
+</html:form>
 </div>
 

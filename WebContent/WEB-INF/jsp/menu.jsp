@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<div class="margins">
 		<h4><bean:message key="program.title" /></h4>
 		<p>
-		(Rev. @version@)
+		(Rev. 20)
 		</p>	
 		</td>		
 		<div id="links"><html:link href="index.jsp">
@@ -46,6 +46,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<html:param name="action" value="Fiscaal overzicht"></html:param>
 			<bean:message key="menu.fiscal.overview" />
 			<span> <bean:message key="menu.fiscal.overview.descr" /></span>
+		</html:link> <html:link action="getPrivateAccounts.do">
+			<bean:message key="menu.private.accounts" />
+			<span> <bean:message key="menu.private.accounts.descr" /></span>
+		</html:link> <html:link action="getPrivateExpenses.do">
+			<bean:message key="menu.private.expenses" />
+			<span> <bean:message key="menu.private.expenses.descr" /></span>
 		</html:link> <%
  	if (request.getUserPrincipal() != null) {
  %> <a href="<%=request.getContextPath()%>/index.jsp?logoff=true"><bean:message

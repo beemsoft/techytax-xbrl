@@ -22,7 +22,6 @@ package org.techytax.struts.action;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,13 +31,12 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.struts.upload.FormFile;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.helper.RekeningFileHelper;
+import org.techytax.struts.form.UploadForm;
 
 public class UploadFileAction extends Action {
 
@@ -46,67 +44,23 @@ public class UploadFileAction extends Action {
 			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		String forward = "success";
+		UploadForm uploadForm = (UploadForm) form;
+
+		FormFile myFile = uploadForm.getTheFile();
+
+		String forward = uploadForm.getType();
 		try {
-			List<Kost> result = uploadData(request);
+			KostensoortDao dao = new KostensoortDao();
+			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
+			InputStream is = myFile.getInputStream();
+			List<Kost> result = RekeningFileHelper.readFile(new BufferedReader(
+					new InputStreamReader(is)), kostensoortLijst);
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return mapping.findForward(forward);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Kost> uploadData(HttpServletRequest request) {
-		DiskFileUpload upload = new DiskFileUpload();
-		// Set maximum size;
-		upload.setSizeMax(-1);
-		// parse this request by the handler
-		// this gives us a list of items from the request
-		try {
-			List<Kost> items = upload.parseRequest(request);
-			return getUploadedFile(items, request);
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
-
-	private List<Kost> getUploadedFile(List<Kost> items, HttpServletRequest request) {
-
-		Iterator<Kost> itr = items.iterator();
-		List<Kost> result = null;
-
-		while (itr.hasNext()) {
-			FileItem item = (FileItem) itr.next();
-
-			// check if the current item is a form field or an uploaded file
-			if (item.isFormField()) {
-
-				// get the name of the field
-				String fieldName = item.getFieldName();
-				System.out.println("Fieldname: " + fieldName + ": "
-						+ item.getString());
-
-			} else {
-				System.out.println("Dit is de file zelf: "
-						+ item.getFieldName());
-				try {
-					KostensoortDao dao = new KostensoortDao();
-					List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
-					InputStream is = item.getInputStream();
-					result = RekeningFileHelper.readFile(new BufferedReader(
-							new InputStreamReader(is)), kostensoortLijst);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-
-		}
-		return result;
 	}
 
 }

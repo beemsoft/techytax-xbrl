@@ -42,8 +42,6 @@ import com.Ostermiller.util.LabeledCSVParser;
 
 public class RekeningFileHelper {
 
-	private static final Log log = LogFactory.getLog(RekeningFileHelper.class);
-
 	final static char DELIMITER = ',';
 
 	final static char QUOTE = '"';
@@ -65,20 +63,14 @@ public class RekeningFileHelper {
 		kostensoortList = kostensoortList2;
 		List<Kost> kostLijst = new ArrayList<Kost>();
 		try {
-			System.out.println("Initialize parser");
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			// aantalRecords = data.size();
 			Kost kost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
-				// for (int regelNummer = 45; regelNummer <= 50; regelNummer++)
-				// {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				System.err.println("Regel: " + regelNummer + " " + regel[0]);
-
 				kost = verwerkRegel(regel, regelNummer);
 				kostLijst.add(kost);
 			}
@@ -87,7 +79,6 @@ public class RekeningFileHelper {
 			e.printStackTrace();
 		}
 		return kostLijst;
-		//
 	}
 
 	/**
@@ -101,8 +92,6 @@ public class RekeningFileHelper {
 		while (regel != null) {
 
 			++regelNummer;
-			log.debug("Regel#" + regelNummer + " (" + regel.length + "): "
-					+ ArrayUtils.toString(regel));
 			regels.add(regel);
 
 			regel = parser.getLine();
@@ -129,6 +118,13 @@ public class RekeningFileHelper {
 					+ "-" + datum.substring(6, 8));
 			BigDecimal bedrag = new BigDecimal(regel[6].replace(',', '.'));
 			kost.setBedrag(bedrag);
+			if (regel[5].equals("Af")) {
+				kost.setIncoming(false);
+			} else {
+				kost.setOmschrijving("Inleg vanaf spaarrekening");
+				kost.setKostenSoortId(KostConstanten.INLEG);
+				kost.setIncoming(true);				
+			}			
 			String omschrijving = regel[1] + " " + regel[8];
 
 			if (omschrijving.trim().equals("")) {

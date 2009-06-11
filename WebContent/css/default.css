@@ -41,6 +41,8 @@ h4.section { font-size:1.1875em; }
 #contentCell p a { text-decoration:underline; }
 #contentCell p a:hover { color:#BA9A85; }
 
+#contentCell ul { padding:0px 0px 5px 20px; }
+
 #contentCell table.formTable { margin:10px 10px 10px -1em; width:31em; }
 #contentCell table.formTable th, #contentCell table.formTable td { text-align:left; vertical-align:top; padding-bottom:3px; }
 #contentCell table.formTable label { display:block; margin-right:16px; }
@@ -66,10 +68,10 @@ div#links a {display: block; text-align: center; font: bold 1em sans-serif;
 div#links a:hover {color: #411; background: #AAA;
    border-right: 5px double white;}
 
-/* hover span editen voor hoogte van text */
+/* Edit hover span for the position of the menu desciption. */
 div#links a span {display: none;}
 div#links a:hover span {display: block;
-   position: absolute; top: 280px; left: 0; width: 125px;
+   position: absolute; top: 360px; left: 0; width: 125px;
    padding: 5px; margin: 10px; z-index: 100;
    color: #FFF; background: #4b93fe;
    font: 10px Verdana, sans-serif; text-align: center;}
