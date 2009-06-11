@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
 
-public class InsertKostLijstAction extends Action {
+public class InsertPrivateExpensesAction extends Action {
 
 	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -43,7 +43,7 @@ public class InsertKostLijstAction extends Action {
 		Kost kost = null;
 		for (int i = 0; i < kostLijst.size(); i++) {
 			kost = (Kost) kostLijst.get(i);
-			boekDao.insertKost(kost);
+			boekDao.insertPrivateExpense(kost);
 		}
 
 		return mapping.findForward("success");

@@ -30,23 +30,29 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
+import org.techytax.struts.form.BalansForm;
 
-public class InsertKostLijstAction extends Action {
+public class GetPrivateExpensesAction extends Action {
 
-	@SuppressWarnings("unchecked")
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		BoekDao boekDao = new BoekDao();
-		List<Kost> kostLijst = (List<Kost>) request.getSession().getAttribute("kostLijst");
-		Kost kost = null;
-		for (int i = 0; i < kostLijst.size(); i++) {
-			kost = (Kost) kostLijst.get(i);
-			boekDao.insertKost(kost);
+		String forward = "failure";
+		List<Kost> result = null;
+
+		try {
+			BoekDao boekDao = new BoekDao();
+			result = boekDao.getPrivateExpenses();
+			request.setAttribute("kostLijst", result);
+			forward = "success";
+		} catch (Exception e) {
+			throw e;
 		}
+		BalansForm balansForm = new BalansForm();
+		request.getSession().setAttribute("balansForm", balansForm);
 
-		return mapping.findForward("success");
-
+		return mapping.findForward(forward);
 	}
+
 }
