@@ -39,6 +39,15 @@ public class BoekDao {
 			throw ex;
 		}
 	}
+	
+	public void insertPrivateExpense(Kost kost) throws Exception {
+		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+		try {
+			sqlMap.insert("insertPrivateExpense", kost);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Kost> getKostLijst() throws Exception {
@@ -49,6 +58,16 @@ public class BoekDao {
 			throw ex;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getPrivateExpenses() throws Exception {
+		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+		try {
+			return sqlMap.queryForList("getPrivateExpenses", null);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Kost> getAlleKosten() throws Exception {

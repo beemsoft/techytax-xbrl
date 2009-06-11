@@ -119,6 +119,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			SELECT @@IDENTITY AS ID
 		</selectKey>
 	</insert>
+	<insert id="insertPrivateExpense" parameterClass="kost">
+		insert into private_expenses
+		values(#id#,#bedrag#,#isIncoming#,#datum#,#omschrijving#)
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>	
 	<select id="getKost" parameterClass="string" resultClass="kost">
 		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as
 		kostenSoortId FROM kosten k, kostensoort ks WHERE k.id = #value#

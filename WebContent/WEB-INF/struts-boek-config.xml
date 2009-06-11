@@ -162,6 +162,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			type="org.techytax.struts.action.InsertKostLijstAction">
 			<forward name="success" path="/getKostLijst.do"></forward>
 		</action>
+		<action path="/insertPrivateExpenses"
+			type="org.techytax.struts.action.InsertPrivateExpensesAction">
+			<forward name="success" path="/getKostLijst.do"></forward>
+		</action>
 		<action path="/insertActiva"
 			type="org.techytax.struts.action.InsertActivaAction">
 			<forward name="success"

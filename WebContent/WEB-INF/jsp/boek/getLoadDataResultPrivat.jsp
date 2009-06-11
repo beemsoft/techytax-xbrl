@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 %>
 
 <h4><bean:message key="load.data"/></h4>
-<a href="<%=request.getContextPath() %>/insertKostLijst.do"><bean:message key="load.data.process"/></a>
+<a href="<%=request.getContextPath() %>/insertPrivateExpenses.do"><bean:message key="load.data.process"/></a>
 
 <table cellspacing="0" border="1" class="overviewTable">
 <tr>
