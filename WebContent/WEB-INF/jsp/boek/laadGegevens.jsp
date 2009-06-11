@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <html:radio property="type" value="business"><bean:message key="label.business"/></html:radio>
 <br>
 <html:file property="theFile"/>
-<html:submit/>
+<html:submit><bean:message key="load.data"/></html:submit>
 </html:form>
 </div>
 

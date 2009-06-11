@@ -103,6 +103,8 @@ public class BoekDao {
 				return sqlMap.queryForList("getAftrekpostenLijst", map);
 			} else if (balansSoort.equals("afschrijvingen")) {
 				return sqlMap.queryForList("getAfschrijvingenLijst", map);
+			} else if (balansSoort.equals("private")) {
+				return sqlMap.queryForList("getPrivateExpenses", map);
 			}
 		} catch (SQLException ex) {
 			throw ex;
