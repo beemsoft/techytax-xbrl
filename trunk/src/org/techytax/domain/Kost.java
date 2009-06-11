@@ -30,6 +30,15 @@ public class Kost {
 	private long crediteurId;
 	private long kostenSoortId;
 	private String kostenSoortOmschrijving;
+	private boolean isIncoming;
+
+	public boolean isIncoming() {
+		return isIncoming;
+	}
+
+	public void setIncoming(boolean isIncoming) {
+		this.isIncoming = isIncoming;
+	}
 
 	public String getKostenSoortOmschrijving() {
 		return kostenSoortOmschrijving;

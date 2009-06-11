@@ -28,7 +28,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="kostForm" type="org.techytax.struts.form.KostForm" />
 		<form-bean name="balansForm" type="org.techytax.struts.form.BalansForm" />
 		<form-bean name="kostensoortForm" type="org.techytax.struts.form.KostensoortForm" />
-		<form-bean name="kostmatchForm" type="org.techytax.struts.form.KostmatchForm" />			
+		<form-bean name="kostmatchForm" type="org.techytax.struts.form.KostmatchForm" />
+		<form-bean name="uploadForm" type="org.techytax.struts.form.UploadForm" />
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -143,10 +144,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/laadKostLijst"
 			forward="/WEB-INF/jsp/boek/laadGegevens.jsp" />
 		<action path="/uploadFile"
-			type="org.techytax.struts.action.UploadFileAction">
-			<forward name="success"
+			type="org.techytax.struts.action.UploadFileAction" name="uploadForm">
+			<forward name="business"
 				path="/WEB-INF/jsp/boek/getInlaadResultaat.jsp">
 			</forward>
+			<forward name="private"
+				path="/WEB-INF/jsp/boek/getLoadDataResultPrivat.jsp">
+			</forward>			
 		</action>
 		<action path="/afschrijvenKost"
 			type="org.techytax.struts.action.AfschrijvenKostAction">
