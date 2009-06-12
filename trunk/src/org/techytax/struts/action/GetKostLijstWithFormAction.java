@@ -79,6 +79,7 @@ public class GetKostLijstWithFormAction extends Action {
 						.calculatAccountBalance(result);
 				request.setAttribute("balans", liquiditeit.getRekeningBalans());
 				request.setAttribute("sparen", liquiditeit.getSpaarBalans());
+				request.setAttribute("private", liquiditeit.getPriveBalans());
 			} else if (balansForm.getBalansSoort().equals("kostenBalans")) {
 				Balans balans = BalanceCalculator.calculatCostBalance(result);
 				request.setAttribute("kosten", balans.getTotaleKosten());

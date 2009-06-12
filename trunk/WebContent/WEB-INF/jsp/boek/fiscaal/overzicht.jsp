@@ -64,7 +64,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.pension"/>:</td>
-		<td align="right"><%=overzicht.getOudedagsReserveMaximaal()%></td>
+		<td align="right">(<%=overzicht.getOudedagsReserveMaximaal()%>)</td>
 	</tr>
 </table>
 
@@ -180,27 +180,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.balance.account"/>:</td>
-		<td align="right"><%=balansSaldo%></td>
+		<td align="right">(<%=balansSaldo%>)</td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
 		<td align="right"><b><%=totaalOnttrekking%></b></td>
 	</tr>
 	<tr>
-		<td><bean:message key="overview.balance.savings"/>:</td>
+		<td><bean:message key="overview.balance.private"/>:</td>
 		<td align="right"><%=overzicht.getOnttrekking().getOpnameSaldo()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.tax.prepaid"/>:</td>
-		<td align="right"><%=overzicht.getOnttrekking().getVoorlopigeAanslag()%></td>
+		<td align="right">-<%=overzicht.getOnttrekking().getVoorlopigeAanslag()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.activa.car"/>:</td>
-		<td align="right"><%=overzicht.getKostenAuto()%></td>
+		<td align="right">-<%=overzicht.getKostenAuto()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.tax.return"/>:</td>
-		<td align="right"><%=overzicht.getOnttrekking().getTeruggave()%></td>
+		<td align="right">+<%=overzicht.getOnttrekking().getTeruggave()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.blackhole"/>:</td>

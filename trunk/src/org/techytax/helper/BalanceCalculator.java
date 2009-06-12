@@ -105,7 +105,10 @@ public class BalanceCalculator {
 									+ obj.getBedrag().add(obj.getBtw()));
 							totalKost = totalKost.add(obj.getBedrag());
 							totalKost = totalKost.add(obj.getBtw());
-							if (id == KostConstanten.INLEG) {
+							// if (id == KostConstanten.INLEG) {
+							// totalInleg = totalInleg.add(obj.getBedrag());
+							// }
+							if (obj.getOmschrijving().contains("prive inleg")) {
 								totalInleg = totalInleg.add(obj.getBedrag());
 							}
 							if (obj.getOmschrijving().equals(
@@ -121,9 +124,13 @@ public class BalanceCalculator {
 							if (obj.getOmschrijving().equals(
 									"naar spaarrekening")) {
 								totalSparen = totalSparen.add(obj.getBedrag());
-							} else if (id == KostConstanten.OPNAME) {
+							} else if (obj.getOmschrijving().contains(
+									"prive opname")) {
 								totalOpname = totalOpname.add(obj.getBedrag());
 							}
+							// else if (id == KostConstanten.OPNAME) {
+							// totalOpname = totalOpname.add(obj.getBedrag());
+							// }
 
 						}
 					}
@@ -169,10 +176,25 @@ public class BalanceCalculator {
 					} else if (id == KostConstanten.UITGAVE_DEZE_REKENING
 							|| id == KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF
 							|| id == KostConstanten.REISKOST_ANDERE_REKENING_FOUTIEF
-							|| id == KostConstanten.REISKOST) {
+							|| id == KostConstanten.REISKOST
+							|| id == KostConstanten.AUTO_VAN_DE_ZAAK
+							|| id == KostConstanten.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
+							|| id == KostConstanten.WEGEN_BELASTING
+							|| id == KostConstanten.UITGAVE_CREDIT_CARD
+							|| id == KostConstanten.UITGAVE_ANDERE_REKENING) {
 						totalKost = totalKost.add(obj.getBedrag());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
+					} else if (id == KostConstanten.ZAKELIJK_ETENTJE) {
+//						totalKost = totalKost
+//								.add(obj
+//										.getBedrag()
+//										.multiply(
+//												new BigDecimal(
+//														KostConstanten.FOOD_TAXFREE_PERCENTAGE)));
+						totalKost = totalKost
+						.add(obj
+								.getBedrag());						
 					}
 				}
 			}
@@ -199,7 +221,9 @@ public class BalanceCalculator {
 						totalKostOV = totalKostOV.add(obj.getBedrag());
 						// BTW niet meenemen
 					}
-					if (id == KostConstanten.AUTO_VAN_DE_ZAAK) {
+					if (id == KostConstanten.AUTO_VAN_DE_ZAAK
+							|| id == KostConstanten.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
+							|| id == KostConstanten.WEGEN_BELASTING) {
 						totalKostAuto = totalKostAuto.add(obj.getBedrag());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj
 								.getBedrag());

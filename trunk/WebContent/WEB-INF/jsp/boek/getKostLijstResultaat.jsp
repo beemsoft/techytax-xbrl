@@ -174,6 +174,7 @@ var cal13 = new CalendarPopup();
 %>
 <p><b><bean:message key="overview.balance.account"/>: <%=request.getAttribute("balans")%> </b></p>
 <p><b><bean:message key="overview.balance.savings"/>: <%=request.getAttribute("sparen")%> </b></p>
+<p><b><bean:message key="overview.balance.private"/>: <%=request.getAttribute("private")%> </b></p>
 <%
 } else if (balansForm.getBalansSoort().equals("kostenBalans")) {
 %>
