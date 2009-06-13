@@ -37,9 +37,9 @@ public class InsertAccountAction extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		AccountForm AccountForm = (AccountForm) form;
+		AccountForm accountForm = (AccountForm) form;
 		Account account = new Account();
-		BeanUtils.copyProperties(account, AccountForm);
+		BeanUtils.copyProperties(account, accountForm);
 
 		AccountDao dao = new AccountDao();
 
