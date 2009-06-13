@@ -22,8 +22,6 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -31,7 +29,6 @@ import org.apache.struts.action.ActionMapping;
 import org.techytax.struts.form.KostmatchForm;
 
 public class NewKostmatchAction extends Action {
-	private static final Log log = LogFactory.getLog(NewKostmatchAction.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			final HttpServletRequest request, HttpServletResponse response)
@@ -39,7 +36,6 @@ public class NewKostmatchAction extends Action {
 
 		KostmatchForm kostmatchForm = new KostmatchForm();
 		String id = (String) request.getParameter("kostenSoortId");
-		log.debug("New match for cost type: " + id);
 		kostmatchForm.setKostenSoortId(Long.parseLong(id));
 		request.setAttribute("kostmatchForm", kostmatchForm);
 		return mapping.findForward("success");

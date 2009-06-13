@@ -19,33 +19,37 @@
  */
 package org.techytax.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
-import org.techytax.struts.form.KostForm;
+import org.techytax.dao.AccountDao;
+import org.techytax.domain.Account;
 
-public class UpdateKostAction extends Action {
+public class GetAccountsAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		KostForm kostForm = (KostForm) form;
+		String forward = "failure";
+		List<Account> result = null;
 
-		Kost kost = new Kost();
-		BeanUtils.copyProperties(kost, kostForm);
-		BoekDao boekDao = new BoekDao();
+		try {
+			AccountDao dao = new AccountDao();
+			result = dao.getAccounts();
+			request.setAttribute("accounts", result);
+			forward = "success";
+		} catch (Exception e) {
+			throw e;
+		}
 
-		boekDao.updateKost(kost);
-
-		return mapping.findForward("success");
-
+		return mapping.findForward(forward);
 	}
+
 }

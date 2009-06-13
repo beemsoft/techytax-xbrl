@@ -43,7 +43,6 @@ public class GetKostensoortLijstAction extends Action {
 		try {
 			KostensoortDao dao = new KostensoortDao();
 			result = dao.getKostensoortLijst();
-			System.err.println("Result: " + result.size());
 			request.setAttribute("kostensoortLijst", result);
 			forward = "success";
 		} catch (Exception e) {

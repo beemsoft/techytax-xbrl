@@ -22,30 +22,17 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
-import org.techytax.struts.form.KostForm;
 
-public class UpdateKostAction extends Action {
+public class NewAccountAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		KostForm kostForm = (KostForm) form;
-
-		Kost kost = new Kost();
-		BeanUtils.copyProperties(kost, kostForm);
-		BoekDao boekDao = new BoekDao();
-
-		boekDao.updateKost(kost);
-
 		return mapping.findForward("success");
-
 	}
 }

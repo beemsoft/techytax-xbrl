@@ -23,29 +23,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
-import org.techytax.struts.form.KostForm;
+import org.techytax.dao.AccountDao;
+import org.techytax.domain.Account;
+import org.techytax.struts.form.AccountForm;
 
-public class UpdateKostAction extends Action {
+public class EditAccountAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
+			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		KostForm kostForm = (KostForm) form;
+		Account result = null;
+		AccountForm objForm = (AccountForm) form;
 
-		Kost kost = new Kost();
-		BeanUtils.copyProperties(kost, kostForm);
-		BoekDao boekDao = new BoekDao();
+		String forward = "failure";
+		String id = (String) request.getParameter("id");
+		if (StringUtils.isNotEmpty(id)) {
+			try {
+				AccountDao AccountDao = new AccountDao();
 
-		boekDao.updateKost(kost);
+				result = AccountDao.getAccount(id);
 
-		return mapping.findForward("success");
+				BeanUtils.copyProperties(objForm, result);
 
+				forward = "success";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return mapping.findForward(forward);
 	}
+
 }

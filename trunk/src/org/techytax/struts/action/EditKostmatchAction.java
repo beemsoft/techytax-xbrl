@@ -24,8 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -35,7 +33,6 @@ import org.techytax.domain.Kostmatch;
 import org.techytax.struts.form.KostmatchForm;
 
 public class EditKostmatchAction extends Action {
-	private static final Log log = LogFactory.getLog(EditKostmatchAction.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			final HttpServletRequest request, HttpServletResponse response)
@@ -51,8 +48,6 @@ public class EditKostmatchAction extends Action {
 				KostmatchDao kostmatchDao = new KostmatchDao();
 
 				result = kostmatchDao.getKostmatch(id);
-
-				log.debug("result=" + result);
 
 				BeanUtils.copyProperties(objForm, result);
 
