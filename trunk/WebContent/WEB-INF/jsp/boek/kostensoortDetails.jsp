@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><html:checkbox property="btwVerrekenbaar"></html:checkbox></td>
 	</tr>
 	<tr>
-		<td><bean:message key="label.account"/>:</td>
+		<td><bean:message key="label.current.account"/>:</td>
 		<td><html:checkbox property="balansMeetellen"></html:checkbox></td>
 	</tr>
 	<tr>

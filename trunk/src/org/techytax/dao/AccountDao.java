@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.techytax.domain.Account;
+import org.techytax.domain.AccountBalance;
 import org.techytax.util.IbatisUtil;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -64,5 +65,15 @@ public class AccountDao {
 			throw ex;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<AccountBalance> getAccountBalance(String id) throws Exception {
+		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+		try {
+			return sqlMap.queryForList("getAccountBalance", id);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 }

@@ -17,43 +17,27 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.struts.form;
+package org.techytax.struts.action;
 
-import java.math.BigDecimal;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.techytax.struts.form.AccountBalanceForm;
 
-public class AccountBalanceForm extends ActionForm {
+public class NewAccountBalanceAction extends Action {
 
-	private static final long serialVersionUID = 1L;
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			final HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
-	private long accountId;
-	private BigDecimal balance;
-	private String datum;
-	private long id;
-	public long getAccountId() {
-		return accountId;
+		AccountBalanceForm accountBalanceForm = new AccountBalanceForm();
+		String accountId = (String) request.getParameter("id");
+		accountBalanceForm.setAccountId(Long.parseLong(accountId));
+		request.setAttribute("accountBalanceForm", accountBalanceForm);
+		return mapping.findForward("success");
 	}
-	public BigDecimal getBalance() {
-		return balance;
-	}
-	public String getDatum() {
-		return datum;
-	}
-	public long getId() {
-		return id;
-	}
-	public void setAccountId(long accountId) {
-		this.accountId = accountId;
-	}
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
-	public void setDatum(String datum) {
-		this.datum = datum;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-
 }
