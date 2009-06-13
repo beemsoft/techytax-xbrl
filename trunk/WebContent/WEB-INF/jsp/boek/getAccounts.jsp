@@ -34,8 +34,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<th><bean:message key="label.id"/></th>
 		<th><bean:message key="label.descr"/></th>
-		<th><bean:message key="label.date"/></th>
-		<th><bean:message key="label.saldo"/></th>
+		<th><bean:message key="label.number"/></th>
+		<th><bean:message key="label.name"/></th>
 	</tr>
 
 	<%
@@ -50,8 +50,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr valign="top">
 		<td><a href="editAccount.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
 		<td><%=obj.getDescription()%></td>
-		<td><%=obj.getDatum()%></td>
-		<td><%=obj.getSaldo()%></td>
+		<td><%=obj.getNumber()%></td>
+		<td><%=obj.getName()%></td>
 	</tr>
 	<%
 				}
