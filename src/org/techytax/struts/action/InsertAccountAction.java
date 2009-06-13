@@ -27,23 +27,23 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
-import org.techytax.struts.form.KostForm;
+import org.techytax.dao.AccountDao;
+import org.techytax.domain.Account;
+import org.techytax.struts.form.AccountForm;
 
-public class UpdateKostAction extends Action {
+public class InsertAccountAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		KostForm kostForm = (KostForm) form;
+		AccountForm AccountForm = (AccountForm) form;
+		Account account = new Account();
+		BeanUtils.copyProperties(account, AccountForm);
 
-		Kost kost = new Kost();
-		BeanUtils.copyProperties(kost, kostForm);
-		BoekDao boekDao = new BoekDao();
+		AccountDao dao = new AccountDao();
 
-		boekDao.updateKost(kost);
+		dao.insertAccount(account);
 
 		return mapping.findForward("success");
 
