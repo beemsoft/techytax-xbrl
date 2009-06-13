@@ -17,44 +17,43 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ page import="org.techytax.domain.Account"%>
+<%@ page import="org.techytax.domain.AccountBalance"%>
 <%@ page import="java.util.List"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
-
 <%
-	List<Account> res = (List<Account>) request.getAttribute("accounts");
+	List<AccountBalance> res = (List<AccountBalance>) request
+			.getAttribute("accountBalance");
+	String accountId = (String)request.getAttribute("accountId");
 %>
 
-<h4><bean:message key="accounts.title"/></h4>
-<div class="margins">
-<a href="newAccount.do"><bean:message key="account.new"/></a>
+<h4><bean:message key="label.account" /></h4>
+<div class="margins"><html:link action="/newAccountBalance.do">
+	<html:param name="accountId"><%=accountId%></html:param>
+	<bean:message key="account.balance.new" />
+</html:link>
 
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
-		<th><bean:message key="label.id"/></th>
-		<th><bean:message key="label.descr"/></th>
-		<th><bean:message key="label.number"/></th>
-		<th><bean:message key="label.name"/></th>
+		<th><bean:message key="label.date" /></th>
+		<th><bean:message key="label.saldo" /></th>
 	</tr>
 
 	<%
-			if (res != null) {
+		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
-				Account obj = null;
-				obj = (Account) res.get(i);
+				AccountBalance obj = null;
+				obj = (AccountBalance) res.get(i);
 				if (obj != null) {
 	%>
 
 	<tr valign="top">
-		<td><a href="editAccount.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
-		<td><a href="getAccountBalance.do?id=<%=obj.getId()%>"><%=obj.getDescription()%></a></td>
-		<td><%=obj.getNumber()%></td>
-		<td><%=obj.getName()%></td>
+		<td><%=obj.getDatum()%></td>
+		<td><%=obj.getBalance()%></td>
 	</tr>
 	<%
-				}
+		}
 			}
 		}
 	%>

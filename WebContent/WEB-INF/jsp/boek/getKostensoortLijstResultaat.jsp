@@ -36,7 +36,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="label.descr"/></th>
 		<th><bean:message key="label.incoming.payment"/></th>
 		<th><bean:message key="label.vat.appl"/></th>
-		<th><bean:message key="label.account"/></th>
+		<th><bean:message key="label.current.account"/></th>
 		<th><bean:message key="label.tax.deductible"/></th>
 		<th><bean:message key="label.investment"/></th>		
 	</tr>

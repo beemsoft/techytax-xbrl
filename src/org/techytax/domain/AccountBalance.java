@@ -21,13 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
-
 public class AccountBalance {
-	private long id = 0;
-	private long accountId;
-	private String description;
-	private String datum;
-	private BigDecimal balance;
 	public long getId() {
 		return id;
 	}
@@ -39,12 +33,6 @@ public class AccountBalance {
 	}
 	public void setAccountId(long accountId) {
 		this.accountId = accountId;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public String getDatum() {
 		return datum;
@@ -58,4 +46,8 @@ public class AccountBalance {
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
+	private long id = 0;
+	private long accountId;
+	private String datum;
+	private BigDecimal balance;
 }

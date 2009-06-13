@@ -22,10 +22,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Account">
 	<typeAlias alias="account" type="org.techytax.domain.Account" />
+	<typeAlias alias="balance" type="org.techytax.domain.AccountBalance" />	
 	<select id="getAccounts" resultClass="account">
 		SELECT * FROM accounts
 	</select>
-
 	<insert id="insertAccount" parameterClass="account">
 		insert into accounts
 		values(#id#,#description#,#number#,#name#,#dateOpened#,#dateClosed#)
@@ -38,4 +38,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		update accounts set description = #description#,
 		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed# WHERE id = #id#
 	</update>
+	<select id="getAccountBalance" parameterClass="string"
+		resultClass="balance">
+		SELECT id, account_id as accountId, datum, balance FROM account_balance WHERE account_id = #value#
+	</select>
+	<insert id="insertAccountBalance" parameterClass="balance">
+		insert into account_balance
+		values(#id#,#accountId#,#datum#,#balance#)
+	</insert>
 </sqlMap>
