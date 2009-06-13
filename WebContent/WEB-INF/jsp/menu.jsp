@@ -47,11 +47,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<bean:message key="menu.fiscal.overview" />
 			<span> <bean:message key="menu.fiscal.overview.descr" /></span>
 		</html:link> <html:link action="getPrivateAccounts.do">
-			<bean:message key="menu.private.accounts" />
-			<span> <bean:message key="menu.private.accounts.descr" /></span>
-		</html:link> <html:link action="getPrivateExpenses.do">
-			<bean:message key="menu.private.expenses" />
-			<span> <bean:message key="menu.private.expenses.descr" /></span>
+			<bean:message key="menu.accounts" />
+			<span> <bean:message key="menu.accounts.descr" /></span>
 		</html:link> <%
  	if (request.getUserPrincipal() != null) {
  %> <a href="<%=request.getContextPath()%>/index.jsp?logoff=true"><bean:message
