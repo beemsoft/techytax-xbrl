@@ -205,6 +205,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/getAccountBalance.jsp">
 			</forward>
+		</action>
+		<action path="/newAccountBalance" type="org.techytax.struts.action.NewAccountBalanceAction">
+			<forward name="success" path="/WEB-INF/jsp/boek/insertAccountBalance.jsp"></forward>
+		</action>		
+		<action path="/insertAccountBalance" type="org.techytax.struts.action.InsertAccountBalanceAction"
+			name="accountBalanceForm" scope="request">
+			<forward name="success" path="/getAccounts.do"></forward>
 		</action>		
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />

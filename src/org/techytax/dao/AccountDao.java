@@ -29,10 +29,10 @@ import org.techytax.util.IbatisUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class AccountDao {
-	public void insertAccount(Account kost) throws Exception {
+	public void insertAccount(Account account) throws Exception {
 		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
-			sqlMap.insert("insertAccount", kost);
+			sqlMap.insert("insertAccount", account);
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -71,6 +71,15 @@ public class AccountDao {
 		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getAccountBalance", id);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}
+	
+	public void insertAccountBalance(AccountBalance accountBalance) throws Exception {
+		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+		try {
+			sqlMap.insert("insertAccountBalance", accountBalance);
 		} catch (SQLException ex) {
 			throw ex;
 		}

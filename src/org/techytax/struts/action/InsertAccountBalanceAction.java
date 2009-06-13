@@ -22,22 +22,30 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.techytax.dao.AccountDao;
+import org.techytax.domain.AccountBalance;
 import org.techytax.struts.form.AccountBalanceForm;
 
-public class NewAccountBalanceAction extends Action {
+public class InsertAccountBalanceAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			final HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		AccountBalanceForm accountBalanceForm = new AccountBalanceForm();
-		String accountId = (String) request.getParameter("accountId");
-		accountBalanceForm.setAccountId(Long.parseLong(accountId));
-		request.setAttribute("accountBalanceForm", accountBalanceForm);
+		AccountBalanceForm accountBalanceForm = (AccountBalanceForm) form;
+		AccountBalance accountBalance = new AccountBalance();
+		BeanUtils.copyProperties(accountBalance, accountBalanceForm);
+
+		AccountDao dao = new AccountDao();
+
+		dao.insertAccountBalance(accountBalance);
+
 		return mapping.findForward("success");
+
 	}
 }
