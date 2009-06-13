@@ -25,16 +25,26 @@ var cal13 = new CalendarPopup();
 <table border="0">
 	<tr>
 		<td><bean:message key="label.descr"/>:</td>
-		<td><html:text property="description" size="80" /></td>
+		<td><html:text property="description" size="100" /></td>
 	</tr>
 	<tr>
-		<td><bean:message key="label.date"/>:</td>
-		<td><html:text property="datum" /><a href="#"
-			onclick="cal13.select(document.forms[0].datum,'datum','yyyy-MM-dd'); return false;"
-			title="Kies datum" name="datum" id="datum">select</a></td>
+	<td><bean:message key="label.number"/>:</td>
+		<td><html:text property="number" size="20" /></td>
 	</tr>
 	<tr>
-		<td><bean:message key="label.saldo"/>:</td>
-		<td><html:text property="saldo"></html:text></td>
+		<td><bean:message key="label.name"/>:</td>
+		<td><html:text property="name" size="100" /></td>
+	</tr>
+	<tr>
+		<td><bean:message key="label.date.opened"/>:</td>
+		<td><html:text property="dateOpened" /><a href="#"
+			onclick="cal13.select(document.forms[0].dateOpened,'dateOpened','yyyy-MM-dd'); return false;"
+			title="<bean:message key="label.date.select"/>" name="dateOpened" id="dateOpened">select</a></td>
+	</tr>
+	<tr>
+		<td><bean:message key="label.date.closed"/>:</td>
+		<td><html:text property="dateClosed" /><a href="#"
+			onclick="cal13.select(document.forms[0].dateClosed,'dateClosed','yyyy-MM-dd'); return false;"
+			title="<bean:message key="label.date.select"/>" name="dateClosed" id="dateClosed">select</a></td>
 	</tr>	
 </table>

@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="kostmatchForm" type="org.techytax.struts.form.KostmatchForm" />
 		<form-bean name="uploadForm" type="org.techytax.struts.form.UploadForm" />
 		<form-bean name="accountForm" type="org.techytax.struts.form.AccountForm" />		
+		<form-bean name="accountBalanceForm" type="org.techytax.struts.form.AccountBalanceForm" />		
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -180,7 +181,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>		
 		<action path="/updateAccount" type="org.techytax.struts.action.UpdateAccountAction"
-			name="kostensoortForm" scope="request">
+			name="accountForm" scope="request">
 			<forward name="success" path="/getAccounts.do"></forward>
 		</action>
 		<action path="/editAccount" name="accountForm"

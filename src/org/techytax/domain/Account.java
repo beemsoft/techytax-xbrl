@@ -19,18 +19,14 @@
  */
 package org.techytax.domain;
 
-import java.math.BigDecimal;
 
 public class Account {
 	private long id = 0;
-
 	private String description;
-
-	private boolean bijschrijving;
-
-	private String datum;
-
-	private BigDecimal saldo;
+	private String number;
+	private String name;
+	private String dateOpened;
+	private String dateClosed;
 
 	public long getId() {
 		return id;
@@ -48,28 +44,35 @@ public class Account {
 		this.description = description;
 	}
 
-	public boolean isBijschrijving() {
-		return bijschrijving;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setBijschrijving(boolean bijschrijving) {
-		this.bijschrijving = bijschrijving;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
-	public String getDatum() {
-		return datum;
+	public String getName() {
+		return name;
 	}
 
-	public void setDatum(String datum) {
-		this.datum = datum;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public BigDecimal getSaldo() {
-		return saldo;
+	public String getDateOpened() {
+		return dateOpened;
 	}
 
-	public void setSaldo(BigDecimal saldo) {
-		this.saldo = saldo;
+	public void setDateOpened(String dateOpened) {
+		this.dateOpened = dateOpened;
 	}
 
+	public String getDateClosed() {
+		return dateClosed;
+	}
+
+	public void setDateClosed(String dateClosed) {
+		this.dateClosed = dateClosed;
+	}
 }

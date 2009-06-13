@@ -28,14 +28,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	<insert id="insertAccount" parameterClass="account">
 		insert into accounts
-		values(#id#,#description#,#datum#,#saldo#)
+		values(#id#,#description#,#number#,#name#,#dateOpened#,#dateClosed#)
 	</insert>
 	<select id="getAccount" parameterClass="string"
-		resultClass="kostensoort">
-		SELECT * FROM accounts WHERE id = #value#
+		resultClass="account">
+		SELECT id, description, number, name, date_opened as dateOpened, date_closed as dateClosed FROM accounts WHERE id = #value#
 	</select>
 	<update id="updateAccount" parameterClass="account">
 		update accounts set description = #description#,
-		datum = #datum#, saldo = #saldo# WHERE id = #id#
+		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed# WHERE id = #id#
 	</update>
 </sqlMap>

@@ -19,65 +19,48 @@
  */
 package org.techytax.struts.form;
 
+import java.math.BigDecimal;
+
 import org.apache.struts.action.ActionForm;
 
-public class AccountForm extends ActionForm {
+public class AccountBalanceForm extends ActionForm {
 
 	private static final long serialVersionUID = 1L;
 
 	private long id;
+	private long accountId;
 	private String description;
-	private String number;
-	private String name;
-	private String dateOpened;
-	private String dateClosed;
-
+	private String datum;
+	private BigDecimal balance;
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
-
+	public long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public String getNumber() {
-		return number;
+	public String getDatum() {
+		return datum;
 	}
-
-	public void setNumber(String number) {
-		this.number = number;
+	public void setDatum(String datum) {
+		this.datum = datum;
 	}
-
-	public String getName() {
-		return name;
+	public BigDecimal getBalance() {
+		return balance;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDateOpened() {
-		return dateOpened;
-	}
-
-	public void setDateOpened(String dateOpened) {
-		this.dateOpened = dateOpened;
-	}
-
-	public String getDateClosed() {
-		return dateClosed;
-	}
-
-	public void setDateClosed(String dateClosed) {
-		this.dateClosed = dateClosed;
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
 
 }

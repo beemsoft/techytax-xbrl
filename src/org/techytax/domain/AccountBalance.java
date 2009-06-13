@@ -17,67 +17,45 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.struts.form;
+package org.techytax.domain;
 
-import org.apache.struts.action.ActionForm;
+import java.math.BigDecimal;
 
-public class AccountForm extends ActionForm {
 
-	private static final long serialVersionUID = 1L;
-
-	private long id;
+public class AccountBalance {
+	private long id = 0;
+	private long accountId;
 	private String description;
-	private String number;
-	private String name;
-	private String dateOpened;
-	private String dateClosed;
-
+	private String datum;
+	private BigDecimal balance;
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
-
+	public long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public String getNumber() {
-		return number;
+	public String getDatum() {
+		return datum;
 	}
-
-	public void setNumber(String number) {
-		this.number = number;
+	public void setDatum(String datum) {
+		this.datum = datum;
 	}
-
-	public String getName() {
-		return name;
+	public BigDecimal getBalance() {
+		return balance;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
 	}
-
-	public String getDateOpened() {
-		return dateOpened;
-	}
-
-	public void setDateOpened(String dateOpened) {
-		this.dateOpened = dateOpened;
-	}
-
-	public String getDateClosed() {
-		return dateClosed;
-	}
-
-	public void setDateClosed(String dateClosed) {
-		this.dateClosed = dateClosed;
-	}
-
 }
