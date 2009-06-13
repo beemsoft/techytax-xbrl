@@ -71,7 +71,7 @@ div#links a:hover {color: #411; background: #AAA;
 /* Edit hover span for the position of the menu desciption. */
 div#links a span {display: none;}
 div#links a:hover span {display: block;
-   position: absolute; top: 360px; left: 0; width: 125px;
+   position: absolute; top: 320px; left: 0; width: 125px;
    padding: 5px; margin: 10px; z-index: 100;
    color: #FFF; background: #4b93fe;
    font: 10px Verdana, sans-serif; text-align: center;}
