@@ -28,8 +28,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	
 <%
 	int boekjaar = overzicht.getJaar();
-	int balansSaldo = 0;
-	int totaalOnttrekking = 0; 
 %>
 <h2><bean:message key="overview.fiscal.title"/> <%=boekjaar%></h2>
 <h4><bean:message key="overview.fiscal.statement"/></h4>
@@ -157,8 +155,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 						}					
 					}
 					totaalEind += obj.getSaldo().intValue();
-					balansSaldo = totaalEind - totaalBegin;
-					totaalOnttrekking = overzicht.getWinst() - balansSaldo;
 	%>
 	<tr>
 		<td><%=obj.getOmschrijving() %></td>
@@ -180,11 +176,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.balance.account"/>:</td>
-		<td align="right">(<%=balansSaldo%>)</td>
+		<td align="right">(<%=overzicht.getOnttrekking().getBalansSaldo()%>)</td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
-		<td align="right"><b><%=totaalOnttrekking%></b></td>
+		<td align="right"><b><%=-overzicht.getOnttrekking().getBalansSaldo()+overzicht.getNettoOmzet()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.balance.private"/>:</td>
@@ -195,8 +191,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">-<%=overzicht.getOnttrekking().getVoorlopigeAanslag()%></td>
 	</tr>
 	<tr>
-		<td><bean:message key="overview.fiscal.activa.car"/>:</td>
-		<td align="right">-<%=overzicht.getKostenAuto()%></td>
+		<td><bean:message key="overview.cost.total.out"/>:</td>
+		<td align="right">-<%=overzicht.getOnttrekking().getTotalCost()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.tax.return"/>:</td>
@@ -204,6 +200,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.blackhole"/>:</td>
-		<td align="right"><%=totaalOnttrekking+overzicht.getOnttrekking().getOpnameSaldo()-overzicht.getOnttrekking().getVoorlopigeAanslag()-overzicht.getKostenAuto()+overzicht.getOnttrekking().getTeruggave()%></td>
+		<td align="right"><%=-overzicht.getOnttrekking().getBalansSaldo()+overzicht.getNettoOmzet()+overzicht.getOnttrekking().getOpnameSaldo()-overzicht.getOnttrekking().getVoorlopigeAanslag()-overzicht.getOnttrekking().getTotalCost()+overzicht.getOnttrekking().getTeruggave()%></td>
 	</tr>
 </table>

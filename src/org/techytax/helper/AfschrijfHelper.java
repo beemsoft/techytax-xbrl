@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BoekwaardeDao;
+import org.techytax.domain.Activa;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Kost;
@@ -63,6 +64,7 @@ public class AfschrijfHelper {
 			Kost afschrijving = new Kost();
 			afschrijving.setBtw(new BigDecimal(0));
 			afschrijving.setKostenSoortId(0);
+			// TODO: translate
 			afschrijving
 					.setKostenSoortOmschrijving("Aan te geven als afschrijving");
 			System.out.println("Afschrijving datum: "
@@ -99,12 +101,10 @@ public class AfschrijfHelper {
 				.getAfschrijvingAuto(aftrekpostenLijst);
 		totaalAfschrijvingenOverig = BalanceCalculator
 				.getOverigeAfschrijvingen(aftrekpostenLijst);
-		System.out.println("Test: " + totaalAfschrijvingenAuto);
-		System.out.println("Test: " + totaalAfschrijvingenOverig);
 		Boekwaarde boekwaarde = new Boekwaarde();
 		int ditJaar = DateConverter.getJaar(periode.getBeginDatum());
 		boekwaarde.setJaar(ditJaar);
-		boekwaarde.setBalansId(2);
+		boekwaarde.setBalansId(Activa.CAR);
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 		boekwaarde.setId(0);
@@ -112,7 +112,7 @@ public class AfschrijfHelper {
 		boekwaarde.setSaldo(boekwaarde.getSaldo()
 				- totaalAfschrijvingenAuto.intValue());
 		boekwaardeDao.insertBoekwaarde(boekwaarde);
-		boekwaarde.setBalansId(1);
+		boekwaarde.setBalansId(Activa.MACHINERY);
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 		boekwaarde.setId(0);
 		boekwaarde.setJaar(ditJaar);
