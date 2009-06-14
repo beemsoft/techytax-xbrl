@@ -112,7 +112,7 @@ public class GetKostLijstWithFormAction extends Action {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ActionMessage message = new ActionMessage(e.getMessage());
+			ActionMessage message = new ActionMessage("errors.detail", e.getMessage());
 			errors.add(ActionErrors.GLOBAL_MESSAGE, message);
 			addErrors(request, errors);
 			saveErrors(request, errors);
