@@ -186,12 +186,7 @@ public class BalanceCalculator {
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
 					} else if (id == KostConstanten.ZAKELIJK_ETENTJE) {
-//						totalKost = totalKost
-//								.add(obj
-//										.getBedrag()
-//										.multiply(
-//												new BigDecimal(
-//														KostConstanten.FOOD_TAXFREE_PERCENTAGE)));
+						// Do not apply tax deduction to this cost.
 						totalKost = totalKost
 						.add(obj
 								.getBedrag());						
@@ -360,7 +355,6 @@ public class BalanceCalculator {
 		int forLimiet = KostConstanten.MAXIMALE_FOR;
 		Date datum = DateConverter.stringToDate(beginDatum);
 		int jaar = DateConverter.getJaar(datum);
-		System.out.println("Jaar: " + jaar);
 
 		// Maak winst-en-verlies rekening op
 		Balans btwBalans = calculateBtwBalance(boekingen);
@@ -405,6 +399,7 @@ public class BalanceCalculator {
 		boekwaarde.setJaar(jaar);
 		boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 
+		onttrekking.setBalansSaldo(0);
 		// Alleen voor het eerste boekjaar??
 		if (boekwaarde == null) {
 			String startDate = props.getProperty("start.date");
@@ -421,9 +416,15 @@ public class BalanceCalculator {
 
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		} else {
+			Boekwaarde vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 			List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum,
 					eindDatum, "rekeningBalans");
 			liquiditeit = calculatAccountBalance(rekeningLijst);
+			if (vorigeBoekwaarde != null) {
+				onttrekking.setBalansSaldo(boekwaarde.getSaldo()-vorigeBoekwaarde.getSaldo());
+			} else {
+				onttrekking.setBalansSaldo(boekwaarde.getSaldo());
+			}
 		}
 		FiscaalDao fiscaalDao = new FiscaalDao();
 		List<Activa> activaLijst = fiscaalDao.getActivaLijst(Integer
@@ -472,6 +473,8 @@ public class BalanceCalculator {
 		overzicht.setPassiva(passivaLijst);
 
 		// Vul prive onttrekking in
+		Balans kostBalans = calculatCostBalance(boekingen);
+		onttrekking.setTotalCost(kostBalans.getTotaleKosten().intValue());
 		if (liquiditeit != null) {
 			onttrekking.setOpnameSaldo(liquiditeit.getPriveBalans().intValue());
 		}

@@ -20,27 +20,32 @@
 package org.techytax.domain;
 
 public class PriveOnttrekking {
-	private int balansSaldo;
-	private int gat;
+	private int balansSaldo; // Current Asset
+	private int gat;		// Extra private extraction
 	private int opnameSaldo;
-	private int teruggave;
-	private int totaleOnttrekking;
-	private int voorlopigeAanslag;
 
+	private int teruggave;
+
+	private int totalCost;
+
+	private int totaleOnttrekking;
+
+	private int voorlopigeAanslag;
 	public int getBalansSaldo() {
 		return balansSaldo;
 	}
-
 	public int getGat() {
 		return gat;
 	}
-
 	public int getOpnameSaldo() {
 		return opnameSaldo;
 	}
-
 	public int getTeruggave() {
 		return teruggave;
+	}
+
+	public int getTotalCost() {
+		return totalCost;
 	}
 
 	public int getTotaleOnttrekking() {
@@ -65,6 +70,10 @@ public class PriveOnttrekking {
 
 	public void setTeruggave(int teruggave) {
 		this.teruggave = teruggave;
+	}
+
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
 	}
 
 	public void setTotaleOnttrekking(int totaleOnttrekking) {
