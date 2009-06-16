@@ -26,7 +26,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.helper.AfschrijfHelper;
+import org.techytax.helper.DepreciationHelper;
 
 public class InsertActivaAction extends Action {
 
@@ -38,7 +38,7 @@ public class InsertActivaAction extends Action {
 			throws Exception {
 
 		String forward = "success";
-		AfschrijfHelper helper = new AfschrijfHelper();
+		DepreciationHelper helper = new DepreciationHelper();
 		try {
 
 			helper.toevoegenAfschrijvingenAanActiva();

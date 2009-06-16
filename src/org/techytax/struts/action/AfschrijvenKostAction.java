@@ -30,7 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
-import org.techytax.helper.AfschrijfHelper;
+import org.techytax.helper.DepreciationHelper;
 
 public class AfschrijvenKostAction extends Action {
 
@@ -39,7 +39,7 @@ public class AfschrijvenKostAction extends Action {
 			throws Exception {
 
 		String forward = "success";
-		AfschrijfHelper helper = new AfschrijfHelper();
+		DepreciationHelper helper = new DepreciationHelper();
 		String id = (String) request.getParameter("id");
 		System.out.println("Afschrijven van kost: " + id);
 		BoekDao dao = new BoekDao();

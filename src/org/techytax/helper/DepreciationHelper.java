@@ -35,17 +35,18 @@ import org.techytax.domain.Periode;
 import org.techytax.util.DateConverter;
 import org.techytax.util.DateHelper;
 
-public class AfschrijfHelper {
+public class DepreciationHelper {
 
 	/**
-	 * Verdeel de af te schrijven kost in jaarlijkse afschrijvingen. Standaard
-	 * wordt in 5 jaar afgeschreven naar een restwaarde van 10%.
+	 * Split the cost into yearly depreciations. By default, there will be
+	 * 5 depreciaton terms, resulting in a restvalue of 10%.
 	 * 
 	 * @param kost
 	 * @return
 	 */
 	public List<Kost> verdeelKosten(Kost kost) throws Exception {
-		BigDecimal aanschafKost = kost.getBedrag().add(kost.getBtw());
+		// Use the net value.
+		BigDecimal aanschafKost = kost.getBedrag();
 		BigDecimal restWaarde = aanschafKost.divide(new BigDecimal(10));
 		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(restWaarde))
 				.divide(new BigDecimal(5));
