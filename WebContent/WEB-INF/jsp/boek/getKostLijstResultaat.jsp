@@ -69,8 +69,8 @@ var cal13 = new CalendarPopup();
 <html:errors/>
 
 <%
-		if (balansForm != null && balansForm.getBalansSoort() != null) {
-			if (balansForm.getBalansSoort().equals("private")) {
+			if (balansForm != null && balansForm.getBalansSoort() != null && balansForm.getBalansSoort().equals("private")) 
+			{
 %>
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
@@ -82,16 +82,19 @@ var cal13 = new CalendarPopup();
 	</tr>
 
 	<%
-			if (res != null) {
-			for (int i = 0; i < res.size(); i++) {
-
-				Kost obj = null;
-				obj = (Kost) res.get(i);
-				if (obj != null) {
-					String incoming = "-";
-					if (obj.isIncoming()) {
-						incoming = "+";
-					}					
+				if (res != null)
+				{
+					for (int i = 0; i < res.size(); i++) 
+					{
+						Kost obj = null;
+						obj = (Kost) res.get(i);
+						if (obj != null)
+						{
+							String incoming = "-";
+							if (obj.isIncoming()) 
+							{
+								incoming = "+";
+							}					
 	%>
 
 	<tr valign="top">
@@ -102,14 +105,15 @@ var cal13 = new CalendarPopup();
 		<td><%=obj.getOmschrijving()%></td>
 	</tr>
 	<%
-			}
+						}
 
-			}
-		}
+					}
+				}
 	%>
 </table>
 <%
-			} else {
+			} else 
+			{
 %>
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
@@ -122,12 +126,14 @@ var cal13 = new CalendarPopup();
 	</tr>
 
 	<%
-			if (res != null) {
-			for (int i = 0; i < res.size(); i++) {
-
-				Kost obj = null;
-				obj = (Kost) res.get(i);
-				if (obj != null) {
+				if (res != null) 
+				{
+					for (int i = 0; i < res.size(); i++) 
+					{
+						Kost obj = null;
+						obj = (Kost) res.get(i);
+						if (obj != null) 
+						{
 	%>
 
 	<tr valign="top">
@@ -139,15 +145,14 @@ var cal13 = new CalendarPopup();
 		<td><bean:message key="<%=obj.getKostenSoortOmschrijving()%>"/></td>
 	</tr>
 	<%
-			}
+						}
 
-			}
-		}
+					}
+				}
 	%>
 </table>
 <%
 			}
-		}
 %>
 
 
