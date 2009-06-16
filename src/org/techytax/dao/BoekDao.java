@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Kost;
+import org.techytax.domain.KostConstanten;
 import org.techytax.util.IbatisUtil;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -98,6 +99,7 @@ public class BoekDao {
 			} else if (balansSoort.equals("reiskostenBalans")) {
 				return sqlMap.queryForList("getReisKostenBalansLijst", map);
 			} else if (balansSoort.equals("investeringen")) {
+				map.put("investmentMinimum", Integer.toString(KostConstanten.INVESTMENT_MINIMUM_AMOUNT));
 				return sqlMap.queryForList("getInvesteringenLijst", map);
 			} else if (balansSoort.equals("aftrekpostenLijst")) {
 				return sqlMap.queryForList("getAftrekpostenLijst", map);
