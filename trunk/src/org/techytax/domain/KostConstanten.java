@@ -49,5 +49,6 @@ public interface KostConstanten {
 	public static final int MAXIMALE_FOR = 11227;
 	public static final float FOR_PERCENTAGE = 0.12f;
 	public static final float FOOD_TAXFREE_PERCENTAGE = 0.75f;
+	public static final int INVESTMENT_MINIMUM_AMOUNT = 450;	
 
 }
