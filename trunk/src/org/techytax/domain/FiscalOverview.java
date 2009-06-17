@@ -21,19 +21,25 @@ package org.techytax.domain;
 
 import java.util.List;
 
-public class FiscaalOverzicht {
+public class FiscalOverview {
 
 	private List<Activa> activa;
 
 	private int afschrijvingAuto;
+	
+	private int afschrijvingAutoCorrectie;
 
 	private int afschrijvingOverig;
+	
+	private int afschrijvingOverigCorrectie;	
 
 	private int bijtellingAuto;
 
 	private int jaar;
 
 	private int kostenAuto;
+	
+	private int kostenAutoAftrekbaar;	
 
 	private int kostenOverig;
 
@@ -57,9 +63,17 @@ public class FiscaalOverzicht {
 		return afschrijvingAuto;
 	}
 
+	public int getAfschrijvingAutoCorrectie() {
+		return afschrijvingAutoCorrectie;
+	}
+
 	public int getAfschrijvingOverig() {
 		return afschrijvingOverig;
 	}
+	
+	public int getAfschrijvingOverigCorrectie() {
+		return afschrijvingOverigCorrectie;
+	}	
 
 	public int getBijtellingAuto() {
 		return bijtellingAuto;
@@ -72,6 +86,10 @@ public class FiscaalOverzicht {
 	public int getKostenAuto() {
 		return kostenAuto;
 	}
+	
+	public int getKostenAutoAftrekbaar() {
+		return kostenAutoAftrekbaar;
+	}	
 
 	public int getKostenOverig() {
 		return kostenOverig;
@@ -83,6 +101,10 @@ public class FiscaalOverzicht {
 
 	public int getNettoOmzet() {
 		return nettoOmzet;
+	}
+
+	public PriveOnttrekking getOnttrekking() {
+		return onttrekking;
 	}
 
 	public int getOudedagsReserveMaximaal() {
@@ -105,9 +127,17 @@ public class FiscaalOverzicht {
 		this.afschrijvingAuto = afschrijvingAuto;
 	}
 
+	public void setAfschrijvingAutoCorrectie(int afschrijvingAutoCorrectie) {
+		this.afschrijvingAutoCorrectie = afschrijvingAutoCorrectie;
+	}
+
 	public void setAfschrijvingOverig(int afschrijvingOverig) {
 		this.afschrijvingOverig = afschrijvingOverig;
 	}
+	
+	public void setAfschrijvingOverigCorrectie(int afschrijvingOverigCorrectie) {
+		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
+	}	
 
 	public void setBijtellingAuto(int bijtellingAuto) {
 		this.bijtellingAuto = bijtellingAuto;
@@ -120,6 +150,10 @@ public class FiscaalOverzicht {
 	public void setKostenAuto(int kostenAuto) {
 		this.kostenAuto = kostenAuto;
 	}
+	
+	public void setKostenAutoAftrekbaar(int kostenAutoAftrekbaar) {
+		this.kostenAutoAftrekbaar = kostenAutoAftrekbaar;
+	}	
 
 	public void setKostenOverig(int kostenOverig) {
 		this.kostenOverig = kostenOverig;
@@ -133,6 +167,10 @@ public class FiscaalOverzicht {
 		this.nettoOmzet = nettoOmzet;
 	}
 
+	public void setOnttrekking(PriveOnttrekking onttrekking) {
+		this.onttrekking = onttrekking;
+	}
+
 	public void setOudedagsReserveMaximaal(int oudedagsReserveMaximaal) {
 		this.oudedagsReserveMaximaal = oudedagsReserveMaximaal;
 	}
@@ -143,14 +181,6 @@ public class FiscaalOverzicht {
 
 	public void setWinst(int winst) {
 		this.winst = winst;
-	}
-
-	public PriveOnttrekking getOnttrekking() {
-		return onttrekking;
-	}
-
-	public void setOnttrekking(PriveOnttrekking onttrekking) {
-		this.onttrekking = onttrekking;
 	}
 
 }

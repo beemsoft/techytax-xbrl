@@ -33,12 +33,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Balans;
-import org.techytax.domain.FiscaalOverzicht;
+import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.Reiskosten;
 import org.techytax.helper.BalanceCalculator;
+import org.techytax.helper.FiscalOverviewHelper;
 import org.techytax.struts.form.BalansForm;
 import org.techytax.util.DateHelper;
 
@@ -101,10 +102,10 @@ public class GetKostLijstWithFormAction extends Action {
 				forward = "success";
 			} else {
 				if (action.equals("Fiscaal overzicht")) {
-					FiscaalOverzicht overzicht = BalanceCalculator
-							.maakFiscaalOverzicht(balansForm.getBeginDatum(),
+					FiscalOverview overview = FiscalOverviewHelper
+							.createFiscalOverview(balansForm.getBeginDatum(),
 									balansForm.getEindDatum(), result);
-					request.setAttribute("overzicht", overzicht);
+					request.setAttribute("overzicht", overview);
 					forward = "fiscaal";
 				} else {
 					forward = "success";					
@@ -112,7 +113,12 @@ public class GetKostLijstWithFormAction extends Action {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ActionMessage message = new ActionMessage("errors.detail", e.getMessage());
+			ActionMessage message = null;
+			if (e.getMessage().startsWith("error")) {
+				message = new ActionMessage(e.getMessage());				
+			} else {
+				message = new ActionMessage("errors.detail", e.getMessage());
+			}
 			errors.add(ActionErrors.GLOBAL_MESSAGE, message);
 			addErrors(request, errors);
 			saveErrors(request, errors);

@@ -95,9 +95,9 @@ public class DepreciationHelper {
 		Periode periode = DateHelper.getPeriodeVorigJaar();
 		BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
 		BigDecimal totaalAfschrijvingenAuto = new BigDecimal("0");
-		List<Aftrekpost> aftrekpostenLijst = boekDao.getAftrekpostLijst(
+		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(
 				DateHelper.getDate(periode.getBeginDatum()), DateHelper
-						.getDate(periode.getEindDatum()), "aftrekpostenLijst");
+						.getDate(periode.getEindDatum()));
 		totaalAfschrijvingenAuto = BalanceCalculator
 				.getAfschrijvingAuto(aftrekpostenLijst);
 		totaalAfschrijvingenOverig = BalanceCalculator
