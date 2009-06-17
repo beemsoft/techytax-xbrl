@@ -1,20 +1,81 @@
 <h4 class="section">User Guide</h4>
+<div style="width:400">
 <p>
 TechyTax has the following Use Case scenario's.
 </p>
-<h4>Use Case: Add expense</h4>
+<h4>Use Case: Add cost</h4>
 <p>
-The bulk of your expenses will be loaded by the 'Load Data' Use Case.
+The bulk of your costs will be loaded by the 'Load Data' Use Case. In order to add a cost manually:
 </p>
-<h4>Use Case: Display expense overview</h4>
+<ul>
+<li>Go to 'Add cost'.</li>
+<li>Enter the details and select a cost type.</li>
+<li>Click on 'Add'.</li>
+</ul>
+<h4>Use Case: Display cost overview</h4>
+<ul>
+<li>Go to 'Cost overview'.</li>
+<li>The latest 10 costs are displayed.</li>
+<li>Click on 'Show overview'.</li>
+<li>All costs from the previous year are displayed.</li>
+</ul>
+<h5>VAT return</h5>
+<ul>
+<li>Select the period for which you want to calculate the VAT return.</li>
+<li>Select the option 'VAT'.</li>
+<li>Click on 'Show overview'.</li>
+</ul>
 <h4>Use Case: Load data</h4>
 <p>
 <b>NB:</b>Online bank systems keep data available only for the past 16 months. Be sure
 to load your data in time. For example: at the beginning of a new year, load data, both private and business,
  from the complete previous year. Keep the dowloaded data as a backup!
 </p>
-<h5>Match expenses</h5>
-<h5>Load business expenses</h5>
-<h5>Load private expenses</h5>
+<ul>
+<li>Go to 'Load data'.</li>
+<li>Select 'Private' or 'Business'.</li>
+<li>Browse to the data file.</li>
+<li>Click 'Load data'.</li>
+<li>An overview is displayed that lists the costs. For business costs, the matched costtypes are also displayed.</li>
+<li>If the business costs are matched fine, then click 'Load data into the system'. Otherwise go to
+subscenario 'Match cost types'.</li>
+</ul>
+<h5>Match cost types</h5>
+<ul>
+<li>Go to 'Cost types'.</li>
+<li>Select a cost type which has 'Current account' checked.</li>
+<li>Add a match string for this cost type.</li>
+<li>Go to 'Load data' again.</li>
+</ul>
 <h4>Use Case: Display fiscal overview</h4>
+<ul>
+<li>Go to 'Fiscal overview'.</li>
+<li>The fiscal overview of the previous year is displayed.</li>
+</ul>
+<h5>Fiscal overview of other years</h5>
+<ul>
+<li>Go to 'Cost overview'.</li>
+<li>Select a period.</li>
+<li>Click on 'Show overview'.</li>
+<li>Go to 'Fiscal overview'.</li>
+</ul>
 <h4>Use Case: Add account</h4> 
+<ul>
+<li>Go to 'Accounts'.</li>
+<li>Click on 'New account'.</li>
+<li>Enter the details.</li>
+<li>Click on 'Add'.</li>
+</ul>
+<h4>Use Case: Depreciate investments</h4>
+<ul>
+<li>Go to the 'Cost overview'.</li>
+<li>Select a period.</li>
+<li>Click the option 'investments'.</li>
+<li>Click on 'Show overview'.</li>
+<li>This will show all costs that are higher than the investment minimum.</li>
+<li>Click on one of the costs.</li>
+<li>If this cost is indeed an investment, change the costtype accordingly.</li>
+<li>A link will appear that enables you to depreciate the cost over a period of 5 years. VAT is excluded from this
+calculation. The remaining value is 10%.</li>
+</ul>
+</div>

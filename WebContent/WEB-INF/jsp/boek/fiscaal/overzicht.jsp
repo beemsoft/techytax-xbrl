@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
-<jsp:useBean id="overzicht" class="org.techytax.domain.FiscaalOverzicht"
+<jsp:useBean id="overzicht" class="org.techytax.domain.FiscalOverview"
 	scope="request" />
 	
 <%
@@ -34,34 +34,68 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.turnover.net"/>:</td>
+		<td></td>		
 		<td align="right"><%=overzicht.getNettoOmzet()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
-		<td align="right"><%=overzicht.getAfschrijvingAuto()%></td>
+		<td align="right">-<%=overzicht.getAfschrijvingAuto()%></td>
+		<td></td>		
 	</tr>
+<% if (overzicht.getAfschrijvingAutoCorrectie() > 0) {
+%>	
 	<tr>
-		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
-		<td align="right"><%=overzicht.getAfschrijvingOverig()%></td>
+		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
+		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
+		<td></td>		
+	</tr>
+<% } %>	
+	<tr>
+		<td><bean:message key="overview.fiscal.income.car"/>:</td>
+		<td align="right">+<%=overzicht.getBijtellingAuto()%></td>
+		<td></td>		
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car"/>:</td>
-		<td align="right"><%=overzicht.getKostenAuto()%> - <%=overzicht.getBijtellingAuto()%></td>
+		<td align="right">-<%=overzicht.getKostenAuto()%></td>
+		<td></td>		
 	</tr>
 	<tr>
+		<td><bean:message key="overview.fiscal.cost.car.deductable"/></td>
+		<td></td>		
+		<td align="right"><%=overzicht.getKostenAutoAftrekbaar()%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.fiscal.cost.transport"/>:</td>
+		<td></td>		
 		<td align="right"><%=overzicht.getKostenOverigTransport()%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
+		<td></td>		
+		<td align="right">-<%=overzicht.getAfschrijvingOverig()%></td>
+	</tr>
+<% if (overzicht.getAfschrijvingOverigCorrectie() > 0) {
+%>	
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.other.correction"/>:</td>
+		<td></td>		
+		<td align="right">+<%=overzicht.getAfschrijvingOverigCorrectie()%></td>
+	</tr>
+<% } %>			
+	<tr>
 		<td><bean:message key="overview.fiscal.cost.other"/>:</td>
-		<td align="right"><%=overzicht.getKostenOverig()%></td>
+		<td></td>		
+		<td align="right">-<%=overzicht.getKostenOverig()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.profit"/>:</td>
+		<td></td>		
 		<td align="right"><b><%=overzicht.getWinst()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.pension"/>:</td>
+		<td></td>		
 		<td align="right">(<%=overzicht.getOudedagsReserveMaximaal()%>)</td>
 	</tr>
 </table>
