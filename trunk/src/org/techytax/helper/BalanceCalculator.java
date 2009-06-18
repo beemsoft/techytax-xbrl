@@ -199,6 +199,7 @@ public class BalanceCalculator {
 		BigDecimal totalKostOV = new BigDecimal(0);
 		BigDecimal totalKostAuto = new BigDecimal(0);
 		BigDecimal totalKostAutoMetBtw = new BigDecimal(0);
+		BigDecimal totalVatCorrection = new BigDecimal(0);		
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 				Kost obj = null;
@@ -208,9 +209,7 @@ public class BalanceCalculator {
 					if (id == KostConstanten.REISKOST
 							|| id == KostConstanten.REISKOST_ANDERE_REKENING_FOUTIEF) {
 						totalKostOV = totalKostOV.add(obj.getBedrag());
-						// BTW niet meenemen
-					}
-					if (id == KostConstanten.AUTO_VAN_DE_ZAAK
+					} else if (id == KostConstanten.AUTO_VAN_DE_ZAAK
 							|| id == KostConstanten.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
 							|| id == KostConstanten.WEGEN_BELASTING) {
 						totalKostAuto = totalKostAuto.add(obj.getBedrag());
@@ -218,16 +217,16 @@ public class BalanceCalculator {
 								.getBedrag());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj
 								.getBtw());
-						// BTW niet meenemen
+					} else if (id == KostConstanten.VAT_CORRECTION_CAR_PRIVATE) {
+						totalVatCorrection = totalVatCorrection.add(obj.getBtw());
 					}
 				}
 			}
 		}
-		System.out.println("Totale kosten OV: " + totalKostOV);
-		System.out.println("Totale kosten auto: " + totalKostAuto);
 		reiskosten.setOvKosten(totalKostOV);
 		reiskosten.setAutoKostenZonderBtw(totalKostAuto);
 		reiskosten.setAutoKostenMetBtw(totalKostAutoMetBtw);
+		reiskosten.setVatCorrection(totalVatCorrection);
 		return reiskosten;
 	}
 

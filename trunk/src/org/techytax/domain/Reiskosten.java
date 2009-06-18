@@ -23,34 +23,44 @@ import java.math.BigDecimal;
 
 public class Reiskosten {
 	
-	private BigDecimal ovKosten;
+	private BigDecimal autoKostenMetBtw;
 	
 	private BigDecimal autoKostenZonderBtw;
 	
-	private BigDecimal autoKostenMetBtw;
+	private BigDecimal ovKosten;
+	
+	private BigDecimal vatCorrection;
 
 	public BigDecimal getAutoKostenMetBtw() {
 		return autoKostenMetBtw;
-	}
-
-	public void setAutoKostenMetBtw(BigDecimal autoKostenMetBtw) {
-		this.autoKostenMetBtw = autoKostenMetBtw;
 	}
 
 	public BigDecimal getAutoKostenZonderBtw() {
 		return autoKostenZonderBtw;
 	}
 
-	public void setAutoKostenZonderBtw(BigDecimal autoKostenZonderBtw) {
-		this.autoKostenZonderBtw = autoKostenZonderBtw;
-	}
-
 	public BigDecimal getOvKosten() {
 		return ovKosten;
 	}
 
+	public BigDecimal getVatCorrection() {
+		return vatCorrection;
+	}
+
+	public void setAutoKostenMetBtw(BigDecimal autoKostenMetBtw) {
+		this.autoKostenMetBtw = autoKostenMetBtw;
+	}
+
+	public void setAutoKostenZonderBtw(BigDecimal autoKostenZonderBtw) {
+		this.autoKostenZonderBtw = autoKostenZonderBtw;
+	}
+
 	public void setOvKosten(BigDecimal ovKosten) {
 		this.ovKosten = ovKosten;
+	}
+
+	public void setVatCorrection(BigDecimal vatCorrection) {
+		this.vatCorrection = vatCorrection;
 	}
 
 }
