@@ -24,13 +24,9 @@ import java.util.List;
 
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class AccountDao {
+public class AccountDao extends BaseDao {
 	public void insertAccount(Account account) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertAccount", account);
 		} catch (SQLException ex) {
@@ -40,7 +36,6 @@ public class AccountDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Account> getAccounts() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getAccounts", null);
 		} catch (SQLException ex) {
@@ -49,7 +44,6 @@ public class AccountDao {
 	}
 
 	public void updateAccount(Account Account) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("updateAccount", Account);
 		} catch (SQLException ex) {
@@ -58,31 +52,29 @@ public class AccountDao {
 	}
 
 	public Account getAccount(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Account) sqlMap.queryForObject("getAccount", id);
 		} catch (SQLException ex) {
 			throw ex;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<AccountBalance> getAccountBalance(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getAccountBalance", id);
 		} catch (SQLException ex) {
 			throw ex;
 		}
 	}
-	
-	public void insertAccountBalance(AccountBalance accountBalance) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+
+	public void insertAccountBalance(AccountBalance accountBalance)
+			throws Exception {
 		try {
 			sqlMap.insert("insertAccountBalance", accountBalance);
 		} catch (SQLException ex) {
 			throw ex;
 		}
-	}	
+	}
 
 }

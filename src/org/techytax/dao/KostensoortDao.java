@@ -23,13 +23,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.techytax.domain.Kostensoort;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class KostensoortDao {
+public class KostensoortDao extends BaseDao {
 	public void insertKostensoort(Kostensoort kost) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertKostensoort", kost);
 		} catch (SQLException ex) {
@@ -39,7 +35,6 @@ public class KostensoortDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Kostensoort> getKostensoortLijst() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getKostensoortLijst", null);
 		} catch (SQLException ex) {
@@ -48,7 +43,6 @@ public class KostensoortDao {
 	}
 
 	public void updateKostensoort(Kostensoort kostensoort) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("updateKostensoort", kostensoort);
 		} catch (SQLException ex) {
@@ -57,7 +51,6 @@ public class KostensoortDao {
 	}
 
 	public Kostensoort getKostensoort(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Kostensoort) sqlMap.queryForObject("getKostensoort", id);
 		} catch (SQLException ex) {

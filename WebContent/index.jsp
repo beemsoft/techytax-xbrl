@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
+<%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <%
 	if (request.getParameter("logoff") != null) {
@@ -31,10 +32,45 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td valign="top">
 		<p><bean:message key="welcome.intro" /></p>
-		<p><bean:message key="welcome.security"/></p>
-		<p><a href="help.html"/><bean:message key="welcome.install"/></a></p>
-		<p><a href="userguide.html"/><bean:message key="welcome.guide"/></a></p>		
-		<p><a href="releasenotes.html"/><bean:message key="welcome.release"/></a></p>		
+		<p><bean:message key="welcome.security" /></p>
+		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
+		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
+		<p><a href="releasenotes.html" /><bean:message
+			key="welcome.release" /></a></p>
 		</td>
 	</tr>
 </table>
+<%
+	if (request.isUserInRole("admin")) {
+%>
+<%@ page import="org.techytax.util.IbatisUtil"%>
+<%@ page import="org.techytax.util.ConnectionInfo"%>
+<%
+	ConnectionInfo connectionInfo = IbatisUtil.getInfo();
+%>
+<h5>Database information</h5>
+<html:form action="/changeDatabase.do">
+<table>
+	<tr>
+		<td>Database user</td>
+		<td><html:text property="username" value="<%=connectionInfo.getUser()%>"/></td>
+	</tr>
+	<tr>
+		<td>Password</td>
+		<td><html:password property="password"/></td>
+	</tr>	
+	<tr>
+		<td>Connection URL</td>
+		<td><html:text property="host" value="<%=connectionInfo.getUrl()%>" size="100"/></td>
+	</tr>
+	<tr>
+		<td>Catalog</td>
+		<td><html:text property="catalog"></html:text></td>
+	</tr>	
+</table>
+<html:submit/>
+</html:form>
+<html:errors/>
+<%
+	}
+%>

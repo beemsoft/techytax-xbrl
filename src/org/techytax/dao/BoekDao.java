@@ -27,13 +27,9 @@ import java.util.Map;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class BoekDao {
+public class BoekDao extends BaseDao {
 	public void insertKost(Kost kost) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertKost", kost);
 		} catch (SQLException ex) {
@@ -42,7 +38,6 @@ public class BoekDao {
 	}
 
 	public void insertPrivateExpense(Kost kost) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertPrivateExpense", kost);
 		} catch (SQLException ex) {
@@ -52,7 +47,6 @@ public class BoekDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Kost> getKostLijst() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getKostLijst", null);
 		} catch (SQLException ex) {
@@ -62,7 +56,6 @@ public class BoekDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Kost> getPrivateExpenses() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getPrivateExpenses", null);
 		} catch (SQLException ex) {
@@ -72,7 +65,6 @@ public class BoekDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Kost> getAlleKosten() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getAlleKosten", null);
 		} catch (SQLException ex) {
@@ -83,10 +75,7 @@ public class BoekDao {
 	@SuppressWarnings("unchecked")
 	public List<Kost> getKostLijst(String beginDatum, String eindDatum,
 			String balansSoort) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			if (balansSoort.equals("alles")) {
 				return sqlMap.queryForList("getCompleteKostLijst", map);
@@ -118,10 +107,7 @@ public class BoekDao {
 	@SuppressWarnings("unchecked")
 	public List<Aftrekpost> getDeductableCosts(String beginDatum,
 			String eindDatum) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return sqlMap.queryForList("getAftrekpostenLijst", map);
 		} catch (SQLException ex) {
@@ -131,10 +117,7 @@ public class BoekDao {
 
 	public Integer getBelastingKosten(String beginDatum, String eindDatum)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return (Integer) sqlMap.queryForObject("getBelastingKosten", map);
 		} catch (SQLException ex) {
@@ -144,10 +127,7 @@ public class BoekDao {
 
 	public Integer getBelastingTeruggave(String beginDatum, String eindDatum)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return (Integer) sqlMap
 					.queryForObject("getBelastingTeruggave", map);
@@ -157,7 +137,6 @@ public class BoekDao {
 	}
 
 	public void updateKost(Kost kost) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("updateKost", kost);
 		} catch (SQLException ex) {
@@ -166,7 +145,6 @@ public class BoekDao {
 	}
 
 	public Kost getKost(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Kost) sqlMap.queryForObject("getKost", id);
 		} catch (SQLException ex) {
@@ -176,7 +154,6 @@ public class BoekDao {
 
 	public Kost getKostMetDatumEnBedrag(String datum, String bedrag)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("datum", datum);
 		map.put("bedrag", bedrag);
@@ -190,10 +167,7 @@ public class BoekDao {
 	@SuppressWarnings("unchecked")
 	public List<Kost> getVatCorrectionDepreciation(String beginDatum,
 			String eindDatum) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return sqlMap.queryForList("getVatCorrectionDepreciation", map);
 		} catch (SQLException ex) {
@@ -203,10 +177,7 @@ public class BoekDao {
 
 	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
+		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return (Integer) sqlMap.queryForObject("getVatCorrectionPrivate",
 					map);
