@@ -87,15 +87,17 @@ public class GetKostLijstWithFormAction extends Action {
 				request.setAttribute("kosten", balans.getTotaleKosten());
 				request.setAttribute("baten", balans.getTotaleBaten());
 			} else if (balansForm.getBalansSoort().equals("reiskostenBalans")) {
-				Reiskosten balans = BalanceCalculator
+				Reiskosten travelCostBalance = BalanceCalculator
 						.calculatTravelCostBalance(result);
-				request.setAttribute("kostenOv", balans.getOvKosten());
-				request.setAttribute("kostenAutoMetBtw", balans
+				request.setAttribute("kostenOv", travelCostBalance.getOvKosten());
+				request.setAttribute("kostenAutoMetBtw", travelCostBalance
 						.getAutoKostenMetBtw());
-				request.setAttribute("kostenAutoZonderBtw", balans
+				request.setAttribute("kostenAutoZonderBtw", travelCostBalance
 						.getAutoKostenZonderBtw());
-				BigDecimal verschil = balans.getAutoKostenMetBtw().subtract(
-						balans.getAutoKostenZonderBtw());
+				request.setAttribute("vatCorrection", travelCostBalance
+						.getVatCorrection());				
+				BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(
+						travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
 				request.setAttribute("verschil", verschil);
 			}
 			String action = (String) request.getParameter("action");

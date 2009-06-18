@@ -88,7 +88,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
 		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
 		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (8,9,14,19,31) ORDER BY
+		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (8,9,14,19,31,36) ORDER BY
 		datum asc
 	</select>
 	<select id="getInvesteringenLijst" parameterMap="periodeMapWithInvestment"
