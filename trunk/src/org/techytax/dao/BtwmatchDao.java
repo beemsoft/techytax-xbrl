@@ -23,13 +23,9 @@ import java.sql.SQLException;
 
 import org.techytax.domain.Btwmatch;
 import org.techytax.domain.Kostmatch;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class BtwmatchDao {
+public class BtwmatchDao extends BaseDao {
 	public void insertBtwmatch(Kostmatch kostmatch) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		Btwmatch btwmatch = new Btwmatch();
 		btwmatch.setKostmatchId(kostmatch.getId());
 		try {
@@ -40,21 +36,19 @@ public class BtwmatchDao {
 	}
 
 	public void updateBtwmatch(Kostmatch kostmatch) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("updateBtwmatch", kostmatch);
 		} catch (SQLException ex) {
 			throw ex;
 		}
 	}
-	
+
 	public Btwmatch getBtwmatch(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Btwmatch) sqlMap.queryForObject("getBtwmatch", id);
 		} catch (SQLException ex) {
 			throw ex;
 		}
-	}	
+	}
 
 }

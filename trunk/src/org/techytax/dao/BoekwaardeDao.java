@@ -22,13 +22,9 @@ package org.techytax.dao;
 import java.sql.SQLException;
 
 import org.techytax.domain.Boekwaarde;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class BoekwaardeDao {
+public class BoekwaardeDao extends BaseDao {
 	public void insertBoekwaarde(Boekwaarde boekwaarde) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertBoekwaarde", boekwaarde);
 		} catch (SQLException ex) {
@@ -38,7 +34,6 @@ public class BoekwaardeDao {
 
 	public Boekwaarde getVorigeBoekwaarde(Boekwaarde boekwaarde)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Boekwaarde) sqlMap.queryForObject("getVorigeBoekwaarde",
 					boekwaarde);
@@ -49,7 +44,6 @@ public class BoekwaardeDao {
 
 	public Boekwaarde getBoekwaardeDitJaar(Boekwaarde boekwaarde)
 			throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Boekwaarde) sqlMap.queryForObject("getBoekwaardeDitJaar",
 					boekwaarde);

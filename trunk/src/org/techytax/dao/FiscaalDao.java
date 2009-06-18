@@ -24,15 +24,11 @@ import java.util.List;
 
 import org.techytax.domain.Activa;
 import org.techytax.domain.Passiva;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class FiscaalDao {
+public class FiscaalDao extends BaseDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Activa> getActivaLijst(String boekjaar) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getActivaLijst", boekjaar);
 		} catch (SQLException ex) {
@@ -42,7 +38,6 @@ public class FiscaalDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Passiva> getPassivaLijst(String boekjaar) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getPassivaLijst", boekjaar);
 		} catch (SQLException ex) {

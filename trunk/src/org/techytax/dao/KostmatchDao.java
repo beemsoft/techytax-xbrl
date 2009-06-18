@@ -23,13 +23,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.techytax.domain.Kostmatch;
-import org.techytax.util.IbatisUtil;
 
-import com.ibatis.sqlmap.client.SqlMapClient;
-
-public class KostmatchDao {
+public class KostmatchDao extends BaseDao {
 	public void insertKostmatch(Kostmatch kostmatch) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("insertKostmatch", kostmatch);
 		} catch (SQLException ex) {
@@ -38,8 +34,8 @@ public class KostmatchDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
+	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId)
+			throws Exception {
 		try {
 			return sqlMap.queryForList("getKostmatchLijstForId", kostenSoortId);
 		} catch (SQLException ex) {
@@ -49,7 +45,6 @@ public class KostmatchDao {
 
 	@SuppressWarnings("unchecked")
 	public List<Kostmatch> getKostmatchLijst() throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return sqlMap.queryForList("getKostmatchLijst", null);
 		} catch (SQLException ex) {
@@ -58,7 +53,6 @@ public class KostmatchDao {
 	}
 
 	public void updateKostmatch(Kostmatch kostmatch) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			sqlMap.insert("updateKostmatch", kostmatch);
 		} catch (SQLException ex) {
@@ -67,7 +61,6 @@ public class KostmatchDao {
 	}
 
 	public Kostmatch getKostmatch(String id) throws Exception {
-		SqlMapClient sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
 			return (Kostmatch) sqlMap.queryForObject("getKostmatch", id);
 		} catch (SQLException ex) {

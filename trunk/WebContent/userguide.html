@@ -3,7 +3,32 @@
 <p>
 TechyTax has the following Use Case scenario's.
 </p>
-<h4>Use Case: Add cost</h4>
+<ul>
+<li><a href="#add.cost">Add cost</a></li>
+<li><a href="#display.cost.overview"">Display cost overview</a>
+	<ul>
+	<li><a href="#vat.return">VAT return</a></li>
+	</ul>
+</li>
+<li><a href="#load.data">Load data</a>
+	<ul>
+	<li><a href="#match.cost.types">Match cost types</a></li>
+	</ul>
+</li>
+<li><a href="#fiscal.overview">Fiscal overview</a>
+	<ul>
+	<li><a href="#fiscal.overview.other">Fiscal overview for other years</a></li>
+	</ul>
+</li>
+<li><a href="#add.account">Add account</a></li>
+<li><a href="#depreciate.investments">Depreciate investments</a>
+	<ul>
+	<li><a href="#depreciation.correction">Depreciation correction</a></li>
+	</ul>
+</li>
+<li><a href="#change.database">Change database</a></li>
+</ul>
+<h4 id="add.cost">Use Case: Add cost</h4>
 <p>
 The bulk of your costs will be loaded by the 'Load Data' Use Case. In order to add a cost manually:
 </p>
@@ -12,20 +37,20 @@ The bulk of your costs will be loaded by the 'Load Data' Use Case. In order to a
 <li>Enter the details and select a cost type.</li>
 <li>Click on 'Add'.</li>
 </ul>
-<h4>Use Case: Display cost overview</h4>
+<h4 id="display.cost.overview">Use Case: Display cost overview</h4>
 <ul>
 <li>Go to 'Cost overview'.</li>
 <li>The latest 10 costs are displayed.</li>
 <li>Click on 'Show overview'.</li>
 <li>All costs from the previous year are displayed.</li>
 </ul>
-<h5>VAT return</h5>
+<h5 id="vat.return">VAT return</h5>
 <ul>
 <li>Select the period for which you want to calculate the VAT return.</li>
 <li>Select the option 'VAT'.</li>
 <li>Click on 'Show overview'.</li>
 </ul>
-<h4>Use Case: Load data</h4>
+<h4 id="load.data">Use Case: Load data</h4>
 <p>
 <b>NB:</b>Online bank systems keep data available only for the past 16 months. Be sure
 to load your data in time. For example: at the beginning of a new year, load data, both private and business,
@@ -37,38 +62,39 @@ to load your data in time. For example: at the beginning of a new year, load dat
 <li>Browse to the data file.</li>
 <li>Click 'Load data'.</li>
 <li>An overview is displayed that lists the costs. For business costs, the matched costtypes are also displayed.</li>
-<li>If the business costs are matched fine, then click 'Load data into the system'. Otherwise go to
+<li>If the business costs are matched fine, then click 'Load data into the system'. Otherwise, go to
 subscenario 'Match cost types'.</li>
 </ul>
-<h5>Match cost types</h5>
+<h5 id="match.cost.types">Match cost types</h5>
 <ul>
 <li>Go to 'Cost types'.</li>
 <li>Select a cost type which has 'Current account' checked.</li>
 <li>Add a match string for this cost type.</li>
 <li>Go to 'Load data' again.</li>
 </ul>
-<h4>Use Case: Display fiscal overview</h4>
+<h4 id="fiscal.overview">Use Case: Fiscal overview</h4>
 <ul>
 <li>Go to 'Fiscal overview'.</li>
 <li>The fiscal overview of the previous year is displayed.</li>
 </ul>
-<h5>Fiscal overview of other years</h5>
+<h5 id="fiscal.overview.other">Fiscal overview for other years</h5>
 <ul>
 <li>Go to 'Cost overview'.</li>
 <li>Select a period.</li>
+<li>Select 'All costs'.</li>
 <li>Click on 'Show overview'.</li>
 <li>Go to 'Fiscal overview'.</li>
 </ul>
-<h4>Use Case: Add account</h4> 
+<h4 id="add.account">Use Case: Add account</h4> 
 <ul>
 <li>Go to 'Accounts'.</li>
 <li>Click on 'New account'.</li>
 <li>Enter the details.</li>
 <li>Click on 'Add'.</li>
 </ul>
-<h4>Use Case: Depreciate investments</h4>
+<h4 id="depreciate.investments">Use Case: Depreciate investments</h4>
 <ul>
-<li>Go to the 'Cost overview'.</li>
+<li>Go to 'Cost overview'.</li>
 <li>Select a period.</li>
 <li>Click the option 'investments'.</li>
 <li>Click on 'Show overview'.</li>
@@ -77,5 +103,17 @@ subscenario 'Match cost types'.</li>
 <li>If this cost is indeed an investment, change the costtype accordingly.</li>
 <li>A link will appear that enables you to depreciate the cost over a period of 5 years. VAT is excluded from this
 calculation. The remaining value is 10%.</li>
+</ul>
+<h5 id="depreciation.correction">Depreciation correction</h5>
+<ul>
+	<li>Go to 'Add cost'.</li>
+	<li>Add a cost with cost type 'VAT correction of depreciation' and dated at the 31st of December.</li> 
+</ul>
+<h4 id="change.database">Use Case: Change database connection</h4>
+<ul>
+<li>Log on as an admin user.</li>
+<li>Go to the 'Welcome' page.</li>
+<li>Change the database properties.</li>
+<li>Click on 'Submit'.</li>
 </ul>
 </div>

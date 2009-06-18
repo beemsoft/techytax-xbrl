@@ -20,13 +20,19 @@
 package org.techytax.util;
 
 import java.io.Reader;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.sql.DataSource;
+
+import com.ibatis.common.jdbc.SimpleDataSource;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
 public class IbatisUtil {
-	private static final SqlMapClient sqlMap;
+	private static SqlMapClient sqlMap;
 	static {
 		try {
 			String resource = "sql-map-config.xml";
@@ -46,11 +52,62 @@ public class IbatisUtil {
 		}
 	}
 
-	public static SqlMapClient getSqlMapInstance() {
+	public SqlMapClient getSqlMapInstance() {
 		return sqlMap;
 	}
 
-	public static SqlMapClient getSqlMapForClearQuestInstance() {
+	public static void changeUserConnection(String username, String password,
+			String host, String catalog) throws Exception {
+		sqlMap.setUserConnection(null);
+		Map<String, String> props = new HashMap<String, String>();
+		props.put("JDBC.Driver", "com.mysql.jdbc.Driver");
+		props
+				.put(
+						"JDBC.ConnectionURL",
+						"jdbc:mysql://"
+								+ host
+								+ "/"
+								+ catalog
+								+ "?enableDeprecatedAutoreconnect=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull");
+		props.put("JDBC.Username", username);
+		props.put("JDBC.Password", password);
+		props.put("JDBC.DefaultAutoCommit", "true");
+		props.put("Pool.MaximumActiveConnections", "10");
+		props.put("Pool.MaximumIdleConnections", "5");
+		props.put("Pool.MaximumCheckoutTime", "600000");
+		props.put("Pool.TimeToWait", "500");
+		props.put("Pool.PingQuery", "select 1 from " + catalog + ".boekwaarde");
+		props.put("Pool.PingConnectionsOlderThan", "600000");
+		props.put("Pool.PingEnabled", "true");
+		props.put("Pool.PingConnectionsNotUsedFor", "600000");
+
+		DataSource dataSource = new SimpleDataSource(props);
+		Connection userConnection = dataSource.getConnection();
+		sqlMap.setUserConnection(userConnection);
+	}
+
+	public void setUserConnection(Connection userConnection) {
+		try {
+			sqlMap.setUserConnection(userConnection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static ConnectionInfo getInfo() {
+		try {
+			if (sqlMap.getDataSource() != null) {
+				ConnectionInfo connectionInfo = new ConnectionInfo();
+				Connection connection = sqlMap.getDataSource().getConnection();
+				connectionInfo.setUrl(connection.getMetaData().getURL());
+				connectionInfo.setUser(connection.getMetaData().getUserName());
+				connection.close();
+				return connectionInfo;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
+
 }
