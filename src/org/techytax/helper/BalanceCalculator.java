@@ -20,6 +20,8 @@
 package org.techytax.helper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Reiskosten;
+import org.techytax.util.DateHelper;
 
 public class BalanceCalculator {
 
@@ -320,5 +323,37 @@ public class BalanceCalculator {
 		return kosten.multiply(new BigDecimal(
 				KostConstanten.FOOD_TAXFREE_PERCENTAGE));
 	}
+	
+	public static BigDecimal calculatMonthlyPrivateExpenses(List<Kost> res) throws Exception {
+		BigDecimal monthlyExpenses = new BigDecimal(0);
+		int nofMonths = 0;
+		int lastMonth = -1;
+		if (res != null) {
+			for (int i = 0; i < res.size(); i++) {
+				Kost obj = null;
+				obj = res.get(i);
+				if (obj != null) {
+					if (!obj.isIncoming()) {
+						if (!obj.getOmschrijving().contains("spaarrekening") && !obj.getOmschrijving().contains("inleg")) {
+							Date datum = DateHelper.stringToDate(obj.getDatum());
+							int month = DateHelper.getMonth(datum);
+							if (month != lastMonth) {
+								lastMonth = month;
+								nofMonths++;
+							}
+							monthlyExpenses = monthlyExpenses.add(obj.getBedrag());
+						}
+					}
+				}
+			}
+		}
+		System.out.println("Expenses: "+monthlyExpenses);
+		System.out.println("nofmonths: "+nofMonths);
+		if (nofMonths == 0) {
+			return monthlyExpenses;
+		} else {
+			return monthlyExpenses.divide(new BigDecimal(nofMonths), RoundingMode.HALF_UP);
+		}
+	}	
 
 }

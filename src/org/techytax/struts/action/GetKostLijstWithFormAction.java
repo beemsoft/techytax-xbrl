@@ -99,7 +99,11 @@ public class GetKostLijstWithFormAction extends Action {
 				BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(
 						travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
 				request.setAttribute("verschil", verschil);
+			} else if (balansForm.getBalansSoort().equals("private")) {
+				BigDecimal monthlyExpenses = BalanceCalculator.calculatMonthlyPrivateExpenses(result);
+				request.setAttribute("monthlyExpenses", monthlyExpenses);
 			}
+			
 			String action = (String) request.getParameter("action");
 			if (action == null) {
 				forward = "success";

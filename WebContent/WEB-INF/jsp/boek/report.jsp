@@ -58,33 +58,59 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%
 	} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
-<p><b><bean:message key="overview.balance.account" />: <%=request.getAttribute("balans")%>
-</b></p>
-<p><b><bean:message key="overview.balance.savings" />: <%=request.getAttribute("sparen")%>
-</b></p>
-<p><b><bean:message key="overview.balance.private" />: <%=request.getAttribute("private")%>
-</b></p>
+<table>
+	<tr>
+		<td><bean:message key="overview.balance.account" /></td>
+		<td align="right"><%=request.getAttribute("balans")%></td>
+	<tr>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.balance.savings" /></td>
+		<td align="right"><%=request.getAttribute("sparen")%>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.balance.private" /></td>
+		<td align="right"><%=request.getAttribute("private")%></td>
+	</tr>
+</table>
 <%
 	} else if (balansForm.getBalansSoort().equals("kostenBalans")) {
 %>
-<p><b><bean:message key="overview.cost.total.out" />: <%=request.getAttribute("kosten")%>
-</b> <b><bean:message key="overview.cost.total.in" />: <%=request.getAttribute("baten")%>
-</b></p>
+<table>
+	<tr>
+		<td><bean:message key="overview.cost.total.out" /></td>
+		<td align="right"><%=request.getAttribute("kosten")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.cost.total.in" /></td>
+		<td align="right"><%=request.getAttribute("baten")%></td>
+	</tr>
+</table>
 <%
 	} else if (balansForm.getBalansSoort().equals(
 				"reiskostenBalans")) {
 %>
 <table>
-<tr><td><bean:message key="overview.travel.public" /></td><td align="right"><%=request.getAttribute("kostenOv")%></td>
-</tr><tr>
-<td><bean:message key="overview.travel.car.net" /></td><td align="right"><%=request.getAttribute("kostenAutoZonderBtw")%></td>
-</tr><tr>
-<td><bean:message key="overview.travel.car.gross" /></td><td align="right"><%=request.getAttribute("kostenAutoMetBtw")%></td>
-</tr><tr>
-<td><bean:message key="overview.vat.correction" /></td><td align="right"><%=request.getAttribute("vatCorrection")%></td>
-</tr><tr>
-<td><bean:message key="overview.travel.car.vat" /></td><td align="right"><%=request.getAttribute("verschil")%></td>
-</tr>
+	<tr>
+		<td><bean:message key="overview.travel.public" /></td>
+		<td align="right"><%=request.getAttribute("kostenOv")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.travel.car.net" /></td>
+		<td align="right"><%=request.getAttribute("kostenAutoZonderBtw")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.travel.car.gross" /></td>
+		<td align="right"><%=request.getAttribute("kostenAutoMetBtw")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.vat.correction" /></td>
+		<td align="right"><%=request.getAttribute("vatCorrection")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.travel.car.vat" /></td>
+		<td align="right"><%=request.getAttribute("verschil")%></td>
+	</tr>
 </table>
 
 <%
@@ -93,6 +119,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 %>
 <a href="<%=request.getContextPath()%>/insertActiva.do"><bean:message
 	key="cost.depreciate.process" /></a>
+<%
+	} else if (balansForm.getBalansSoort().equals("private")) {
+		%>
+		<table>
+			<tr>
+				<td><bean:message key="overview.private.monthly" /></td>
+				<td align="right"><%=request.getAttribute("monthlyExpenses")%></td>
+			</tr>
+		</table>
 <%
 	}
 	}

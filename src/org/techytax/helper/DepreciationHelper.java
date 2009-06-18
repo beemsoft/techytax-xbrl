@@ -32,7 +32,6 @@ import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Periode;
-import org.techytax.util.DateConverter;
 import org.techytax.util.DateHelper;
 
 public class DepreciationHelper {
@@ -55,7 +54,7 @@ public class DepreciationHelper {
 				BigDecimal.ROUND_UP);
 		List<Kost> kostLijst = new ArrayList<Kost>();
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(DateConverter.stringToDate(kost.getDatum()));
+		cal.setTime(DateHelper.stringToDate(kost.getDatum()));
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		BigDecimal boekwaardeBegin = aanschafKost;
@@ -69,8 +68,8 @@ public class DepreciationHelper {
 			afschrijving
 					.setKostenSoortOmschrijving("Aan te geven als afschrijving");
 			System.out.println("Afschrijving datum: "
-					+ DateConverter.getDate(cal.getTime()));
-			afschrijving.setDatum(DateConverter.getDate(cal.getTime()));
+					+ DateHelper.getDate(cal.getTime()));
+			afschrijving.setDatum(DateHelper.getDate(cal.getTime()));
 			afschrijving.setBedrag(jaarlijkseAfschrijving);
 			afschrijving.setOmschrijving("Afschrijving: " + (i + 1) + ", item "
 					+ kost.getId() + ", boekwaarde begin: " + boekwaardeBegin
@@ -103,7 +102,7 @@ public class DepreciationHelper {
 		totaalAfschrijvingenOverig = BalanceCalculator
 				.getOverigeAfschrijvingen(aftrekpostenLijst);
 		Boekwaarde boekwaarde = new Boekwaarde();
-		int ditJaar = DateConverter.getJaar(periode.getBeginDatum());
+		int ditJaar = DateHelper.getJaar(periode.getBeginDatum());
 		boekwaarde.setJaar(ditJaar);
 		boekwaarde.setBalansId(Activa.CAR);
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
