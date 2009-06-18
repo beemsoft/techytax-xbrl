@@ -37,27 +37,43 @@ var cal13 = new CalendarPopup();
 <html:form action="/getKostLijstWithForm">
 	<table>
 		<tr>
-			<td><bean:message key="select.from"/>:</td>
-			<td><html:text property="beginDatum" /><a href="#"
-				onclick="cal13.select(document.forms[0].beginDatum,'beginDatum','yyyy-MM-dd'); return false;"
-				title="Kies begindatum" name="beginDatum" id="beginDatum">select</a></td>
-		</tr>
-		<tr>
-			<td><bean:message key="select.to"/>:</td>
-			<td><html:text property="eindDatum" /><a href="#"
+			<td>
+				<table>
+					<tr>
+						<td><bean:message key="select.from"/>:</td>
+						<td><html:text property="beginDatum" /><a href="#"
+						onclick="cal13.select(document.forms[0].beginDatum,'beginDatum','yyyy-MM-dd'); return false;"
+						title="Kies begindatum" name="beginDatum" id="beginDatum">select</a></td>
+					</tr>
+					<tr>
+						<td><bean:message key="select.to"/>:</td>
+				<td><html:text property="eindDatum" /><a href="#"
 				onclick="cal13.select(document.forms[0].eindDatum,'eindDatum','yyyy-MM-dd',(document.forms[0].eindDatum.value=='')?document.forms[0].beginDatum.value:null); return false;"
 				title="Kies einddatum" name="eindDatum" id="eindDatum">select</a></td>
-		</tr>
-		<tr>
+					</tr>
+				</table>
+			</td>
 			<td><bean:message key="select.type"/>:</td>
-			<td><html:radio property="balansSoort" value="alles"><bean:message key="overview.all"/></html:radio><html:radio
-				property="balansSoort" value="rekeningBalans"><bean:message key="overview.account"/></html:radio>
-			<html:radio property="balansSoort" value="btwBalans"><bean:message key="overview.vat"/></html:radio>
-			<html:radio property="balansSoort" value="kostenBalans"><bean:message key="overview.cost"/></html:radio>
-			<html:radio property="balansSoort" value="reiskostenBalans"><bean:message key="overview.travel"/></html:radio>
-			<html:radio property="balansSoort" value="investeringen"><bean:message key="overview.invest"/></html:radio>
-			<html:radio property="balansSoort" value="afschrijvingen"><bean:message key="overview.depreciation"/></html:radio>			
-			<html:radio property="balansSoort" value="private"><bean:message key="overview.private"/></html:radio>			
+			<td>
+				<table>
+					<tr>
+						<td><html:radio property="balansSoort" value="alles"><bean:message key="overview.all"/></html:radio></td>
+						<td><html:radio
+				property="balansSoort" value="rekeningBalans"><bean:message key="overview.account"/></html:radio></td>
+			<td><html:radio property="balansSoort" value="btwBalans"><bean:message key="overview.vat"/></html:radio></td>
+			<td><html:radio property="balansSoort" value="kostenBalans"><bean:message key="overview.cost"/></html:radio>			
+			</td>
+				</tr>
+				<tr>
+				<td>
+			<html:radio property="balansSoort" value="reiskostenBalans"><bean:message key="overview.travel"/></html:radio></td>
+			<td><html:radio property="balansSoort" value="investeringen"><bean:message key="overview.invest"/></html:radio></td>
+			<td><html:radio property="balansSoort" value="afschrijvingen"><bean:message key="overview.depreciation"/></html:radio></td>			
+			<td><html:radio property="balansSoort" value="private"><bean:message key="overview.private"/></html:radio>
+				</td>
+				</tr>
+				</table>
+					
 			</td>
 		</tr>
 		<tr>

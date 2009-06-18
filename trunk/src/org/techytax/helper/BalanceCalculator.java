@@ -20,29 +20,17 @@
 package org.techytax.helper;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 
-import org.techytax.dao.BoekDao;
-import org.techytax.dao.BoekwaardeDao;
-import org.techytax.dao.FiscaalDao;
 import org.techytax.dao.KostensoortDao;
-import org.techytax.domain.Activa;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Balans;
-import org.techytax.domain.Boekwaarde;
-import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Liquiditeit;
-import org.techytax.domain.Passiva;
-import org.techytax.domain.PriveOnttrekking;
 import org.techytax.domain.Reiskosten;
-import org.techytax.props.PropsFactory;
-import org.techytax.util.DateConverter;
 
 public class BalanceCalculator {
 
@@ -52,6 +40,7 @@ public class BalanceCalculator {
 
 		BigDecimal totalBtwOut = new BigDecimal(0);
 		BigDecimal totalBtwIn = new BigDecimal(0);
+		BigDecimal totalBtwCorrection = new BigDecimal(0);		
 		BigDecimal brutoOmzet = new BigDecimal(0);
 		BigDecimal nettoOmzet = new BigDecimal(0);
 		if (res != null) {
@@ -70,7 +59,11 @@ public class BalanceCalculator {
 							nettoOmzet = nettoOmzet.add(obj.getBedrag());
 							brutoOmzet = brutoOmzet.add(obj.getBtw());
 						} else {
-							totalBtwOut = totalBtwOut.add(obj.getBtw());
+							if (kostensoort.getKostenSoortId() == KostConstanten.VAT_CORRECTION_CAR_PRIVATE) {
+								totalBtwCorrection = totalBtwCorrection.add(obj.getBtw());
+							} else {
+								totalBtwOut = totalBtwOut.add(obj.getBtw());
+							}
 						}
 					}
 				}
@@ -81,6 +74,7 @@ public class BalanceCalculator {
 		balans.setTotaleKosten(totalBtwOut);
 		balans.setBrutoOmzet(brutoOmzet);
 		balans.setNettoOmzet(nettoOmzet);
+		balans.setCorrection(totalBtwCorrection);
 		return balans;
 	}
 

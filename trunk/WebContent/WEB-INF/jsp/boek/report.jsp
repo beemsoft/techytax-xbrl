@@ -28,20 +28,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		if (balansForm != null && balansForm.getBalansSoort() != null) {
 		if (balansForm.getBalansSoort().equals("btwBalans")) {
 %>
-
-<b><bean:message key="overview.vat.return"/>: <%=request.getAttribute("balans")%> </b>
-<br>
-<bean:message key="overview.vat.in"/>:
+<table>
+<tr>
+<td>
+<b><bean:message key="overview.vat.return"/></b></td><td align="right"><%=request.getAttribute("balans")%></td>
+</tr>
+<tr>
+<td>
+<bean:message key="overview.vat.in"/></td><td align="right">
 <%=request.getAttribute("btwIn")%>
-<br>
-<bean:message key="overview.vat.out"/>:
+</td>
+</tr>
+<tr>
+<td>
+<bean:message key="overview.vat.out"/></td><td align="right">
 <%=request.getAttribute("btwOut")%>
-<br>
-<bean:message key="overview.turnover.gross"/>:
+</td>
+</tr>
+<tr>
+<td>
+<bean:message key="overview.vat.correction"/></td><td align="right">
+<%=request.getAttribute("btwCorrection")%>
+</td>
+</tr>
+<tr>
+<td>
+<bean:message key="overview.turnover.gross"/></td><td align="right">
 <%=request.getAttribute("brutoOmzet")%>
-<br>
-<bean:message key="overview.turnover.net"/>:
+</td>
+</tr>
+<tr>
+<td>
+<b><bean:message key="overview.turnover.net"/></b></td><td align="right">
 <%=request.getAttribute("nettoOmzet")%>
+</td>
+</tr>
+</table>
 <%
 } else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
