@@ -39,7 +39,7 @@ import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passiva;
 import org.techytax.domain.PriveOnttrekking;
 import org.techytax.props.PropsFactory;
-import org.techytax.util.DateConverter;
+import org.techytax.util.DateHelper;
 
 public class FiscalOverviewHelper {
 
@@ -54,8 +54,8 @@ public class FiscalOverviewHelper {
 		Liquiditeit liquiditeit = null;
 
 		int forLimiet = KostConstanten.MAXIMALE_FOR;
-		Date datum = DateConverter.stringToDate(beginDatum);
-		int jaar = DateConverter.getJaar(datum);
+		Date datum = DateHelper.stringToDate(beginDatum);
+		int jaar = DateHelper.getJaar(datum);
 
 		// Maak winst-en-verlies rekening op
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen);

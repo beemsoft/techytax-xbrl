@@ -19,6 +19,7 @@
  */
 package org.techytax.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,10 +29,27 @@ import org.techytax.domain.Periode;
 
 public class DateHelper {
 
+	private static String datePattern = "yyyy-MM-dd";
+
+	public static Date stringToDate(String date_str) throws Exception {
+		SimpleDateFormat df_zos = new SimpleDateFormat(datePattern);
+		try {
+			return df_zos.parse(date_str);
+		} catch (ParseException e) {
+			throw new Exception("errors.date.invalid");
+		}
+	}
+
 	public static String getDate(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat(datePattern);
 		String dateString = format.format(date);
 		return dateString;
+	}
+
+	public static int getMonth(Date date) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		return cal.get(Calendar.MONTH);
 	}
 
 	public static Periode getPeriodeVorigJaar() {
@@ -48,6 +66,13 @@ public class DateHelper {
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
 		return periode;
+	}
+
+	public static int getJaar(Date date) {
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(date);
+		int jaar = cal.get(Calendar.YEAR);
+		return jaar;
 	}
 
 }
