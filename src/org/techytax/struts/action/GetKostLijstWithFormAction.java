@@ -71,10 +71,11 @@ public class GetKostLijstWithFormAction extends Action {
 				Balans balans = BalanceCalculator.calculateBtwBalance(result);
 				request.setAttribute("btwOut", balans.getTotaleKosten());
 				request.setAttribute("btwIn", balans.getTotaleBaten());
-				request.setAttribute("balans", balans.getTotaleBaten()
-						.subtract(balans.getTotaleKosten()));
+				request.setAttribute("balans", (balans.getTotaleBaten()
+						.subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
 				request.setAttribute("brutoOmzet", balans.getBrutoOmzet());
 				request.setAttribute("nettoOmzet", balans.getNettoOmzet());
+				request.setAttribute("btwCorrection", balans.getCorrection());				
 			} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 				Liquiditeit liquiditeit = BalanceCalculator
 						.calculatAccountBalance(result);

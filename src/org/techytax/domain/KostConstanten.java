@@ -45,6 +45,7 @@ public interface KostConstanten {
 	public static final int INKOMSTEN_BELASTING = 29;
 	public static final int WEGEN_BELASTING = 31;
 	public static final int UITGAVE_CREDIT_CARD = 32;
+	public static final int VAT_CORRECTION_CAR_PRIVATE = 36;
 
 	public static final int MAXIMALE_FOR = 11227;
 	public static final float FOR_PERCENTAGE = 0.12f;
