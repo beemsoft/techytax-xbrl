@@ -211,8 +211,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			name="accountBalanceForm" scope="request">
 			<forward name="success" path="/getAccounts.do"></forward>
 		</action>
+		<action path="/getDatabaseInfo" type="org.techytax.struts.action.GetDatabaseInfoAction" name="databaseForm" scope="session">
+			<forward name="success" path="/WEB-INF/jsp/database.jsp"></forward>
+		</action>			
 		<action path="/changeDatabase" type="org.techytax.struts.action.ChangeDatabaseAction"
-			name="databaseForm" scope="request">
+			name="databaseForm" scope="session">
 			<forward name="success" path="/index.jsp"></forward>
 			<forward name="error"
 				path="/index.jsp">

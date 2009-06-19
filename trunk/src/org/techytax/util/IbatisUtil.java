@@ -99,8 +99,17 @@ public class IbatisUtil {
 			if (sqlMap.getDataSource() != null) {
 				ConnectionInfo connectionInfo = new ConnectionInfo();
 				Connection connection = sqlMap.getDataSource().getConnection();
-				connectionInfo.setUrl(connection.getMetaData().getURL());
-				connectionInfo.setUser(connection.getMetaData().getUserName());
+				String username = connection.getMetaData().getUserName();
+				username = username.replaceFirst("@.*", "");
+				String url = connection.getMetaData().getURL();
+				String host = url.replaceFirst(".*//", "");
+				host = host.replaceFirst(":.*", "");
+				String catalog = connection.getMetaData().getURL();
+				catalog = catalog.replaceAll(".*/", "");
+				catalog = catalog.replaceFirst("\\?.*", "");
+				connectionInfo.setUsername(username);
+				connectionInfo.setHost(host);
+				connectionInfo.setCatalog(catalog);
 				connection.close();
 				return connectionInfo;
 			}

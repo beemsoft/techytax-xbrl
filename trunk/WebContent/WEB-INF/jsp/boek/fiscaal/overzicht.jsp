@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%
 	int boekjaar = overzicht.getJaar();
 %>
-<h2><bean:message key="overview.fiscal.title"/> <%=boekjaar%></h2>
+<h4 class="section"><bean:message key="overview.fiscal.title"/> <%=boekjaar%></h4>
 <h4><bean:message key="overview.fiscal.statement"/></h4>
 <table class="overviewTable">
 	<tr>
