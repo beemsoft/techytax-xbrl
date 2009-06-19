@@ -86,8 +86,13 @@ public class IbatisUtil {
 				String username = connection.getMetaData().getUserName();
 				username = username.replaceFirst("@.*", "");
 				String url = connection.getMetaData().getURL();
-				String host = url.replaceFirst(".*//", "");
-				host = host.replaceFirst(":.*", "");
+				String host = null;
+				if (url.contains("///")) {
+					host = "localhost";
+				} else {
+					host = url.replaceFirst(".*//", "");
+					host = host.replaceFirst(":.*", "");
+				}
 				String catalog = connection.getMetaData().getURL();
 				catalog = catalog.replaceAll(".*/", "");
 				catalog = catalog.replaceFirst("\\?.*", "");
