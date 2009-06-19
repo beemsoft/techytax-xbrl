@@ -52,7 +52,7 @@ public class IbatisUtil {
 		}
 	}
 
-	public SqlMapClient getSqlMapInstance() {
+	public static SqlMapClient getSqlMapInstance() {
 		return sqlMap;
 	}
 
@@ -72,27 +72,11 @@ public class IbatisUtil {
 		props.put("JDBC.Username", username);
 		props.put("JDBC.Password", password);
 		props.put("JDBC.DefaultAutoCommit", "true");
-		props.put("Pool.MaximumActiveConnections", "10");
-		props.put("Pool.MaximumIdleConnections", "5");
-		props.put("Pool.MaximumCheckoutTime", "600000");
-		props.put("Pool.TimeToWait", "500");
-		props.put("Pool.PingQuery", "select 1 from " + catalog + ".boekwaarde");
-		props.put("Pool.PingConnectionsOlderThan", "600000");
-		props.put("Pool.PingEnabled", "true");
-		props.put("Pool.PingConnectionsNotUsedFor", "600000");
-
 		DataSource dataSource = new SimpleDataSource(props);
 		Connection userConnection = dataSource.getConnection();
 		sqlMap.setUserConnection(userConnection);
 	}
 
-	public void setUserConnection(Connection userConnection) {
-		try {
-			sqlMap.setUserConnection(userConnection);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static ConnectionInfo getInfo() {
 		try {
