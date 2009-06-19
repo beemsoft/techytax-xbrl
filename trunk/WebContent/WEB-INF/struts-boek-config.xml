@@ -218,7 +218,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			name="databaseForm" scope="session">
 			<forward name="success" path="/index.jsp"></forward>
 			<forward name="error"
-				path="/index.jsp">
+				path="/WEB-INF/jsp/database.jsp">
 			</forward>				
 		</action>				
 	</action-mappings>
