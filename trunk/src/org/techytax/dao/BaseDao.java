@@ -12,8 +12,7 @@ public class BaseDao {
 	protected SqlMapClient sqlMap;
 
 	public BaseDao() {
-		IbatisUtil ibatisUtil = new IbatisUtil();
-		sqlMap = ibatisUtil.getSqlMapInstance();
+		sqlMap = IbatisUtil.getSqlMapInstance();
 	}
 	
 	protected Map<String, String> createMap(String beginDatum, String eindDatum) {
