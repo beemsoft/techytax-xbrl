@@ -38,7 +38,6 @@ public class GetDatabaseInfoAction extends Action {
 			throws Exception {
 		try {
 			DatabaseForm databaseForm = (DatabaseForm)form;
-			
 			if (databaseForm == null || databaseForm.getUsername() == null) {
 				ConnectionInfo connectionInfo = IbatisUtil.getInfo();
 				databaseForm = new DatabaseForm();
