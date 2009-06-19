@@ -2,13 +2,24 @@
 <div style="width:400">
 <h4>Required software</h4>
 <p>
-The following software is required on your system:
+The following software is required:
+</p>
+<h5>Application Server</h5>
+<p>
+TechyTax runs as a web application on an application server.
 </p>
 <ul>
 <li>Java 1.6</li>
 <li>Tomcat 6.0</li>
-<li>MySQL 5.0</li>
 <li>MySQL Java Connector</li>
+</ul>
+<h5>Database Server</h5>
+<p>
+All data is stored in a MySQL database on a database server. This does not
+have to be the same server as the application server. 
+</p>
+<ul>
+<li>MySQL 5.0</li>
 </ul>
 <h4>Installation instructions</h4>
 <ul>
@@ -19,6 +30,7 @@ The following software is required on your system:
 </ul>
 <h4>Database configuration</h4>
 <ul>
+<li>If needed, adapt the file 'database.properties' to your own database situation.</li> 
 <li>In your database, create schema 'techytax': <code>create database techytax;</code></li>
 <li>Create a user, 'techy': <code>create user techy@localhost;</code></li>
 <li>Give this user select, insert and update privileges: <code>grant select, insert, update on techytax.* to techy;</code></li>

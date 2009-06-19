@@ -37,40 +37,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>
-		</td>
-	</tr>
-</table>
 <%
 	if (request.isUserInRole("admin")) {
-%>
-<%@ page import="org.techytax.util.IbatisUtil"%>
-<%@ page import="org.techytax.util.ConnectionInfo"%>
-<%
-	ConnectionInfo connectionInfo = IbatisUtil.getInfo();
-%>
-<h5>Database information</h5>
-<html:form action="/changeDatabase.do">
-<table>
-	<tr>
-		<td>Database user</td>
-		<td><html:text property="username" value="<%=connectionInfo.getUser()%>"/></td>
-	</tr>
-	<tr>
-		<td>Password</td>
-		<td><html:password property="password"/></td>
-	</tr>	
-	<tr>
-		<td>Connection URL</td>
-		<td><html:text property="host" value="<%=connectionInfo.getUrl()%>" size="100"/></td>
-	</tr>
-	<tr>
-		<td>Catalog</td>
-		<td><html:text property="catalog"></html:text></td>
-	</tr>	
-</table>
-<html:submit/>
-</html:form>
-<html:errors/>
+%>	
+		<p><html:link action="/getDatabaseInfo.do"><bean:message key="db.info"/></html:link></p>	
 <%
 	}
 %>
+		</td>
+	</tr>
+</table>

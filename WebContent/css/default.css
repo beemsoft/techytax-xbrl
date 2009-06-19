@@ -15,6 +15,8 @@ table { border-collapse:collapse; }
 #contentTable td#contentCell { background: #FFFFFF; color: #010066; vertical-align:top; }
 
 blockquote, input, select, label, p, ul, ol, caption, textarea { font-size:0.69em; }
+ul li ul { font-size:100%; }
+
 th, p, label, caption, ul { line-height:1.4em; }
 
 h1, h3, h4, .h4, h5, h6, strong { font-weight:bold; width:auto; }
@@ -35,7 +37,7 @@ h4.section { font-size:1.1875em; }
 #contentCell h3{ background:#FFC850; padding:8px 24px 8px 24px; color:#fff; clear:both; }
 #contentCell h4 { background:#B1B1B1; margin:0px 0px 8px 0px; padding:0px 24px 2px 8px; line-height:1.4em; clear:both; }
 #contentCell h4.section { background:#B1B1B1; margin:0px 0px 18px 0px; padding:0px 12px 0px 8px; clear:both; }
-#contentCell h5 { background:#BA9A85; margin:0px 0px 8px 0px; padding:0px 24px 2px 8px; line-height:1.4em; clear:both;  }
+#contentCell h5 { background:#cec6d2; margin:0px 0px 8px 0px; padding:0px 24px 2px 8px; line-height:1.4em; clear:both;  }
 
 #contentCell p { padding:0px 8px 8px 8px; }
 #contentCell p a { text-decoration:underline; }
@@ -43,9 +45,9 @@ h4.section { font-size:1.1875em; }
 
 #contentCell ul { padding:0px 0px 5px 20px; }
 
-#contentCell table.formTable { margin:10px 10px 10px -1em; width:31em; }
-#contentCell table.formTable th, #contentCell table.formTable td { text-align:left; vertical-align:top; padding-bottom:3px; }
-#contentCell table.formTable label { display:block; margin-right:16px; }
+#contentCell table.formTable { margin:0px 0px 0px 10px; }
+#contentCell table.formTable td { font-size:0.69em; text-align:left; padding-bottom:3px; }
+#contentCell table.formTable input { font-size:100%; text-align:left; padding-bottom:3px; }
 
 #contentCell table.formSpecs { margin:0px 8px 24px 0px; width:14em; float:right; }
 #contentCell .formSpecs th { text-align:left; font-weight:normal; padding-right:12px; }
@@ -54,11 +56,12 @@ h4.section { font-size:1.1875em; }
 #contentCell .loginForm th { text-align:left; font-weight:normal; padding:0px 24px 3px 0px; }
 #contentCell .loginForm td { padding-bottom:3px; }
 
-#contentCell table.overviewTable { margin:3px 0px 24px 0px; width:31em; }
 #contentCell table.overviewTable th { text-align:left; vertical-align:top; padding-left:12px; font-size:0.69em; }
 #contentCell table.overviewTable td { vertical-align:top; padding-left:12px; font-size:0.69em; }
 #contentCell table.overviewTable td { background:#dde; white-space:nowrap; border-bottom:2px solid #eeeef7; }
 #contentCell table.overviewTable td a { color:#de2a8d; text-decoration:underline; margin-right:8px; white-space:nowrap; }
+
+#contentCell table.headerTable td { font-size:0.69em; }
 
 div#links {position: absolute; top: 81px; left: 0; width: 166px; height: 700px; font: 16px Verdana, sans-serif; z-index: 100;}
 div#links a {display: block; text-align: center; font: bold 1em sans-serif; 

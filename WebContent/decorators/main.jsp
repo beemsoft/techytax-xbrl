@@ -51,7 +51,7 @@ function scrollToItem(id) {
 	<tr>
 		<td class="noPrint" id="navigationCell" valign="top">
 		<page:applyDecorator page="/WEB-INF/jsp/menu.jsp" name="panel" /></td>
-		<td id="contentCell" valign="top"><table><tr><td><img
+		<td id="contentCell" valign="top"><table class="headerTable"><tr><td><img
 			src="images/techytax_logo.png" /></td><td><bean:message key="program.disclaimer"/></td><td><a href="http://sourceforge.net/projects/techytax"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=260219&amp;type=14" width="150" height="40" alt="Get TechyTax at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td></tr></table> 
 			<decorator:body /></td>
 		</tr>
