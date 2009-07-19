@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ page import="org.techytax.domain.Kost"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.math.BigDecimal"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <jsp:useBean id="balansForm" scope="session"
@@ -56,6 +57,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</tr>
 </table>
 <%
+	if (request.isUserInRole("admin")) {
+		BigDecimal vatIn = (BigDecimal)request.getAttribute("btwIn");
+		BigDecimal vatOut = (BigDecimal)request.getAttribute("btwOut");
+		BigDecimal vatReturn = (BigDecimal)request.getAttribute("balans");		
+%>	
+<html:form action="/sendVatReport.do">
+<html:hidden property="vatIn" value="<%=vatIn.toString()%>"/>
+<html:hidden property="vatOut" value="<%=vatOut.toString()%>"/>
+<html:hidden property="vatReturn" value="<%=vatReturn.toString()%>"/>
+<html:submit/>
+</html:form>
+<%
+	}
 	} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
 <table>
