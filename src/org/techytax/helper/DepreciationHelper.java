@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Properties;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BoekwaardeDao;
@@ -32,23 +33,28 @@ import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Periode;
+import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
 public class DepreciationHelper {
 
 	/**
-	 * Split the cost into yearly depreciations. By default, there will be
-	 * 5 depreciaton terms, resulting in a restvalue of 10%.
+	 * Split the cost into yearly depreciations. The number of depreciation terms
+	 * is read from the properties file. The restvalue is 10%.
 	 * 
 	 * @param kost
 	 * @return
 	 */
 	public List<Kost> verdeelKosten(Kost kost) throws Exception {
+		Properties props = PropsFactory.loadProperties();
+		String nofYearsString = props.getProperty("depreciation.terms");
+		int nofYears = Integer.parseInt(nofYearsString);
+		
 		// Use the net value.
 		BigDecimal aanschafKost = kost.getBedrag();
 		BigDecimal restWaarde = aanschafKost.divide(new BigDecimal(10));
 		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(restWaarde))
-				.divide(new BigDecimal(5));
+				.divide(new BigDecimal(nofYears));
 		// afronden
 		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0,
 				BigDecimal.ROUND_UP);
@@ -60,7 +66,7 @@ public class DepreciationHelper {
 		BigDecimal boekwaardeBegin = aanschafKost;
 		BigDecimal boekwaarde = aanschafKost.subtract(jaarlijkseAfschrijving);
 		boekwaarde = boekwaarde.setScale(0, BigDecimal.ROUND_UP);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < nofYears; i++) {
 			Kost afschrijving = new Kost();
 			afschrijving.setBtw(new BigDecimal(0));
 			afschrijving.setKostenSoortId(0);
