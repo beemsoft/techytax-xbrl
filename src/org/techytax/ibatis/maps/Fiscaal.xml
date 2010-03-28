@@ -38,14 +38,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	<select id="getActivaLijst" parameterClass="string"
 		resultClass="activa">
-		select balanssoort.omschrijving, kosten.bedrag + kosten.btw as
+		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as
+		aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo,
+		restwaarde.restwaarde from balans, activa, kosten, balanssoort,
+		boekwaarde, restwaarde where balans.balanssoort_id =
+		balanssoort.id and kosten.id = activa.kost_id and
+		activa.balans_id = balans.id and boekwaarde.balans_id =
+		balans.id and restwaarde.activa_id = activa.id and 
+		(boekjaar=#value#-1) and activa.einddatum is null group by balans.balanssoort_id union
+		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as
 		aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo,
 		restwaarde.restwaarde from balans, activa, kosten, balanssoort,
 		boekwaarde, restwaarde where balans.balanssoort_id =
 		balanssoort.id and kosten.id = activa.kost_id and
 		activa.balans_id = balans.id and boekwaarde.balans_id =
 		balans.id and restwaarde.activa_id = activa.id and
-		(boekjaar=#value# or boekjaar=#value#-1) union select
+		(boekjaar=#value#) and activa.einddatum is null group by balans.balanssoort_id 
+		 union select
 		balanssoort.omschrijving, NULL, boekwaarde.boekjaar,
 		boekwaarde.saldo, NULL from balans, balanssoort, boekwaarde where
 		boekwaarde.balans_id = balans.id and (boekjaar=#value# or
