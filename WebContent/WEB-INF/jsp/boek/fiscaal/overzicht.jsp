@@ -49,7 +49,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
 		<td></td>		
 	</tr>
+<% } %>
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
+		<td align="right">-<%=overzicht.getAfschrijvingOverig()%></td>
+		<td></td>		
+	</tr>
+<% if (overzicht.getAfschrijvingOverigCorrectie() > 0) {
+%>	
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.other.correction"/>:</td>
+		<td align="right">+<%=overzicht.getAfschrijvingOverigCorrectie()%></td>
+		<td></td>		
+	</tr>
 <% } %>	
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.total"/></td>
+		<td></td>		
+		<td align="right"><%=overzicht.getAfschrijvingTotaal()%></td>
+	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.income.car"/>:</td>
 		<td align="right">+<%=overzicht.getBijtellingAuto()%></td>
@@ -70,19 +88,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td></td>		
 		<td align="right"><%=overzicht.getKostenOverigTransport()%></td>
 	</tr>
-	<tr>
-		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
-		<td></td>		
-		<td align="right">-<%=overzicht.getAfschrijvingOverig()%></td>
-	</tr>
-<% if (overzicht.getAfschrijvingOverigCorrectie() > 0) {
-%>	
-	<tr>
-		<td><bean:message key="overview.fiscal.depreciation.other.correction"/>:</td>
-		<td></td>		
-		<td align="right">+<%=overzicht.getAfschrijvingOverigCorrectie()%></td>
-	</tr>
-<% } %>			
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.other"/>:</td>
 		<td></td>		

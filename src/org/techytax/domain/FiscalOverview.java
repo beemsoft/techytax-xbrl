@@ -31,19 +31,21 @@ public class FiscalOverview {
 
 	private int afschrijvingOverig;
 	
-	private int afschrijvingOverigCorrectie;	
+	private int afschrijvingOverigCorrectie;
+	
+	private int afschrijvingTotaal;
 
 	private int bijtellingAuto;
 
 	private int jaar;
 
 	private int kostenAuto;
-	
-	private int kostenAutoAftrekbaar;	
+
+	private int kostenAutoAftrekbaar;
 
 	private int kostenOverig;
-
-	private int kostenOverigTransport;
+	
+	private int kostenOverigTransport;	
 
 	private int nettoOmzet;
 
@@ -70,14 +72,18 @@ public class FiscalOverview {
 	public int getAfschrijvingOverig() {
 		return afschrijvingOverig;
 	}
-	
+
 	public int getAfschrijvingOverigCorrectie() {
 		return afschrijvingOverigCorrectie;
-	}	
+	}
 
+	public int getAfschrijvingTotaal() {
+		return afschrijvingTotaal;
+	}
+	
 	public int getBijtellingAuto() {
 		return bijtellingAuto;
-	}
+	}	
 
 	public int getJaar() {
 		return jaar;
@@ -86,14 +92,14 @@ public class FiscalOverview {
 	public int getKostenAuto() {
 		return kostenAuto;
 	}
-	
+
 	public int getKostenAutoAftrekbaar() {
 		return kostenAutoAftrekbaar;
-	}	
-
+	}
+	
 	public int getKostenOverig() {
 		return kostenOverig;
-	}
+	}	
 
 	public int getKostenOverigTransport() {
 		return kostenOverigTransport;
@@ -134,9 +140,13 @@ public class FiscalOverview {
 	public void setAfschrijvingOverig(int afschrijvingOverig) {
 		this.afschrijvingOverig = afschrijvingOverig;
 	}
-	
+
 	public void setAfschrijvingOverigCorrectie(int afschrijvingOverigCorrectie) {
 		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
+	}
+	
+	public void setAfschrijvingTotaal(int afschrijvingTotaal) {
+		this.afschrijvingTotaal = afschrijvingTotaal;
 	}	
 
 	public void setBijtellingAuto(int bijtellingAuto) {
