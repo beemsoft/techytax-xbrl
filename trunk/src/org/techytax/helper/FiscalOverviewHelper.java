@@ -65,44 +65,56 @@ public class FiscalOverviewHelper {
 				beginDatum, eindDatum);
 		overzicht.setJaar(jaar);
 		overzicht.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
-		
+
 		// Business car costs
-		BigDecimal afschrijvingAuto = BalanceCalculator.getAfschrijvingAuto(aftrekpostenLijst);
+		BigDecimal afschrijvingAuto = BalanceCalculator
+				.getAfschrijvingAuto(aftrekpostenLijst);
 		if (afschrijvingAuto != null) {
 			overzicht.setAfschrijvingAuto(afschrijvingAuto.intValue());
-			overzicht.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(aftrekpostenLijst)
-					.intValue());
-			overzicht.setKostenAuto(BalanceCalculator.getKostenVoorAuto(aftrekpostenLijst)
-					.intValue());
-			List<Kost> corrections = boekDao.getVatCorrectionDepreciation(beginDatum, eindDatum);
+			overzicht.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(
+					aftrekpostenLijst).intValue());
+			overzicht.setKostenAuto(BalanceCalculator.getKostenVoorAuto(
+					aftrekpostenLijst).intValue());
+			List<Kost> corrections = boekDao.getVatCorrectionDepreciation(
+					beginDatum, eindDatum);
 			Iterator<Kost> iterator = corrections.iterator();
 			int depreciationCorrection = 0;
 			while (iterator.hasNext()) {
 				Kost correctionKost = iterator.next();
 				if (correctionKost.getOmschrijving().contains("auto")) {
-					overzicht.setAfschrijvingAutoCorrectie(correctionKost.getBedrag().intValue());
+					overzicht.setAfschrijvingAutoCorrectie(correctionKost
+							.getBedrag().intValue());
 				} else {
-					depreciationCorrection += correctionKost.getBedrag().intValue();
+					depreciationCorrection += correctionKost.getBedrag()
+							.intValue();
 				}
 			}
 			overzicht.setAfschrijvingOverigCorrectie(depreciationCorrection);
 			int kostenAutoAftrekbaar = 0;
-			kostenAutoAftrekbaar = overzicht.getBijtellingAuto() - overzicht.getAfschrijvingAuto() + overzicht.getAfschrijvingAutoCorrectie() - overzicht.getKostenAuto();
+			kostenAutoAftrekbaar = overzicht.getBijtellingAuto()
+					- overzicht.getKostenAuto();
 			if (kostenAutoAftrekbaar > 0) {
 				kostenAutoAftrekbaar = 0;
 			}
 			overzicht.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 		}
-		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
+		BigDecimal depreciationOther = BalanceCalculator
+				.getOverigeAfschrijvingen(aftrekpostenLijst);
 		if (depreciationOther != null) {
-			overzicht.setAfschrijvingOverig(BalanceCalculator.getOverigeAfschrijvingen(
-					aftrekpostenLijst).intValue());
+			overzicht.setAfschrijvingOverig(BalanceCalculator
+					.getOverigeAfschrijvingen(aftrekpostenLijst).intValue());
 		}
+		overzicht.setAfschrijvingTotaal(overzicht.getAfschrijvingAuto()
+				- overzicht.getAfschrijvingAutoCorrectie()
+				+ overzicht.getAfschrijvingOverig()
+				- overzicht.getAfschrijvingOverigCorrectie());
 
-		overzicht.setKostenOverigTransport(BalanceCalculator.getReiskosten(aftrekpostenLijst)
+		overzicht.setKostenOverigTransport(BalanceCalculator.getReiskosten(
+				aftrekpostenLijst).intValue());
+		overzicht.setKostenOverig(BalanceCalculator.getEtenskosten(
+				aftrekpostenLijst).add(
+				BalanceCalculator.getAlgemeneKosten(aftrekpostenLijst))
 				.intValue());
-		overzicht.setKostenOverig(BalanceCalculator.getEtenskosten(aftrekpostenLijst).add(
-				BalanceCalculator.getAlgemeneKosten(aftrekpostenLijst)).intValue());
 		overzicht.setWinst(berekenWinst(overzicht));
 		int maximaleFor = (int) (overzicht.getWinst() * KostConstanten.FOR_PERCENTAGE);
 		System.out.println("Maximale FOR: " + maximaleFor);
@@ -126,7 +138,8 @@ public class FiscalOverviewHelper {
 			String startDate = props.getProperty("start.date");
 			List<Kost> rekeningLijst = boekDao.getKostLijst(startDate,
 					eindDatum, "rekeningBalans");
-			liquiditeit = BalanceCalculator.calculatAccountBalance(rekeningLijst);
+			liquiditeit = BalanceCalculator
+					.calculatAccountBalance(rekeningLijst);
 
 			int saldo = liquiditeit.getRekeningBalans().intValue();
 			saldo += liquiditeit.getSpaarBalans().intValue();
@@ -137,12 +150,15 @@ public class FiscalOverviewHelper {
 
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		} else {
-			Boekwaarde vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+			Boekwaarde vorigeBoekwaarde = boekwaardeDao
+					.getVorigeBoekwaarde(boekwaarde);
 			List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum,
 					eindDatum, "rekeningBalans");
-			liquiditeit = BalanceCalculator.calculatAccountBalance(rekeningLijst);
+			liquiditeit = BalanceCalculator
+					.calculatAccountBalance(rekeningLijst);
 			if (vorigeBoekwaarde != null) {
-				onttrekking.setBalansSaldo(boekwaarde.getSaldo()-vorigeBoekwaarde.getSaldo());
+				onttrekking.setBalansSaldo(boekwaarde.getSaldo()
+						- vorigeBoekwaarde.getSaldo());
 			} else {
 				onttrekking.setBalansSaldo(boekwaarde.getSaldo());
 			}
@@ -233,7 +249,7 @@ public class FiscalOverviewHelper {
 		}
 		return false;
 	}
-	
+
 	public static int berekenWinst(FiscalOverview overzicht) {
 		int nettoOmzet = overzicht.getNettoOmzet();
 		nettoOmzet += overzicht.getKostenAutoAftrekbaar();
@@ -241,6 +257,8 @@ public class FiscalOverviewHelper {
 		nettoOmzet -= overzicht.getKostenOverig();
 		nettoOmzet -= overzicht.getAfschrijvingOverig();
 		nettoOmzet += overzicht.getAfschrijvingOverigCorrectie();
+		nettoOmzet -= overzicht.getAfschrijvingAuto();
+		nettoOmzet += overzicht.getAfschrijvingAutoCorrectie();
 		return nettoOmzet;
-	}	
+	}
 }

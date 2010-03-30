@@ -37,6 +37,7 @@ public interface KostConstanten {
 	public static final int ZAKELIJK_ETENTJE = 13;
 	public static final int AUTO_VAN_DE_ZAAK = 14;
 	public static final int AUTO_VAN_DE_ZAAK_ANDERE_REKENING = 19;	
+	public static final int BUSINESS_FOOD_OTHER_ACCOUNT = 20;	
 	public static final int AFSCHRIJVING_AUTO = 23;
 	public static final int FISCALE_BIJTELLING_AUTO = 24;
 	public static final int AFSCHRIJVING = 25;

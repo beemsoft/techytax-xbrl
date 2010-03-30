@@ -109,7 +109,7 @@ public class BalanceCalculator {
 								totalInleg = totalInleg.add(obj.getBedrag());
 							}
 							if (obj.getOmschrijving().equals(
-									"Inleg vanaf spaarrekening")) {
+									"Inleg vanaf spaarrekening") || obj.getOmschrijving().startsWith("VAN Toprekening")) {
 								totalSparen = totalSparen.subtract(obj
 										.getBedrag());
 							}
@@ -118,8 +118,8 @@ public class BalanceCalculator {
 									+ obj.getBedrag().add(obj.getBtw()));
 							totalKost = totalKost.subtract(obj.getBedrag());
 							totalKost = totalKost.subtract(obj.getBtw());
-							if (obj.getOmschrijving().equals(
-									"naar spaarrekening")) {
+							if (obj.getOmschrijving().contains(
+									"naar spaarrekening") || obj.getOmschrijving().startsWith("NAAR Toprekening")) {
 								totalSparen = totalSparen.add(obj.getBedrag());
 							} else if (obj.getOmschrijving().contains(
 									"prive opname")) {
@@ -182,7 +182,7 @@ public class BalanceCalculator {
 						totalKost = totalKost.add(obj.getBedrag());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
-					} else if (id == KostConstanten.ZAKELIJK_ETENTJE) {
+					} else if (id == KostConstanten.ZAKELIJK_ETENTJE || id == KostConstanten.BUSINESS_FOOD_OTHER_ACCOUNT) {
 						// Do not apply tax deduction to this cost.
 						totalKost = totalKost
 						.add(obj
@@ -316,7 +316,7 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			Aftrekpost aftrekpost = (Aftrekpost) iterator.next();
-			if (aftrekpost.getKostenSoortId() == KostConstanten.ZAKELIJK_ETENTJE) {
+			if (aftrekpost.getKostenSoortId() == KostConstanten.ZAKELIJK_ETENTJE || aftrekpost.getKostenSoortId() == KostConstanten.BUSINESS_FOOD_OTHER_ACCOUNT) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
