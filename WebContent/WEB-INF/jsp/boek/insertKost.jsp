@@ -25,5 +25,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <jsp:include page="/WEB-INF/jsp/boek/kostDetails.jsp"/>
 <html:submit><bean:message key="button.add"/></html:submit>
 </html:form>
+<html:errors/>
 </div>
 

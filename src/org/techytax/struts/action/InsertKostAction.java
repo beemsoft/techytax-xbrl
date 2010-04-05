@@ -25,38 +25,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
+import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
+import org.techytax.domain.Kostensoort;
 import org.techytax.struts.form.KostForm;
 
 public class InsertKostAction extends Action {
-
-	private static final Log log = LogFactory.getLog(InsertKostAction.class);
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		log.debug("Voeg kost toe.");
+		final ActionErrors errors = new ActionErrors();
 		KostForm kostForm = (KostForm) form;
 		Kost kost = new Kost();
 		BeanUtils.copyProperties(kost, kostForm);
-
 		BoekDao boekDao = new BoekDao();
-
-		// Voeg de kost toe
 		boekDao.insertKost(kost);
-
-		List<Kost> kostLijst = boekDao.getKostLijst();
-
-		request.setAttribute("kostLijst", kostLijst);
-
+		KostensoortDao kostensoortDao = new KostensoortDao();
+		List<Kostensoort> kostenSoortLijst = kostensoortDao
+				.getKostensoortLijst();
+		request.setAttribute("kostenSoortLijst", kostenSoortLijst);
+		ActionMessage message = new ActionMessage("messages.confirm");
+		errors.add(ActionErrors.GLOBAL_MESSAGE, message);
+		addErrors(request, errors);
+		saveErrors(request, errors);
 		return mapping.findForward("success");
 
 	}

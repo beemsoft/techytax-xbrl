@@ -67,24 +67,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>		
 		</action>
 		<action path="/updateKost" type="org.techytax.struts.action.UpdateKostAction"
-			name="kostForm" scope="request">
-			<forward name="success" path="/getKostLijstWithForm.do"></forward>
+			name="kostForm" scope="session">
+			<forward name="success" path="/WEB-INF/jsp/boek/editKost.jsp"></forward>
 		</action>
 		<action path="/editKost" name="kostForm"
-			type="org.techytax.struts.action.EditKostAction" scope="request">
+			type="org.techytax.struts.action.EditKostAction" scope="session">
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/editKost.jsp">
 			</forward>
 		</action>
 		<action path="/newKost" type="org.techytax.struts.action.NewKostAction"
-			scope="request">
+			scope="session">
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/insertKost.jsp">
 			</forward>
 		</action>
 		<action path="/insertKost" type="org.techytax.struts.action.InsertKostAction"
-			name="kostForm" scope="request">
-			<forward name="success" path="/getKostLijst.do"></forward>
+			name="kostForm" scope="session">
+			<forward name="success" path="/WEB-INF/jsp/boek/insertKost.jsp"></forward>
 		</action>
 		<action path="/getKostensoortLijst"
 			type="org.techytax.struts.action.GetKostensoortLijstAction">
