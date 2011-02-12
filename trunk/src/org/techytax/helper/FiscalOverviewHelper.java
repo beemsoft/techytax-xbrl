@@ -219,8 +219,11 @@ public class FiscalOverviewHelper {
 				eindDatum);
 		if (belastingKosten != null) {
 			onttrekking.setVoorlopigeAanslag(belastingKosten);
-			onttrekking.setTeruggave(boekDao.getBelastingTeruggave(beginDatum,
-					eindDatum));
+			Integer belastingTeruggave = boekDao.getBelastingTeruggave(beginDatum,
+					eindDatum);
+			if (belastingTeruggave != null) {
+				onttrekking.setTeruggave(belastingTeruggave);
+			}
 		}
 		overzicht.setOnttrekking(onttrekking);
 		return overzicht;
