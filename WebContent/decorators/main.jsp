@@ -19,16 +19,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 <%@ taglib uri="sitemesh-decorator" prefix="decorator"%>
 <%@ taglib uri="sitemesh-page" prefix="page"%>
-<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="struts-html" prefix="html"%>
+<%@ taglib uri="struts-bean" prefix="bean"%>
 
 <html>
 <head>
 
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
-<link type="text/css" href="../css/overcast/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
-<script type="text/javascript" src="../js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui-1.8.6.custom.min.js"></script>
+<SCRIPT LANGUAGE="JavaScript" SRC="script/CalendarPopup.js"></SCRIPT>
 <script language="JavaScript">
 
 function scrollToItem(id) {
@@ -43,19 +42,6 @@ function scrollToItem(id) {
 @import url(css/default.css);
 -->
 </style>
-			<style type="text/css">
-			/*demo page css*/
-			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
-			.demoHeaders { margin-top: 2em; }
-			#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
-			#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
-			ul#icons {margin: 0; padding: 0;}
-			ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
-			ul#icons span.ui-icon {float: left; margin: 0 4px;}
-			
-			@font-face { font-family: tomhand;	src: url('../ttf/tomhand.ttf');}
-			p.custom_font{	font-family: tomhand;	font-size: 30px; margin: 0 0 0 0 }
-		</style>	
 <title><decorator:title default="TechyTax"/></title>
 </head>
 
@@ -65,7 +51,8 @@ function scrollToItem(id) {
 	<tr>
 		<td class="noPrint" id="navigationCell" valign="top">
 		<page:applyDecorator page="/WEB-INF/jsp/menu.jsp" name="panel" /></td>
-		<td id="contentCell" valign="top"><table class="headerTable"><tr><td></td><td></td><td></td></tr></table> 
+		<td id="contentCell" valign="top"><table class="headerTable"><tr><td><img
+			src="images/techytax_logo.png" /></td><td><bean:message key="program.disclaimer"/></td><td><a href="http://sourceforge.net/projects/techytax"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=260219&amp;type=14" width="150" height="40" alt="Get TechyTax at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td></tr></table> 
 			<decorator:body /></td>
 		</tr>
 </table>
