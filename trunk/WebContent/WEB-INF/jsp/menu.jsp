@@ -1,5 +1,5 @@
 <%--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -30,23 +30,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		Version: @version@
 		</p>	
 		</td>		
-		<div id="links"><html:link href="index.jsp">
+		<div id="links">
+		<html:link href="index.jsp">
 			<bean:message key="menu.welcome" />
 			<span><bean:message key="menu.welcome.descr" /></span>
-		</html:link> <html:link action="newKost.do">
+		</html:link> 
+		<html:link action="newKost.do">
 			<bean:message key="menu.new.cost" />
-		</html:link> <html:link action="getKostensoortLijst.do">
+		</html:link>
+		<html:link action="getKostensoortLijst.do">
 			<bean:message key="menu.cost.types" />
-		</html:link> <html:link action="laadKostLijst.do">
+		</html:link> 
+		<html:link action="laadKostLijst.do">
 			<bean:message key="menu.load.data" />
-		</html:link> <html:link action="getKostLijst.do">
+		</html:link> 
+		<html:link action="getKostLijst.do">
 			<bean:message key="menu.cost.list" />
 			<span> <bean:message key="menu.cost.list.descr" /></span>
-		</html:link> <html:link action="getKostLijstWithForm">
+		</html:link> 
+		<html:link action="getKostLijstWithForm">
 			<html:param name="action" value="Fiscaal overzicht"></html:param>
 			<bean:message key="menu.fiscal.overview" />
 			<span> <bean:message key="menu.fiscal.overview.descr" /></span>
-		</html:link> <html:link action="getAccounts.do">
+		</html:link> 
+		<html:link action="getAccounts.do">
 			<bean:message key="menu.accounts" />
 			<span> <bean:message key="menu.accounts.descr" /></span>
 		</html:link> <%
