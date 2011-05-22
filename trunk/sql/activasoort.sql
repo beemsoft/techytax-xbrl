@@ -1,4 +1,4 @@
-CREATE TABLE `project`.`activasoort` (
+CREATE TABLE `techytax`.`activasoort` (
   `id` BIGINT  NOT NULL AUTO_INCREMENT,
   `omschrijving` VARCHAR(20)  NOT NULL,
   PRIMARY KEY (`id`)
