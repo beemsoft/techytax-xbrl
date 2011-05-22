@@ -2,7 +2,7 @@ USE techytax;
 
 -- MySQL dump 10.11
 --
--- Host: localhost    Database: project
+-- Host: localhost    Database: techytax
 -- ------------------------------------------------------
 -- Server version	5.0.77
 

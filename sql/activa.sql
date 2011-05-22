@@ -1,4 +1,4 @@
-CREATE TABLE `project`.`activa` (
+CREATE TABLE `techytax`.`activa` (
   `id` BIGINT  NOT NULL AUTO_INCREMENT,
   `activasoort_id` BIGINT  NOT NULL DEFAULT 0,
   `kost_id` BIGINT  NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE `project`.`activa` (
 )
 ENGINE = MyISAM;
 
-ALTER TABLE `project`.`activa` DROP COLUMN `boekjaar`,
+ALTER TABLE `techytax`.`activa` DROP COLUMN `boekjaar`,
  DROP COLUMN `saldo_begin`,
  DROP COLUMN `saldo_eind`,
  ADD COLUMN `einddatum` DATE  AFTER `kost_id`;
