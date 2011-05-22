@@ -86,6 +86,8 @@ public class GetKostLijstWithFormAction extends Action {
 				Balans balans = BalanceCalculator.calculatCostBalance(result);
 				request.setAttribute("kosten", balans.getTotaleKosten());
 				request.setAttribute("baten", balans.getTotaleBaten());
+				Balans balanceCurrentAccount = BalanceCalculator.calculatCostBalanceCurrentAccount(result);
+				request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
 			} else if (balansForm.getBalansSoort().equals("reiskostenBalans")) {
 				Reiskosten travelCostBalance = BalanceCalculator
 						.calculatTravelCostBalance(result);
