@@ -1,0 +1,1 @@
+ALTER TABLE `techytax`.`kosten` ADD COLUMN `crediteur_id` BIGINT(20) NOT NULL DEFAULT 0 AFTER `btw`;
