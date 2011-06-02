@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -49,13 +49,33 @@ public class FiscalOverview {
 
 	private int nettoOmzet;
 
-	private PriveOnttrekking onttrekking;
+	private PrivatWithdrawal onttrekking;
 
 	private int oudedagsReserveMaximaal;
 
 	private List<Passiva> passiva;
 
-	private int winst;
+	private int profit;
+	
+	private int bookTotalBegin;
+	
+	private int bookTotalEnd;
+
+	public int getBookTotalBegin() {
+		return bookTotalBegin;
+	}
+
+	public void setBookTotalBegin(int bookTotalBegin) {
+		this.bookTotalBegin = bookTotalBegin;
+	}
+
+	public int getBookTotalEnd() {
+		return bookTotalEnd;
+	}
+
+	public void setBookTotalEnd(int bookTotalEnd) {
+		this.bookTotalEnd = bookTotalEnd;
+	}
 
 	public List<Activa> getActiva() {
 		return activa;
@@ -65,6 +85,7 @@ public class FiscalOverview {
 		return afschrijvingAuto;
 	}
 
+	@Deprecated
 	public int getAfschrijvingAutoCorrectie() {
 		return afschrijvingAutoCorrectie;
 	}
@@ -73,6 +94,7 @@ public class FiscalOverview {
 		return afschrijvingOverig;
 	}
 
+	@Deprecated
 	public int getAfschrijvingOverigCorrectie() {
 		return afschrijvingOverigCorrectie;
 	}
@@ -109,7 +131,7 @@ public class FiscalOverview {
 		return nettoOmzet;
 	}
 
-	public PriveOnttrekking getOnttrekking() {
+	public PrivatWithdrawal getOnttrekking() {
 		return onttrekking;
 	}
 
@@ -122,7 +144,7 @@ public class FiscalOverview {
 	}
 
 	public int getWinst() {
-		return winst;
+		return profit;
 	}
 
 	public void setActiva(List<Activa> activa) {
@@ -177,7 +199,7 @@ public class FiscalOverview {
 		this.nettoOmzet = nettoOmzet;
 	}
 
-	public void setOnttrekking(PriveOnttrekking onttrekking) {
+	public void setOnttrekking(PrivatWithdrawal onttrekking) {
 		this.onttrekking = onttrekking;
 	}
 
@@ -189,8 +211,8 @@ public class FiscalOverview {
 		this.passiva = passiva;
 	}
 
-	public void setWinst(int winst) {
-		this.winst = winst;
+	public void setProfit(int winst) {
+		this.profit = winst;
 	}
 
 }

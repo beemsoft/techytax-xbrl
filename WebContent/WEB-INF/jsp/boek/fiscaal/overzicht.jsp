@@ -214,31 +214,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <h4><bean:message key="overview.fiscal.withdrawal"/></h4>
 <table class="overviewTable">
 	<tr>
-		<td><bean:message key="overview.balance.account"/>:</td>
-		<td align="right">(<%=overzicht.getOnttrekking().getBalansSaldo()%>)</td>
-	</tr>
-	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
-		<td align="right"><b><%=-overzicht.getOnttrekking().getBalansSaldo()+overzicht.getNettoOmzet()%></b></td>
+		<td align="right"><b><%=overzicht.getOnttrekking().getTotaleOnttrekking()%></b></td>
 	</tr>
 	<tr>
-		<td><bean:message key="overview.balance.private"/>:</td>
-		<td align="right"><%=overzicht.getOnttrekking().getOpnameSaldo()%></td>
-	</tr>
-	<tr>
-		<td><bean:message key="overview.fiscal.tax.prepaid"/>:</td>
-		<td align="right">-<%=overzicht.getOnttrekking().getVoorlopigeAanslag()%></td>
-	</tr>
-	<tr>
-		<td><bean:message key="overview.cost.total.out"/>:</td>
-		<td align="right">-<%=overzicht.getOnttrekking().getTotalCost()%></td>
-	</tr>
-	<tr>
-		<td><bean:message key="overview.fiscal.tax.return"/>:</td>
-		<td align="right">+<%=overzicht.getOnttrekking().getTeruggave()%></td>
-	</tr>
-	<tr>
-		<td><bean:message key="overview.fiscal.withdrawal.blackhole"/>:</td>
-		<td align="right"><%=-overzicht.getOnttrekking().getBalansSaldo()+overzicht.getNettoOmzet()+overzicht.getOnttrekking().getOpnameSaldo()-overzicht.getOnttrekking().getVoorlopigeAanslag()-overzicht.getOnttrekking().getTotalCost()+overzicht.getOnttrekking().getTeruggave()%></td>
-	</tr>
+		<td><bean:message key="overview.fiscal.withdrawal.cash"/>:</td>
+		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalCash()%></b></td>
+	</tr>	
+
 </table>
