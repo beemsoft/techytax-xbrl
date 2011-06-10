@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,9 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.Kost;
@@ -144,6 +141,10 @@ public class RekeningFileHelper {
 			} else {
 				kost.setOmschrijving(omschrijving);
 				kost = matchKost(kost);
+				
+				if (kost.getKostenSoortId() == KostConstanten.INKOMSTEN_BELASTING) {
+					TaxCodeHelper.convertTaxCode(kost);
+				}
 			}
 			return kost;
 		} catch (Exception e) {
