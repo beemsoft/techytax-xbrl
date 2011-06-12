@@ -33,11 +33,12 @@ public class TaxCodeHelper {
 		String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
 		String fullDescription = "";
 		String taxType = convertedTaxCode.substring(12, 13);
-		String yearIndicator = convertedTaxCode.substring(17, 18);
+		String yearIndicator = convertedTaxCode.substring(14, 15);
 		String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
 
 		if (taxType.equals("B")) {
 			cost.setKostenSoortId(KostConstanten.OMZET_BELASTING);
+			yearIndicator = convertedTaxCode.substring(17, 18);
 			fullDescription = "Omzetbelasting";
 		} else if (taxType.equals("W")) {
 			fullDescription = "Zorgverzekeringswet";
@@ -45,7 +46,6 @@ public class TaxCodeHelper {
 			fullDescription = "Zorgverzekeringswet";
 		} else if (taxType.equals("M")) {
 			fullDescription = "Motorrijtuigenbelasting";
-			yearIndicator = convertedTaxCode.substring(14, 15);
 			cost.setKostenSoortId(KostConstanten.WEGEN_BELASTING);
 		} else if (taxType.equals("O")) {
 			fullDescription = "Omzetbelasting teruggaaf";
@@ -61,5 +61,13 @@ public class TaxCodeHelper {
 		return cost;
 
 	}
+	
+	public static void main(String[] args) {
+		Kost cost = new Kost();
+		cost.setOmschrijving("AC");
+		System.out.println(convertTaxCode(cost).getOmschrijving());
+	}
+	
+	
 
 }
