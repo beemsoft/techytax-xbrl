@@ -29,11 +29,13 @@ public class TaxCodeHelper {
 	public static Kost convertTaxCode(Kost cost) {
 		String description = cost.getOmschrijving();
 		int endIndex = description.indexOf("AC");
-		String taxCode = cost.getOmschrijving().substring(endIndex - 16,
-				endIndex);
+		String taxCode = cost.getOmschrijving().substring(endIndex - 16, endIndex);
 		String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
 		String fullDescription = "";
 		String taxType = convertedTaxCode.substring(12, 13);
+		String yearIndicator = convertedTaxCode.substring(17, 18);
+		String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
+
 		if (taxType.equals("B")) {
 			cost.setKostenSoortId(KostConstanten.OMZET_BELASTING);
 			fullDescription = "Omzetbelasting";
@@ -43,19 +45,19 @@ public class TaxCodeHelper {
 			fullDescription = "Zorgverzekeringswet";
 		} else if (taxType.equals("M")) {
 			fullDescription = "Motorrijtuigenbelasting";
+			yearIndicator = convertedTaxCode.substring(14, 15);
+			cost.setKostenSoortId(KostConstanten.WEGEN_BELASTING);
 		} else if (taxType.equals("O")) {
 			fullDescription = "Omzetbelasting teruggaaf";
 		} else if (taxType.equals("H")) {
 			fullDescription = "Inkomstenbelasting";
 		}
-		String yearIndicator = convertedTaxCode.substring(17, 18);
-		String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
-		String taxYear = currentYear.substring(0, 3)+yearIndicator;
+
+		String taxYear = currentYear.substring(0, 3) + yearIndicator;
 		if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
 			taxYear = Integer.toString((Integer.parseInt(taxYear) - 10));
 		}
-		cost.setOmschrijving(description + " " + convertedTaxCode + " "
-				+ fullDescription + " " + taxYear);
+		cost.setOmschrijving(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
 		return cost;
 
 	}
