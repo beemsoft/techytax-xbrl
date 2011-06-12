@@ -113,6 +113,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		private_expenses WHERE datum &gt;= ? AND datum &lt;= ? ORDER BY
 		datum asc
 	</select>
+	<select id="getTaxList" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
+		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
+		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
+		datum &gt;= ? AND datum &lt;= ? AND ks.id 
+		IN (12,29,30,31,34) ORDER BY datum asc
+	</select>	
 	<select id="getVatCorrectionDepreciation" parameterMap="periodeMap"
 		resultClass="kost">
 		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as

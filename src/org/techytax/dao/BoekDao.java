@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -73,8 +73,7 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getKostLijst(String beginDatum, String eindDatum,
-			String balansSoort) throws Exception {
+	public List<Kost> getKostLijst(String beginDatum, String eindDatum, String balansSoort) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			if (balansSoort.equals("alles")) {
@@ -88,8 +87,7 @@ public class BoekDao extends BaseDao {
 			} else if (balansSoort.equals("reiskostenBalans")) {
 				return sqlMap.queryForList("getReisKostenBalansLijst", map);
 			} else if (balansSoort.equals("investeringen")) {
-				map.put("investmentMinimum", Integer
-						.toString(KostConstanten.INVESTMENT_MINIMUM_AMOUNT));
+				map.put("investmentMinimum", Integer.toString(KostConstanten.INVESTMENT_MINIMUM_AMOUNT));
 				return sqlMap.queryForList("getInvesteringenLijst", map);
 			} else if (balansSoort.equals("aftrekpostenLijst")) {
 				return sqlMap.queryForList("getAftrekpostenLijst", map);
@@ -97,6 +95,8 @@ public class BoekDao extends BaseDao {
 				return sqlMap.queryForList("getAfschrijvingenLijst", map);
 			} else if (balansSoort.equals("private")) {
 				return sqlMap.queryForList("getPrivateExpenses", map);
+			} else if (balansSoort.equals("tax")) {
+				return sqlMap.queryForList("getTaxList", map);
 			}
 		} catch (SQLException ex) {
 			throw ex;
@@ -105,8 +105,7 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Aftrekpost> getDeductableCosts(String beginDatum,
-			String eindDatum) throws Exception {
+	public List<Aftrekpost> getDeductableCosts(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return sqlMap.queryForList("getAftrekpostenLijst", map);
@@ -115,8 +114,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public Integer getBelastingKosten(String beginDatum, String eindDatum)
-			throws Exception {
+	public Integer getBelastingKosten(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return (Integer) sqlMap.queryForObject("getBelastingKosten", map);
@@ -125,12 +123,10 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public Integer getBelastingTeruggave(String beginDatum, String eindDatum)
-			throws Exception {
+	public Integer getBelastingTeruggave(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
-			return (Integer) sqlMap
-					.queryForObject("getBelastingTeruggave", map);
+			return (Integer) sqlMap.queryForObject("getBelastingTeruggave", map);
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -152,8 +148,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public Kost getKostMetDatumEnBedrag(String datum, String bedrag)
-			throws Exception {
+	public Kost getKostMetDatumEnBedrag(String datum, String bedrag) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("datum", datum);
 		map.put("bedrag", bedrag);
@@ -165,8 +160,7 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getVatCorrectionDepreciation(String beginDatum,
-			String eindDatum) throws Exception {
+	public List<Kost> getVatCorrectionDepreciation(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return sqlMap.queryForList("getVatCorrectionDepreciation", map);
@@ -175,12 +169,10 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum)
-			throws Exception {
+	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
-			return (Integer) sqlMap.queryForObject("getVatCorrectionPrivate",
-					map);
+			return (Integer) sqlMap.queryForObject("getVatCorrectionPrivate", map);
 		} catch (SQLException ex) {
 			throw ex;
 		}
