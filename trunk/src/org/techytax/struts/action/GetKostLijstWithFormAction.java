@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -45,9 +45,7 @@ import org.techytax.util.DateHelper;
 
 public class GetKostLijstWithFormAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			final HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		final ActionErrors errors = new ActionErrors();
 		String forward = "failure";
@@ -57,28 +55,24 @@ public class GetKostLijstWithFormAction extends Action {
 		if (balansForm.getBalansSoort() == null) {
 			Periode periode = DateHelper.getPeriodeVorigJaar();
 			balansForm.setBalansSoort("alles");
-			balansForm.setBeginDatum(DateHelper
-					.getDate(periode.getBeginDatum()));
+			balansForm.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
 			balansForm.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
 		}
 		try {
 			BoekDao boekDao = new BoekDao();
-			result = boekDao.getKostLijst(balansForm.getBeginDatum(),
-					balansForm.getEindDatum(), balansForm.getBalansSoort());
+			result = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), balansForm.getBalansSoort());
 			request.setAttribute("kostLijst", result);
 
 			if (balansForm.getBalansSoort().equals("btwBalans")) {
 				Balans balans = BalanceCalculator.calculateBtwBalance(result);
 				request.setAttribute("btwOut", balans.getTotaleKosten());
 				request.setAttribute("btwIn", balans.getTotaleBaten());
-				request.setAttribute("balans", (balans.getTotaleBaten()
-						.subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
+				request.setAttribute("balans", (balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
 				request.setAttribute("brutoOmzet", balans.getBrutoOmzet());
 				request.setAttribute("nettoOmzet", balans.getNettoOmzet());
-				request.setAttribute("btwCorrection", balans.getCorrection());				
+				request.setAttribute("btwCorrection", balans.getCorrection());
 			} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
-				Liquiditeit liquiditeit = BalanceCalculator
-						.calculatAccountBalance(result);
+				Liquiditeit liquiditeit = BalanceCalculator.calculatAccountBalance(result);
 				request.setAttribute("balans", liquiditeit.getRekeningBalans());
 				request.setAttribute("sparen", liquiditeit.getSpaarBalans());
 				request.setAttribute("private", liquiditeit.getPriveBalans());
@@ -89,42 +83,35 @@ public class GetKostLijstWithFormAction extends Action {
 				Balans balanceCurrentAccount = BalanceCalculator.calculatCostBalanceCurrentAccount(result);
 				request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
 			} else if (balansForm.getBalansSoort().equals("reiskostenBalans")) {
-				Reiskosten travelCostBalance = BalanceCalculator
-						.calculatTravelCostBalance(result);
+				Reiskosten travelCostBalance = BalanceCalculator.calculatTravelCostBalance(result);
 				request.setAttribute("kostenOv", travelCostBalance.getOvKosten());
-				request.setAttribute("kostenAutoMetBtw", travelCostBalance
-						.getAutoKostenMetBtw());
-				request.setAttribute("kostenAutoZonderBtw", travelCostBalance
-						.getAutoKostenZonderBtw());
-				request.setAttribute("vatCorrection", travelCostBalance
-						.getVatCorrection());				
-				BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(
-						travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
+				request.setAttribute("kostenAutoMetBtw", travelCostBalance.getAutoKostenMetBtw());
+				request.setAttribute("kostenAutoZonderBtw", travelCostBalance.getAutoKostenZonderBtw());
+				request.setAttribute("vatCorrection", travelCostBalance.getVatCorrection());
+				BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
 				request.setAttribute("verschil", verschil);
 			} else if (balansForm.getBalansSoort().equals("private")) {
 				BigDecimal monthlyExpenses = BalanceCalculator.calculatMonthlyPrivateExpenses(result);
 				request.setAttribute("monthlyExpenses", monthlyExpenses);
-			}
-			
+			} 
+
 			String action = (String) request.getParameter("action");
 			if (action == null) {
 				forward = "success";
 			} else {
 				if (action.equals("Fiscaal overzicht")) {
-					FiscalOverview overview = FiscalOverviewHelper
-							.createFiscalOverview(balansForm.getBeginDatum(),
-									balansForm.getEindDatum(), result);
+					FiscalOverview overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result);
 					request.setAttribute("overzicht", overview);
 					forward = "fiscaal";
 				} else {
-					forward = "success";					
+					forward = "success";
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			ActionMessage message = null;
 			if (e.getMessage().startsWith("error")) {
-				message = new ActionMessage(e.getMessage());				
+				message = new ActionMessage(e.getMessage());
 			} else {
 				message = new ActionMessage("errors.detail", e.getMessage());
 			}

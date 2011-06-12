@@ -58,20 +58,19 @@ var cal13 = new CalendarPopup();
 				<table>
 					<tr>
 						<td><html:radio property="balansSoort" value="alles"><bean:message key="overview.all"/></html:radio></td>
-						<td><html:radio
-				property="balansSoort" value="rekeningBalans"><bean:message key="overview.account"/></html:radio></td>
-			<td><html:radio property="balansSoort" value="btwBalans"><bean:message key="overview.vat"/></html:radio></td>
-			<td><html:radio property="balansSoort" value="kostenBalans"><bean:message key="overview.cost"/></html:radio>			
-			</td>
-				</tr>
-				<tr>
-				<td>
-			<html:radio property="balansSoort" value="reiskostenBalans"><bean:message key="overview.travel"/></html:radio></td>
-			<td><html:radio property="balansSoort" value="investeringen"><bean:message key="overview.invest"/></html:radio></td>
-			<td><html:radio property="balansSoort" value="afschrijvingen"><bean:message key="overview.depreciation"/></html:radio></td>			
-			<td><html:radio property="balansSoort" value="private"><bean:message key="overview.private"/></html:radio>
-				</td>
-				</tr>
+						<td><html:radio	property="balansSoort" value="rekeningBalans"><bean:message key="overview.account"/></html:radio></td>
+						<td><html:radio property="balansSoort" value="btwBalans"><bean:message key="overview.vat"/></html:radio></td>
+					</tr>
+					<tr>
+						<td><html:radio property="balansSoort" value="kostenBalans"><bean:message key="overview.cost"/></html:radio></td>
+						<td><html:radio property="balansSoort" value="reiskostenBalans"><bean:message key="overview.travel"/></html:radio></td>
+						<td><html:radio property="balansSoort" value="investeringen"><bean:message key="overview.invest"/></html:radio></td>
+					</tr>
+					<tr>
+						<td><html:radio property="balansSoort" value="afschrijvingen"><bean:message key="overview.depreciation"/></html:radio></td>
+						<td><html:radio property="balansSoort" value="private"><bean:message key="overview.private"/></html:radio></td>
+						<td><html:radio property="balansSoort" value="tax"><bean:message key="overview.tax"/></html:radio></td>
+					</tr>
 				</table>
 					
 			</td>
