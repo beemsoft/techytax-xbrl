@@ -114,6 +114,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
+	@Deprecated
 	public Integer getBelastingKosten(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
@@ -123,6 +124,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
+	@Deprecated
 	public Integer getBelastingTeruggave(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
@@ -169,6 +171,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
+	@Deprecated
 	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
@@ -177,5 +180,15 @@ public class BoekDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getTaxList(String beginDatum, String eindDatum) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum);
+		try {
+			return sqlMap.queryForList("getTaxList", map);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 }

@@ -221,5 +221,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><bean:message key="overview.fiscal.withdrawal.cash"/>:</td>
 		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalCash()%></b></td>
 	</tr>	
-
+</table>
+<h4><bean:message key="overview.fiscal.tax.prepaid"/></h4>
+<table class="overviewTable">
+	<tr>
+		<td><bean:message key="overview.fiscal.tax.prepaid.income"/>:</td>
+		<td align="right"><b><%=overzicht.getPrepaidTax().getPrepaidIncome()%></b></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.tax.prepaid.health"/>:</td>
+		<td align="right"><b><%=overzicht.getPrepaidTax().getPrepaidHealth()%></b></td>
+	</tr>	
 </table>

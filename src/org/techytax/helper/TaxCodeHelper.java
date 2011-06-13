@@ -20,9 +20,14 @@
 package org.techytax.helper;
 
 import java.util.Calendar;
+import java.util.List;
 
+import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
+import org.techytax.domain.Periode;
+import org.techytax.domain.PrepaidTax;
+import org.techytax.util.DateHelper;
 
 public class TaxCodeHelper {
 
@@ -62,12 +67,34 @@ public class TaxCodeHelper {
 
 	}
 	
+	public static PrepaidTax findPrepaidTax(int year) {
+		PrepaidTax prepaidTax = new PrepaidTax();
+		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
+		BoekDao boekDao = new BoekDao();
+		try {
+			List<Kost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()));
+			int prepaidIncomeTax = 0;
+			int prepaidHealthTax = 0;
+			for (Kost tax : taxList) {
+				if (tax.getOmschrijving().contains("Inkomstenbelasting "+year)) {
+					prepaidIncomeTax += tax.getBedrag().intValue();
+				}
+				if (tax.getOmschrijving().contains("Zorgverzekeringswet "+year)) {
+					prepaidHealthTax += tax.getBedrag().intValue();
+				}				
+			}
+			prepaidTax.setPrepaidHealth(prepaidHealthTax);
+			prepaidTax.setPrepaidIncome(prepaidIncomeTax);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return prepaidTax;
+	}
+
 	public static void main(String[] args) {
 		Kost cost = new Kost();
 		cost.setOmschrijving("AC");
 		System.out.println(convertTaxCode(cost).getOmschrijving());
 	}
-	
-	
 
 }
