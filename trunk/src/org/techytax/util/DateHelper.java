@@ -74,5 +74,21 @@ public class DateHelper {
 		int jaar = cal.get(Calendar.YEAR);
 		return jaar;
 	}
+	
+	public static Periode getPeriodPreviousYearThisYear(int thisYear) {
+		Calendar cal = new GregorianCalendar();
+		cal.set(Calendar.YEAR, thisYear - 1);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDatum = cal.getTime();
+		cal.set(Calendar.YEAR, thisYear);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		Date eindDatum = cal.getTime();
+		Periode periode = new Periode();
+		periode.setBeginDatum(beginDatum);
+		periode.setEindDatum(eindDatum);
+		return periode;
+	}	
 
 }

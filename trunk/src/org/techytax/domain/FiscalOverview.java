@@ -37,50 +37,36 @@ public class FiscalOverview {
 
 	private int bijtellingAuto;
 
+	private int bookTotalBegin;
+
+	private int bookTotalEnd;
+
 	private int jaar;
 
 	private int kostenAuto;
-
-	private int kostenAutoAftrekbaar;
+	
+	private int kostenAutoAftrekbaar;	
 
 	private int kostenOverig;
-	
-	private int kostenOverigTransport;	
+
+	private int kostenOverigTransport;
 
 	private int nettoOmzet;
 
 	private PrivatWithdrawal onttrekking;
-
+	
 	private int oudedagsReserveMaximaal;
 
 	private List<Passiva> passiva;
 
+	private PrepaidTax prepaidTax;
+
 	private int profit;
 	
-	private int bookTotalBegin;
-	
-	private int bookTotalEnd;
-
-	public int getBookTotalBegin() {
-		return bookTotalBegin;
-	}
-
-	public void setBookTotalBegin(int bookTotalBegin) {
-		this.bookTotalBegin = bookTotalBegin;
-	}
-
-	public int getBookTotalEnd() {
-		return bookTotalEnd;
-	}
-
-	public void setBookTotalEnd(int bookTotalEnd) {
-		this.bookTotalEnd = bookTotalEnd;
-	}
-
 	public List<Activa> getActiva() {
 		return activa;
 	}
-
+	
 	public int getAfschrijvingAuto() {
 		return afschrijvingAuto;
 	}
@@ -102,10 +88,18 @@ public class FiscalOverview {
 	public int getAfschrijvingTotaal() {
 		return afschrijvingTotaal;
 	}
-	
+
 	public int getBijtellingAuto() {
 		return bijtellingAuto;
-	}	
+	}
+
+	public int getBookTotalBegin() {
+		return bookTotalBegin;
+	}
+
+	public int getBookTotalEnd() {
+		return bookTotalEnd;
+	}
 
 	public int getJaar() {
 		return jaar;
@@ -134,13 +128,17 @@ public class FiscalOverview {
 	public PrivatWithdrawal getOnttrekking() {
 		return onttrekking;
 	}
-
+	
 	public int getOudedagsReserveMaximaal() {
 		return oudedagsReserveMaximaal;
-	}
+	}	
 
 	public List<Passiva> getPassiva() {
 		return passiva;
+	}
+
+	public PrepaidTax getPrepaidTax() {
+		return prepaidTax;
 	}
 
 	public int getWinst() {
@@ -166,14 +164,22 @@ public class FiscalOverview {
 	public void setAfschrijvingOverigCorrectie(int afschrijvingOverigCorrectie) {
 		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
 	}
-	
+
 	public void setAfschrijvingTotaal(int afschrijvingTotaal) {
 		this.afschrijvingTotaal = afschrijvingTotaal;
-	}	
+	}
 
 	public void setBijtellingAuto(int bijtellingAuto) {
 		this.bijtellingAuto = bijtellingAuto;
 	}
+
+	public void setBookTotalBegin(int bookTotalBegin) {
+		this.bookTotalBegin = bookTotalBegin;
+	}
+	
+	public void setBookTotalEnd(int bookTotalEnd) {
+		this.bookTotalEnd = bookTotalEnd;
+	}	
 
 	public void setJaar(int jaar) {
 		this.jaar = jaar;
@@ -182,14 +188,14 @@ public class FiscalOverview {
 	public void setKostenAuto(int kostenAuto) {
 		this.kostenAuto = kostenAuto;
 	}
-	
+
 	public void setKostenAutoAftrekbaar(int kostenAutoAftrekbaar) {
 		this.kostenAutoAftrekbaar = kostenAutoAftrekbaar;
-	}	
-
+	}
+	
 	public void setKostenOverig(int kostenOverig) {
 		this.kostenOverig = kostenOverig;
-	}
+	}	
 
 	public void setKostenOverigTransport(int kostenOverigTransport) {
 		this.kostenOverigTransport = kostenOverigTransport;
@@ -209,6 +215,10 @@ public class FiscalOverview {
 
 	public void setPassiva(List<Passiva> passiva) {
 		this.passiva = passiva;
+	}
+
+	public void setPrepaidTax(PrepaidTax prepaidTax) {
+		this.prepaidTax = prepaidTax;
 	}
 
 	public void setProfit(int winst) {

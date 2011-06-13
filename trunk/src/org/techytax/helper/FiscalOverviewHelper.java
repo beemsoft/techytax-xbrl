@@ -37,6 +37,7 @@ import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passiva;
+import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivatWithdrawal;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
@@ -217,6 +218,10 @@ public class FiscalOverviewHelper {
 		int withdrawalCash = totalWithdrawal - overview.getKostenAuto();
 		privatWithdrawal.setWithdrawalCash(withdrawalCash);
 		overview.setOnttrekking(privatWithdrawal);
+		
+		// Prepaid taxes
+		PrepaidTax prepaidTax = TaxCodeHelper.findPrepaidTax(jaar);
+		overview.setPrepaidTax(prepaidTax);
 		return overview;
 	}
 	
