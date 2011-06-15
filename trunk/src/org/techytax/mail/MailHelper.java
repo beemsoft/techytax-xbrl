@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -39,25 +39,33 @@ public class MailHelper {
 	private static Properties props;
 
 	public static void loadProperties() throws Exception {
-		if (props != null) return;
-		
+		if (props != null)
+			return;
+
 		props = new Properties();
 		try {
 			File file = new File("test");
-			System.out.println("Test: "+file.getAbsolutePath());			
+			System.out.println("Test: " + file.getAbsolutePath());
 			props.load(new FileInputStream("mail.properties"));
+			props.put("mail.transport.protocol", "smtps");
+			props.put("mail.smtps.starttls.enable", "true");
+			props.put("mail.smtps.auth", "true");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.socketFactory.fallback", "false");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
-		}		
+		}
 	}
 
 	public static void sendDutchVatDeclaration(String message) throws Exception {
-		loadProperties();		
+		loadProperties();
 		String to = props.getProperty("message.to");
-		System.out.println("Test: "+to);
+		System.out.println("Test: " + to);
 		String subj = "OB aangifte";
 		Session session = Session.getDefaultInstance(props);
+//		session.setDebug(true);
 		Message msg = new MimeMessage(session);
 		InternetAddress[] toAddrs = null;
 
@@ -77,9 +85,7 @@ public class MailHelper {
 		multipart.addBodyPart(messageBodyPart);
 		msg.setContent(multipart);
 		Transport tr = session.getTransport("smtp");
-		tr.connect(props.getProperty("mail.smtp.host"), props
-				.getProperty("mail.smtp.user"), props
-				.getProperty("mail.smtp.password"));
+		tr.connect(props.getProperty("mail.smtp.host"), 465, props.getProperty("mail.smtp.user"), props.getProperty("mail.smtp.password"));
 		msg.saveChanges();
 		tr.sendMessage(msg, msg.getAllRecipients());
 		tr.close();
