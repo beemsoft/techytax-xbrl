@@ -47,6 +47,8 @@ public interface KostConstanten {
 	public static final int WEGEN_BELASTING = 31;
 	public static final int UITGAVE_CREDIT_CARD = 32;
 	public static final int VAT_CORRECTION_CAR_PRIVATE = 36;
+	public static final int PAID_INVOICE_ = 38;
+	public static final int SENT_INVOICE = 39;
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009
