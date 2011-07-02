@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,12 +27,9 @@ public interface KostConstanten {
 	public static final int UITGAVE_DEZE_REKENING_FOUTIEF = 3;
 	public static final int INLEG = 4;
 	public static final int OPNAME = 5;
-	public static final int UITGAVE_ANDERE_REKENING_FOUTIEF = 6;
 	public static final int UITGAVE_ANDERE_REKENING = 7;
 	public static final int REISKOST_ANDERE_REKENING_FOUTIEF = 8;
 	public static final int REISKOST = 9;
-	public static final int UITGAVE_DEZE_REKENING_FOUTIEF_GESPREIDE_TERUGBETALING = 10;
-	public static final int UITGAVE_DEZE_REKENING_GESPREIDE_TERUGBETALING = 11;
 	public static final int OMZET_BELASTING = 12;
 	public static final int ZAKELIJK_ETENTJE = 13;
 	public static final int AUTO_VAN_DE_ZAAK = 14;
@@ -47,8 +44,6 @@ public interface KostConstanten {
 	public static final int WEGEN_BELASTING = 31;
 	public static final int UITGAVE_CREDIT_CARD = 32;
 	public static final int VAT_CORRECTION_CAR_PRIVATE = 36;
-	public static final int PAID_INVOICE_ = 38;
-	public static final int SENT_INVOICE = 39;
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009
