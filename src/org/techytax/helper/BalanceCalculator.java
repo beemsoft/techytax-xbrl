@@ -56,7 +56,7 @@ public class BalanceCalculator {
 					Kostensoort kostensoort = dao.getKostensoort(Long
 							.toString(id));
 					if (kostensoort.isBtwVerrekenbaar()) {
-						if (kostensoort.isBijschrijving()) {
+						if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == KostConstanten.INVOICE_SENT) {
 							totalBtwIn = totalBtwIn.add(obj.getBtw());
 							brutoOmzet = brutoOmzet.add(obj.getBedrag());
 							nettoOmzet = nettoOmzet.add(obj.getBedrag());
