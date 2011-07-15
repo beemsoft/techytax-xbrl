@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -109,7 +109,7 @@ public class BalanceCalculator {
 								totalInleg = totalInleg.add(obj.getBedrag());
 							}
 							if (obj.getOmschrijving().equals(
-									"Inleg vanaf spaarrekening") || obj.getOmschrijving().startsWith("VAN Toprekening")) {
+									"Inleg vanaf spaarrekening") || obj.getOmschrijving().startsWith("VAN Toprekening") || obj.getOmschrijving().startsWith("VAN Profijtrekening")) {
 								totalSparen = totalSparen.subtract(obj
 										.getBedrag());
 							}
@@ -119,7 +119,7 @@ public class BalanceCalculator {
 							totalKost = totalKost.subtract(obj.getBedrag());
 							totalKost = totalKost.subtract(obj.getBtw());
 							if (obj.getOmschrijving().contains(
-									"naar spaarrekening") || obj.getOmschrijving().startsWith("NAAR Toprekening")) {
+									"naar spaarrekening") || obj.getOmschrijving().startsWith("NAAR Toprekening") || obj.getOmschrijving().startsWith("NAAR Profijtrekening")) {
 								totalSparen = totalSparen.add(obj.getBedrag());
 							} else if (obj.getOmschrijving().contains(
 									"prive opname") || obj.getOmschrijving().contains("OPL. CHIPKNIP")) {
