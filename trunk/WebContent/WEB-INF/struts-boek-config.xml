@@ -33,7 +33,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="accountForm" type="org.techytax.struts.form.AccountForm" />		
 		<form-bean name="accountBalanceForm" type="org.techytax.struts.form.AccountBalanceForm" />		
 		<form-bean name="databaseForm" type="org.techytax.struts.form.DatabaseForm" />		
-		<form-bean name="vatReportForm" type="org.techytax.struts.form.VatReportForm" />		
+		<form-bean name="vatReportForm" type="org.techytax.struts.form.VatReportForm" />
+		<form-bean name="auditReportForm" type="org.techytax.struts.form.AuditReportForm" />			
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -226,6 +227,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			name="vatReportForm">
 			<forward name="success" path="/getKostLijst.do"></forward>
 		</action>
+		<action path="/sendAuditReport" type="org.techytax.struts.action.SendAuditReportAction"
+			name="auditReportForm">
+			<forward name="success" path="/getKostLijst.do"></forward>
+		</action>		
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />
