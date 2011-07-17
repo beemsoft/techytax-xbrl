@@ -97,7 +97,9 @@ public class BoekDao extends BaseDao {
 				return sqlMap.queryForList("getPrivateExpenses", map);
 			} else if (balansSoort.equals("tax")) {
 				return sqlMap.queryForList("getTaxList", map);
-			}
+			} else if (balansSoort.equals("audit")) {
+				return sqlMap.queryForList("getAuditList", map);
+			}			
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -186,6 +188,16 @@ public class BoekDao extends BaseDao {
 		Map<String, String> map = createMap(beginDatum, eindDatum);
 		try {
 			return sqlMap.queryForList("getTaxList", map);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getAuditList(String beginDatum, String eindDatum) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum);
+		try {
+			return sqlMap.queryForList("getAuditList", map);
 		} catch (SQLException ex) {
 			throw ex;
 		}

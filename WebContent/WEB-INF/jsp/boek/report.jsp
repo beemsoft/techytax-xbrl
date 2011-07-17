@@ -1,5 +1,5 @@
 <%--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -70,6 +70,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </html:form>
 <%
 	}
+	} else if (balansForm.getBalansSoort().equals("audit")) {
+%>
+<p>Audit</p>
+<html:form action="/sendAuditReport.do">
+<html:hidden property="beginDatum" value="<%=balansForm.getBeginDatum()%>"/>
+<html:hidden property="eindDatum" value="<%=balansForm.getEindDatum()%>"/>
+<html:submit/>
+</html:form>
+<%		
 	} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
 <table>
@@ -147,6 +156,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</tr>
 		</table>
 <%
-	}
+	} 
 	}
 %>
