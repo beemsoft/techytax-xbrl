@@ -71,6 +71,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%
 	}
 	} else if (balansForm.getBalansSoort().equals("audit")) {
+		if (request.isUserInRole("admin")) {
 %>
 <p>Audit</p>
 <html:form action="/sendAuditReport.do">
@@ -79,6 +80,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <html:submit/>
 </html:form>
 <%		
+		}
 	} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
 <table>
