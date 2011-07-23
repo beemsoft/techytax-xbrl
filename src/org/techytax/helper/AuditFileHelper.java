@@ -3,14 +3,15 @@ package org.techytax.helper;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import nl.auditfiles.xaf._3.Auditfile;
 import nl.auditfiles.xaf._3.CurrencyCodeType;
@@ -27,14 +28,31 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Periods.Period;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine;
-import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Currency;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
 
 import org.techytax.domain.Kost;
 import org.techytax.props.PropsFactory;
+import org.techytax.util.DateHelper;
 
 
 public class AuditFileHelper {
+	
+	private static Transaction createTransaction(Kost cost) throws Exception {
+		ObjectFactory objectFactory = new ObjectFactory();
+		Transaction transaction = objectFactory.createAuditfileCompanyTransactionsJournalTransaction();
+		transaction.setAmnt(cost.getBedrag());
+		transaction.setDesc(cost.getOmschrijving().trim());
+		transaction.setNr(Long.toString(cost.getId()));
+		transaction.setTrDt(DateHelper.getDate(cost.getDatum()));
+		if (cost.getBtw() != null && cost.getBtw().floatValue() > 0) {
+			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
+			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
+			vat.setVatAmnt(cost.getBtw());
+			trLine.getVat().add(vat);
+			transaction.getTrLine().add(trLine);
+		}
+		return transaction;
+	}
 	
 	public static String createAuditFile(List<Kost> costList) throws DatatypeConfigurationException {
 
@@ -63,31 +81,31 @@ public class AuditFileHelper {
 			Basics basics = objectFactory.createAuditfileCompanyGeneralLedgerBasics();
 //			basics.
 			Basic basic = objectFactory.createAuditfileCompanyGeneralLedgerBasicsBasic();
-//			basic.s
+
 			
 			generalLedger.setBasics(basics);
-			company.setGeneralLedger(generalLedger);
+//			company.setGeneralLedger(generalLedger);
 			
 			OpeningBalance openingBalance = objectFactory.createAuditfileCompanyOpeningBalance();
-//			openingBalance.s
-			company.setOpeningBalance(openingBalance);
+//			company.setOpeningBalance(openingBalance);
 			
 			Periods periods = objectFactory.createAuditfileCompanyPeriods();
-//			periods.set
 			Period period = objectFactory.createAuditfileCompanyPeriodsPeriod();
 			period.setPeriodNumber(new BigInteger("1")); // referenced by transactions
 			period.setPeriodDesc("Period"); 
 			periods.getPeriod().add(period);
-			company.setPeriods(periods);
+//			company.setPeriods(periods);
 			
 
 			auditfile.setCompany(company);
 			
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencyCodeType.EUR);
-			header.setFiscalYear("2010");
-			XMLGregorianCalendar date = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-			header.setDateCreated(date);
+			Kost firstCost = (Kost)costList.get(0);
+			Date firstDate = DateHelper.stringToDate(firstCost.getDatum());
+			int year = DateHelper.getYear(firstDate);
+			header.setFiscalYear(Integer.toString(year));
+			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
 			header.setSoftwareVersion("1.4");
 
@@ -95,41 +113,30 @@ public class AuditFileHelper {
 			
 			// Transactions
 			Transactions transactions = objectFactory.createAuditfileCompanyTransactions();
-			transactions.setLinesCount(new BigInteger("1"));
-			transactions.setTotalCredit(new BigDecimal("1"));
-			transactions.setTotalDebit(new BigDecimal("1"));
-			Journal journal = objectFactory.createAuditfileCompanyTransactionsJournal();
-//			journal.setBankAccNr("123");
-			journal.setDesc("zakelijke rekening");
+			transactions.setLinesCount(new BigInteger(Long.toString(costList.size())));
 			
-			Transaction transaction = objectFactory.createAuditfileCompanyTransactionsJournalTransaction();
-			transaction.setAmnt(new BigDecimal("1"));
-			transaction.setDesc("Transactie");
-			transaction.setNr("1");
-			transaction.setPeriodNumber(new BigInteger("1"));
-			transaction.setTrDt(date);
-			transaction.setAmntTp("btw code?");
+			String currentKostenSoortOmschrijving = null;
+			Journal journal = null;
 			
-			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
-			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
-			vat.setVatAmnt(new BigDecimal("5.43"));
-			trLine.getVat().add(vat);
-			
-			Currency currency = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineCurrency();
-			currency.setCurCode(CurrencyCodeType.EUR);
-			
-			trLine.setCurrency(currency);
-			
-			transaction.getTrLine().add(trLine);
-			
-			
-			
-		
-			
-			journal.getTransaction().add(transaction);
-			
-//			journal.set
-			
+			ResourceBundle resource = ResourceBundle.getBundle("properties/messages", new Locale("NL"));
+			for (Kost cost: costList) {
+				String kostenSoortOmschrijving = cost.getKostenSoortOmschrijving();
+				Transaction transaction = createTransaction(cost);
+				if (!kostenSoortOmschrijving.equals(currentKostenSoortOmschrijving)) {
+					currentKostenSoortOmschrijving = kostenSoortOmschrijving;
+					if (journal != null) {
+						// Add the previous journal
+						transactions.getJournal().add(journal);
+					}
+					// Start a new journal
+					journal = objectFactory.createAuditfileCompanyTransactionsJournal();
+					journal.setDesc(resource.getString(cost.getKostenSoortOmschrijving()).trim());
+				} 
+				journal.getTransaction().add(transaction);
+			}
+			if (journal != null) {
+				transactions.getJournal().add(journal);
+			}
 			company.setTransactions(transactions);
 			auditfile.setCompany(company);
 			

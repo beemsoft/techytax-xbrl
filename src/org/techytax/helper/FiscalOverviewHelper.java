@@ -56,7 +56,7 @@ public class FiscalOverviewHelper {
 
 		int forLimiet = KostConstanten.MAXIMALE_FOR;
 		Date datum = DateHelper.stringToDate(beginDatum);
-		int jaar = DateHelper.getJaar(datum);
+		int jaar = DateHelper.getYear(datum);
 
 		// Maak winst-en-verlies rekening op
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen);

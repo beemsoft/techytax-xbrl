@@ -108,7 +108,7 @@ public class DepreciationHelper {
 		totaalAfschrijvingenOverig = BalanceCalculator
 				.getOverigeAfschrijvingen(aftrekpostenLijst);
 		Boekwaarde boekwaarde = new Boekwaarde();
-		int ditJaar = DateHelper.getJaar(periode.getBeginDatum());
+		int ditJaar = DateHelper.getYear(periode.getBeginDatum());
 		boekwaarde.setJaar(ditJaar);
 		boekwaarde.setBalansId(Activa.CAR);
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();

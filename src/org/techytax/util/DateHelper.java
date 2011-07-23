@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -25,6 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.techytax.domain.Periode;
 
 public class DateHelper {
@@ -45,6 +48,22 @@ public class DateHelper {
 		String dateString = format.format(date);
 		return dateString;
 	}
+	
+	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
+		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
+		.newXMLGregorianCalendar();
+		Date date = stringToDate(date_str);
+		calendar.setDay(getDay(date));
+		calendar.setMonth(getMonth(date)+1);
+		calendar.setYear(getYear(date));
+		return calendar;
+	}
+	
+	public static int getDay(Date date) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		return cal.get(Calendar.DAY_OF_MONTH);
+	}	
 
 	public static int getMonth(Date date) {
 		Calendar cal = new GregorianCalendar();
@@ -68,7 +87,7 @@ public class DateHelper {
 		return periode;
 	}
 
-	public static int getJaar(Date date) {
+	public static int getYear(Date date) {
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.setTime(date);
 		int jaar = cal.get(Calendar.YEAR);
