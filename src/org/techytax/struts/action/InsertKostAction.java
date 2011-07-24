@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -47,6 +47,7 @@ public class InsertKostAction extends Action {
 		KostForm kostForm = (KostForm) form;
 		Kost kost = new Kost();
 		BeanUtils.copyProperties(kost, kostForm);
+		kost.setId(0);
 		BoekDao boekDao = new BoekDao();
 		boekDao.insertKost(kost);
 		KostensoortDao kostensoortDao = new KostensoortDao();
