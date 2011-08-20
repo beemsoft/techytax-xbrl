@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>
+		<p><a href="http://www.techytax.org/forum/">Forum</a></p>
 <%
 	if (request.isUserInRole("admin")) {
 %>	
