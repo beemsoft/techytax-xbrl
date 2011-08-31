@@ -19,11 +19,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+<%@ taglib uri="struts-logic" prefix="logic"%>
 <%@ page import="org.techytax.util.IbatisUtil"%>
 <%@ page import="org.techytax.util.ConnectionInfo"%>
-<%
-	if (request.isUserInRole("admin")) {
-%>
+
+<logic:present name="user" scope="session">
+<logic:equal name="user" property="administrator" value="true">
 <h4 class="section"><bean:message key="db.info"/></h4>
 <html:form action="/changeDatabase.do">
 <table class="formTable">
@@ -51,6 +52,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </table>
 </html:form>
 <html:errors/>
-<%
-	}
-%>
+</logic:equal>
+</logic:present>

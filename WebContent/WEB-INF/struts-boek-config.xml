@@ -34,7 +34,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="accountBalanceForm" type="org.techytax.struts.form.AccountBalanceForm" />		
 		<form-bean name="databaseForm" type="org.techytax.struts.form.DatabaseForm" />		
 		<form-bean name="vatReportForm" type="org.techytax.struts.form.VatReportForm" />
-		<form-bean name="auditReportForm" type="org.techytax.struts.form.AuditReportForm" />			
+		<form-bean name="auditReportForm" type="org.techytax.struts.form.AuditReportForm" />
+		<form-bean name="loginForm" type="org.techytax.struts.form.LoginForm" />		
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -84,7 +85,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>
 		<action path="/insertKost" type="org.techytax.struts.action.InsertKostAction"
-			name="kostForm" scope="session">
+			name="kostForm" scope="session" >
 			<forward name="success" path="/WEB-INF/jsp/boek/insertKost.jsp"></forward>
 		</action>
 		<action path="/getKostensoortLijst"
@@ -94,7 +95,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>		
 		<action path="/updateKostensoort" type="org.techytax.struts.action.UpdateKostensoortAction"
-			name="kostensoortForm" scope="request">
+			name="kostensoortForm" scope="request" roles="admin">
 			<forward name="success" path="/getKostensoortLijst.do"></forward>
 		</action>
 		<action path="/editKostensoort" name="kostensoortForm"
@@ -104,7 +105,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>
 		<action path="/newKostensoort" type="org.techytax.struts.action.NewKostensoortAction"
-			scope="request">
+			scope="request" >
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/insertKostensoort.jsp">
 			</forward>
@@ -230,7 +231,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/sendAuditReport" type="org.techytax.struts.action.SendAuditReportAction"
 			name="auditReportForm">
 			<forward name="success" path="/getKostLijst.do"></forward>
-		</action>		
+		</action>
+		<action path="/login" type="org.techytax.struts.action.LoginAction"
+			name="loginForm">
+			<forward name="success" path="/index.jsp"></forward>
+		</action>
+		<action path="/logout" type="org.techytax.struts.action.LogoutAction">
+			<forward name="success" path="/index.jsp"></forward>
+		</action>				
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />

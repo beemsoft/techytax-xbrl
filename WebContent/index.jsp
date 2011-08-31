@@ -17,34 +17,68 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ taglib uri="struts-html" prefix="html" %>
+<%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
-<%
-	if (request.getParameter("logoff") != null) {
-		session.invalidate();
-		response.sendRedirect("http://localhost:8080"
-				+ request.getContextPath());
-		return;
-	}
-%>
-<h4 class="section"><bean:message key="welcome.title" /></h4>
+<%@ taglib uri="struts-logic" prefix="logic"%>
+<%@ page import="org.techytax.props.PropsFactory"%>
+<%@ page import="java.util.Properties"%>
+
+<h4 class="section"><bean:message key="welcome.title" /> <logic:present
+	name="user" scope="session">
+	<bean:write name="user" property="fullName" />
+</logic:present></h4>
 <table>
 	<tr>
 		<td valign="top">
-		<p><bean:message key="welcome.intro" /></p>
-		<p><bean:message key="welcome.security" /></p>
+		<logic:notPresent name="user" scope="session">
+		<p><bean:message key="welcome.intro" />
+		</p>
+		</logic:notPresent>
+		 <logic:present	name="user" scope="session"><p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p></logic:present>
 		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>
 		<p><a href="http://www.techytax.org/forum/">Forum</a></p>
-<%
-	if (request.isUserInRole("admin")) {
-%>	
-		<p><html:link action="/getDatabaseInfo.do"><bean:message key="db.info"/></html:link></p>	
-<%
-	}
-%>
-		</td>
+		<logic:present name="user" scope="session">
+			<logic:equal name="user" property="administrator" value="true">
+				<p><html:link action="/getDatabaseInfo.do">
+					<bean:message key="db.info" />
+				</html:link></p>
+			</logic:equal>
+		</logic:present></td>
 	</tr>
 </table>
+
+<logic:notPresent name="user" scope="session">
+	<h4 class="section"><bean:message key="logon.title" /></h4>
+	<p><bean:message key="logon.descr" /></p>
+	<html:form action="/login">
+		<table class="formTable">
+			<tr>
+				<td><bean:message key="logon.username" /></td>
+				<td><html:text property="username" /></td>
+			</tr>
+			<tr>
+				<td><bean:message key="logon.password" /></td>
+				<td><html:password property="password" /></td>
+			</tr>
+		</table>
+		<div class="margins"><html:submit>
+			<bean:message key="logon.title" />
+		</html:submit> <br class="spacer" />
+		</div>
+	</html:form>
+
+	<%
+		Properties props = PropsFactory.loadProperties();
+	%>
+	<%=props.getProperty("html.extra")%>
+</logic:notPresent>
+
+<html:errors />
+
+
+
+
+

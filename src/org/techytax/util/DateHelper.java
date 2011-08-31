@@ -33,6 +33,7 @@ import org.techytax.domain.Periode;
 public class DateHelper {
 
 	private static String datePattern = "yyyy-MM-dd";
+	private static String timePattern = "yyyy-MM-dd HH:mm:ss";
 
 	public static Date stringToDate(String date_str) throws Exception {
 		SimpleDateFormat df_zos = new SimpleDateFormat(datePattern);
@@ -48,6 +49,12 @@ public class DateHelper {
 		String dateString = format.format(date);
 		return dateString;
 	}
+	
+	public static String getTime(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat(timePattern);
+		String timeString = format.format(date);
+		return timeString;
+	}	
 	
 	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
 		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
