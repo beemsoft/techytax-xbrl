@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+<%@ taglib uri="struts-logic" prefix="logic"%>
 
 <table cellspacing="0" cellpadding="20" id="contentTable">
 	<tr>
@@ -56,12 +57,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<html:link action="getAccounts.do">
 			<bean:message key="menu.accounts" />
 			<span> <bean:message key="menu.accounts.descr" /></span>
-		</html:link> <%
- 	if (request.getUserPrincipal() != null) {
- %> <a href="<%=request.getContextPath()%>/index.jsp?logoff=true"><bean:message
-			key="menu.log.off" /></a> <%
- 	}
- %>
+		</html:link>
+		<logic:present name="user" scope="session">
+			<html:link action="logout">
+			<bean:message key="menu.log.off" />
+			</html:link>
+		</logic:present>
 		</div>
 		</div>
 		</td>

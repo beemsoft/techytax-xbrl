@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -32,6 +32,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>adminAccessFilter</filter-name>
+		<filter-class>org.techytax.security.AuthorizationFilter</filter-class>
+		<init-param>
+			<param-name>onError</param-name>
+			<param-value>/index.jsp</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminAccessFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>	
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -66,42 +78,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
-<!-- -->
-	<security-constraint>
-		<display-name></display-name>
-		<web-resource-collection>
-			<web-resource-name>Only for admin user</web-resource-name>
-			<description></description>
-			<url-pattern>*.do</url-pattern>
-		</web-resource-collection>
-		<auth-constraint>
-			<description></description>
-			<role-name>admin</role-name>
-		</auth-constraint>
-		<auth-constraint>
-			<role-name>guest</role-name>			
-		</auth-constraint>
-		<user-data-constraint>
-			<transport-guarantee>NONE</transport-guarantee>
-		</user-data-constraint>
-	</security-constraint>
- <!--  -->	
- <security-role>
- 	<role-name>admin</role-name>
- </security-role>
- <security-role>
- 	<role-name>guest</role-name>
- </security-role> 
-
-	<login-config>
-		<auth-method>FORM</auth-method>
-		<realm-name>User Registry</realm-name>
-		<form-login-config>
-			<form-login-page>/jsp/logon.jsp</form-login-page>
-			<form-error-page>/jsp/logonerror.jsp</form-error-page>
-		</form-login-config>
-	</login-config>
-
 	<jsp-config>
 		<taglib>
 			<taglib-uri>struts-bean</taglib-uri>
@@ -126,11 +102,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<taglib-uri>fmt</taglib-uri>
 			<taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
 		</taglib>
-		
+
 		<taglib>
 			<taglib-uri>i18n</taglib-uri>
 			<taglib-location>/WEB-INF/tld/i18n.tld</taglib-location>
-		</taglib>		
+		</taglib>
 
 		<taglib>
 			<taglib-uri>sitemesh-page</taglib-uri>

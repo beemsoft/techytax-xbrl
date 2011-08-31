@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ taglib uri="sitemesh-page" prefix="page"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+<%@ taglib uri="struts-logic" prefix="logic"%>
 
 <html>
 <head>
@@ -52,7 +53,11 @@ function scrollToItem(id) {
 		<td class="noPrint" id="navigationCell" valign="top">
 		<page:applyDecorator page="/WEB-INF/jsp/menu.jsp" name="panel" /></td>
 		<td id="contentCell" valign="top"><table class="headerTable"><tr><td><img
-			src="images/techytax_logo.png" /></td><td><bean:message key="program.disclaimer"/></td><td><a href="http://sourceforge.net/projects/techytax"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=260219&amp;type=14" width="150" height="40" alt="Get TechyTax at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td></tr></table> 
+			src="images/techytax_logo.png" /></td><td><logic:present name="user" scope="session">
+			<logic:equal name="user" property="guest" value="true">
+				<bean:message key="program.disclaimer"/>
+			</logic:equal>
+		</logic:present></td><td><a href="http://sourceforge.net/projects/techytax"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=260219&amp;type=14" width="150" height="40" alt="Get TechyTax at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td></tr></table> 
 			<decorator:body /></td>
 		</tr>
 </table>
