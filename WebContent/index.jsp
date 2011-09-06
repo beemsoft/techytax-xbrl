@@ -31,11 +31,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td valign="top">
 		<logic:notPresent name="user" scope="session">
-		<p><bean:message key="welcome.intro" />
-		</p>
+		<p><bean:message key="welcome.intro" /></p>
+		 <p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
 		</logic:notPresent>
-		 <logic:present	name="user" scope="session"><p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p></logic:present>
-		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
+		 <logic:present	name="user" scope="session">
+		 <p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p>
+		 <logic:equal name="user" property="user" value="false">
+		 <p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
+		 </logic:equal>
+		 </logic:present>
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>

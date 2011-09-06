@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,58 +21,66 @@ package org.techytax.domain;
 
 
 public class Account {
-	private long id = 0;
-	private String description;
-	private String number;
-	private String name;
-	private String dateOpened;
 	private String dateClosed;
-
-	public long getId() {
-		return id;
+	private String dateOpened;
+	private String description;
+	private long id = 0;
+	private String name;
+	private String number;
+	private long userId;
+	
+	public String getDateClosed() {
+		return dateClosed;
 	}
-
-	public void setId(long id) {
-		this.id = id;
+	public String getDateOpened() {
+		return dateOpened;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
+	public long getId() {
+		return id;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getNumber() {
+		return number;
 	}
 
-	public String getDateOpened() {
-		return dateOpened;
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setDateClosed(String dateClosed) {
+		this.dateClosed = dateClosed;
 	}
 
 	public void setDateOpened(String dateOpened) {
 		this.dateOpened = dateOpened;
 	}
 
-	public String getDateClosed() {
-		return dateClosed;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public void setDateClosed(String dateClosed) {
-		this.dateClosed = dateClosed;
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

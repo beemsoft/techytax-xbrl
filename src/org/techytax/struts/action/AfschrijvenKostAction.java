@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
+import org.techytax.domain.User;
 import org.techytax.helper.DepreciationHelper;
 
 public class AfschrijvenKostAction extends Action {
@@ -43,8 +44,9 @@ public class AfschrijvenKostAction extends Action {
 		String id = (String) request.getParameter("id");
 		System.out.println("Afschrijven van kost: " + id);
 		BoekDao dao = new BoekDao();
+		User user = (User) request.getSession().getAttribute("user");
 		try {
-			Kost kost = dao.getKost(id);
+			Kost kost = dao.getKost(id, user.getId());
 			List<Kost> result = helper.verdeelKosten(kost);
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {

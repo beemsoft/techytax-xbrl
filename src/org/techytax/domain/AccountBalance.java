@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,32 +22,39 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 
 public class AccountBalance {
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
+	private long accountId;
+	private BigDecimal balance;
+	private String datum;
+	private long id = 0;
+	private long userId;
 	public long getAccountId() {
 		return accountId;
-	}
-	public void setAccountId(long accountId) {
-		this.accountId = accountId;
-	}
-	public String getDatum() {
-		return datum;
-	}
-	public void setDatum(String datum) {
-		this.datum = datum;
 	}
 	public BigDecimal getBalance() {
 		return balance;
 	}
+	public String getDatum() {
+		return datum;
+	}
+	public long getId() {
+		return id;
+	}
+	public long getUserId() {
+		return userId;
+	}
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
-	private long id = 0;
-	private long accountId;
-	private String datum;
-	private BigDecimal balance;
+	public void setDatum(String datum) {
+		this.datum = datum;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 }

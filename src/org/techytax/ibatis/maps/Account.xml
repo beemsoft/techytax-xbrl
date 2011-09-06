@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -23,27 +23,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <sqlMap namespace="Account">
 	<typeAlias alias="account" type="org.techytax.domain.Account" />
 	<typeAlias alias="balance" type="org.techytax.domain.AccountBalance" />	
-	<select id="getAccounts" resultClass="account">
-		SELECT * FROM accounts
+	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
+	<select id="getAccounts" parameterClass="key" resultClass="account">
+		SELECT * FROM accounts WHERE user_id = #userId#
 	</select>
 	<insert id="insertAccount" parameterClass="account">
 		insert into accounts
-		values(#id#,#description#,#number#,#name#,#dateOpened#,#dateClosed#)
+		values(#id#,#userId#,#description#,#number#,#name#,#dateOpened#,#dateClosed#)
 	</insert>
-	<select id="getAccount" parameterClass="string"
+	<select id="getAccount" parameterClass="key"
 		resultClass="account">
-		SELECT id, description, number, name, date_opened as dateOpened, date_closed as dateClosed FROM accounts WHERE id = #value#
+		SELECT id, user_id as userId, description, number, name, date_opened as dateOpened, date_closed as dateClosed FROM accounts WHERE id = #id# AND user_id = #userId#
 	</select>
 	<update id="updateAccount" parameterClass="account">
 		update accounts set description = #description#,
-		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed# WHERE id = #id#
+		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed# WHERE id = #id# AND user_id = #userId#
 	</update>
-	<select id="getAccountBalance" parameterClass="string"
+	<select id="getAccountBalance" parameterClass="key"
 		resultClass="balance">
-		SELECT id, account_id as accountId, datum, balance FROM account_balance WHERE account_id = #value#
+		SELECT id, account_id as accountId, datum, balance FROM account_balance WHERE account_id = #id# AND user_id = #userId#
 	</select>
 	<insert id="insertAccountBalance" parameterClass="balance">
 		insert into account_balance
-		values(#id#,#accountId#,#datum#,#balance#)
+		values(#id#,#userId#,#accountId#,#datum#,#balance#)
 	</insert>
 </sqlMap>

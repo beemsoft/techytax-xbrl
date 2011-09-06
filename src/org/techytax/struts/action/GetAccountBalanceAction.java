@@ -31,6 +31,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.AccountBalance;
+import org.techytax.domain.KeyId;
+import org.techytax.domain.User;
 
 public class GetAccountBalanceAction extends Action {
 
@@ -45,7 +47,11 @@ public class GetAccountBalanceAction extends Action {
 		if (StringUtils.isNotEmpty(id)) {
 			try {
 				AccountDao dao = new AccountDao();
-				result = dao.getAccountBalance(id);
+				KeyId key = new KeyId();
+				User user = (User) request.getSession().getAttribute("user");
+				key.setId(Long.parseLong(id));
+				key.setUserId(user.getId());				
+				result = dao.getAccountBalance(key);
 				request.setAttribute("accountBalance", result);
 				request.setAttribute("accountId", id);
 				forward = "success";

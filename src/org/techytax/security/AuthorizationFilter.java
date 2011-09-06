@@ -97,6 +97,8 @@ public class AuthorizationFilter implements Filter {
 				List<String> actions = null;
 				if ("guest".equals(role)) {
 					actions = getGuestActions();
+				} else if ("user".equals(role)) {
+					actions = getUserActions();
 				} else if ("admin".equals(role)) {
 					actions = getAdminActions();
 				}

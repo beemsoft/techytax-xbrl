@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
+import org.techytax.domain.KeyId;
 
 public class AccountDao extends BaseDao {
 	public void insertAccount(Account account) throws Exception {
@@ -35,9 +36,9 @@ public class AccountDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Account> getAccounts() throws Exception {
+	public List<Account> getAccounts(KeyId key) throws Exception {
 		try {
-			return sqlMap.queryForList("getAccounts", null);
+			return sqlMap.queryForList("getAccounts", key);
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -51,18 +52,18 @@ public class AccountDao extends BaseDao {
 		}
 	}
 
-	public Account getAccount(String id) throws Exception {
+	public Account getAccount(KeyId key) throws Exception {
 		try {
-			return (Account) sqlMap.queryForObject("getAccount", id);
+			return (Account) sqlMap.queryForObject("getAccount", key);
 		} catch (SQLException ex) {
 			throw ex;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AccountBalance> getAccountBalance(String id) throws Exception {
+	public List<AccountBalance> getAccountBalance(KeyId key) throws Exception {
 		try {
-			return sqlMap.queryForList("getAccountBalance", id);
+			return sqlMap.queryForList("getAccountBalance", key);
 		} catch (SQLException ex) {
 			throw ex;
 		}

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.techytax.domain.Aftrekpost;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 
@@ -46,9 +47,9 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getKostLijst() throws Exception {
+	public List<Kost> getKostLijst(String userId) throws Exception {
 		try {
-			return sqlMap.queryForList("getKostLijst", null);
+			return sqlMap.queryForList("getKostLijst", userId);
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -64,17 +65,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getAlleKosten() throws Exception {
-		try {
-			return sqlMap.queryForList("getAlleKosten", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Kost> getKostLijst(String beginDatum, String eindDatum, String balansSoort) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public List<Kost> getKostLijst(String beginDatum, String eindDatum, String balansSoort, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			if (balansSoort.equals("alles")) {
 				return sqlMap.queryForList("getCompleteKostLijst", map);
@@ -107,8 +99,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Aftrekpost> getDeductableCosts(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public List<Aftrekpost> getDeductableCosts(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return sqlMap.queryForList("getAftrekpostenLijst", map);
 		} catch (SQLException ex) {
@@ -117,8 +109,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	@Deprecated
-	public Integer getBelastingKosten(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public Integer getBelastingKosten(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return (Integer) sqlMap.queryForObject("getBelastingKosten", map);
 		} catch (SQLException ex) {
@@ -127,8 +119,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	@Deprecated
-	public Integer getBelastingTeruggave(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public Integer getBelastingTeruggave(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return (Integer) sqlMap.queryForObject("getBelastingTeruggave", map);
 		} catch (SQLException ex) {
@@ -144,28 +136,20 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public Kost getKost(String id) throws Exception {
+	public Kost getKost(String id, long userId) throws Exception {
+		KeyId key = new KeyId();
+		key.setId(Long.parseLong(id));
+		key.setUserId(userId);
 		try {
-			return (Kost) sqlMap.queryForObject("getKost", id);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}
-
-	public Kost getKostMetDatumEnBedrag(String datum, String bedrag) throws Exception {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("datum", datum);
-		map.put("bedrag", bedrag);
-		try {
-			return (Kost) sqlMap.queryForObject("getKostMetDatumEnBedrag", map);
+			return (Kost) sqlMap.queryForObject("getKost", key);
 		} catch (SQLException ex) {
 			throw ex;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getVatCorrectionDepreciation(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public List<Kost> getVatCorrectionDepreciation(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return sqlMap.queryForList("getVatCorrectionDepreciation", map);
 		} catch (SQLException ex) {
@@ -174,8 +158,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	@Deprecated
-	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return (Integer) sqlMap.queryForObject("getVatCorrectionPrivate", map);
 		} catch (SQLException ex) {
@@ -184,8 +168,8 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Kost> getTaxList(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public List<Kost> getTaxList(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return sqlMap.queryForList("getTaxList", map);
 		} catch (SQLException ex) {
@@ -194,8 +178,8 @@ public class BoekDao extends BaseDao {
 	}	
 	
 	@SuppressWarnings("unchecked")
-	public List<Kost> getAuditList(String beginDatum, String eindDatum) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum);
+	public List<Kost> getAuditList(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		try {
 			return sqlMap.queryForList("getAuditList", map);
 		} catch (SQLException ex) {

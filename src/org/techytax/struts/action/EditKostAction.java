@@ -36,6 +36,7 @@ import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
+import org.techytax.domain.User;
 import org.techytax.struts.form.KostForm;
 
 public class EditKostAction extends Action {
@@ -49,6 +50,7 @@ public class EditKostAction extends Action {
 		String id = (String) request.getParameter("id");
 		Kost result = null;
 		KostForm objForm = (KostForm) form;
+		User user = (User) request.getSession().getAttribute("user");
 
 		if (StringUtils.isNotEmpty(id)) {
 			BoekDao boekDao = new BoekDao();
@@ -58,7 +60,7 @@ public class EditKostAction extends Action {
 					.getKostensoortLijst();
 			request.setAttribute("kostenSoortLijst", kostenSoortLijst);
 
-			result = boekDao.getKost(id);
+			result = boekDao.getKost(id, user.getId());
 
 			BeanUtils.copyProperties(objForm, result);
 

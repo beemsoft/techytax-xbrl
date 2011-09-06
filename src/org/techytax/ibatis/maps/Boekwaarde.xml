@@ -22,14 +22,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Boekwaarde">
 	<typeAlias alias="boekwaarde" type="org.techytax.domain.Boekwaarde" />
-	<select id="getVorigeBoekwaarde" resultClass="boekwaarde">
-		SELECT id, balans_id as balansId, boekjaar as jaar, saldo FROM boekwaarde WHERE balans_id=#balansId# AND boekjaar=#jaar#-1
+	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
+		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		FROM boekwaarde 
+		WHERE balans_id=#balansId# 
+		AND boekjaar=#jaar#-1
+		AND user_id=#userId#
 	</select>
-	<select id="getBoekwaardeDitJaar" resultClass="boekwaarde">
-		SELECT id, balans_id as balansId, boekjaar as jaar, saldo FROM boekwaarde WHERE balans_id=#balansId# AND boekjaar=#jaar#
+	<select id="getBoekwaardeDitJaar" parameterClass="boekwaarde" resultClass="boekwaarde">
+		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		FROM boekwaarde 
+		WHERE balans_id=#balansId# 
+		AND boekjaar=#jaar#
+		AND user_id=#userId#
 	</select>	
 	<insert id="insertBoekwaarde" parameterClass="boekwaarde">
 		insert into boekwaarde
-		values(#id#,#balansId#,#jaar#,#saldo#)
+		values(#id#,#userId#,#balansId#,#jaar#,#saldo#)
 	</insert>
 </sqlMap>

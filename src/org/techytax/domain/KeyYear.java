@@ -17,33 +17,26 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.dao;
+package org.techytax.domain;
 
-import java.sql.SQLException;
-import java.util.List;
 
-import org.techytax.domain.Activa;
-import org.techytax.domain.KeyYear;
-import org.techytax.domain.Passiva;
-
-public class FiscaalDao extends BaseDao {
-
-	@SuppressWarnings("unchecked")
-	public List<Activa> getActivaLijst(KeyYear key) throws Exception {
-		try {
-			return sqlMap.queryForList("getActivaLijst", key);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+public class KeyYear {
+	private long userId;
+	private int year;
+	
+	public long getUserId() {
+		return userId;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Passiva> getPassivaLijst(KeyYear key) throws Exception {
-		try {
-			return sqlMap.queryForList("getPassivaLijst", key);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public int getYear() {
+		return year;
 	}
 
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
 }

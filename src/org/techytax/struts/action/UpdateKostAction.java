@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
+import org.techytax.domain.User;
 import org.techytax.struts.form.KostForm;
 
 public class UpdateKostAction extends Action {
@@ -38,9 +39,10 @@ public class UpdateKostAction extends Action {
 			throws Exception {
 
 		KostForm kostForm = (KostForm) form;
-
+		User user = (User) request.getSession().getAttribute("user");
 		Kost kost = new Kost();
 		BeanUtils.copyProperties(kost, kostForm);
+		kost.setUserId(user.getId());
 		BoekDao boekDao = new BoekDao();
 
 		boekDao.updateKost(kost);

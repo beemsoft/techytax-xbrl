@@ -38,6 +38,7 @@ import org.techytax.domain.Kost;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.Reiskosten;
+import org.techytax.domain.User;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.helper.FiscalOverviewHelper;
 import org.techytax.struts.form.BalansForm;
@@ -59,8 +60,10 @@ public class GetKostLijstWithFormAction extends Action {
 			balansForm.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
 		}
 		try {
+			User user = (User) request.getSession().getAttribute("user");
+			String userId = Long.toString(user.getId());
 			BoekDao boekDao = new BoekDao();
-			result = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), balansForm.getBalansSoort());
+			result = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), balansForm.getBalansSoort(), userId);
 			request.setAttribute("kostLijst", result);
 
 			if (balansForm.getBalansSoort().equals("btwBalans")) {
@@ -100,7 +103,7 @@ public class GetKostLijstWithFormAction extends Action {
 				forward = "success";
 			} else {
 				if (action.equals("Fiscaal overzicht")) {
-					FiscalOverview overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result);
+					FiscalOverview overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result, user.getId());
 					request.setAttribute("overzicht", overview);
 					forward = "fiscaal";
 				} else {
