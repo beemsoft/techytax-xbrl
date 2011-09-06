@@ -60,6 +60,10 @@ public class User implements Serializable {
 	public boolean isAdministrator() {
 		return hasRole("admin");
 	}
+	
+	public boolean isUser() {
+		return hasRole("user");
+	}	
 
 	public boolean isBlocked() {
 		return blocked;

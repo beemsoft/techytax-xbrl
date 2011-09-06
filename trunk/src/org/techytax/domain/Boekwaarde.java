@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,40 +21,49 @@ package org.techytax.domain;
 
 public class Boekwaarde {
 
-	private long id = 0;
 	private long balansId;
+	private long id = 0;
 	private int jaar;
 	private int saldo;
+	private long userId;
 
 	public long getBalansId() {
 		return balansId;
-	}
-
-	public void setBalansId(long balansId) {
-		this.balansId = balansId;
-	}
-
-	public int getJaar() {
-		return jaar;
-	}
-
-	public void setJaar(int jaar) {
-		this.jaar = jaar;
-	}
-
-	public int getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(int saldo) {
-		this.saldo = saldo;
 	}
 
 	public long getId() {
 		return id;
 	}
 
+	public int getJaar() {
+		return jaar;
+	}
+
+	public int getSaldo() {
+		return saldo;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setBalansId(long balansId) {
+		this.balansId = balansId;
+	}
+
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void setJaar(int jaar) {
+		this.jaar = jaar;
+	}
+
+	public void setSaldo(int saldo) {
+		this.saldo = saldo;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

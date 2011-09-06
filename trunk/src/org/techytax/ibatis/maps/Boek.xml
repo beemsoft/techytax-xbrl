@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -22,165 +22,208 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Kost">
 	<typeAlias alias="kost" type="org.techytax.domain.Kost" />
+	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
 		<parameter property="eindDatum" javaType="string" />
+		<parameter property="userId" javaType="string" />
 	</parameterMap>
 	<parameterMap id="periodeMapWithInvestment" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
 		<parameter property="eindDatum" javaType="string" />
-		<parameter property="investmentMinimum" javaType="string" />		
+		<parameter property="investmentMinimum" javaType="string" />
+		<parameter property="userId" javaType="string" />				
 	</parameterMap>	
 	<parameterMap id="kostMap" class="java.util.Map">
 		<parameter property="datum" javaType="string" />
 		<parameter property="bedrag" javaType="string" />
+		<parameter property="userId" javaType="string" />		
 	</parameterMap>
 
 	<select id="getKostLijst" parameterClass="string"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.omschrijving
-		as kostenSoortOmschrijving, ks.id as kostenSoortId FROM kosten
-		k, kostensoort ks WHERE k.kostensoort_id = ks.id 
-		AND datum &lt;= CURDATE() ORDER BY datum DESC
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.omschrijving as kostenSoortOmschrijving, ks.id as kostenSoortId 
+		FROM kosten	k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND datum &lt;= CURDATE()
+		AND user_id = #value# 
+		ORDER BY datum DESC
 		LIMIT 10
 	</select>
-	<select id="getAlleKosten" parameterClass="string"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.omschrijving
-		as kostenSoortOmschrijving, ks.id as kostenSoortId FROM kosten
-		k, kostensoort ks WHERE k.kostensoort_id = ks.id 
-		AND datum &lt;= CURDATE() ORDER BY datum ASC
-	</select>	
 	<select id="getCompleteKostLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? ORDER BY datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>	
 	<select id="getBtwBalansLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (select id from
-		kostensoort where btwVerrekenbaar = 1)
-		AND btw &gt; 0 ORDER BY datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (select id from kostensoort where btwVerrekenbaar = 1)
+		AND btw &gt; 0
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>
 	<select id="getRekeningBalansLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (select id from
-		kostensoort where balansmeetellen = 1) ORDER BY datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (select id from kostensoort where balansmeetellen = 1) 
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>
 	<select id="getKostenBalansLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (1,2,3,7,8,9,13,14,19,20,27,28,31,32)
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (1,2,3,7,8,9,13,14,19,20,27,28,31,32)
+		AND user_id = ?
 		ORDER BY datum asc
 	</select>
 	<select id="getReisKostenBalansLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (8,9,14,19,31,36) ORDER BY
-		datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (8,9,14,19,31,36) 
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>
 	<select id="getInvesteringenLijst" parameterMap="periodeMapWithInvestment"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND bedrag >= ? AND ks.id NOT
-		IN (1,4,5,12,14,15,23,24,25,29,30) ORDER BY datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND bedrag >= ? 
+		AND ks.id NOT IN (1,4,5,12,14,15,23,24,25,29,30) 
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>
 	<select id="getAfschrijvingenLijst" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (23,25) ORDER BY
-		datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (23,25)
+		AND user_id = ? 
+		ORDER BY datum asc
 	</select>
 	<select id="getPrivateExpenses" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT id, amount as bedrag, is_incoming as isIncoming, datum, description as omschrijving FROM
-		private_expenses WHERE datum &gt;= ? AND datum &lt;= ? ORDER BY
+		SELECT id, amount as bedrag, is_incoming as isIncoming, datum, description as omschrijving 
+		FROM private_expenses 
+		WHERE datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND user_id = ?
+		ORDER BY
 		datum asc
 	</select>
 	<select id="getTaxList" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id 
-		IN (12,29,30,31,34) ORDER BY datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (12,29,30,31,34)
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>	
 	<select id="getVatCorrectionDepreciation" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (35) ORDER BY
-		datum asc
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (35)
+		AND user_id = ? 
+		ORDER BY datum asc
 	</select>
 	<select id="getAuditList" parameterMap="periodeMap"
 		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as
-		kostenSoortId, ks.omschrijving as kostenSoortOmschrijving FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (1,2,4,5,7,8,9,12,13,14,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39)
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (1,2,4,5,7,8,9,12,13,14,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,38,39)
+		AND user_id = ?
 		ORDER BY ks.id asc
 	</select>	
 	<select id="getVatCorrectionPrivate" parameterMap="periodeMap"
 		resultClass="int">
-		SELECT sum(bedrag) FROM
-		kosten k, kostensoort ks WHERE k.kostensoort_id = ks.id AND
-		datum &gt;= ? AND datum &lt;= ? AND ks.id IN (36) ORDER BY
-		datum asc
+		SELECT sum(bedrag)
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id IN (36)
+		AND user_id = ?
+		ORDER BY datum asc
 	</select>
 	<select id="getBelastingKosten" parameterMap="periodeMap"
 		resultClass="int">
-		SELECT sum(bedrag) FROM kosten WHERE datum &gt;= ? AND datum &lt;= ? AND (kostensoort_id IN (29) OR omschrijving LIKE '%Voorlopige IB%')
+		SELECT sum(bedrag) 
+		FROM kosten 
+		WHERE datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND (kostensoort_id IN (29) OR omschrijving LIKE '%Voorlopige IB%')
+		AND user_id = ?
 	</select>
 	<select id="getBelastingTeruggave" parameterMap="periodeMap"
 		resultClass="int">
-		SELECT sum(bedrag) FROM
-		kosten WHERE datum &gt;= ? AND datum &lt;= ? AND kostensoort_id IN (30)
+		SELECT sum(bedrag) 
+		FROM kosten 
+		WHERE datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND kostensoort_id IN (30)
+		AND user_id = ?
 	</select>
 	<insert id="insertKost" parameterClass="kost">
 		insert into kosten
-		values(#id#,#bedrag#,#datum#,#omschrijving#,#btw#,0,#kostenSoortId#)
+		values(#id#,#userId#,#bedrag#,#datum#,#omschrijving#,#btw#,#kostenSoortId#)
 		<selectKey resultClass="int" keyProperty="id">
 			SELECT @@IDENTITY AS ID
 		</selectKey>
 	</insert>
 	<insert id="insertPrivateExpense" parameterClass="kost">
 		insert into private_expenses
-		values(#id#,#bedrag#,#isIncoming#,#datum#,#omschrijving#)
+		values(#id#,#userId#,#bedrag#,#isIncoming#,#datum#,#omschrijving#)
 		<selectKey resultClass="int" keyProperty="id">
 			SELECT @@IDENTITY AS ID
 		</selectKey>
 	</insert>	
-	<select id="getKost" parameterClass="string" resultClass="kost">
-		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as
-		kostenSoortId FROM kosten k, kostensoort ks WHERE k.id = #value#
-		and k.kostensoort_id = ks.id
-	</select>
-	<select id="getKostMetDatumEnBedrag" parameterMap="kostMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as
-		kostenSoortId FROM kosten k, kostensoort ks WHERE k.datum = ?
-		AND k.bedrag = ? and k.kostensoort_id = ks.id
+	<select id="getKost" parameterClass="key" resultClass="kost">
+		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as kostenSoortId 
+		FROM kosten k, kostensoort ks 
+		WHERE k.id = #id#
+		AND k.kostensoort_id = ks.id
+		AND user_id = #userId#
 	</select>
 	<update id="updateKost" parameterClass="kost">
-		update kosten set bedrag = #bedrag#, btw = #btw#, datum =
-		#datum#, omschrijving = #omschrijving#, kostensoort_id =
-		#kostenSoortId# WHERE id = #id#
+		update kosten set bedrag = #bedrag#, btw = #btw#, datum = #datum#, omschrijving = #omschrijving#, kostensoort_id = #kostenSoortId# 
+		WHERE id = #id# 
+		AND user_id = #userId#
 	</update>
 </sqlMap>

@@ -26,6 +26,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.techytax.domain.User;
 import org.techytax.helper.DepreciationHelper;
 
 public class InsertActivaAction extends Action {
@@ -40,8 +41,8 @@ public class InsertActivaAction extends Action {
 		String forward = "success";
 		DepreciationHelper helper = new DepreciationHelper();
 		try {
-
-			helper.toevoegenAfschrijvingenAanActiva();
+			User user = (User) request.getSession().getAttribute("user");
+			helper.toevoegenAfschrijvingenAanActiva(Long.toString(user.getId()));
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -24,49 +24,88 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="activa" type="org.techytax.domain.Activa" />
 	<typeAlias alias="passiva" type="org.techytax.domain.Passiva" />	
 	<typeAlias alias="aftrekpost" type="org.techytax.domain.Aftrekpost" />
+	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
 		<parameter property="eindDatum" javaType="string" />
+		<parameter property="userId" javaType="string" />
 	</parameterMap>
 	<select id="getAftrekpostenLijst" parameterMap="periodeMap"
 		resultClass="aftrekpost">
-		select sum(k.bedrag) as aftrekbaarBedrag, ks.id as kostenSoortId from
-		kosten as k, kostensoort as ks where k.kostensoort_id = ks.id
-		and kostensoort_id in (select id from kostensoort where
-		aftrekbaar=1) and datum &gt;= ? and datum &lt;= ? group by
+		select sum(k.bedrag) as aftrekbaarBedrag, ks.id as kostenSoortId 
+		from
+		kosten as k, kostensoort as ks 
+		where 
+		k.kostensoort_id = ks.id
+		and	kostensoort_id in  (select id 
+								from kostensoort 
+								where
+								aftrekbaar=1)
+		and datum &gt;= ? 
+		and	datum &lt;= ?
+		and user_id = ? 
+		group by
 		kostensoort_id;
 	</select>
-	<select id="getActivaLijst" parameterClass="string"
+	<select id="getActivaLijst" parameterClass="keyYear"
 		resultClass="activa">
-		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as
-		aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo,
-		restwaarde.restwaarde from balans, activa, kosten, balanssoort,
-		boekwaarde, restwaarde where balans.balanssoort_id =
-		balanssoort.id and kosten.id = activa.kost_id and
-		activa.balans_id = balans.id and boekwaarde.balans_id =
-		balans.id and restwaarde.activa_id = activa.id and 
-		(boekjaar=#value#-1) and activa.einddatum is null group by balans.balanssoort_id union
-		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as
-		aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo,
-		restwaarde.restwaarde from balans, activa, kosten, balanssoort,
-		boekwaarde, restwaarde where balans.balanssoort_id =
-		balanssoort.id and kosten.id = activa.kost_id and
-		activa.balans_id = balans.id and boekwaarde.balans_id =
-		balans.id and restwaarde.activa_id = activa.id and
-		(boekjaar=#value#) and activa.einddatum is null group by balans.balanssoort_id 
-		 union select
-		balanssoort.omschrijving, NULL, boekwaarde.boekjaar,
-		boekwaarde.saldo, NULL from balans, balanssoort, boekwaarde where
-		boekwaarde.balans_id = balans.id and (boekjaar=#value# or
-		boekjaar=#value#-1) and balanssoort.id = 3 and
-		balans.balanssoort_id = balanssoort.id order by omschrijving, boekjaar;
+		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
+		where
+		balans.balanssoort_id = balanssoort.id and 
+		kosten.id = activa.kost_id and
+		activa.balans_id = balans.id and 
+		boekwaarde.balans_id = balans.id and 
+		restwaarde.activa_id = activa.id and 
+		(boekjaar=#year#-1) and
+		activa.einddatum is null
+		and activa.user_id = #userId#
+	    and boekwaarde.user_id = #userId#
+	    and restwaarde.user_id = #userId# 
+		
+		group by balans.balanssoort_id
+		
+		union
+		
+		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as	aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
+		where balans.balanssoort_id =
+		balanssoort.id and 
+		kosten.id = activa.kost_id and
+		activa.balans_id = balans.id and 
+		boekwaarde.balans_id = balans.id and 
+		restwaarde.activa_id = activa.id and
+		(boekjaar=#year#) and 
+		activa.einddatum is null
+		and activa.user_id = #userId#
+	    and boekwaarde.user_id = #userId#
+	    and restwaarde.user_id = #userId#  
+		
+		group by balans.balanssoort_id 
+		
+		union 
+		 
+		select balanssoort.omschrijving, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL 
+		from balans, balanssoort, boekwaarde 
+		where
+		boekwaarde.balans_id = balans.id and 
+		(boekjaar=#year# or boekjaar=#year#-1) and 
+		balanssoort.id = 3 and
+		balans.balanssoort_id = balanssoort.id and 
+		boekwaarde.user_id = #userId#
+		
+		order by omschrijving, boekjaar;
 	</select>
-	<select id="getPassivaLijst" parameterClass="string"
+	<select id="getPassivaLijst" parameterClass="keyYear"
 		resultClass="passiva">
-		select balanssoort.omschrijving, boekwaarde.boekjaar,
-		boekwaarde.saldo from balans, balanssoort, boekwaarde where
-		boekwaarde.balans_id = balans.id and (boekjaar=#value# or
-		boekjaar=#value#-1) and balans.balanssoort_id = balanssoort.id
-		and balanssoort.id in (4,5) order by omschrijving, boekjaar;
+		select balanssoort.omschrijving, boekwaarde.boekjaar, boekwaarde.saldo 
+		from balans, balanssoort, boekwaarde 
+		where
+		boekwaarde.balans_id = balans.id and 
+		(boekjaar=#year# or boekjaar=#year#-1) and 
+		balans.balanssoort_id = balanssoort.id
+		and balanssoort.id in (4,5)
+		and boekwaarde.user_id = #userId#
+		order by omschrijving, boekjaar;
 	</select>
 </sqlMap>

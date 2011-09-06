@@ -67,12 +67,12 @@ public class TaxCodeHelper {
 
 	}
 	
-	public static PrepaidTax findPrepaidTax(int year) {
+	public static PrepaidTax findPrepaidTax(int year, String userId) {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
 		BoekDao boekDao = new BoekDao();
 		try {
-			List<Kost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()));
+			List<Kost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
 			int prepaidIncomeTax = 0;
 			int prepaidHealthTax = 0;
 			for (Kost tax : taxList) {

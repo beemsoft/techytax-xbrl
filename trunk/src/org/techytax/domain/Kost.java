@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,85 +22,85 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 
 public class Kost {
-	private long id = 0;
 	private BigDecimal bedrag;
 	private BigDecimal btw;
 	private String datum;
-	private String omschrijving;
-	private long crediteurId;
+	private long id = 0;
+	private boolean isIncoming;
 	private long kostenSoortId;
 	private String kostenSoortOmschrijving;
-	private boolean isIncoming;
-
-	public boolean isIncoming() {
-		return isIncoming;
-	}
-
-	public void setIncoming(boolean isIncoming) {
-		this.isIncoming = isIncoming;
-	}
-
-	public String getKostenSoortOmschrijving() {
-		return kostenSoortOmschrijving;
-	}
-
-	public void setKostenSoortOmschrijving(String kostenSoortOmschrijving) {
-		this.kostenSoortOmschrijving = kostenSoortOmschrijving;
-	}
+	private String omschrijving;
+	private long userId;
 
 	public BigDecimal getBedrag() {
 		return bedrag;
-	}
-
-	public void setBedrag(BigDecimal bedrag) {
-		this.bedrag = bedrag;
-	}
-
-	public String getDatum() {
-		return datum;
-	}
-
-	public void setDatum(String datum) {
-		this.datum = datum;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getKostenSoortId() {
-		return kostenSoortId;
-	}
-
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
-	}
-
-	public String getOmschrijving() {
-		return omschrijving;
-	}
-
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
-	}
-
-	public long getCrediteurId() {
-		return crediteurId;
-	}
-
-	public void setCrediteurId(long crediteurId) {
-		this.crediteurId = crediteurId;
 	}
 
 	public BigDecimal getBtw() {
 		return btw;
 	}
 
+	public String getDatum() {
+		return datum;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public long getKostenSoortId() {
+		return kostenSoortId;
+	}
+
+	public String getKostenSoortOmschrijving() {
+		return kostenSoortOmschrijving;
+	}
+
+	public String getOmschrijving() {
+		return omschrijving;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public boolean isIncoming() {
+		return isIncoming;
+	}
+
+	public void setBedrag(BigDecimal bedrag) {
+		this.bedrag = bedrag;
+	}
+
 	public void setBtw(BigDecimal btw) {
 		this.btw = btw;
+	}
+
+	public void setDatum(String datum) {
+		this.datum = datum;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setIncoming(boolean isIncoming) {
+		this.isIncoming = isIncoming;
+	}
+
+	public void setKostenSoortId(long kostenSoortId) {
+		this.kostenSoortId = kostenSoortId;
+	}
+
+	public void setKostenSoortOmschrijving(String kostenSoortOmschrijving) {
+		this.kostenSoortOmschrijving = kostenSoortOmschrijving;
+	}
+
+	public void setOmschrijving(String omschrijving) {
+		this.omschrijving = omschrijving;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 }

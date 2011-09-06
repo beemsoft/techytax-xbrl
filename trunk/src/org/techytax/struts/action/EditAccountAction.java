@@ -30,6 +30,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
+import org.techytax.domain.KeyId;
+import org.techytax.domain.User;
 import org.techytax.struts.form.AccountForm;
 
 public class EditAccountAction extends Action {
@@ -45,9 +47,13 @@ public class EditAccountAction extends Action {
 		String id = (String) request.getParameter("id");
 		if (StringUtils.isNotEmpty(id)) {
 			try {
+				
+				User user = (User) request.getSession().getAttribute("user");
 				AccountDao AccountDao = new AccountDao();
-
-				result = AccountDao.getAccount(id);
+				KeyId key = new KeyId();
+				key.setId(Long.parseLong(id));
+				key.setUserId(user.getId());
+				result = AccountDao.getAccount(key);
 
 				BeanUtils.copyProperties(objForm, result);
 

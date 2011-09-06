@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
+import org.techytax.domain.User;
 import org.techytax.struts.form.BalansForm;
 
 public class GetKostLijstAction extends Action {
@@ -43,7 +44,8 @@ public class GetKostLijstAction extends Action {
 
 		try {
 			BoekDao boekDao = new BoekDao();
-			result = boekDao.getKostLijst();
+			User user = (User) request.getSession().getAttribute("user");
+			result = boekDao.getKostLijst(Long.toString(user.getId()));
 			request.setAttribute("kostLijst", result);
 			forward = "success";
 		} catch (Exception e) {

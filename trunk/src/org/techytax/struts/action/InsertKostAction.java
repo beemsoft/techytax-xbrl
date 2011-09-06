@@ -35,6 +35,7 @@ import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
+import org.techytax.domain.User;
 import org.techytax.struts.form.KostForm;
 
 public class InsertKostAction extends Action {
@@ -45,9 +46,11 @@ public class InsertKostAction extends Action {
 
 		final ActionErrors errors = new ActionErrors();
 		KostForm kostForm = (KostForm) form;
+		User user = (User) request.getSession().getAttribute("user");
 		Kost kost = new Kost();
 		BeanUtils.copyProperties(kost, kostForm);
 		kost.setId(0);
+		kost.setUserId(user.getId());
 		BoekDao boekDao = new BoekDao();
 		boekDao.insertKost(kost);
 		KostensoortDao kostensoortDao = new KostensoortDao();

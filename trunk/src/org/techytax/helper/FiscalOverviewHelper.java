@@ -33,6 +33,7 @@ import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.FiscalOverview;
+import org.techytax.domain.KeyYear;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Liquiditeit;
@@ -45,7 +46,7 @@ import org.techytax.util.DateHelper;
 public class FiscalOverviewHelper {
 
 	public static FiscalOverview createFiscalOverview(String beginDatum,
-			String eindDatum, List<Kost> boekingen) throws Exception {
+			String eindDatum, List<Kost> boekingen, long userId) throws Exception {
 
 		// Load properties
 		Properties props = PropsFactory.loadProperties();
@@ -63,7 +64,7 @@ public class FiscalOverviewHelper {
 
 		BoekDao boekDao = new BoekDao();
 		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(
-				beginDatum, eindDatum);
+				beginDatum, eindDatum, Long.toString(userId));
 		overview.setJaar(jaar);
 		overview.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
 
@@ -77,7 +78,7 @@ public class FiscalOverviewHelper {
 			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(
 					aftrekpostenLijst).intValue());
 			List<Kost> corrections = boekDao.getVatCorrectionDepreciation(
-					beginDatum, eindDatum);
+					beginDatum, eindDatum, Long.toString(userId));
 			Iterator<Kost> iterator = corrections.iterator();
 			int depreciationCorrection = 0;
 			while (iterator.hasNext()) {
@@ -133,13 +134,14 @@ public class FiscalOverviewHelper {
 		Boekwaarde boekwaarde = new Boekwaarde();
 		boekwaarde.setBalansId(Activa.CURRENT_ASSETS);
 		boekwaarde.setJaar(jaar);
+		boekwaarde.setUserId(userId);
 		boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 
 		// Alleen voor het eerste boekjaar??
 		if (boekwaarde == null) {
 			String startDate = props.getProperty("start.date");
 			List<Kost> rekeningLijst = boekDao.getKostLijst(startDate,
-					eindDatum, "rekeningBalans");
+					eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator
 					.calculatAccountBalance(rekeningLijst);
 
@@ -149,19 +151,19 @@ public class FiscalOverviewHelper {
 			boekwaarde.setJaar(jaar);
 			boekwaarde.setBalansId(Activa.CURRENT_ASSETS);
 			boekwaarde.setSaldo(saldo);
-
+			boekwaarde.setUserId(userId);
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		} else {
-			Boekwaarde vorigeBoekwaarde = boekwaardeDao
-					.getVorigeBoekwaarde(boekwaarde);
 			List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum,
-					eindDatum, "rekeningBalans");
+					eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator
 					.calculatAccountBalance(rekeningLijst);
 		}
 		FiscaalDao fiscaalDao = new FiscaalDao();
-		List<Activa> activaLijst = fiscaalDao.getActivaLijst(Integer
-				.toString(jaar));
+		KeyYear keyYear = new KeyYear();
+		keyYear.setYear(jaar);
+		keyYear.setUserId(userId);
+		List<Activa> activaLijst = fiscaalDao.getActivaLijst(keyYear);
 
 		if (!checkActivaOpgegeven(activaLijst, jaar)) {
 			throw new Exception("errors.fiscal.activa");
@@ -180,6 +182,7 @@ public class FiscalOverviewHelper {
 			boekwaarde = new Boekwaarde();
 			boekwaarde.setBalansId(Passiva.PENSION);
 			boekwaarde.setJaar(jaar);
+			boekwaarde.setUserId(userId);
 			boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 
 			if (boekwaarde != null) {
@@ -208,8 +211,10 @@ public class FiscalOverviewHelper {
 			boekwaarde.setSaldo(bookTotalEnd - FOR);
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		}
-		List<Passiva> passivaLijst = fiscaalDao.getPassivaLijst(Integer
-				.toString(jaar));
+		KeyYear key = new KeyYear();
+		key.setUserId(userId);
+		key.setYear(jaar);
+		List<Passiva> passivaLijst = fiscaalDao.getPassivaLijst(key);
 		overview.setPassiva(passivaLijst);
 
 		// Vul prive onttrekking in
@@ -220,7 +225,7 @@ public class FiscalOverviewHelper {
 		overview.setOnttrekking(privatWithdrawal);
 		
 		// Prepaid taxes
-		PrepaidTax prepaidTax = TaxCodeHelper.findPrepaidTax(jaar);
+		PrepaidTax prepaidTax = TaxCodeHelper.findPrepaidTax(jaar, Long.toString(userId));
 		overview.setPrepaidTax(prepaidTax);
 		return overview;
 	}

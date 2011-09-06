@@ -30,6 +30,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
+import org.techytax.domain.KeyId;
+import org.techytax.domain.User;
 
 public class GetAccountsAction extends Action {
 
@@ -42,7 +44,10 @@ public class GetAccountsAction extends Action {
 
 		try {
 			AccountDao dao = new AccountDao();
-			result = dao.getAccounts();
+			KeyId key = new KeyId();
+			User user = (User) request.getSession().getAttribute("user");
+			key.setUserId(user.getId());
+			result = dao.getAccounts(key);
 			request.setAttribute("accounts", result);
 			forward = "success";
 		} catch (Exception e) {

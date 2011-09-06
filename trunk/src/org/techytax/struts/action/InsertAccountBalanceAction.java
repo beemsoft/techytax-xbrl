@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.AccountBalance;
+import org.techytax.domain.User;
 import org.techytax.struts.form.AccountBalanceForm;
 
 public class InsertAccountBalanceAction extends Action {
@@ -40,9 +41,9 @@ public class InsertAccountBalanceAction extends Action {
 		AccountBalanceForm accountBalanceForm = (AccountBalanceForm) form;
 		AccountBalance accountBalance = new AccountBalance();
 		BeanUtils.copyProperties(accountBalance, accountBalanceForm);
-
 		AccountDao dao = new AccountDao();
-
+		User user = (User) request.getSession().getAttribute("user");
+		accountBalance.setUserId(user.getId());
 		dao.insertAccountBalance(accountBalance);
 
 		return mapping.findForward("success");

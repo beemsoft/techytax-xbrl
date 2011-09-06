@@ -95,14 +95,14 @@ public class DepreciationHelper {
 	 * 
 	 * @param afschrijvingen
 	 */
-	public void toevoegenAfschrijvingenAanActiva() throws Exception {
+	public void toevoegenAfschrijvingenAanActiva(String userId) throws Exception {
 		BoekDao boekDao = new BoekDao();
 		Periode periode = DateHelper.getPeriodeVorigJaar();
 		BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
 		BigDecimal totaalAfschrijvingenAuto = new BigDecimal("0");
 		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(
 				DateHelper.getDate(periode.getBeginDatum()), DateHelper
-						.getDate(periode.getEindDatum()));
+						.getDate(periode.getEindDatum()), userId);
 		totaalAfschrijvingenAuto = BalanceCalculator
 				.getAfschrijvingAuto(aftrekpostenLijst);
 		totaalAfschrijvingenOverig = BalanceCalculator
@@ -111,12 +111,14 @@ public class DepreciationHelper {
 		int ditJaar = DateHelper.getYear(periode.getBeginDatum());
 		boekwaarde.setJaar(ditJaar);
 		boekwaarde.setBalansId(Activa.CAR);
+		boekwaarde.setUserId(Long.parseLong(userId));
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 		boekwaarde.setId(0);
 		boekwaarde.setJaar(ditJaar);
 		boekwaarde.setSaldo(boekwaarde.getSaldo()
 				- totaalAfschrijvingenAuto.intValue());
+		boekwaarde.setUserId(Long.parseLong(userId));
 		boekwaardeDao.insertBoekwaarde(boekwaarde);
 		boekwaarde.setBalansId(Activa.MACHINERY);
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
