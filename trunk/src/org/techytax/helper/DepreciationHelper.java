@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -92,8 +92,6 @@ public class DepreciationHelper {
 	 * Voeg de hele lijst met afschrijvingen toe aan de Activa balans. Maak
 	 * hierbij onderscheid tussen afschrijvingen voor de auto van de zaak en
 	 * overige afschrijvingen.
-	 * 
-	 * @param afschrijvingen
 	 */
 	public void toevoegenAfschrijvingenAanActiva(String userId) throws Exception {
 		BoekDao boekDao = new BoekDao();
@@ -116,16 +114,14 @@ public class DepreciationHelper {
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 		boekwaarde.setId(0);
 		boekwaarde.setJaar(ditJaar);
-		boekwaarde.setSaldo(boekwaarde.getSaldo()
-				- totaalAfschrijvingenAuto.intValue());
+		boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenAuto.toBigInteger()));
 		boekwaarde.setUserId(Long.parseLong(userId));
 		boekwaardeDao.insertBoekwaarde(boekwaarde);
 		boekwaarde.setBalansId(Activa.MACHINERY);
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 		boekwaarde.setId(0);
 		boekwaarde.setJaar(ditJaar);
-		boekwaarde.setSaldo(boekwaarde.getSaldo()
-				- totaalAfschrijvingenOverig.intValue());
+		boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
 		boekwaardeDao.insertBoekwaarde(boekwaarde);
 		return;
 	}

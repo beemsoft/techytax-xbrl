@@ -30,9 +30,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<parameter property="eindDatum" javaType="string" />
 		<parameter property="userId" javaType="string" />
 	</parameterMap>
-	<select id="getAftrekpostenLijst" parameterMap="periodeMap"
+	<select id="getDeductableCostList" parameterMap="periodeMap"
 		resultClass="aftrekpost">
-		select sum(k.bedrag) as aftrekbaarBedrag, ks.id as kostenSoortId 
+		select k.bedrag as aftrekbaarBedrag, ks.id as kostenSoortId 
 		from
 		kosten as k, kostensoort as ks 
 		where 
@@ -44,12 +44,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and datum &gt;= ? 
 		and	datum &lt;= ?
 		and user_id = ? 
-		group by
-		kostensoort_id;
 	</select>
 	<select id="getActivaLijst" parameterClass="keyYear"
 		resultClass="activa">
-		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
 		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
 		where
 		balans.balanssoort_id = balanssoort.id and 
@@ -67,7 +65,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		
 		union
 		
-		select balanssoort.omschrijving, sum(kosten.bedrag + kosten.btw) as	aanschafKosten, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
 		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
 		where balans.balanssoort_id =
 		balanssoort.id and 
@@ -85,7 +83,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		
 		union 
 		 
-		select balanssoort.omschrijving, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL 
+		select balanssoort.omschrijving, NULL, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL 
 		from balans, balanssoort, boekwaarde 
 		where
 		boekwaarde.balans_id = balans.id and 

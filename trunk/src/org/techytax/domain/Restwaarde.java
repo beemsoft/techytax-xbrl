@@ -21,51 +21,25 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
-public class Boekwaarde {
+public class Restwaarde {
 
-	private long balansId;
 	private long id = 0;
-	private int jaar;
-	private BigInteger saldo;
-	private long userId;
-
-	public long getBalansId() {
-		return balansId;
-	}
+	private BigInteger restwaarde;
 
 	public long getId() {
 		return id;
 	}
 
-	public int getJaar() {
-		return jaar;
+	public BigInteger getRestwaarde() {
+		return restwaarde;
 	}
 
-	public BigInteger getSaldo() {
-		return saldo;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setBalansId(long balansId) {
-		this.balansId = balansId;
+	public void setRestwaarde(BigInteger restwaarde) {
+		this.restwaarde = restwaarde;
 	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public void setJaar(int jaar) {
-		this.jaar = jaar;
-	}
-
-	public void setSaldo(BigInteger saldo) {
-		this.saldo = saldo;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
 }

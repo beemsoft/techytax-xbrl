@@ -20,6 +20,7 @@
 package org.techytax.helper;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -145,8 +146,8 @@ public class FiscalOverviewHelper {
 			liquiditeit = BalanceCalculator
 					.calculatAccountBalance(rekeningLijst);
 
-			int saldo = liquiditeit.getRekeningBalans().intValue();
-			saldo += liquiditeit.getSpaarBalans().intValue();
+			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
+			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
 			boekwaarde = new Boekwaarde();
 			boekwaarde.setJaar(jaar);
 			boekwaarde.setBalansId(Activa.CURRENT_ASSETS);
@@ -176,6 +177,7 @@ public class FiscalOverviewHelper {
 		boekwaarde = new Boekwaarde();
 		boekwaarde.setBalansId(Passiva.PENSION);
 		boekwaarde.setJaar(jaar);
+		boekwaarde.setUserId(userId);
 		boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 		int FOR = 0;
 		if (boekwaarde == null) {
@@ -186,9 +188,10 @@ public class FiscalOverviewHelper {
 			boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 
 			if (boekwaarde != null) {
-				FOR = boekwaarde.getSaldo();
+				FOR = boekwaarde.getSaldo().intValue();
 				boekwaarde.setId(0);
 				boekwaarde.setJaar(jaar);
+				boekwaarde.setUserId(userId);
 				boekwaardeDao.insertBoekwaarde(boekwaarde);
 			}
 		}
@@ -203,12 +206,14 @@ public class FiscalOverviewHelper {
 		boekwaarde = new Boekwaarde();
 		boekwaarde.setBalansId(Passiva.NON_CURRENT_ASSETS);
 		boekwaarde.setJaar(jaar);
+		boekwaarde.setUserId(userId);
 		boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 		if (boekwaarde == null) {
 			boekwaarde = new Boekwaarde();
 			boekwaarde.setBalansId(Passiva.NON_CURRENT_ASSETS);
 			boekwaarde.setJaar(jaar);
-			boekwaarde.setSaldo(bookTotalEnd - FOR);
+			boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
+			boekwaarde.setUserId(userId);
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		}
 		KeyYear key = new KeyYear();

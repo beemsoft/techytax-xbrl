@@ -20,56 +20,75 @@
 package org.techytax.domain;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Activa {
-	
-	public static final int MACHINERY = 1;
-	public static final int CAR = 2;
-	public static final int CURRENT_ASSETS = 3;	
 
-	private String omschrijving;
+	public static final int CAR = 2;
+	public static final int CURRENT_ASSETS = 3;
+	public static final int MACHINERY = 1;
+
 	private BigDecimal aanschafKosten;
+	private BigDecimal bedrag;
 	private int boekjaar;
-	private BigDecimal saldo;
-	private BigDecimal restwaarde;
+	private BigDecimal btw;
+	private String omschrijving;
+	private BigInteger restwaarde;
+	private BigInteger saldo;
 
 	public BigDecimal getAanschafKosten() {
 		return aanschafKosten;
 	}
 
-	public void setAanschafKosten(BigDecimal aanschafKosten) {
-		this.aanschafKosten = aanschafKosten;
+	public BigDecimal getBedrag() {
+		return bedrag;
 	}
 
 	public int getBoekjaar() {
 		return boekjaar;
 	}
 
-	public void setBoekjaar(int boekjaar) {
-		this.boekjaar = boekjaar;
+	public BigDecimal getBtw() {
+		return btw;
 	}
 
 	public String getOmschrijving() {
 		return omschrijving;
 	}
 
+	public BigInteger getRestwaarde() {
+		return restwaarde;
+	}
+
+	public BigInteger getSaldo() {
+		return saldo;
+	}
+
+	public void setAanschafKosten(BigDecimal aanschafKosten) {
+		this.aanschafKosten = aanschafKosten;
+	}
+
+	public void setBedrag(BigDecimal bedrag) {
+		this.bedrag = bedrag;
+	}
+
+	public void setBoekjaar(int boekjaar) {
+		this.boekjaar = boekjaar;
+	}
+
+	public void setBtw(BigDecimal btw) {
+		this.btw = btw;
+	}
+
 	public void setOmschrijving(String omschrijving) {
 		this.omschrijving = omschrijving;
 	}
 
-	public BigDecimal getRestwaarde() {
-		return restwaarde;
-	}
-
-	public void setRestwaarde(BigDecimal restwaarde) {
+	public void setRestwaarde(BigInteger restwaarde) {
 		this.restwaarde = restwaarde;
 	}
 
-	public BigDecimal getSaldo() {
-		return saldo;
-	}
-
-	public void setSaldo(BigDecimal saldo) {
+	public void setSaldo(BigInteger saldo) {
 		this.saldo = saldo;
 	}
 

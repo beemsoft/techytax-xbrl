@@ -27,33 +27,43 @@ public class AccountBalance {
 	private String datum;
 	private long id = 0;
 	private long userId;
+
 	public long getAccountId() {
 		return accountId;
 	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
+
 	public String getDatum() {
 		return datum;
 	}
+
 	public long getId() {
 		return id;
 	}
+
 	public long getUserId() {
 		return userId;
 	}
+
 	public void setAccountId(long accountId) {
 		this.accountId = accountId;
 	}
+
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
+
 	public void setDatum(String datum) {
 		this.datum = datum;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}

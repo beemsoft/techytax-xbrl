@@ -27,6 +27,9 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 		enhancementEnabled="true" maxSessions="64" maxTransactions="8"
 		maxRequests="128" />
 
+	<typeHandler javaType="java.math.BigInteger" 
+                 callback="org.techytax.ibatis.typehandler.BigIntegerTypeHandler"/>
+                 
 	<transactionManager type="JDBC">
 		<dataSource type="SIMPLE">
 			<property name="JDBC.Driver" value="${driver}" />
@@ -45,6 +48,7 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 
 		</dataSource>
 	</transactionManager>
+	
 	<sqlMap resource="org/techytax/ibatis/maps/Boek.xml" />	
 	<sqlMap resource="org/techytax/ibatis/maps/Kostensoort.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/Kostmatch.xml" />

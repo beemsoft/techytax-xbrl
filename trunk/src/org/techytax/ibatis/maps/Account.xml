@@ -25,7 +25,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="balance" type="org.techytax.domain.AccountBalance" />	
 	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
 	<select id="getAccounts" parameterClass="key" resultClass="account">
-		SELECT * FROM accounts WHERE user_id = #userId#
+		SELECT id, user_id as userId, description, number, name, date_opened as dateOpened, date_closed as dateClosed 
+		FROM accounts WHERE user_id = #userId#
 	</select>
 	<insert id="insertAccount" parameterClass="account">
 		insert into accounts
@@ -33,8 +34,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</insert>
 	<select id="getAccount" parameterClass="key"
 		resultClass="account">
-		SELECT id, user_id as userId, description, number, name, date_opened as dateOpened, date_closed as dateClosed FROM accounts WHERE id = #id# AND user_id = #userId#
+		SELECT id, user_id as userId, description, number, name, date_opened as dateOpened, date_closed as dateClosed 
+		FROM accounts WHERE id = #id# AND user_id = #userId#
 	</select>
+	<select id="getAllAccounts" resultClass="account">
+		SELECT id, user_id as userId, description, number, name, date_opened as dateOpened, date_closed as dateClosed
+		FROM accounts
+	</select>	
 	<update id="updateAccount" parameterClass="account">
 		update accounts set description = #description#,
 		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed# WHERE id = #id# AND user_id = #userId#
@@ -47,4 +53,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		insert into account_balance
 		values(#id#,#userId#,#accountId#,#datum#,#balance#)
 	</insert>
+	<select id="getAllAccountBalances" resultClass="balance">
+		SELECT id, account_id as accountId, datum, balance 
+		FROM account_balance 
+	</select>
+	<update id="updateAccountBalance" parameterClass="balance">
+		update account_balance set balance = #balance#
+		WHERE id = #id#
+	</update>		
 </sqlMap>
