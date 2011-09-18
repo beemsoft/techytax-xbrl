@@ -19,7 +19,6 @@
  */
 package org.techytax.domain;
 
-
 public class Account {
 	private String dateClosed;
 	private String dateOpened;
@@ -28,10 +27,11 @@ public class Account {
 	private String name;
 	private String number;
 	private long userId;
-	
+
 	public String getDateClosed() {
 		return dateClosed;
 	}
+
 	public String getDateOpened() {
 		return dateOpened;
 	}

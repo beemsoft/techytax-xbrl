@@ -28,10 +28,28 @@ import org.techytax.domain.Passiva;
 
 public class FiscaalDao extends BaseDao {
 
+	private void decrypt(Activa activa) {
+		activa.setSaldo(intEncryptor.decrypt(activa.getSaldo()));	
+		activa.setRestwaarde(intEncryptor.decrypt(activa.getRestwaarde()));
+		activa.setBedrag(decimalEncryptor.decrypt(activa.getBedrag()));
+		activa.setBtw(decimalEncryptor.decrypt(activa.getBtw()));
+	}
+	
+	private void decrypt(Passiva passiva) {
+		passiva.setSaldo(intEncryptor.decrypt(passiva.getSaldo()));	
+	}	
+	
 	@SuppressWarnings("unchecked")
 	public List<Activa> getActivaLijst(KeyYear key) throws Exception {
 		try {
-			return sqlMap.queryForList("getActivaLijst", key);
+			List<Activa> activaList = sqlMap.queryForList("getActivaLijst", key);
+			for (Activa activa : activaList) {
+				decrypt(activa);
+				if (activa.getBedrag() != null) {
+					activa.setAanschafKosten(activa.getBedrag().add(activa.getBtw()));
+				}
+			}
+			return activaList;
 		} catch (SQLException ex) {
 			throw ex;
 		}
@@ -40,7 +58,11 @@ public class FiscaalDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<Passiva> getPassivaLijst(KeyYear key) throws Exception {
 		try {
-			return sqlMap.queryForList("getPassivaLijst", key);
+			List<Passiva> passivaList = sqlMap.queryForList("getPassivaLijst", key);
+			for (Passiva passiva : passivaList) {
+				decrypt(passiva);
+			}
+			return passivaList;
 		} catch (SQLException ex) {
 			throw ex;
 		}

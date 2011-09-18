@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,7 +19,7 @@
  */
 package org.techytax.domain;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Passiva {
 
@@ -28,7 +28,7 @@ public class Passiva {
 
 	private String omschrijving;
 	private int boekjaar;
-	private BigDecimal saldo;
+	private BigInteger saldo;
 
 	public int getBoekjaar() {
 		return boekjaar;
@@ -46,11 +46,11 @@ public class Passiva {
 		this.omschrijving = omschrijving;
 	}
 
-	public BigDecimal getSaldo() {
+	public BigInteger getSaldo() {
 		return saldo;
 	}
 
-	public void setSaldo(BigDecimal saldo) {
+	public void setSaldo(BigInteger saldo) {
 		this.saldo = saldo;
 	}
 

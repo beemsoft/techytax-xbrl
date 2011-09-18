@@ -21,19 +21,37 @@ package org.techytax.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import org.jasypt.util.numeric.BasicDecimalNumberEncryptor;
+import org.jasypt.util.numeric.BasicIntegerNumberEncryptor;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.techytax.props.PropsFactory;
 import org.techytax.util.IbatisUtil;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class BaseDao {
-	
+
 	protected SqlMapClient sqlMap;
+
+	protected BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+	protected BasicDecimalNumberEncryptor decimalEncryptor = new BasicDecimalNumberEncryptor();
+	protected BasicIntegerNumberEncryptor intEncryptor = new BasicIntegerNumberEncryptor();
 
 	public BaseDao() {
 		sqlMap = IbatisUtil.getSqlMapInstance();
+		try {
+			Properties props = PropsFactory.loadProperties();
+			String password = props.getProperty("security.password");
+			textEncryptor.setPassword(password);
+			decimalEncryptor.setPassword(password);
+			intEncryptor.setPassword(password);				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	protected Map<String, String> createMap(String beginDatum, String eindDatum, String userId) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("beginDatum", beginDatum);
@@ -41,5 +59,5 @@ public class BaseDao {
 		map.put("userId", userId);
 		return map;
 	}
-	
+
 }

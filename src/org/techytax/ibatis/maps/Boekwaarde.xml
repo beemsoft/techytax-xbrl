@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Boekwaarde">
 	<typeAlias alias="boekwaarde" type="org.techytax.domain.Boekwaarde" />
+	<typeAlias alias="restwaarde" type="org.techytax.domain.Restwaarde" />	
 	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
 		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
 		FROM boekwaarde 
@@ -29,6 +30,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND boekjaar=#jaar#-1
 		AND user_id=#userId#
 	</select>
+	<select id="getAllBoekwaardes" resultClass="boekwaarde">
+		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		FROM boekwaarde
+	</select>	
 	<select id="getBoekwaardeDitJaar" parameterClass="boekwaarde" resultClass="boekwaarde">
 		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
 		FROM boekwaarde 
@@ -40,4 +45,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		insert into boekwaarde
 		values(#id#,#userId#,#balansId#,#jaar#,#saldo#)
 	</insert>
+	<update id="updateBoekwaarde" parameterClass="boekwaarde">
+		update boekwaarde set saldo = #saldo#
+		WHERE id = #id#
+	</update>	
+	<select id="getAllRestwaardes" resultClass="restwaarde">
+		SELECT id, restwaarde 
+		FROM restwaarde
+	</select>
+	<update id="updateRestwaarde" parameterClass="restwaarde">
+		update restwaarde set restwaarde = #restwaarde#
+		WHERE id = #id#
+	</update>		
 </sqlMap>

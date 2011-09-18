@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
-public class Aftrekpost {
+public class Aftrekpost implements Comparable<Aftrekpost> {
 	private BigDecimal aftrekbaarBedrag;
 
 	private long kostenSoortId;
@@ -40,6 +40,10 @@ public class Aftrekpost {
 
 	public void setKostenSoortId(long kostenSoortId) {
 		this.kostenSoortId = kostenSoortId;
+	}
+
+	public int compareTo(Aftrekpost o) {
+		return (int) (this.kostenSoortId - o.kostenSoortId);
 	}
 
 }

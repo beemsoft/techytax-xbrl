@@ -5,7 +5,6 @@ ALTER TABLE boekwaarde ADD COLUMN `user_id` bigint(20) NOT NULL AFTER id;
 ALTER TABLE restwaarde ADD COLUMN `user_id` bigint(20) NOT NULL AFTER id;
 ALTER TABLE private_expenses ADD COLUMN `user_id` bigint(20) NOT NULL AFTER id;
 ALTER TABLE kosten ADD COLUMN `user_id` bigint(20) NOT NULL AFTER id;
-ALTER TABLE kosten MODIFY COLUMN `omschrijving` VARCHAR(255) NOT NULL;
 ALTER TABLE kosten DROP crediteur_id;
 
  
