@@ -63,7 +63,6 @@ public class AuthorizationFilter implements Filter {
 		list.add("updateKost");
 		list.add("afschrijvenKost");
 		list.add("insertKostLijst");
-		list.add("insertPrivateExpenses");
 		list.add("insertActiva");
 		list.add("insertAccount");
 		list.add("updateAccount");
@@ -76,6 +75,7 @@ public class AuthorizationFilter implements Filter {
 	private List<String> getAdminActions() {
 		List<String> list = getUserActions();
 		list.add("insertKostensoort");
+		list.add("insertPrivateExpenses");		
 		list.add("updateKostensoort");
 		list.add("getDatabaseInfo");
 		list.add("changeDatabase");
