@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -32,7 +32,6 @@ public class KostForm extends ActionForm {
 	private BigDecimal btw;
 	private String datum;
 	private String omschrijving;
-	private long crediteurId;
 	private long kostenSoortId;
 
 	public BigDecimal getBedrag() {
@@ -83,11 +82,4 @@ public class KostForm extends ActionForm {
 		this.btw = btw;
 	}
 
-	public long getCrediteurId() {
-		return crediteurId;
-	}
-
-	public void setCrediteurId(long crediteurId) {
-		this.crediteurId = crediteurId;
-	}
 }
