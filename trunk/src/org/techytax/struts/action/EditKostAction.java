@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,11 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
@@ -45,7 +43,6 @@ public class EditKostAction extends Action {
 			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		final ActionErrors errors = new ActionErrors();
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
 		Kost result = null;
@@ -70,10 +67,6 @@ public class EditKostAction extends Action {
 			if (kostensoort.isInvestering()) {
 				request.setAttribute("investering", "true");
 			}
-			ActionMessage message = new ActionMessage("messages.confirm");
-			errors.add(ActionErrors.GLOBAL_MESSAGE, message);
-			addErrors(request, errors);
-			saveErrors(request, errors);			
 			forward="success";
 		}
 		return mapping.findForward(forward);
