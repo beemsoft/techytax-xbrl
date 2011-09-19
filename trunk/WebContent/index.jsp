@@ -68,7 +68,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				<td><html:password property="password" /></td>
 			</tr>
 		</table>
-		<div class="margins"><html:submit>
+		<div class="margins"><html:submit  onclick="encryptPassword()">
 			<bean:message key="logon.title" />
 		</html:submit> <br class="spacer" />
 		</div>
@@ -81,6 +81,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </logic:notPresent>
 
 <html:errors />
+
+<script type="text/javascript" src="js/jquery.sha1.js"></script>
+<script type="text/javascript">
+	function encryptPassword() {
+		var passwordField=$('input[type=password]');
+		var password=passwordField.val();
+		var encryptedPassword=$.sha1(password);
+		passwordField.val(encryptedPassword);
+	}
+</script>
 
 
 
