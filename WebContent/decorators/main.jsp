@@ -29,6 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 
 <SCRIPT LANGUAGE="JavaScript" SRC="script/CalendarPopup.js"></SCRIPT>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script language="JavaScript">
 
 function scrollToItem(id) {
