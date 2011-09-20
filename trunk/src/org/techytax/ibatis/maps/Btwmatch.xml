@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -27,13 +27,26 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		insert into btwmatch
 		values(#id#,#kostmatchId#,#btwType#)
 	</insert>
+	<insert id="insertBtwMatchPrivate" parameterClass="btwmatch">
+		insert into btwmatch_private
+		values(#id#,#kostmatchId#,#btwType#)
+	</insert>	
 	<update id="updateBtwmatch" parameterClass="kostmatch">
 		update btwmatch set btw_type = #btwType#
 		WHERE kostmatch_id = #id#
 	</update>
+	<update id="updateBtwMatchPrivate" parameterClass="kostmatch">
+		update btwmatch_private set btw_type = #btwType#
+		WHERE kostmatch_id = #id#
+	</update>	
 	<select id="getBtwmatch" parameterClass="string" resultClass="btwmatch">
 		SELECT id, kostmatch_id, btw_type 
 		FROM btwmatch
-		WHERE kostmatch_id= #value#
-	</select>	
+		WHERE kostmatch_id = #value#
+	</select>
+	<select id="getBtwmatchPrivate" parameterClass="string" resultClass="btwmatch">
+		SELECT id, kostmatch_id, btw_type 
+		FROM btwmatch_private
+		WHERE kostmatch_id = #value#
+	</select>		
 </sqlMap>

@@ -77,6 +77,46 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		%>
 	</table>
 </div>	
+<h4><bean:message key="costtype.match" /></h4>
+<div class="margins">
+	<html:link action="/newCostMatchPrivate.do">
+		<html:param name="kostenSoortId"><%=id%></html:param>
+		<bean:message key="costtype.match.new" />
+	</html:link>
+	<table cellspacing="0" border="1" class="overviewTable">
+		<tr>
+			<th><bean:message key="label.match"/></th>
+			<logic:equal value="true" property="btwVerrekenbaar"
+				name="kostensoortForm">
+				<th><bean:message key="label.vat"/></th>
+			</logic:equal>
+		</tr>
+
+		<%
+			res = (List<Kostmatch>)request.getAttribute("costMatchPrivateList");
+				if (res != null) {
+					for (int i = 0; i < res.size(); i++) {
+
+						Kostmatch obj = null;
+						obj = (Kostmatch) res.get(i);
+						if (obj != null) {
+		%>
+
+		<tr valign="top">
+			<td><a href="editCostMatchPrivate.do?id=<%=obj.getId()%>"><%=obj.getMatchText()%></a></td>
+			<logic:equal value="true" property="btwVerrekenbaar"
+				name="kostensoortForm">
+				<td><a href="editBtwMatchPrivate.do?id=<%=obj.getId()%>"><%=obj.getBtwType()%></a></td>
+			</logic:equal>
+		</tr>
+		<%
+			}
+
+					}
+				}
+		%>
+	</table>
+</div>
 </logic:equal>
 
 

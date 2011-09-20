@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,9 +22,23 @@ package org.techytax.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
 
 public class KostmatchDao extends BaseDao {
+	
+	private void decrypt(Kostmatch costMatch) {
+		String matchText = costMatch.getMatchText();
+		if (StringUtils.isNotEmpty(matchText)) {
+			costMatch.setMatchText(textEncryptor.decrypt(matchText));
+		}
+	}
+	
+	private void encrypt(Kostmatch costMatch) {
+		costMatch.setMatchText(textEncryptor.encrypt(costMatch.getMatchText()));
+	}
+	
 	public void insertKostmatch(Kostmatch kostmatch) throws Exception {
 		try {
 			sqlMap.insert("insertKostmatch", kostmatch);
@@ -32,6 +46,15 @@ public class KostmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	public void insertCostMatchPrivate(Kostmatch costMatch) throws Exception {
+		try {
+			encrypt(costMatch);
+			sqlMap.insert("insertCostMatchPrivate", costMatch);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId)
@@ -42,6 +65,20 @@ public class KostmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kostmatch> getCostMatchPrivateListForId(KeyId key)
+			throws Exception {
+		try {
+			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateListForId", key);
+			for (Kostmatch costMatch : costMatches) {
+				decrypt(costMatch);
+			}
+			return costMatches;			
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Kostmatch> getKostmatchLijst() throws Exception {
@@ -51,6 +88,19 @@ public class KostmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kostmatch> getCostMatchPrivateList() throws Exception {
+		try {
+			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", null);
+			for (Kostmatch costMatch : costMatches) {
+				decrypt(costMatch);
+			}
+			return costMatches;
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	public void updateKostmatch(Kostmatch kostmatch) throws Exception {
 		try {
@@ -59,6 +109,15 @@ public class KostmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	public void updateCostMatchPrivate(Kostmatch costMatch) throws Exception {
+		try {
+			encrypt(costMatch);
+			sqlMap.insert("updateCostMatchPrivate", costMatch);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	public Kostmatch getKostmatch(String id) throws Exception {
 		try {
@@ -67,5 +126,15 @@ public class KostmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	public Kostmatch getCostMatchPrivate(KeyId key) throws Exception {
+		try {
+			Kostmatch costMatch = (Kostmatch) sqlMap.queryForObject("getCostMatchPrivate", key);
+			decrypt(costMatch);
+			return costMatch;
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 }

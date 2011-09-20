@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -22,26 +22,59 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Kostmatch">
 	<typeAlias alias="kostmatch" type="org.techytax.domain.Kostmatch" />
+	<typeAlias alias="key" type="org.techytax.domain.KeyId" />		
 	<select id="getKostmatchLijst" resultClass="kostmatch">
-		SELECT id, kostensoort_id as kostenSoortId, match_text as matchText FROM kostmatch
+		SELECT id, kostensoort_id as kostenSoortId, match_text as matchText 
+		FROM kostmatch
 	</select>
+	<select id="getCostMatchPrivateList" resultClass="kostmatch">
+		SELECT id, kostensoort_id as kostenSoortId, match_text as matchText 
+		FROM kostmatch_private
+		WHERE user_id = #userId#
+	</select>	
 	<select id="getKostmatchLijstForId" parameterClass="string" resultClass="kostmatch">
 		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
-		FROM kostmatch as k LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
+		FROM kostmatch as k 
+		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
 		WHERE k.kostensoort_id = #value#;
-	</select>	
+	</select>
+	<select id="getCostMatchPrivateListForId" parameterClass="key" resultClass="kostmatch">
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		FROM kostmatch_private as k 
+		LEFT OUTER JOIN btwmatch_private as b ON k.id = b.kostmatch_id 
+		WHERE k.kostensoort_id = #id#
+		AND k.user_id = #userId#;
+	</select>		
 	<insert id="insertKostmatch" parameterClass="kostmatch">
 		insert into kostmatch
 		values(#id#,#kostenSoortId#,#matchText#)
 	</insert>
+	<insert id="insertCostMatchPrivate" parameterClass="kostmatch">
+		insert into kostmatch_private
+		values(#id#,#userId#,#kostenSoortId#,#matchText#)
+	</insert>	
 	<select id="getKostmatch" parameterClass="string"
 		resultClass="kostmatch">
 		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
-		FROM kostmatch as k LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
+		FROM kostmatch as k 
+		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
 		WHERE k.id = #value#;
 	</select>
+	<select id="getCostMatchPrivate" parameterClass="key"
+		resultClass="kostmatch">
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		FROM kostmatch_private as k 
+		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
+		WHERE k.id = #id#
+		AND k.user_id = #userId#;
+	</select>	
 	<update id="updateKostmatch" parameterClass="kostmatch">
 		update kostmatch set match_text = #matchText#
 		WHERE id = #id#
 	</update>
+	<update id="updateCostMatchPrivate" parameterClass="kostmatch">
+		update kostmatch_private set match_text = #matchText#
+		WHERE id = #id#
+		AND user_id = #userId#
+	</update>	
 </sqlMap>
