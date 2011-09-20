@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -50,5 +50,31 @@ public class BtwmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	public void insertBtwMatchPrivate(Kostmatch kostmatch) throws Exception {
+		Btwmatch btwmatch = new Btwmatch();
+		btwmatch.setKostmatchId(kostmatch.getId());
+		try {
+			sqlMap.insert("insertBtwMatchPrivate", btwmatch);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}
+
+	public void updateBtwMatchPrivate(Kostmatch kostmatch) throws Exception {
+		try {
+			sqlMap.insert("updateBtwMatchPrivate", kostmatch);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}
+
+	public Btwmatch getBtwMatchPrivate(String id) throws Exception {
+		try {
+			return (Btwmatch) sqlMap.queryForObject("getBtwMatchPrivate", id);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 }

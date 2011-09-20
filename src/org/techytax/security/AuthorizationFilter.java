@@ -40,6 +40,9 @@ public class AuthorizationFilter implements Filter {
 		list.add("newKostmatch");
 		list.add("editKostmatch");
 		list.add("editBtwmatch");
+		list.add("newCostMatchPrivate");
+		list.add("editCostMatchPrivate");
+		list.add("editBtwMatchPrivate");		
 		list.add("getKostLijst");
 		list.add("getKostLijstWithForm");
 		list.add("newKost");
@@ -56,9 +59,9 @@ public class AuthorizationFilter implements Filter {
 
 	private List<String> getUserActions() {
 		List<String> list = getGuestActions();
-		list.add("insertKostmatch");
-		list.add("updateKostmatch");
-		list.add("updateBtwmatch");
+		list.add("insertCostMatchPrivate");
+		list.add("updateCostMatchPrivate");
+		list.add("updateBtwMatchPrivate");		
 		list.add("insertKost");
 		list.add("updateKost");
 		list.add("afschrijvenKost");
@@ -74,6 +77,9 @@ public class AuthorizationFilter implements Filter {
 
 	private List<String> getAdminActions() {
 		List<String> list = getUserActions();
+		list.add("insertKostmatch");
+		list.add("updateKostmatch");
+		list.add("updateBtwmatch");		
 		list.add("insertKostensoort");
 		list.add("insertPrivateExpenses");		
 		list.add("updateKostensoort");

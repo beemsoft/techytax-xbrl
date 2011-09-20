@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,8 +19,6 @@
  */
 package org.techytax.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,48 +30,48 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.AccountDao;
+import org.techytax.dao.BtwmatchDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.domain.Btwmatch;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.User;
-import org.techytax.struts.form.KostensoortForm;
+import org.techytax.struts.form.KostmatchForm;
 
-public class EditKostensoortAction extends Action {
-	private static final Log log = LogFactory.getLog(EditKostensoortAction.class);
+public class EditBtwMatchPrivateAction extends Action {
+	private static final Log log = LogFactory.getLog(EditBtwMatchPrivateAction.class);
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			final HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
-		Kostensoort result = null;
-		KostensoortForm objForm = (KostensoortForm) form;
+		Kostmatch kostmatch = null;
+		KostmatchForm objForm = (KostmatchForm) form;
 
 		String forward = "failure";
-		String kostenSoortId = (String) request.getParameter("kostenSoortId");
-		if (StringUtils.isEmpty(kostenSoortId)) {
-			kostenSoortId = (String) request.getAttribute("kostenSoortId");
-		}
-		if (StringUtils.isNotEmpty(kostenSoortId)) {
+		String id = (String) request.getParameter("id");
+		if (StringUtils.isNotEmpty(id)) {
 			try {
-				KostensoortDao kostensoortDao = new KostensoortDao();
 
-				result = kostensoortDao.getKostensoort(kostenSoortId);
-
-				log.debug("result=" + result);
-
-				BeanUtils.copyProperties(objForm, result);
-
-				// Get the list of matching strings
 				KostmatchDao kostmatchDao = new KostmatchDao();
-				List<Kostmatch> kostmatchLijst = kostmatchDao.getKostmatchLijstForId(kostenSoortId);
-				request.setAttribute("kostmatchLijst", kostmatchLijst);
-
 				User user = (User) request.getSession().getAttribute("user");
 				KeyId key = new KeyId();
+				key.setId(Long.parseLong(id));
 				key.setUserId(user.getId());
-				key.setId(Long.parseLong(kostenSoortId));
-				List<Kostmatch> costMatchPrivateList = kostmatchDao.getCostMatchPrivateListForId(key);
-				request.setAttribute("costMatchPrivateList", costMatchPrivateList);
+				kostmatch = kostmatchDao.getCostMatchPrivate(key);
+				if (kostmatch.getBtwType() == null) {
+					BtwmatchDao btwmatchDao = new BtwmatchDao();
+					Btwmatch btwmatch = btwmatchDao.getBtwMatchPrivate(id);
+					if (btwmatch == null) {
+						btwmatchDao.insertBtwmatch(kostmatch);
+					}
+				}
+
+				log.debug("result=" + kostmatch);
+
+				BeanUtils.copyProperties(objForm, kostmatch);
+
 				forward = "success";
 			} catch (Exception e) {
 				e.printStackTrace();

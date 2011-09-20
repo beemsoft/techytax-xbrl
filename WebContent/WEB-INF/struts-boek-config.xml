@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright 2009 Hans Beemsterboer
+Copyright 2011 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -143,7 +143,37 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/insertKostmatch" type="org.techytax.struts.action.InsertKostmatchAction"
 			name="kostmatchForm" scope="request">
 			<forward name="success" path="/editKostensoort.do"></forward>
-		</action>			
+		</action>
+		<action path="/updateCostMatchPrivate" type="org.techytax.struts.action.UpdateCostMatchPrivateAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>
+		<action path="/updateBtwMatchPrivate" type="org.techytax.struts.action.UpdateBtwMatchPrivateAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>		
+		<action path="/editCostMatchPrivate" name="kostmatchForm"
+			type="org.techytax.struts.action.EditCostMatchPrivateAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editCostMatchPrivate.jsp">
+			</forward>
+		</action>
+		<action path="/editBtwMatchPrivate" name="kostmatchForm"
+			type="org.techytax.struts.action.EditBtwMatchPrivateAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editBtwMatchPrivate.jsp">
+			</forward>
+		</action>		
+		<action path="/newCostMatchPrivate" type="org.techytax.struts.action.NewCostMatchPrivateAction"
+			scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/insertCostMatchPrivate.jsp">
+			</forward>
+		</action>
+		<action path="/insertCostMatchPrivate" type="org.techytax.struts.action.InsertCostMatchPrivateAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>					
 		<action path="/laadKostLijst"
 			forward="/WEB-INF/jsp/boek/laadGegevens.jsp" />
 		<action path="/uploadFile"

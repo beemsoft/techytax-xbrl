@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,44 +20,54 @@
 package org.techytax.domain;
 
 public class Kostmatch {
+	private String btwType;
+
 	private long id = 0;
 
 	private long kostenSoortId = 0;
 
 	private String matchText;
 
-	private String btwType;
+	private long userId;
+
+	public String getBtwType() {
+		return btwType;
+	}
 
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public long getKostenSoortId() {
 		return kostenSoortId;
 	}
 
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
-	}
-
 	public String getMatchText() {
 		return matchText;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setBtwType(String btwType) {
+		this.btwType = btwType;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setKostenSoortId(long kostenSoortId) {
+		this.kostenSoortId = kostenSoortId;
 	}
 
 	public void setMatchText(String matchText) {
 		this.matchText = matchText;
 	}
 
-	public String getBtwType() {
-		return btwType;
-	}
-
-	public void setBtwType(String btwType) {
-		this.btwType = btwType;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 }
