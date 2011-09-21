@@ -44,7 +44,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		FROM btwmatch
 		WHERE kostmatch_id = #value#
 	</select>
-	<select id="getBtwmatchPrivate" parameterClass="string" resultClass="btwmatch">
+	<select id="getBtwMatchPrivate" parameterClass="string" resultClass="btwmatch">
 		SELECT id, kostmatch_id, btw_type 
 		FROM btwmatch_private
 		WHERE kostmatch_id = #value#
