@@ -27,10 +27,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		SELECT id, kostensoort_id as kostenSoortId, match_text as matchText 
 		FROM kostmatch
 	</select>
-	<select id="getCostMatchPrivateList" resultClass="kostmatch">
+	<select id="getCostMatchPrivateList" parameterClass="string" resultClass="kostmatch">
 		SELECT id, kostensoort_id as kostenSoortId, match_text as matchText 
 		FROM kostmatch_private
-		WHERE user_id = #userId#
+		WHERE user_id = #value#
 	</select>	
 	<select id="getKostmatchLijstForId" parameterClass="string" resultClass="kostmatch">
 		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType

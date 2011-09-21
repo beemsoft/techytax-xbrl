@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ page import="java.util.List"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+<%@ taglib uri="struts-logic" prefix="logic"%>
 
 <%
 	List<Kostensoort> res = (List<Kostensoort>) request.getAttribute("kostensoortLijst");
@@ -28,7 +29,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <h4><bean:message key="costtype.list.title"/></h4>
 <div class="margins">
-<a href="newKostensoort.do"><bean:message key="costtype.new"/></a>
+<logic:present name="user" scope="session">
+	<logic:equal name="user" property="administrator" value="true">
+		<a href="newKostensoort.do"><bean:message key="costtype.new"/></a>
+	</logic:equal>
+</logic:present>
 
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
