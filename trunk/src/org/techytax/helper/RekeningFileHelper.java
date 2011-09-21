@@ -56,7 +56,7 @@ public class RekeningFileHelper {
 	private RekeningFileHelper() {
 	}
 
-	public static List<Kost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2) {
+	public static List<Kost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) {
 		kostensoortList = kostensoortList2;
 		List<Kost> kostLijst = new ArrayList<Kost>();
 		try {
@@ -68,7 +68,7 @@ public class RekeningFileHelper {
 			Kost kost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				kost = verwerkRegel(regel, regelNummer);
+				kost = verwerkRegel(regel, regelNummer, userId);
 				kostLijst.add(kost);
 			}
 
@@ -106,7 +106,7 @@ public class RekeningFileHelper {
 	 * @param labels
 	 * @param request
 	 */
-	public static Kost verwerkRegel(String[] regel, int regelNummer) {
+	public static Kost verwerkRegel(String[] regel, int regelNummer, String userId) {
 		Kost kost = new Kost();
 		// Controleer of het aantal waarden in de regel klopt.
 		try {
@@ -140,7 +140,7 @@ public class RekeningFileHelper {
 				}
 			} else {
 				kost.setOmschrijving(omschrijving);
-				kost = matchKost(kost);
+				kost = matchKost(kost, userId);
 				
 				if (kost.getKostenSoortId() == KostConstanten.INKOMSTEN_BELASTING) {
 					TaxCodeHelper.convertTaxCode(kost);
@@ -154,10 +154,18 @@ public class RekeningFileHelper {
 		return null;
 	}
 
-	private static long findKostensoort(String omschrijving) throws Exception {
+	private static long findKostensoort(String omschrijving, String userId) throws Exception {
 		KostmatchDao kostmatchDao = new KostmatchDao();
-		List<Kostmatch> kostmatchList = kostmatchDao.getKostmatchLijst();
+		List<Kostmatch> kostmatchList = kostmatchDao.getCostMatchPrivateList(userId);
 		Iterator<Kostmatch> iterator = kostmatchList.iterator();
+		while (iterator.hasNext()) {
+			Kostmatch kostmatch = iterator.next();
+			if (omschrijving.contains(kostmatch.getMatchText())) {
+				return kostmatch.getKostenSoortId();
+			}
+		}		
+		kostmatchList = kostmatchDao.getKostmatchLijst();
+		iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
 			Kostmatch kostmatch = iterator.next();
 			if (omschrijving.contains(kostmatch.getMatchText())) {
@@ -167,13 +175,13 @@ public class RekeningFileHelper {
 		return 0;
 	}
 
-	private static Kost matchKost(Kost kost) throws Exception {
+	private static Kost matchKost(Kost kost, String userId) throws Exception {
 		long kostensoortId = KostConstanten.ONBEPAALD;
 		BigDecimal bedrag = kost.getBedrag();
 		BigDecimal btwBedrag = new BigDecimal(0);
 		boolean berekenBtw_hoog = false;
 		boolean berekenBtw_laag = false;
-		kostensoortId = findKostensoort(kost.getOmschrijving());
+		kostensoortId = findKostensoort(kost.getOmschrijving(), userId);
 		KostensoortDao kostensoortDao = new KostensoortDao();
 		Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
 				.toString(kostensoortId));

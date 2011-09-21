@@ -90,9 +90,9 @@ public class KostmatchDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getCostMatchPrivateList() throws Exception {
+	public List<Kostmatch> getCostMatchPrivateList(String userId) throws Exception {
 		try {
-			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", null);
+			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", userId);
 			for (Kostmatch costMatch : costMatches) {
 				decrypt(costMatch);
 			}

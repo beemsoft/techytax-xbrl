@@ -27,9 +27,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <html:form action="/updateKostensoort.do">
 	<html:hidden property="kostenSoortId" />
 	<jsp:include page="/WEB-INF/jsp/boek/kostensoortDetails.jsp" />
-	<html:submit>
-		<bean:message key="button.update" />
-	</html:submit>
+	<logic:present name="user" scope="session">
+	<logic:equal name="user" property="administrator" value="true">
+		<html:submit>
+			<bean:message key="button.update" />
+		</html:submit>
+	</logic:equal>
+	</logic:present>
 </html:form>
 </div>
 <logic:equal value="true" property="balansMeetellen"
@@ -39,10 +43,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	%>
 <h4><bean:message key="costtype.match" /></h4>
 <div class="margins">
-	<html:link action="/newKostmatch.do">
-		<html:param name="kostenSoortId"><%=id%></html:param>
-		<bean:message key="costtype.match.new" />
-	</html:link>
+	<logic:present name="user" scope="session">
+		<logic:equal name="user" property="administrator" value="true">
+		<html:link action="/newKostmatch.do">
+			<html:param name="kostenSoortId"><%=id%></html:param>
+			<bean:message key="costtype.match.new" />
+		</html:link>
+		</logic:equal>
+	</logic:present>
 	<table cellspacing="0" border="1" class="overviewTable">
 		<tr>
 			<th><bean:message key="label.match"/></th>
@@ -77,7 +85,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		%>
 	</table>
 </div>	
-<h4><bean:message key="costtype.match" /></h4>
+<h4><bean:message key="costtype.match.private" /></h4>
 <div class="margins">
 	<html:link action="/newCostMatchPrivate.do">
 		<html:param name="kostenSoortId"><%=id%></html:param>

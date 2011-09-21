@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -35,14 +35,13 @@ import org.apache.struts.upload.FormFile;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
+import org.techytax.domain.User;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.struts.form.UploadForm;
 
 public class UploadFileAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			final HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		UploadForm uploadForm = (UploadForm) form;
 
@@ -53,8 +52,8 @@ public class UploadFileAction extends Action {
 			KostensoortDao dao = new KostensoortDao();
 			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
 			InputStream is = myFile.getInputStream();
-			List<Kost> result = RekeningFileHelper.readFile(new BufferedReader(
-					new InputStreamReader(is)), kostensoortLijst);
+			User user = (User) request.getSession().getAttribute("user");
+			List<Kost> result = RekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
 			e.printStackTrace();
