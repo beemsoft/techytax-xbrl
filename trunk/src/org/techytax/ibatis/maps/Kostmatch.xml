@@ -53,6 +53,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		insert into kostmatch_private
 		values(#id#,#userId#,#kostenSoortId#,#matchText#)
 	</insert>	
+	<delete id="deleteCostMatchPrivate" parameterClass="kostmatch">
+		delete from kostmatch_private
+		where id = #id#
+		and user_id = #userId#
+	</delete>
 	<select id="getKostmatch" parameterClass="string"
 		resultClass="kostmatch">
 		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
@@ -64,7 +69,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		resultClass="kostmatch">
 		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
 		FROM kostmatch_private as k 
-		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
+		LEFT OUTER JOIN btwmatch_private as b ON k.id = b.kostmatch_id 
 		WHERE k.id = #id#
 		AND k.user_id = #userId#;
 	</select>	

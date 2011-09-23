@@ -60,6 +60,14 @@ public class BtwmatchDao extends BaseDao {
 			throw ex;
 		}
 	}
+	
+	public void deleteBtwMatchPrivate(String kostMatchId) throws Exception {
+		try {
+			sqlMap.delete("deleteBtwMatchPrivate", kostMatchId);
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}	
 
 	public void updateBtwMatchPrivate(Kostmatch kostmatch) throws Exception {
 		try {

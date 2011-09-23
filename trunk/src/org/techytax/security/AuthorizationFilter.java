@@ -61,6 +61,7 @@ public class AuthorizationFilter implements Filter {
 		List<String> list = getGuestActions();
 		list.add("insertCostMatchPrivate");
 		list.add("updateCostMatchPrivate");
+		list.add("deleteCostMatchPrivate");
 		list.add("updateBtwMatchPrivate");		
 		list.add("insertKost");
 		list.add("updateKost");

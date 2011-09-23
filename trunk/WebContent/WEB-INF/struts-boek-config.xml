@@ -173,7 +173,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/insertCostMatchPrivate" type="org.techytax.struts.action.InsertCostMatchPrivateAction"
 			name="kostmatchForm" scope="request">
 			<forward name="success" path="/editKostensoort.do"></forward>
-		</action>					
+		</action>
+		<action path="/deleteCostMatchPrivate" type="org.techytax.struts.action.DeleteCostMatchPrivateAction"
+			name="kostmatchForm" scope="request">
+			<forward name="success" path="/editKostensoort.do"></forward>
+		</action>							
 		<action path="/laadKostLijst"
 			forward="/WEB-INF/jsp/boek/laadGegevens.jsp" />
 		<action path="/uploadFile"
