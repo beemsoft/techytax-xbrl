@@ -54,6 +54,14 @@ public class KostmatchDao extends BaseDao {
 		} catch (SQLException ex) {
 			throw ex;
 		}
+	}
+	
+	public void deleteCostMatchPrivate(Kostmatch costMatch) throws Exception {
+		try {
+			sqlMap.delete("deleteCostMatchPrivate", costMatch);
+		} catch (SQLException ex) {
+			throw ex;
+		}
 	}	
 
 	@SuppressWarnings("unchecked")

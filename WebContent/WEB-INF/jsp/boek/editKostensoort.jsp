@@ -98,6 +98,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				name="kostensoortForm">
 				<th><bean:message key="label.vat"/></th>
 			</logic:equal>
+			<th></th>
 		</tr>
 
 		<%
@@ -116,6 +117,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				name="kostensoortForm">
 				<td><a href="editBtwMatchPrivate.do?id=<%=obj.getId()%>"><%=obj.getBtwType()%></a></td>
 			</logic:equal>
+			<td><a href="deleteCostMatchPrivate.do?id=<%=obj.getId()%>&kostenSoortId=<%=obj.getKostenSoortId()%>">delete</a></td>
 		</tr>
 		<%
 			}

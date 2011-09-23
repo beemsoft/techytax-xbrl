@@ -13,3 +13,6 @@ CREATE TABLE `btwmatch_private` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
 
+grant delete on kostmatch_private;
+grant delete on btwmatch_private;
+
