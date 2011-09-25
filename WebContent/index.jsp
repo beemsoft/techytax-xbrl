@@ -76,8 +76,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	<%
 		Properties props = PropsFactory.loadProperties();
+		String htmlExtra = props.getProperty("html.extra");
+		if (htmlExtra != null) {
 	%>
-	<%=props.getProperty("html.extra")%>
+	<%=htmlExtra%>
+	<%
+		}
+	%>
 </logic:notPresent>
 
 <html:errors />
