@@ -19,7 +19,6 @@
  */
 package org.techytax.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -27,122 +26,76 @@ import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
 
 public class KostmatchDao extends BaseDao {
-	
+
 	private void decrypt(Kostmatch costMatch) {
 		String matchText = costMatch.getMatchText();
 		if (StringUtils.isNotEmpty(matchText)) {
 			costMatch.setMatchText(textEncryptor.decrypt(matchText));
 		}
 	}
-	
+
 	private void encrypt(Kostmatch costMatch) {
 		costMatch.setMatchText(textEncryptor.encrypt(costMatch.getMatchText()));
 	}
-	
+
 	public void insertKostmatch(Kostmatch kostmatch) throws Exception {
-		try {
-			sqlMap.insert("insertKostmatch", kostmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("insertKostmatch", kostmatch);
 	}
-	
+
 	public void insertCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		try {
-			encrypt(costMatch);
-			sqlMap.insert("insertCostMatchPrivate", costMatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(costMatch);
+		sqlMap.insert("insertCostMatchPrivate", costMatch);
 	}
-	
+
 	public void deleteCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		try {
-			sqlMap.delete("deleteCostMatchPrivate", costMatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		sqlMap.delete("deleteCostMatchPrivate", costMatch);
+	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId)
-			throws Exception {
-		try {
-			return sqlMap.queryForList("getKostmatchLijstForId", kostenSoortId);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId) throws Exception {
+		return sqlMap.queryForList("getKostmatchLijstForId", kostenSoortId);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getCostMatchPrivateListForId(KeyId key)
-			throws Exception {
-		try {
-			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateListForId", key);
-			for (Kostmatch costMatch : costMatches) {
-				decrypt(costMatch);
-			}
-			return costMatches;			
-		} catch (SQLException ex) {
-			throw ex;
+	public List<Kostmatch> getCostMatchPrivateListForId(KeyId key) throws Exception {
+		List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateListForId", key);
+		for (Kostmatch costMatch : costMatches) {
+			decrypt(costMatch);
 		}
-	}	
+		return costMatches;
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Kostmatch> getKostmatchLijst() throws Exception {
-		try {
-			return sqlMap.queryForList("getKostmatchLijst", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return sqlMap.queryForList("getKostmatchLijst", null);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Kostmatch> getCostMatchPrivateList(String userId) throws Exception {
-		try {
-			List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", userId);
-			for (Kostmatch costMatch : costMatches) {
-				decrypt(costMatch);
-			}
-			return costMatches;
-		} catch (SQLException ex) {
-			throw ex;
+		List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", userId);
+		for (Kostmatch costMatch : costMatches) {
+			decrypt(costMatch);
 		}
-	}	
+		return costMatches;
+	}
 
 	public void updateKostmatch(Kostmatch kostmatch) throws Exception {
-		try {
-			sqlMap.insert("updateKostmatch", kostmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("updateKostmatch", kostmatch);
 	}
-	
+
 	public void updateCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		try {
-			encrypt(costMatch);
-			sqlMap.insert("updateCostMatchPrivate", costMatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		encrypt(costMatch);
+		sqlMap.insert("updateCostMatchPrivate", costMatch);
+	}
 
 	public Kostmatch getKostmatch(String id) throws Exception {
-		try {
-			return (Kostmatch) sqlMap.queryForObject("getKostmatch", id);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return (Kostmatch) sqlMap.queryForObject("getKostmatch", id);
 	}
-	
+
 	public Kostmatch getCostMatchPrivate(KeyId key) throws Exception {
-		try {
-			Kostmatch costMatch = (Kostmatch) sqlMap.queryForObject("getCostMatchPrivate", key);
-			decrypt(costMatch);
-			return costMatch;
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		Kostmatch costMatch = (Kostmatch) sqlMap.queryForObject("getCostMatchPrivate", key);
+		decrypt(costMatch);
+		return costMatch;
+	}
 
 }

@@ -19,43 +19,26 @@
  */
 package org.techytax.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.techytax.domain.Kostensoort;
 
 public class KostensoortDao extends BaseDao {
 	public void insertKostensoort(Kostensoort kost) throws Exception {
-		try {
-			sqlMap.insert("insertKostensoort", kost);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("insertKostensoort", kost);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Kostensoort> getKostensoortLijst() throws Exception {
-		try {
-			return sqlMap.queryForList("getKostensoortLijst", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return sqlMap.queryForList("getKostensoortLijst", null);
 	}
 
 	public void updateKostensoort(Kostensoort kostensoort) throws Exception {
-		try {
-			sqlMap.insert("updateKostensoort", kostensoort);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("updateKostensoort", kostensoort);
 	}
 
 	public Kostensoort getKostensoort(String id) throws Exception {
-		try {
-			return (Kostensoort) sqlMap.queryForObject("getKostensoort", id);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return (Kostensoort) sqlMap.queryForObject("getKostensoort", id);
 	}
 
 }

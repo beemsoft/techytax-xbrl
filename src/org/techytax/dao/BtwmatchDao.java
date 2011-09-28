@@ -19,8 +19,6 @@
  */
 package org.techytax.dao;
 
-import java.sql.SQLException;
-
 import org.techytax.domain.Btwmatch;
 import org.techytax.domain.Kostmatch;
 
@@ -28,61 +26,33 @@ public class BtwmatchDao extends BaseDao {
 	public void insertBtwmatch(Kostmatch kostmatch) throws Exception {
 		Btwmatch btwmatch = new Btwmatch();
 		btwmatch.setKostmatchId(kostmatch.getId());
-		try {
-			sqlMap.insert("insertBtwmatch", btwmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("insertBtwmatch", btwmatch);
 	}
 
 	public void updateBtwmatch(Kostmatch kostmatch) throws Exception {
-		try {
-			sqlMap.insert("updateBtwmatch", kostmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("updateBtwmatch", kostmatch);
 	}
 
 	public Btwmatch getBtwmatch(String id) throws Exception {
-		try {
-			return (Btwmatch) sqlMap.queryForObject("getBtwmatch", id);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return (Btwmatch) sqlMap.queryForObject("getBtwmatch", id);
 	}
-	
+
 	public void insertBtwMatchPrivate(Kostmatch kostmatch) throws Exception {
 		Btwmatch btwmatch = new Btwmatch();
 		btwmatch.setKostmatchId(kostmatch.getId());
-		try {
-			sqlMap.insert("insertBtwMatchPrivate", btwmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("insertBtwMatchPrivate", btwmatch);
 	}
-	
+
 	public void deleteBtwMatchPrivate(String kostMatchId) throws Exception {
-		try {
-			sqlMap.delete("deleteBtwMatchPrivate", kostMatchId);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		sqlMap.delete("deleteBtwMatchPrivate", kostMatchId);
+	}
 
 	public void updateBtwMatchPrivate(Kostmatch kostmatch) throws Exception {
-		try {
-			sqlMap.insert("updateBtwMatchPrivate", kostmatch);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("updateBtwMatchPrivate", kostmatch);
 	}
 
 	public Btwmatch getBtwMatchPrivate(String id) throws Exception {
-		try {
-			return (Btwmatch) sqlMap.queryForObject("getBtwMatchPrivate", id);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		return (Btwmatch) sqlMap.queryForObject("getBtwMatchPrivate", id);
+	}
 
 }

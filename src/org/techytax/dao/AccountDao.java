@@ -20,7 +20,6 @@
 package org.techytax.dao;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -63,94 +62,58 @@ public class AccountDao extends BaseDao {
 	}	
 	
 	public void insertAccount(Account account) throws Exception {
-		try {
-			encrypt(account);
-			sqlMap.insert("insertAccount", account);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(account);
+		sqlMap.insert("insertAccount", account);
 	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Account> getAccounts(KeyId key) throws Exception {
-		try {
-			List<Account> accounts = sqlMap.queryForList("getAccounts", key);
-			for (Account account : accounts) {
-				decrypt(account);
-			}
-			return accounts;
-		} catch (SQLException ex) {
-			throw ex;
+		List<Account> accounts = sqlMap.queryForList("getAccounts", key);
+		for (Account account : accounts) {
+			decrypt(account);
 		}
+		return accounts;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<Account> getAllAccounts() throws Exception {
-		try {
-			return sqlMap.queryForList("getAllAccounts", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return sqlMap.queryForList("getAllAccounts", null);
 	}	
 
 	public void updateAccount(Account account) throws Exception {
-		try {
-			encrypt(account);
-			sqlMap.insert("updateAccount", account);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(account);
+		sqlMap.insert("updateAccount", account);
 	}
 	
 	public Account getAccount(KeyId key) throws Exception {
-		try {
-			Account account = (Account) sqlMap.queryForObject("getAccount", key);
-			decrypt(account);
-			return account;
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		Account account = (Account) sqlMap.queryForObject("getAccount", key);
+		decrypt(account);
+		return account;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<AccountBalance> getAccountBalance(KeyId key) throws Exception {
-		try {
-			List<AccountBalance> balances = sqlMap.queryForList("getAccountBalance", key);
-			for (AccountBalance balance : balances) {
-				decrypt(balance);
-			}
-			return balances;
-		} catch (SQLException ex) {
-			throw ex;
+		List<AccountBalance> balances = sqlMap.queryForList("getAccountBalance", key);
+		for (AccountBalance balance : balances) {
+			decrypt(balance);
 		}
+		return balances;
 	}
 
 	public void insertAccountBalance(AccountBalance accountBalance)
 			throws Exception {
-		try {
-			encrypt(accountBalance);
-			sqlMap.insert("insertAccountBalance", accountBalance);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(accountBalance);
+		sqlMap.insert("insertAccountBalance", accountBalance);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<AccountBalance> getAllAccountBalances() throws Exception {
-		try {
-			return sqlMap.queryForList("getAllAccountBalances", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return sqlMap.queryForList("getAllAccountBalances", null);
 	}	
 	
 	public void updateAccountBalance(AccountBalance accountBalance) throws Exception {
-		try {
-			encrypt(accountBalance);
-			sqlMap.insert("updateAccountBalance", accountBalance);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(accountBalance);
+		sqlMap.insert("updateAccountBalance", accountBalance);
 	}	
 
 }

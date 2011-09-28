@@ -19,26 +19,16 @@
  */
 package org.techytax.dao;
 
-import java.sql.SQLException;
-
 import org.techytax.domain.User;
 
 public class UserDao extends BaseDao {
 
 	public void updateUser(User user) throws Exception {
-		try {
-			sqlMap.insert("updateUser", user);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		sqlMap.insert("updateUser", user);
 	}
 
 	public User getUser(String username) throws Exception {
-		try {
-			return (User) sqlMap.queryForObject("getUser", username);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		return (User) sqlMap.queryForObject("getUser", username);
 	}
 
 }

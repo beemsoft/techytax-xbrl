@@ -19,95 +19,62 @@
  */
 package org.techytax.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Restwaarde;
 
 public class BoekwaardeDao extends BaseDao {
-	
+
 	private void encrypt(Boekwaarde boekwaarde) {
-		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));	
+		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));
 	}
-	
+
 	private void encrypt(Restwaarde restwaarde) {
-		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));	
-	}	
-	
+		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));
+	}
+
 	private void decrypt(Boekwaarde boekwaarde) {
 		if (boekwaarde != null) {
-			boekwaarde.setSaldo(intEncryptor.decrypt(boekwaarde.getSaldo()));	
+			boekwaarde.setSaldo(intEncryptor.decrypt(boekwaarde.getSaldo()));
 		}
-	}	
-	
+	}
+
 	public void insertBoekwaarde(Boekwaarde boekwaarde) throws Exception {
-		try {
-			encrypt(boekwaarde);
-			sqlMap.insert("insertBoekwaarde", boekwaarde);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(boekwaarde);
+		sqlMap.insert("insertBoekwaarde", boekwaarde);
 	}
 
-	public Boekwaarde getVorigeBoekwaarde(Boekwaarde boekwaarde)
-			throws Exception {
-		try {
-			Boekwaarde vorigeBoekwaarde = (Boekwaarde) sqlMap.queryForObject("getVorigeBoekwaarde",
-					boekwaarde);
-			decrypt(vorigeBoekwaarde);
-			return vorigeBoekwaarde;
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public Boekwaarde getVorigeBoekwaarde(Boekwaarde boekwaarde) throws Exception {
+		Boekwaarde vorigeBoekwaarde = (Boekwaarde) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
+		decrypt(vorigeBoekwaarde);
+		return vorigeBoekwaarde;
 	}
 
-	public Boekwaarde getBoekwaardeDitJaar(Boekwaarde boekwaarde)
-			throws Exception {
-		try {
-			Boekwaarde boekwaardeDitJaar = (Boekwaarde) sqlMap.queryForObject("getBoekwaardeDitJaar",
-					boekwaarde);
-			decrypt(boekwaardeDitJaar);
-			return boekwaardeDitJaar;
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public Boekwaarde getBoekwaardeDitJaar(Boekwaarde boekwaarde) throws Exception {
+		Boekwaarde boekwaardeDitJaar = (Boekwaarde) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
+		decrypt(boekwaardeDitJaar);
+		return boekwaardeDitJaar;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Boekwaarde> getAllBoekwaardes()	throws Exception {
-		try {
-			return sqlMap.queryForList("getAllBoekwaardes", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public List<Boekwaarde> getAllBoekwaardes() throws Exception {
+		return sqlMap.queryForList("getAllBoekwaardes", null);
 	}
-	
+
 	public void updateBoekwaarde(Boekwaarde boekwaarde) throws Exception {
-		try {
-			encrypt(boekwaarde);
-			sqlMap.insert("updateBoekwaarde", boekwaarde);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+		encrypt(boekwaarde);
+		sqlMap.insert("updateBoekwaarde", boekwaarde);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Restwaarde> getAllRestwaardes()	throws Exception {
-		try {
-			return sqlMap.queryForList("getAllRestwaardes", null);
-		} catch (SQLException ex) {
-			throw ex;
-		}
+	public List<Restwaarde> getAllRestwaardes() throws Exception {
+		return sqlMap.queryForList("getAllRestwaardes", null);
 	}
-	
+
 	public void updateRestwaarde(Restwaarde restwaarde) throws Exception {
-		try {
-			encrypt(restwaarde);
-			sqlMap.insert("updateRestwaarde", restwaarde);
-		} catch (SQLException ex) {
-			throw ex;
-		}
-	}	
+		encrypt(restwaarde);
+		sqlMap.insert("updateRestwaarde", restwaarde);
+	}
 
 }
