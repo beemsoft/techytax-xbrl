@@ -42,14 +42,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</logic:notPresent>
 		
 		<logic:present	name="user" scope="session">
-		<p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p>
+		<logic:notEmpty name="user" property="latestOnlineTime">
+			<p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" format="yyyy-MM-dd HH:mm:ss"/></p>
+		</logic:notEmpty>
 		<logic:equal name="user" property="user" value="false">
 		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
 		</logic:equal>
 	<%
 		if (htmlExtraLoggedOn != null) {
 	%>
+	<logic:equal name="user" property="user" value="true">
 	<%=htmlExtraLoggedOn%>
+	</logic:equal>
 	<%
 		}
 	%>
