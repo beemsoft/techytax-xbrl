@@ -23,6 +23,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ page import="org.techytax.props.PropsFactory"%>
 <%@ page import="java.util.Properties"%>
 
+<%
+	Properties props = PropsFactory.loadProperties();
+	String htmlExtra = props.getProperty("html.extra");
+	String htmlExtraLoggedOn = props.getProperty("html.extra.logged.on");
+%>	
+
 <h4 class="section"><bean:message key="welcome.title" /> <logic:present
 	name="user" scope="session">
 	<bean:write name="user" property="fullName" />
@@ -34,12 +40,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<p><bean:message key="welcome.intro" /></p>
 		 <p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
 		</logic:notPresent>
-		 <logic:present	name="user" scope="session">
-		 <p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p>
-		 <logic:equal name="user" property="user" value="false">
-		 <p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
-		 </logic:equal>
-		 </logic:present>
+		
+		<logic:present	name="user" scope="session">
+		<p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" /></p>
+		<logic:equal name="user" property="user" value="false">
+		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
+		</logic:equal>
+	<%
+		if (htmlExtraLoggedOn != null) {
+	%>
+	<%=htmlExtraLoggedOn%>
+	<%
+		}
+	%>
+		
+		</logic:present>
+		 
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>
@@ -75,8 +91,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</html:form>
 
 	<%
-		Properties props = PropsFactory.loadProperties();
-		String htmlExtra = props.getProperty("html.extra");
 		if (htmlExtra != null) {
 	%>
 	<%=htmlExtra%>
