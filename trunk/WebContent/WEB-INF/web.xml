@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter>
-		<filter-name>adminAccessFilter</filter-name>
+		<filter-name>authorizationFilter</filter-name>
 		<filter-class>org.techytax.security.AuthorizationFilter</filter-class>
 		<init-param>
 			<param-name>onError</param-name>
@@ -41,7 +41,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>adminAccessFilter</filter-name>
+		<filter-name>authorization</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>	
 	<servlet>
