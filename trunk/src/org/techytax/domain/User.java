@@ -1,6 +1,7 @@
 package org.techytax.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable {
 
@@ -14,7 +15,7 @@ public class User implements Serializable {
 
 	private long id;
 
-	private String latestOnlineTime;
+	private Date latestOnlineTime;
 
 	private String password;
 
@@ -34,7 +35,7 @@ public class User implements Serializable {
 		return id;
 	}
 
-	public String getLatestOnlineTime() {
+	public Date getLatestOnlineTime() {
 		return latestOnlineTime;
 	}
 
@@ -93,7 +94,7 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public void setLatestOnlineTime(String latestOnlineTime) {
+	public void setLatestOnlineTime(Date latestOnlineTime) {
 		this.latestOnlineTime = latestOnlineTime;
 	}
 

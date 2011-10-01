@@ -25,7 +25,6 @@ import java.util.Date;
 import org.apache.commons.beanutils.BeanUtils;
 import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
-import org.techytax.util.DateHelper;
 
 public class SecurityServiceImpl implements SecurityService {
 
@@ -59,7 +58,7 @@ public class SecurityServiceImpl implements SecurityService {
 			e.printStackTrace();
 		}
 
-		user.setLatestOnlineTime(DateHelper.getTime(new Date()));
+		user.setLatestOnlineTime(new Date());
 		try {
 			userDao.updateUser(user);
 		} catch (Exception e) {
