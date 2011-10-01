@@ -25,10 +25,13 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.techytax.domain.User;
+import org.techytax.security.AuthenticationException;
 import org.techytax.security.SecurityService;
 import org.techytax.security.SecurityServiceImpl;
 
@@ -38,8 +41,21 @@ public final class LoginAction extends Action {
 		String username = (String) PropertyUtils.getSimpleProperty(form, "username");
 		String password = (String) PropertyUtils.getSimpleProperty(form, "password");
 		SecurityService service = new SecurityServiceImpl();
-		User user = service.authenticate(username, password);
-		session.setAttribute("user", user);
+		ActionErrors errors = new ActionErrors();
+		try {
+			User user = service.authenticate(username, password);
+			session.setAttribute("user", user);
+		} catch (AuthenticationException e) {
+			if (e.getMessage().equals("Unknown user")) {
+				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.authentication.user"));
+			} else if (e.getMessage().equals("Invalid password")) {
+				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.authentication.password"));
+			} else if (e.getMessage().equals("User blocked")) {
+				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.user.blocked"));
+			} 
+			addErrors(request, errors);
+			saveErrors(request, errors);
+		}
 		return mapping.findForward("success");
 	}
 }

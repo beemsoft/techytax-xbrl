@@ -40,10 +40,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<param-value>/index.jsp</param-value>
 		</init-param>
 	</filter>
+	<filter>
+		<filter-name>userFilter</filter-name>
+		<filter-class>org.techytax.security.UserFilter</filter-class>
+	</filter>	
 	<filter-mapping>
-		<filter-name>authorization</filter-name>
+		<filter-name>authorizationFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
-	</filter-mapping>	
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>userFilter</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>		
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
