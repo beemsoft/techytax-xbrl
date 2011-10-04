@@ -34,39 +34,41 @@ public class TaxCodeHelper {
 	public static Kost convertTaxCode(Kost cost) {
 		String description = cost.getOmschrijving();
 		int endIndex = description.indexOf("AC");
-		String taxCode = cost.getOmschrijving().substring(endIndex - 16, endIndex);
-		String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
-		String fullDescription = "";
-		String taxType = convertedTaxCode.substring(12, 13);
-		String yearIndicator = convertedTaxCode.substring(14, 15);
-		String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
+		if (endIndex != -1) {
+			String taxCode = cost.getOmschrijving().substring(endIndex - 16, endIndex);
+			String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
+			String fullDescription = "";
+			String taxType = convertedTaxCode.substring(12, 13);
+			String yearIndicator = convertedTaxCode.substring(14, 15);
+			String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
 
-		if (taxType.equals("B")) {
-			cost.setKostenSoortId(KostConstanten.OMZET_BELASTING);
-			yearIndicator = convertedTaxCode.substring(17, 18);
-			fullDescription = "Omzetbelasting";
-		} else if (taxType.equals("W")) {
-			fullDescription = "Zorgverzekeringswet";
-		} else if (taxType.equals("W")) {
-			fullDescription = "Zorgverzekeringswet";
-		} else if (taxType.equals("M")) {
-			fullDescription = "Motorrijtuigenbelasting";
-			cost.setKostenSoortId(KostConstanten.WEGEN_BELASTING);
-		} else if (taxType.equals("O")) {
-			fullDescription = "Omzetbelasting teruggaaf";
-		} else if (taxType.equals("H")) {
-			fullDescription = "Inkomstenbelasting";
-		}
+			if (taxType.equals("B")) {
+				cost.setKostenSoortId(KostConstanten.OMZET_BELASTING);
+				yearIndicator = convertedTaxCode.substring(17, 18);
+				fullDescription = "Omzetbelasting";
+			} else if (taxType.equals("W")) {
+				fullDescription = "Zorgverzekeringswet";
+			} else if (taxType.equals("W")) {
+				fullDescription = "Zorgverzekeringswet";
+			} else if (taxType.equals("M")) {
+				fullDescription = "Motorrijtuigenbelasting";
+				cost.setKostenSoortId(KostConstanten.WEGEN_BELASTING);
+			} else if (taxType.equals("O")) {
+				fullDescription = "Omzetbelasting teruggaaf";
+			} else if (taxType.equals("H")) {
+				fullDescription = "Inkomstenbelasting";
+			}
 
-		String taxYear = currentYear.substring(0, 3) + yearIndicator;
-		if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
-			taxYear = Integer.toString((Integer.parseInt(taxYear) - 10));
+			String taxYear = currentYear.substring(0, 3) + yearIndicator;
+			if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
+				taxYear = Integer.toString((Integer.parseInt(taxYear) - 10));
+			}
+			cost.setOmschrijving(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
 		}
-		cost.setOmschrijving(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
 		return cost;
 
 	}
-	
+
 	public static PrepaidTax findPrepaidTax(int year, String userId) {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
@@ -76,12 +78,12 @@ public class TaxCodeHelper {
 			int prepaidIncomeTax = 0;
 			int prepaidHealthTax = 0;
 			for (Kost tax : taxList) {
-				if (tax.getOmschrijving().contains("Inkomstenbelasting "+year)) {
+				if (tax.getOmschrijving().contains("Inkomstenbelasting " + year)) {
 					prepaidIncomeTax += tax.getBedrag().intValue();
 				}
-				if (tax.getOmschrijving().contains("Zorgverzekeringswet "+year)) {
+				if (tax.getOmschrijving().contains("Zorgverzekeringswet " + year)) {
 					prepaidHealthTax += tax.getBedrag().intValue();
-				}				
+				}
 			}
 			prepaidTax.setPrepaidHealth(prepaidHealthTax);
 			prepaidTax.setPrepaidIncome(prepaidIncomeTax);
