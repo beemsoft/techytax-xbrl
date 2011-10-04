@@ -48,7 +48,7 @@ public class SendAuditReportAction extends Action {
 		List<Kost> costList = boekDao.getAuditList(auditReportForm.getBeginDatum(), auditReportForm.getEindDatum(), Long.toString(user.getId()));
 		try {
 			String message = AuditFileHelper.createAuditFile(costList);
-			MailHelper.sendAuditReport(message);
+			MailHelper.sendAuditReport(message, user.getEmail());
 
 		} catch (Exception e) {
 			e.printStackTrace();

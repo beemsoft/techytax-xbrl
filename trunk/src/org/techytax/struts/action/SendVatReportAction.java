@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.techytax.domain.User;
 import org.techytax.mail.MailHelper;
 import org.techytax.struts.form.VatReportForm;
 import org.techytax.xml.dutch.vat.AangifteOmzetbelasting;
@@ -50,7 +51,7 @@ public class SendVatReportAction extends Action {
 			throws Exception {
 		final ActionErrors errors = new ActionErrors();
 		VatReportForm vatReportForm = (VatReportForm) form;
-
+		User user = (User) request.getSession().getAttribute("user");
 		ObjectFactory objectFactory = null;
 		JAXBContext jc = null;
 		Marshaller m = null;
@@ -99,7 +100,7 @@ public class SendVatReportAction extends Action {
 					.setIdentificerendeGegevens(identificerendeGegevens);
 			m.marshal(aangifteOmzetbelasting, writer);
 			System.out.println(writer.toString());
-			MailHelper.sendDutchVatDeclaration(writer.toString());
+			MailHelper.sendDutchVatDeclaration(writer.toString(), user.getEmail());
 
 		} catch (Exception e) {
 			e.printStackTrace();
