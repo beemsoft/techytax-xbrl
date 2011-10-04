@@ -56,11 +56,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=request.getAttribute("nettoOmzet")%></td>
 	</tr>
 </table>
+
 <%
-	if (request.isUserInRole("admin")) {
-		BigDecimal vatIn = (BigDecimal)request.getAttribute("btwIn");
-		BigDecimal vatOut = (BigDecimal)request.getAttribute("btwOut");
-		BigDecimal vatReturn = (BigDecimal)request.getAttribute("balans");		
+	BigDecimal vatIn = (BigDecimal)request.getAttribute("btwIn");
+	BigDecimal vatOut = (BigDecimal)request.getAttribute("btwOut");
+	BigDecimal vatReturn = (BigDecimal)request.getAttribute("balans");		
 %>	
 <html:form action="/sendVatReport.do">
 <html:hidden property="vatIn" value="<%=vatIn.toString()%>"/>
@@ -69,9 +69,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <html:submit/>
 </html:form>
 <%
-	}
 	} else if (balansForm.getBalansSoort().equals("audit")) {
-		if (request.isUserInRole("admin")) {
 %>
 <p>Audit</p>
 <html:form action="/sendAuditReport.do">
@@ -80,18 +78,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <html:submit/>
 </html:form>
 <%		
-		}
 	} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
 %>
 <table>
 	<tr>
 		<td><bean:message key="overview.balance.account" /></td>
 		<td align="right"><%=request.getAttribute("balans")%></td>
-	<tr>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.balance.savings" /></td>
-		<td align="right"><%=request.getAttribute("sparen")%>
+		<td align="right"><%=request.getAttribute("sparen")%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.balance.private" /></td>
@@ -158,6 +154,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</tr>
 		</table>
 <%
-	} 
+	}
 	}
 %>
