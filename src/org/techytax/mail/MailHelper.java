@@ -59,10 +59,8 @@ public class MailHelper {
 		}
 	}
 	
-	private static void sendMail(String subject, String message) throws Exception {
+	private static void sendMail(String subject, String message, String to) throws Exception {
 			loadProperties();
-			String to = props.getProperty("message.to");
-			System.out.println("Test: " + to);
 			Session session = Session.getDefaultInstance(props);
 	//		session.setDebug(true);
 			Message msg = new MimeMessage(session);
@@ -90,12 +88,12 @@ public class MailHelper {
 			tr.close();
 	}	
 
-	public static void sendDutchVatDeclaration(String message) throws Exception {
-		sendMail("OB aangifte", message);
+	public static void sendDutchVatDeclaration(String message, String to) throws Exception {
+		sendMail("OB aangifte", message, to);
 	}
 	
-	public static void sendAuditReport(String message) throws Exception {
-		sendMail("Audit report", message);
+	public static void sendAuditReport(String message, String to) throws Exception {
+		sendMail("Audit report", message, to);
 	}	
 
 }
