@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
@@ -33,15 +34,27 @@ import org.techytax.domain.KostConstanten;
 public class BoekDao extends BaseDao {
 	
 	private void encrypt(Kost cost) {
-		cost.setBedrag(decimalEncryptor.encrypt(cost.getBedrag()));	
-		cost.setBtw(decimalEncryptor.encrypt(cost.getBtw()));
-		cost.setOmschrijving(textEncryptor.encrypt(cost.getOmschrijving()));
+		if (cost.getBedrag().doubleValue() != 0) {
+			cost.setBedrag(decimalEncryptor.encrypt(cost.getBedrag()));
+		}
+		if (cost.getBtw().doubleValue() != 0) {
+			cost.setBtw(decimalEncryptor.encrypt(cost.getBtw()));
+		}
+		if (StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
+			cost.setOmschrijving(textEncryptor.encrypt(cost.getOmschrijving()));
+		}
 	}
 	
 	private void decrypt(Kost cost) {
-		cost.setBedrag(decimalEncryptor.decrypt(cost.getBedrag()));	
-		cost.setBtw(decimalEncryptor.decrypt(cost.getBtw()));
-		cost.setOmschrijving(textEncryptor.decrypt(cost.getOmschrijving()));
+		if (cost.getBedrag().doubleValue() != 0) {
+			cost.setBedrag(decimalEncryptor.decrypt(cost.getBedrag()));
+		}
+		if (cost.getBtw().doubleValue() != 0) {
+			cost.setBtw(decimalEncryptor.decrypt(cost.getBtw()));
+		}
+		if (StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
+			cost.setOmschrijving(textEncryptor.decrypt(cost.getOmschrijving()));
+		}
 	}	
 	
 	private void decrypt(Aftrekpost deductableCost) {
