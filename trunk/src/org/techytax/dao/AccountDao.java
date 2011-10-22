@@ -51,13 +51,16 @@ public class AccountDao extends BaseDao {
 	}
 	
 	private void encrypt(AccountBalance accountBalance) {
-		accountBalance.setBalance(decimalEncryptor.encrypt(accountBalance.getBalance()));	
+		BigDecimal balance = accountBalance.getBalance();
+		if (balance != null && balance.doubleValue() != 0) {
+			accountBalance.setBalance(decimalEncryptor.encrypt(balance));
+		}
 	}	
 	
 	private void decrypt(AccountBalance accountBalance) {
 		BigDecimal balance = accountBalance.getBalance();
-		if (balance != null) {
-			accountBalance.setBalance(decimalEncryptor.decrypt(balance.stripTrailingZeros()));
+		if (balance != null && balance.doubleValue() != 0) {
+			accountBalance.setBalance(decimalEncryptor.decrypt(balance));
 		}
 	}	
 	
