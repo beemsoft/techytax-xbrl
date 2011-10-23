@@ -19,10 +19,8 @@
  */
 package org.techytax.security;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
 
@@ -32,10 +30,11 @@ public class SecurityServiceImpl implements SecurityService {
 
 		UserDao userDao = new UserDao();
 		User user = null;
-		User resultUser = new User();
+		Date latestOnlineTime = null;
 
 		try {
 			user = userDao.getUser(username);
+			latestOnlineTime = user.getLatestOnlineTime();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -50,21 +49,14 @@ public class SecurityServiceImpl implements SecurityService {
 		if (user.isBlocked()) {
 			throw new AuthenticationException("User blocked");
 		}
+		Date currentDate = new Date();
 		try {
-			BeanUtils.copyProperties(resultUser, user);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-
-		user.setLatestOnlineTime(new Date());
-		try {
+			user.setLatestOnlineTime(currentDate);
 			userDao.updateUser(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return resultUser;
+		user.setLatestOnlineTime(latestOnlineTime);
+		return user;
 	}
 }

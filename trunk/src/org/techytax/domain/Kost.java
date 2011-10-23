@@ -19,9 +19,12 @@
  */
 package org.techytax.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Kost {
+public class Kost implements Serializable {
+
+	private static final long serialVersionUID = 6493376166158299239L;
 	private BigDecimal bedrag;
 	private BigDecimal btw;
 	private String datum;

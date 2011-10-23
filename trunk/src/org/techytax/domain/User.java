@@ -1,3 +1,22 @@
+/**
+ * Copyright 2011 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.techytax.domain;
 
 import java.io.Serializable;
@@ -8,8 +27,10 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -374265857173724138L;
 
 	private boolean blocked;
-
+	
 	private String email;
+	
+	private boolean frozen;
 
 	private String fullName;
 
@@ -17,12 +38,14 @@ public class User implements Serializable {
 
 	private Date latestOnlineTime;
 
+	private boolean paid;
+
 	private String password;
 
 	private String role;
 
 	private String username;
-
+	
 	public String getEmail() {
 		return email;
 	}
@@ -61,22 +84,30 @@ public class User implements Serializable {
 	public boolean isAdministrator() {
 		return hasRole("admin");
 	}
-	
-	public boolean isUser() {
-		return hasRole("user");
-	}	
 
 	public boolean isBlocked() {
 		return blocked;
+	}
+
+	public boolean isFrozen() {
+		return frozen;
 	}
 
 	public boolean isGuest() {
 		return hasRole("guest");
 	}
 
+	public boolean isPaid() {
+		return paid;
+	}
+
+	public boolean isUser() {
+		return hasRole("user");
+	}
+	
 	public boolean passwordMatch(String pwd) {
 		return password.equals(pwd);
-	}
+	}	
 
 	public void setBlocked(boolean blocked) {
 		this.blocked = blocked;
@@ -84,6 +115,10 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public void setFrozen(boolean frozen) {
+		this.frozen = frozen;
 	}
 
 	public void setFullName(String fullName) {
@@ -96,6 +131,10 @@ public class User implements Serializable {
 
 	public void setLatestOnlineTime(Date latestOnlineTime) {
 		this.latestOnlineTime = latestOnlineTime;
+	}
+
+	public void setPaid(boolean paid) {
+		this.paid = paid;
 	}
 
 	public void setPassword(String password) {

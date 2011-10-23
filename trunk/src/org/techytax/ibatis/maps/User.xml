@@ -24,11 +24,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="user" type="org.techytax.domain.User" />
 	<select id="getUser" parameterClass="string"
 		resultClass="user">
-		SELECT id, username, role, password, fullName, email, latestOnlineTime, blocked FROM user WHERE username = #value#
+		SELECT id, username, role, password, fullName, email, latestOnlineTime, blocked, frozen, paid FROM user WHERE username = #value#
 	</select>
 	<update id="updateUser" parameterClass="user">
 		update user set username = #username#,
 		password = #password#, fullName =
-		#fullName#, email = #email#, latestOnlineTime = #latestOnlineTime# WHERE id = #id#
+		#fullName#, email = #email#, latestOnlineTime = #latestOnlineTime# 
+		WHERE id = #id#
 	</update>
 </sqlMap>

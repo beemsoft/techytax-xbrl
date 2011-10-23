@@ -73,6 +73,7 @@ public class AuthorizationFilter implements Filter {
 		list.add("editAccount");
 		list.add("getAccountBalance");
 		list.add("newAccountBalance");
+		list.add("sendAuditReport");
 		return list;
 	}
 
@@ -91,7 +92,6 @@ public class AuthorizationFilter implements Filter {
 		list.add("updateAccount");
 		list.add("insertAccountBalance");
 		list.add("sendVatReport");
-		list.add("sendAuditReport");
 		return list;
 	}
 
@@ -121,12 +121,12 @@ public class AuthorizationFilter implements Filter {
 			} else {
 				String role = user.getRole();
 				List<String> actions = null;
-				if ("guest".equals(role)) {
-					actions = getGuestActions();
-				} else if ("user".equals(role)) {
+				if ("user".equals(role) && !user.isFrozen() && user.isPaid()) {
 					actions = getUserActions();
 				} else if ("admin".equals(role)) {
 					actions = getAdminActions();
+				} else {
+					actions = getGuestActions();
 				}
 				boolean hasRole = false;
 				for (String action2 : actions) {
