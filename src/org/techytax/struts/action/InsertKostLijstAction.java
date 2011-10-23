@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
+import org.techytax.domain.User;
 
 public class InsertKostLijstAction extends Action {
 
@@ -40,9 +41,12 @@ public class InsertKostLijstAction extends Action {
 
 		BoekDao boekDao = new BoekDao();
 		List<Kost> kostLijst = (List<Kost>) request.getSession().getAttribute("kostLijst");
+		User user = (User) request.getSession().getAttribute("user");
 		Kost kost = null;
 		for (int i = 0; i < kostLijst.size(); i++) {
 			kost = (Kost) kostLijst.get(i);
+			kost.setId(0);
+			kost.setUserId(user.getId());
 			boekDao.insertKost(kost);
 		}
 
