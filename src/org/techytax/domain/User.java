@@ -27,10 +27,12 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -374265857173724138L;
 
 	private boolean blocked;
-	
+
 	private String email;
-	
-	private boolean frozen;
+
+	private Date freezeEndDate;
+
+	private Date freezeStartDate;
 
 	private String fullName;
 
@@ -45,9 +47,26 @@ public class User implements Serializable {
 	private String role;
 
 	private String username;
-	
+
+	public boolean isFrozen() {
+		boolean frozen = false;
+		Date currentDate = new Date();
+		if (freezeStartDate != null && freezeStartDate.before(currentDate) && (freezeEndDate == null || freezeEndDate.after(currentDate))) {
+			frozen = true;
+		}
+		return frozen;
+	}
+
 	public String getEmail() {
 		return email;
+	}
+
+	public Date getFreezeEndDate() {
+		return freezeEndDate;
+	}
+
+	public Date getFreezeStartDate() {
+		return freezeStartDate;
 	}
 
 	public String getFullName() {
@@ -89,10 +108,6 @@ public class User implements Serializable {
 		return blocked;
 	}
 
-	public boolean isFrozen() {
-		return frozen;
-	}
-
 	public boolean isGuest() {
 		return hasRole("guest");
 	}
@@ -104,10 +119,10 @@ public class User implements Serializable {
 	public boolean isUser() {
 		return hasRole("user");
 	}
-	
+
 	public boolean passwordMatch(String pwd) {
 		return password.equals(pwd);
-	}	
+	}
 
 	public void setBlocked(boolean blocked) {
 		this.blocked = blocked;
@@ -117,8 +132,12 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public void setFrozen(boolean frozen) {
-		this.frozen = frozen;
+	public void setFreezeEndDate(Date freezeEndDate) {
+		this.freezeEndDate = freezeEndDate;
+	}
+
+	public void setFreezeStartDate(Date freezeStartDate) {
+		this.freezeStartDate = freezeStartDate;
 	}
 
 	public void setFullName(String fullName) {
