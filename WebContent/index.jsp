@@ -43,24 +43,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		
 		<logic:present	name="user" scope="session">
 		<logic:notEmpty name="user" property="latestOnlineTime">
-			<p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" format="yyyy-MM-dd HH:mm:ss"/></p>
+			<p><bean:message key="welcome.latest.visit" /> <bean:write name="user" property="latestOnlineTime" format="yyyy-MM-dd HH:mm:ss"/>.</p>
 		</logic:notEmpty>
 		<logic:equal name="user" property="user" value="false">
 		<p><a href="help.html" /><bean:message key="welcome.install" /></a></p>
 		</logic:equal>
-	<%
-		if (htmlExtraLoggedOn != null) {
-	%>
+
 	<logic:equal name="user" property="user" value="true">
-	<%=htmlExtraLoggedOn%>
+		<logic:equal name="user" property="frozen" value="true">
+		<p>Uw account is bevroren. Daarom kunt u uw gegevens alleen inzien, niet wijzigen.</p>
+		</logic:equal>
 	</logic:equal>
-	<%
-		}
-	%>
-		
 		</logic:present>
 		 
 		<p><a href="userguide.html" /><bean:message key="welcome.guide" /></a></p>
+	<%
+		if (htmlExtra != null) {
+	%>
+	<%=htmlExtra%>
+	<%
+		}
+	%>		
 		<p><a href="releasenotes.html" /><bean:message
 			key="welcome.release" /></a></p>
 		<p><a href="http://www.techytax.org/forum/">Forum</a></p>
@@ -93,14 +96,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</html:submit> <br class="spacer" />
 		</div>
 	</html:form>
-
-	<%
-		if (htmlExtra != null) {
-	%>
-	<%=htmlExtra%>
-	<%
-		}
-	%>
 </logic:notPresent>
 
 <html:errors />
