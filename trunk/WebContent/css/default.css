@@ -14,8 +14,6 @@ table { border-collapse:collapse; }
 #contentTable td#navigationCell { width:100px; background: #4b93fe repeat-y; color:#fff; vertical-align:top; }
 #contentTable td#contentCell { background: #FFFFFF; color: #010066; vertical-align:top; }
 
-blockquote, input, select, label, p, ul, ol, caption, textarea { font-size:0.69em; }
-ul li ul { font-size:100%; }
 
 th, p, label, caption, ul { line-height:1.4em; }
 
