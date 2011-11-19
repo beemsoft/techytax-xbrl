@@ -99,8 +99,7 @@ public class BoekDao extends BaseDao {
 		} else if (balansSoort.equals("reiskostenBalans")) {
 			costs = sqlMap.queryForList("getReisKostenBalansLijst", map);
 		} else if (balansSoort.equals("investeringen")) {
-			map.put("investmentMinimum", Integer.toString(KostConstanten.INVESTMENT_MINIMUM_AMOUNT));
-			costs = sqlMap.queryForList("getInvesteringenLijst", map);
+			return getInvestments(beginDatum, eindDatum, userId);
 		} else if (balansSoort.equals("afschrijvingen")) {
 			costs = sqlMap.queryForList("getAfschrijvingenLijst", map);
 		} else if (balansSoort.equals("private")) {
@@ -207,6 +206,20 @@ public class BoekDao extends BaseDao {
 			decrypt(cost);
 		}
 		return costs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getInvestments(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getInvesteringenLijst", map);
+		List<Kost> filteredCosts = new ArrayList<Kost>();
+		for (Kost cost: costs) {
+			decrypt(cost);
+			if (cost.getBedrag().compareTo(new BigDecimal(KostConstanten.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
+				filteredCosts.add(cost);
+			}
+		}
+		return filteredCosts;
 	}	
 	
 	@SuppressWarnings("unchecked")
