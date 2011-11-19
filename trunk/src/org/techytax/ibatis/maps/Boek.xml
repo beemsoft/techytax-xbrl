@@ -28,12 +28,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<parameter property="eindDatum" javaType="string" />
 		<parameter property="userId" javaType="string" />
 	</parameterMap>
-	<parameterMap id="periodeMapWithInvestment" class="java.util.Map">
-		<parameter property="beginDatum" javaType="string" />
-		<parameter property="eindDatum" javaType="string" />
-		<parameter property="investmentMinimum" javaType="string" />
-		<parameter property="userId" javaType="string" />				
-	</parameterMap>	
 	<parameterMap id="kostMap" class="java.util.Map">
 		<parameter property="datum" javaType="string" />
 		<parameter property="bedrag" javaType="string" />
@@ -105,15 +99,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND user_id = ?
 		ORDER BY datum asc
 	</select>
-	<select id="getInvesteringenLijst" parameterMap="periodeMapWithInvestment"
+	<select id="getInvesteringenLijst" parameterMap="periodeMap"
 		resultClass="kost">
 		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND datum &gt;= ? 
 		AND datum &lt;= ? 
-		AND bedrag >= ? 
-		AND ks.id NOT IN (1,4,5,12,14,15,23,24,25,29,30) 
+		AND ks.id NOT IN (1,4,5,12,14,15,23,24,25,29,30,33) 
 		AND user_id = ?
 		ORDER BY datum asc
 	</select>
