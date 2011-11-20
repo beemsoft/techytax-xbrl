@@ -75,7 +75,12 @@ var cal13 = new CalendarPopup();
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2"><html:submit><bean:message key="button.show"/></html:submit>
+			<td><bean:message key="search.term"/>:<html:text property="searchTerm"/></td>
+			<td/>
+			<td/>
+		</tr>		
+		<tr>
+			<td colspan="3"><html:submit><bean:message key="button.show"/></html:submit>
 			</td>
 		</tr>
 	</table>

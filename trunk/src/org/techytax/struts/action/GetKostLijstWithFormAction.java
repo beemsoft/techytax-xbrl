@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -53,7 +54,7 @@ public class GetKostLijstWithFormAction extends Action {
 
 		List<Kost> result = null;
 		BalansForm balansForm = (BalansForm) form;
-		if (balansForm.getBalansSoort() == null) {
+		if (balansForm.getBalansSoort() == null && StringUtils.isNotEmpty(balansForm.getSearchTerm())) {
 			Periode periode = DateHelper.getPeriodeVorigJaar();
 			balansForm.setBalansSoort("alles");
 			balansForm.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
@@ -63,7 +64,12 @@ public class GetKostLijstWithFormAction extends Action {
 			User user = (User) request.getSession().getAttribute("user");
 			String userId = Long.toString(user.getId());
 			BoekDao boekDao = new BoekDao();
-			result = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), balansForm.getBalansSoort(), userId);
+			
+			if (StringUtils.isNotEmpty(balansForm.getSearchTerm())) {
+				result = boekDao.searchCosts(balansForm.getSearchTerm(), userId);
+			} else {
+				result = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), balansForm.getBalansSoort(), userId);
+			}
 			request.setAttribute("kostLijst", result);
 
 			if (balansForm.getBalansSoort().equals("btwBalans")) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,6 +28,7 @@ public class BalansForm extends ActionForm {
 	private String beginDatum;
 	private String eindDatum;
 	private String balansSoort;
+	private String searchTerm;
 
 	public String getBalansSoort() {
 		return balansSoort;
@@ -51,6 +52,14 @@ public class BalansForm extends ActionForm {
 
 	public void setEindDatum(String eindDatum) {
 		this.eindDatum = eindDatum;
+	}
+
+	public String getSearchTerm() {
+		return searchTerm;
+	}
+
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
 	}
 
 }
