@@ -223,5 +223,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		resultClass="kost">
 		SELECT id, bedrag, datum, btw, omschrijving, kostensoort_id as kostenSoortId  
 		FROM kosten 
-	</select>	
+	</select>
+	<select id="getAllCostsForUser" parameterClass="string"
+		resultClass="kost">
+		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id
+		AND user_id = #userId#
+	</select>		
 </sqlMap>

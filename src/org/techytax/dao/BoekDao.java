@@ -226,5 +226,18 @@ public class BoekDao extends BaseDao {
 	public List<Kost> getAllCosts() throws Exception {
 		return sqlMap.queryForList("getAllCosts", null);
 	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> searchCosts(String searchTerm, String userId) throws Exception {
+		List<Kost> costs = sqlMap.queryForList("getAllCostsForUser", userId);
+		List<Kost> filteredCosts = new ArrayList<Kost>();
+		for (Kost cost: costs) {
+			decrypt(cost);
+			if (cost.getOmschrijving().toUpperCase().contains(searchTerm.toUpperCase())) {
+				filteredCosts.add(cost);
+			}
+		}
+		return filteredCosts;
+	}	
 
 }
