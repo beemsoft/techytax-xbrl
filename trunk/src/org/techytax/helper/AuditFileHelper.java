@@ -107,7 +107,7 @@ public class AuditFileHelper {
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("1.4");
+			header.setSoftwareVersion("1.5");
 
 			auditfile.setHeader(header);
 			
