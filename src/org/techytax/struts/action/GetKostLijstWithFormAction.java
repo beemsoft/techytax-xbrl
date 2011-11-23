@@ -54,7 +54,7 @@ public class GetKostLijstWithFormAction extends Action {
 
 		List<Kost> result = null;
 		BalansForm balansForm = (BalansForm) form;
-		if (balansForm.getBalansSoort() == null && StringUtils.isNotEmpty(balansForm.getSearchTerm())) {
+		if (balansForm.getBalansSoort() == null && StringUtils.isEmpty(balansForm.getSearchTerm())) {
 			Periode periode = DateHelper.getPeriodeVorigJaar();
 			balansForm.setBalansSoort("alles");
 			balansForm.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
