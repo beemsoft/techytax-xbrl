@@ -64,7 +64,7 @@ public class GetKostLijstWithFormAction extends Action {
 			User user = (User) request.getSession().getAttribute("user");
 			String userId = Long.toString(user.getId());
 			BoekDao boekDao = new BoekDao();
-			
+
 			if (StringUtils.isNotEmpty(balansForm.getSearchTerm())) {
 				result = boekDao.searchCosts(balansForm.getSearchTerm(), userId);
 			} else {
@@ -72,37 +72,40 @@ public class GetKostLijstWithFormAction extends Action {
 			}
 			request.setAttribute("kostLijst", result);
 
-			if (balansForm.getBalansSoort().equals("btwBalans")) {
-				Balans balans = BalanceCalculator.calculateBtwBalance(result);
-				request.setAttribute("btwOut", balans.getTotaleKosten());
-				request.setAttribute("btwIn", balans.getTotaleBaten());
-				request.setAttribute("balans", (balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
-				request.setAttribute("brutoOmzet", balans.getBrutoOmzet());
-				request.setAttribute("nettoOmzet", balans.getNettoOmzet());
-				request.setAttribute("btwCorrection", balans.getCorrection());
-			} else if (balansForm.getBalansSoort().equals("rekeningBalans")) {
-				Liquiditeit liquiditeit = BalanceCalculator.calculatAccountBalance(result);
-				request.setAttribute("balans", liquiditeit.getRekeningBalans());
-				request.setAttribute("sparen", liquiditeit.getSpaarBalans());
-				request.setAttribute("private", liquiditeit.getPriveBalans());
-			} else if (balansForm.getBalansSoort().equals("kostenBalans")) {
-				Balans balans = BalanceCalculator.calculatCostBalance(result);
-				request.setAttribute("kosten", balans.getTotaleKosten());
-				request.setAttribute("baten", balans.getTotaleBaten());
-				Balans balanceCurrentAccount = BalanceCalculator.calculatCostBalanceCurrentAccount(result);
-				request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
-			} else if (balansForm.getBalansSoort().equals("reiskostenBalans")) {
-				Reiskosten travelCostBalance = BalanceCalculator.calculatTravelCostBalance(result);
-				request.setAttribute("kostenOv", travelCostBalance.getOvKosten());
-				request.setAttribute("kostenAutoMetBtw", travelCostBalance.getAutoKostenMetBtw());
-				request.setAttribute("kostenAutoZonderBtw", travelCostBalance.getAutoKostenZonderBtw());
-				request.setAttribute("vatCorrection", travelCostBalance.getVatCorrection());
-				BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
-				request.setAttribute("verschil", verschil);
-			} else if (balansForm.getBalansSoort().equals("private")) {
-				BigDecimal monthlyExpenses = BalanceCalculator.calculatMonthlyPrivateExpenses(result);
-				request.setAttribute("monthlyExpenses", monthlyExpenses);
-			} 
+			String balansSoort = balansForm.getBalansSoort();
+			if (balansSoort != null) {
+				if (balansSoort.equals("btwBalans")) {
+					Balans balans = BalanceCalculator.calculateBtwBalance(result);
+					request.setAttribute("btwOut", balans.getTotaleKosten());
+					request.setAttribute("btwIn", balans.getTotaleBaten());
+					request.setAttribute("balans", (balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
+					request.setAttribute("brutoOmzet", balans.getBrutoOmzet());
+					request.setAttribute("nettoOmzet", balans.getNettoOmzet());
+					request.setAttribute("btwCorrection", balans.getCorrection());
+				} else if (balansSoort.equals("rekeningBalans")) {
+					Liquiditeit liquiditeit = BalanceCalculator.calculatAccountBalance(result);
+					request.setAttribute("balans", liquiditeit.getRekeningBalans());
+					request.setAttribute("sparen", liquiditeit.getSpaarBalans());
+					request.setAttribute("private", liquiditeit.getPriveBalans());
+				} else if (balansSoort.equals("kostenBalans")) {
+					Balans balans = BalanceCalculator.calculatCostBalance(result);
+					request.setAttribute("kosten", balans.getTotaleKosten());
+					request.setAttribute("baten", balans.getTotaleBaten());
+					Balans balanceCurrentAccount = BalanceCalculator.calculatCostBalanceCurrentAccount(result);
+					request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
+				} else if (balansSoort.equals("reiskostenBalans")) {
+					Reiskosten travelCostBalance = BalanceCalculator.calculatTravelCostBalance(result);
+					request.setAttribute("kostenOv", travelCostBalance.getOvKosten());
+					request.setAttribute("kostenAutoMetBtw", travelCostBalance.getAutoKostenMetBtw());
+					request.setAttribute("kostenAutoZonderBtw", travelCostBalance.getAutoKostenZonderBtw());
+					request.setAttribute("vatCorrection", travelCostBalance.getVatCorrection());
+					BigDecimal verschil = (travelCostBalance.getAutoKostenMetBtw().subtract(travelCostBalance.getAutoKostenZonderBtw()).subtract(travelCostBalance.getVatCorrection()));
+					request.setAttribute("verschil", verschil);
+				} else if (balansSoort.equals("private")) {
+					BigDecimal monthlyExpenses = BalanceCalculator.calculatMonthlyPrivateExpenses(result);
+					request.setAttribute("monthlyExpenses", monthlyExpenses);
+				}
+			}
 
 			String action = (String) request.getParameter("action");
 			if (action == null) {
