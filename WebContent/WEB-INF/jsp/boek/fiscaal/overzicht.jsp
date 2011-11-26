@@ -103,6 +103,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td></td>		
 		<td align="right">(<%=overzicht.getOudedagsReserveMaximaal()%>)</td>
 	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.investment.deduction"/>:</td>
+		<td></td>		
+		<td align="right">(<%=overzicht.getInvestmentDeduction()%>)</td>
+	</tr>	
 </table>
 
 <h4><bean:message key="overview.fiscal.activa"/></h4>

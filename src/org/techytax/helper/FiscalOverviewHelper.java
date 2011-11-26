@@ -56,7 +56,6 @@ public class FiscalOverviewHelper {
 		PrivatWithdrawal privatWithdrawal = new PrivatWithdrawal();
 		Liquiditeit liquiditeit = null;
 
-		int forLimiet = KostConstanten.MAXIMALE_FOR;
 		Date datum = DateHelper.stringToDate(beginDatum);
 		int jaar = DateHelper.getYear(datum);
 
@@ -123,10 +122,13 @@ public class FiscalOverviewHelper {
 		overview.setProfit(profit);
 		int maximaleFor = (int) (overview.getWinst() * KostConstanten.FOR_PERCENTAGE);
 		System.out.println("Maximale FOR: " + maximaleFor);
-		if (maximaleFor > forLimiet) {
-			maximaleFor = forLimiet;
+		if (maximaleFor > KostConstanten.MAXIMALE_FOR) {
+			maximaleFor = KostConstanten.MAXIMALE_FOR;
 		}
 		overview.setOudedagsReserveMaximaal(maximaleFor);
+		
+		List<Kost> investmentKostList = boekDao.getInvestments(beginDatum, eindDatum, Long.toString(userId));
+		overview.setInvestmentDeduction(InvestmentDeductionHelper.getInvestmentDeduction(investmentKostList));
 
 		// Maak activa balans op.
 

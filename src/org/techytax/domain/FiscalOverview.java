@@ -19,6 +19,7 @@
  */
 package org.techytax.domain;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class FiscalOverview {
@@ -62,6 +63,8 @@ public class FiscalOverview {
 	private PrepaidTax prepaidTax;
 
 	private int profit;
+	
+	private BigInteger investmentDeduction;
 	
 	public List<Activa> getActiva() {
 		return activa;
@@ -223,6 +226,14 @@ public class FiscalOverview {
 
 	public void setProfit(int winst) {
 		this.profit = winst;
+	}
+
+	public BigInteger getInvestmentDeduction() {
+		return investmentDeduction;
+	}
+
+	public void setInvestmentDeduction(BigInteger investmentDeduction) {
+		this.investmentDeduction = investmentDeduction;
 	}
 
 }
