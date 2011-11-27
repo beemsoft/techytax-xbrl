@@ -7,3 +7,5 @@ CREATE TABLE `accounts` (
   `date_closed` date,  
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE accounts ADD COLUMN `type` int(1) default '0' NOT NULL AFTER date_closed;
