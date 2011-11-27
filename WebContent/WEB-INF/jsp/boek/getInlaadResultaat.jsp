@@ -51,7 +51,7 @@ if (res != null) {
 <td><%=obj.getDatum()%></td>
 <td align="right"><%=obj.getBedrag()%></td>
 <td align="right"><%=obj.getBtw()%></td>
-<td><%=obj.getKostenSoortOmschrijving()%></td>
+<td><bean:message key="<%=obj.getKostenSoortOmschrijving()%>"/></td>
 <td><%=obj.getOmschrijving()%></td>
 </tr>
 <%
