@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.domain.AccountType;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
@@ -44,15 +45,23 @@ public class UploadFileAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		UploadForm uploadForm = (UploadForm) form;
-
+		User user = (User) request.getSession().getAttribute("user");
+		
 		FormFile myFile = uploadForm.getTheFile();
 
-		String forward = uploadForm.getType();
+		String forward = "business";
 		try {
+			
+			String fileName = myFile.getFileName();
+			AccountType accountType = RekeningFileHelper.getAccountType(fileName, user.getId());
+			switch (accountType) {
+				case PRIVATE : forward = "private"; break;
+			}
+			
 			KostensoortDao dao = new KostensoortDao();
 			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
 			InputStream is = myFile.getInputStream();
-			User user = (User) request.getSession().getAttribute("user");
+
 			List<Kost> result = RekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
