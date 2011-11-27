@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
+import org.techytax.domain.AccountType;
 import org.techytax.domain.KeyId;
 
 public class AccountDao extends BaseDao {
@@ -78,6 +79,18 @@ public class AccountDao extends BaseDao {
 		return accounts;
 	}
 	
+	public AccountType getAccountType(String accountNumber, long userId) throws Exception {
+		KeyId key = new KeyId();
+		key.setUserId(userId);
+		List<Account> accounts = getAccounts(key);
+		for (Account account: accounts) {
+			if (account.getNumber().equals(accountNumber)) {
+				return account.getType();
+			}
+		}
+		return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Account> getAllAccounts() throws Exception {
 		return sqlMap.queryForList("getAllAccounts", null);
@@ -93,7 +106,7 @@ public class AccountDao extends BaseDao {
 		decrypt(account);
 		return account;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<AccountBalance> getAccountBalance(KeyId key) throws Exception {
 		List<AccountBalance> balances = sqlMap.queryForList("getAccountBalance", key);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -34,16 +34,6 @@ public class UploadForm extends ActionForm {
 
 	public void setTheFile(FormFile theFile) {
 		this.theFile = theFile;
-	}
-
-	private String type="business";
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 }

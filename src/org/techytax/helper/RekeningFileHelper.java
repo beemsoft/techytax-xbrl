@@ -27,8 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.domain.Account;
+import org.techytax.domain.AccountType;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
@@ -54,6 +58,13 @@ public class RekeningFileHelper {
 	private static List<Kostensoort> kostensoortList = null;
 
 	private RekeningFileHelper() {
+	}
+	
+	public static AccountType getAccountType(String fileName, long userId) throws Exception {
+		int index = fileName.indexOf("_");
+		String accountNumber = fileName.substring(0, index);
+		AccountDao accountDao = new AccountDao();
+		return accountDao.getAccountType(accountNumber, userId);
 	}
 
 	public static List<Kost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) {
