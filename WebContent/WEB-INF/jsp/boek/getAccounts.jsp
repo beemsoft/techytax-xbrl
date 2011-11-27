@@ -36,6 +36,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="label.descr"/></th>
 		<th><bean:message key="label.number"/></th>
 		<th><bean:message key="label.name"/></th>
+		<th><bean:message key="label.type"/></th>
 	</tr>
 
 	<%
@@ -52,6 +53,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><a href="getAccountBalance.do?id=<%=obj.getId()%>"><%=obj.getDescription()%></a></td>
 		<td><%=obj.getNumber()%></td>
 		<td><%=obj.getName()%></td>
+		<td><bean:message key="<%=obj.getType().getKey()%>"/></td>
 	</tr>
 	<%
 				}

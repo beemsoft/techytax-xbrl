@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <h4><bean:message key="account.edit" /></h4>
+<div class="margins">
 <html:form action="/updateAccount.do">
 	<html:hidden property="id" />
 	<jsp:include page="/WEB-INF/jsp/boek/accountDetails.jsp" />
@@ -27,4 +28,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<bean:message key="button.update" />
 	</html:submit>
 </html:form>
+</div>
 

@@ -22,26 +22,30 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
+import org.techytax.domain.AccountType;
 import org.techytax.domain.User;
 import org.techytax.struts.form.AccountForm;
 
 public class UpdateAccountAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		AccountForm accountForm = (AccountForm) form;
 
 		Account account = new Account();
-		BeanUtils.copyProperties(account, accountForm);
+		account.setId(accountForm.getId());
+		account.setDateClosed(accountForm.getDateClosed());
+		account.setDateOpened(accountForm.getDateOpened());
+		account.setDescription(accountForm.getDescription());
+		account.setName(accountForm.getName());
+		account.setNumber(accountForm.getNumber());
+		account.setType(AccountType.getInstance(Integer.parseInt(accountForm.getType())));
 		AccountDao accountDao = new AccountDao();
 		User user = (User) request.getSession().getAttribute("user");
 		account.setUserId(user.getId());

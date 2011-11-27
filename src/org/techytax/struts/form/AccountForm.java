@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -31,6 +31,7 @@ public class AccountForm extends ActionForm {
 	private String name;
 	private String dateOpened;
 	private String dateClosed;
+	private String type;
 
 	public long getId() {
 		return id;
@@ -78,6 +79,14 @@ public class AccountForm extends ActionForm {
 
 	public void setDateClosed(String dateClosed) {
 		this.dateClosed = dateClosed;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

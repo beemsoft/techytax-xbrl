@@ -46,5 +46,16 @@ var cal13 = new CalendarPopup();
 		<td><html:text property="dateClosed" /><a href="#"
 			onclick="cal13.select(document.forms[0].dateClosed,'dateClosed','yyyy-MM-dd'); return false;"
 			title="<bean:message key="label.date.select"/>" name="dateClosed" id="dateClosed">select</a></td>
-	</tr>	
+	</tr>
+	<tr>
+		<td><bean:message key="label.type"/>:</td>
+		<td><html:select property="type">
+				<html:option value="0"><bean:message key="account.type.private"/></html:option>
+				<html:option value="1"><bean:message key="account.type.business"/></html:option>
+				<html:option value="2"><bean:message key="account.type.savings"/></html:option>
+				<html:option value="3"><bean:message key="account.type.mortgage.loan"/></html:option>
+				<html:option value="4"><bean:message key="account.type.mortgage.savings"/></html:option>
+			</html:select>
+		</td>
+	</tr>		
 </table>

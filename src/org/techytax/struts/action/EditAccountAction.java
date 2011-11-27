@@ -22,7 +22,6 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -40,8 +39,8 @@ public class EditAccountAction extends Action {
 			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		Account result = null;
-		AccountForm objForm = (AccountForm) form;
+		Account account = null;
+		AccountForm accountForm = (AccountForm) form;
 
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
@@ -53,9 +52,15 @@ public class EditAccountAction extends Action {
 				KeyId key = new KeyId();
 				key.setId(Long.parseLong(id));
 				key.setUserId(user.getId());
-				result = AccountDao.getAccount(key);
+				account = AccountDao.getAccount(key);
 
-				BeanUtils.copyProperties(objForm, result);
+				accountForm.setId(account.getId());
+				accountForm.setDateClosed(account.getDateClosed());
+				accountForm.setDateOpened(account.getDateOpened());
+				accountForm.setDescription(account.getDescription());
+				accountForm.setName(account.getName());
+				accountForm.setNumber(account.getNumber());
+				accountForm.setType(Integer.toString(account.getType().ordinal()));
 
 				forward = "success";
 			} catch (Exception e) {

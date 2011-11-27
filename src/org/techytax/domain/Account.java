@@ -27,6 +27,7 @@ public class Account {
 	private String name;
 	private String number;
 	private long userId;
+	private AccountType type;
 
 	public String getDateClosed() {
 		return dateClosed;
@@ -82,5 +83,13 @@ public class Account {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public AccountType getType() {
+		return type;
+	}
+
+	public void setType(AccountType type) {
+		this.type = type;
 	}
 }
