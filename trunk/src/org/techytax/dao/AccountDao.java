@@ -91,6 +91,18 @@ public class AccountDao extends BaseDao {
 		return null;
 	}
 	
+	public Account getBusinessAccount(long userId) throws Exception {
+		KeyId key = new KeyId();
+		key.setUserId(userId);
+		List<Account> accounts = getAccounts(key);
+		for (Account account: accounts) {
+			if (account.getType() == AccountType.BUSINESS) {
+				return account;
+			}
+		}
+		return null;
+	}	
+	
 	@SuppressWarnings("unchecked")
 	public List<Account> getAllAccounts() throws Exception {
 		return sqlMap.queryForList("getAllAccounts", null);
