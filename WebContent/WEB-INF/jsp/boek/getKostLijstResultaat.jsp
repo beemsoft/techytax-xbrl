@@ -140,11 +140,11 @@ var cal13 = new CalendarPopup();
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
 		<th><bean:message key="label.id"/></th>
-		<th width="10%"><bean:message key="label.date"/></th>
-		<th width="10%"><bean:message key="label.amount"/></th>
+		<th width="5%"><bean:message key="label.date"/></th>
+		<th width="5%"><bean:message key="label.amount"/></th>
 		<th width="5%"><bean:message key="label.vat"/></th>
 		<th><bean:message key="label.descr"/></th>
-		<th width="35%"><bean:message key="label.costtype"/></th>
+		<th width="25%"><bean:message key="label.costtype"/></th>
 	</tr>
 
 	<%

@@ -86,6 +86,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=request.getAttribute("balans")%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.balance.account.actual" /></td>
+		<td align="right"><%=request.getAttribute("actualBalance")%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.balance.savings" /></td>
 		<td align="right"><%=request.getAttribute("sparen")%></td>
 	</tr>

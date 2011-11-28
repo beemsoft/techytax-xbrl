@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
-public class AccountBalance {
+public class AccountBalance implements Comparable<AccountBalance>{
 	private long accountId;
 	private BigDecimal balance;
 	private String datum;
@@ -66,5 +66,9 @@ public class AccountBalance {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public int compareTo(AccountBalance o) {
+		return datum.compareTo(o.getDatum());
 	}
 }

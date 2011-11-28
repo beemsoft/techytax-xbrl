@@ -21,13 +21,18 @@ package org.techytax.helper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.domain.Account;
+import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Balans;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
@@ -79,7 +84,35 @@ public class BalanceCalculator {
 		balans.setCorrection(totalBtwCorrection);
 		return balans;
 	}
-
+	
+	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum, long userId) throws Exception {
+		AccountDao accountDao = new AccountDao();
+		Account businessAccount = accountDao.getBusinessAccount(userId);
+		if (businessAccount != null) {
+			KeyId key = new KeyId();
+			key.setUserId(userId);
+			key.setId(businessAccount.getId());
+			List<AccountBalance> accountBalances = accountDao.getAccountBalance(key);
+			Collections.sort(accountBalances);
+			BigDecimal beginAmount = null;
+			BigDecimal endAmount = null;
+			for (AccountBalance accountBalance: accountBalances) {
+				if (DateHelper.hasOneDayDifference(accountBalance.getDatum(), beginDatum)) {
+					beginAmount = accountBalance.getBalance();
+				}
+				if (beginAmount != null) {
+					if (DateHelper.hasOneDayDifference(accountBalance.getDatum(), eindDatum)) {
+						endAmount = accountBalance.getBalance();
+					}
+					if (endAmount != null) {
+						return endAmount.subtract(beginAmount);
+					}
+				}
+			}			
+		}
+		return null;
+	}
+	
 	public static Liquiditeit calculatAccountBalance(List<Kost> res) throws Exception {
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalInleg = new BigDecimal(0);

@@ -115,6 +115,27 @@ public class DateHelper {
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
 		return periode;
-	}	
+	}
+	
+	public static boolean hasOneDayDifference(String date1, String date2) throws Exception {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(stringToDate(date1));
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		String date = getDate(cal.getTime());
+		if (date.equals(date2)) {
+			return true;
+		}
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		date = getDate(cal.getTime());	
+		if (date.equals(date2)) {
+			return true;
+		}
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		date = getDate(cal.getTime());	
+		if (date.equals(date2)) {
+			return true;
+		}		
+		return false;
+	}
 
 }

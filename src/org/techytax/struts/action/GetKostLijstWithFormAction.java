@@ -83,6 +83,12 @@ public class GetKostLijstWithFormAction extends Action {
 					request.setAttribute("nettoOmzet", balans.getNettoOmzet());
 					request.setAttribute("btwCorrection", balans.getCorrection());
 				} else if (balansSoort.equals("rekeningBalans")) {
+					BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(balansForm.getBeginDatum(), balansForm.getEindDatum(), user.getId());
+					if (actualBalance != null) {
+						request.setAttribute("actualBalance", actualBalance);
+					} else {
+						request.setAttribute("actualBalance", "kan nog niet berekend worden");
+					}
 					Liquiditeit liquiditeit = BalanceCalculator.calculatAccountBalance(result);
 					request.setAttribute("balans", liquiditeit.getRekeningBalans());
 					request.setAttribute("sparen", liquiditeit.getSpaarBalans());
