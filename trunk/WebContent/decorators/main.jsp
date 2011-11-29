@@ -58,7 +58,7 @@ function scrollToItem(id) {
 			<logic:equal name="user" property="guest" value="true">
 				<bean:message key="program.disclaimer"/>
 			</logic:equal>
-		</logic:present></td><td><a href="http://sourceforge.net/projects/techytax"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=260219&amp;type=14" width="150" height="40" alt="Get TechyTax at SourceForge.net. Fast, secure and Free Open Source software downloads" /></a></td></tr></table> 
+		</logic:present></td><td></td></tr></table> 
 			<decorator:body /></td>
 		</tr>
 </table>
