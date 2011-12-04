@@ -95,7 +95,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>		
 		<action path="/updateKostensoort" type="org.techytax.struts.action.UpdateKostensoortAction"
-			name="kostensoortForm" scope="request" roles="admin">
+			name="kostensoortForm" scope="request">
 			<forward name="success" path="/getKostensoortLijst.do"></forward>
 		</action>
 		<action path="/editKostensoort" name="kostensoortForm"
