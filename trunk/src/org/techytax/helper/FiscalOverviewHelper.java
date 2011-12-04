@@ -60,7 +60,7 @@ public class FiscalOverviewHelper {
 		int jaar = DateHelper.getYear(datum);
 
 		// Maak winst-en-verlies rekening op
-		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen);
+		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen, false);
 
 		BoekDao boekDao = new BoekDao();
 		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(
@@ -146,7 +146,7 @@ public class FiscalOverviewHelper {
 			List<Kost> rekeningLijst = boekDao.getKostLijst(startDate,
 					eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator
-					.calculatAccountBalance(rekeningLijst);
+					.calculateAccountBalance(rekeningLijst);
 
 			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
@@ -160,7 +160,7 @@ public class FiscalOverviewHelper {
 			List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum,
 					eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator
-					.calculatAccountBalance(rekeningLijst);
+					.calculateAccountBalance(rekeningLijst);
 		}
 		FiscaalDao fiscaalDao = new FiscaalDao();
 		KeyYear keyYear = new KeyYear();

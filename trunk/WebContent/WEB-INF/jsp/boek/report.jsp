@@ -88,6 +88,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="overview.balance.account.actual" /></td>
 		<td align="right"><%=request.getAttribute("actualBalance")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.turnover.gross" /></td>
+		<td align="right"><%=request.getAttribute("brutoOmzet")%></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.balance.tax" /></td>
+		<td align="right"><%=request.getAttribute("taxBalans")%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.balance.savings" /></td>
@@ -97,6 +105,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><bean:message key="overview.balance.private" /></td>
 		<td align="right"><%=request.getAttribute("private")%></td>
 	</tr>
+	<tr>
+		<td>cost balance</td>
+		<td align="right"><%=request.getAttribute("costBalance")%></td>
+	</tr>	
 </table>
 <%
 	} else if (balansForm.getBalansSoort().equals("kostenBalans")) {
@@ -107,7 +119,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=request.getAttribute("kosten")%></td>
 	</tr>
 	<tr>
-		<td>Test</td>
+		<td>Current account costs</td>
 		<td align="right"><%=request.getAttribute("costCurrentAccount")%></td>
 	</tr>
 	<tr>

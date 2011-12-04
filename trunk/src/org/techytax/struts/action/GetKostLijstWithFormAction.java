@@ -75,7 +75,7 @@ public class GetKostLijstWithFormAction extends Action {
 			String balansSoort = balansForm.getBalansSoort();
 			if (balansSoort != null) {
 				if (balansSoort.equals("btwBalans")) {
-					Balans balans = BalanceCalculator.calculateBtwBalance(result);
+					Balans balans = BalanceCalculator.calculateBtwBalance(result, false);
 					request.setAttribute("btwOut", balans.getTotaleKosten());
 					request.setAttribute("btwIn", balans.getTotaleBaten());
 					request.setAttribute("balans", (balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
@@ -89,15 +89,23 @@ public class GetKostLijstWithFormAction extends Action {
 					} else {
 						request.setAttribute("actualBalance", "kan nog niet berekend worden");
 					}
-					Liquiditeit liquiditeit = BalanceCalculator.calculatAccountBalance(result);
+					Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(result);
 					request.setAttribute("balans", liquiditeit.getRekeningBalans());
 					request.setAttribute("sparen", liquiditeit.getSpaarBalans());
 					request.setAttribute("private", liquiditeit.getPriveBalans());
+					List<Kost> result2 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "btwBalans", userId);
+					Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
+					BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(result);					
+					request.setAttribute("brutoOmzet", balans.getBrutoOmzet().add(totalPaidInvoices));
+					List<Kost> result3 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "tax", userId);
+					request.setAttribute("taxBalans", BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten());
+					List<Kost> result4 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "kostenBalans", userId);
+					request.setAttribute("costBalance", BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten());
 				} else if (balansSoort.equals("kostenBalans")) {
 					Balans balans = BalanceCalculator.calculatCostBalance(result);
 					request.setAttribute("kosten", balans.getTotaleKosten());
 					request.setAttribute("baten", balans.getTotaleBaten());
-					Balans balanceCurrentAccount = BalanceCalculator.calculatCostBalanceCurrentAccount(result);
+					Balans balanceCurrentAccount = BalanceCalculator.calculateCostBalanceCurrentAccount(result, false);
 					request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
 				} else if (balansSoort.equals("reiskostenBalans")) {
 					Reiskosten travelCostBalance = BalanceCalculator.calculatTravelCostBalance(result);
