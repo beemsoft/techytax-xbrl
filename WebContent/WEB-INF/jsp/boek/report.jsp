@@ -90,6 +90,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=request.getAttribute("actualBalance")%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.balance.double.check" /></td>
+		<td align="right"><%=request.getAttribute("doubleCheck")%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.turnover.gross" /></td>
 		<td align="right"><%=request.getAttribute("brutoOmzet")%></td>
 	</tr>
