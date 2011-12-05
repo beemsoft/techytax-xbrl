@@ -95,12 +95,17 @@ public class GetKostLijstWithFormAction extends Action {
 					request.setAttribute("private", liquiditeit.getPriveBalans());
 					List<Kost> result2 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "btwBalans", userId);
 					Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
-					BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(result);					
+					BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(result);
 					request.setAttribute("brutoOmzet", balans.getBrutoOmzet().add(totalPaidInvoices));
 					List<Kost> result3 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "tax", userId);
-					request.setAttribute("taxBalans", BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten());
+					BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
+					request.setAttribute("taxBalans", taxBalance);
 					List<Kost> result4 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "kostenBalans", userId);
-					request.setAttribute("costBalance", BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten());
+					BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
+					request.setAttribute("costBalance", costBalance);
+					BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance).subtract(
+							liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()));
+					request.setAttribute("doubleCheck", doubleCheck);
 				} else if (balansSoort.equals("kostenBalans")) {
 					Balans balans = BalanceCalculator.calculatCostBalance(result);
 					request.setAttribute("kosten", balans.getTotaleKosten());
