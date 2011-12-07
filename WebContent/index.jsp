@@ -77,38 +77,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</tr>
 </table>
 
-<logic:notPresent name="user" scope="session">
-	<h4 class="section"><bean:message key="logon.title" /></h4>
-	<p><bean:message key="logon.descr" /></p>
-	<html:form action="/login">
-		<table class="formTable">
-			<tr>
-				<td><bean:message key="logon.username" /></td>
-				<td><html:text property="username" /></td>
-			</tr>
-			<tr>
-				<td><bean:message key="logon.password" /></td>
-				<td><html:password property="password" /></td>
-			</tr>
-		</table>
-		<div class="margins"><html:submit  onclick="encryptPassword()">
-			<bean:message key="logon.title" />
-		</html:submit> <br class="spacer" />
-		</div>
-	</html:form>
-</logic:notPresent>
-
 <html:errors />
-
-<script type="text/javascript" src="js/jquery.sha1.js"></script>
-<script type="text/javascript">
-	function encryptPassword() {
-		var passwordField=$('input[type=password]');
-		var password=passwordField.val();
-		var encryptedPassword=$.sha1(password);
-		passwordField.val(encryptedPassword);
-	}
-</script>
 
 
 

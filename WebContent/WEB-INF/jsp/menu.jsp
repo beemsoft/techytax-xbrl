@@ -35,7 +35,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<html:link href="index.jsp">
 			<bean:message key="menu.welcome" />
 			<span><bean:message key="menu.welcome.descr" /></span>
-		</html:link> 
+		</html:link>
+		<logic:present name="user" scope="session">
+			<html:link action="logout">
+			<bean:message key="menu.log.off" />
+			</html:link>
+		</logic:present>
+		<logic:notPresent name="user" scope="session">
+			<html:link action="toLogin">
+			<bean:message key="menu.log.in" />
+			</html:link>
+		</logic:notPresent>				 
 		<html:link action="newKost.do">
 			<bean:message key="menu.new.cost" />
 		</html:link>
@@ -58,11 +68,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<bean:message key="menu.accounts" />
 			<span> <bean:message key="menu.accounts.descr" /></span>
 		</html:link>
-		<logic:present name="user" scope="session">
-			<html:link action="logout">
-			<bean:message key="menu.log.off" />
-			</html:link>
-		</logic:present>
 		</div>
 		</div>
 		</td>

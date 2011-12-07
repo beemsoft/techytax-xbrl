@@ -41,9 +41,6 @@ import org.techytax.domain.User;
 public class AuthorizationFilter implements Filter {
 	private String onErrorUrl;
 
-	private static final String LOGIN = "login";
-	private static final String LOGOUT = "logout";
-
 	public void init(FilterConfig filterConfig) throws ServletException {
 		onErrorUrl = filterConfig.getInitParameter("onError");
 		if (onErrorUrl == null || "".equals(onErrorUrl)) {
@@ -115,7 +112,7 @@ public class AuthorizationFilter implements Filter {
 		User user = (User) session.getAttribute("user");
 		ActionErrors errors = new ActionErrors();
 		String action = req.getRequestURI().replaceAll(".*/", "").replace(".do", "");
-		if (!action.equals(LOGIN) && !action.equals(LOGOUT)) {
+		if (!action.equals("login") && !action.equals("toLogin") && !action.equals("logout")) {
 			if (user == null) {
 				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.authentication.required"));
 			} else {
