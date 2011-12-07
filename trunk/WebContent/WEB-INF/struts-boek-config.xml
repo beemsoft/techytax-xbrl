@@ -266,6 +266,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			name="auditReportForm">
 			<forward name="success" path="/getKostLijst.do"></forward>
 		</action>
+		<action path="/toLogin" forward="/WEB-INF/jsp/login.jsp"/>
 		<action path="/login" type="org.techytax.struts.action.LoginAction"
 			name="loginForm">
 			<forward name="success" path="/index.jsp"></forward>
