@@ -46,18 +46,22 @@ public class UploadFileAction extends Action {
 
 		UploadForm uploadForm = (UploadForm) form;
 		User user = (User) request.getSession().getAttribute("user");
-		
+
 		FormFile myFile = uploadForm.getTheFile();
 
 		String forward = "business";
 		try {
-			
+
 			String fileName = myFile.getFileName();
 			AccountType accountType = RekeningFileHelper.getAccountType(fileName, user.getId());
-			switch (accountType) {
-				case PRIVATE : forward = "private"; break;
+			if (accountType != null) {
+				switch (accountType) {
+				case PRIVATE:
+					forward = "private";
+					break;
+				}
 			}
-			
+
 			KostensoortDao dao = new KostensoortDao();
 			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
 			InputStream is = myFile.getInputStream();
