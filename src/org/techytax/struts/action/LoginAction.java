@@ -55,6 +55,7 @@ public final class LoginAction extends Action {
 			} 
 			addErrors(request, errors);
 			saveErrors(request, errors);
+			return mapping.findForward("error");
 		}
 		return mapping.findForward("success");
 	}
