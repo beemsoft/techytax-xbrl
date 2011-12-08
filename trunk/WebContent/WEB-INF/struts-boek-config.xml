@@ -270,6 +270,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/login" type="org.techytax.struts.action.LoginAction"
 			name="loginForm">
 			<forward name="success" path="/index.jsp"></forward>
+			<forward name="error" path="/WEB-INF/jsp/login.jsp"></forward>
 		</action>
 		<action path="/logout" type="org.techytax.struts.action.LogoutAction">
 			<forward name="success" path="/index.jsp"></forward>
