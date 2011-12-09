@@ -155,6 +155,7 @@ public class RekeningFileHelper {
 				
 				if (kost.getKostenSoortId() == KostConstanten.INKOMSTEN_BELASTING) {
 					TaxCodeHelper.convertTaxCode(kost);
+					kost = matchKost(kost, userId);
 				}
 			}
 			return kost;
