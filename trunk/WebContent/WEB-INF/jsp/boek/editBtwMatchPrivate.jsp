@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <jsp:useBean id="kostmatchForm" scope="request"
 	type="org.techytax.struts.form.KostmatchForm" />
 <h4><bean:message key="costtype.match.vat.edit" /></h4>
+<div class="margins">
 <html:form action="/updateBtwMatchPrivate.do">
 	<html:hidden property="id" />
 	<html:hidden property="kostenSoortId" />
@@ -45,4 +46,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<bean:message key="button.update" />
 	</html:submit>
 </html:form>
+</div>
 
