@@ -118,6 +118,18 @@ public class BoekDao extends BaseDao {
 		}
 		return costs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getCostListCurrentAccount(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getKostenBalansCurrentAccountLijst", map);
+		if (costs != null) {
+			for (Kost cost : costs) {
+				decrypt(cost);
+			}
+		}
+		return costs;
+	}	
 
 	@SuppressWarnings("unchecked")
 	public List<Aftrekpost> getDeductableCosts(String beginDatum, String eindDatum, String userId) throws Exception {
