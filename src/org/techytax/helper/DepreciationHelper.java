@@ -32,6 +32,7 @@ import org.techytax.domain.Activa;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Kost;
+import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Periode;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
@@ -69,14 +70,11 @@ public class DepreciationHelper {
 		for (int i = 0; i < nofYears; i++) {
 			Kost afschrijving = new Kost();
 			afschrijving.setBtw(new BigDecimal(0));
-			afschrijving.setKostenSoortId(0);
-			// TODO: translate
+			afschrijving.setKostenSoortId(KostConstanten.AFSCHRIJVING);
 			afschrijving
-					.setKostenSoortOmschrijving("Aan te geven als afschrijving");
-			System.out.println("Afschrijving datum: "
-					+ DateHelper.getDate(cal.getTime()));
+					.setKostenSoortOmschrijving("costtype.depreciation");
 			afschrijving.setDatum(DateHelper.getDate(cal.getTime()));
-			afschrijving.setBedrag(jaarlijkseAfschrijving);
+			afschrijving.setBedrag(jaarlijkseAfschrijving.setScale(2));
 			afschrijving.setOmschrijving("Afschrijving: " + (i + 1) + ", item "
 					+ kost.getId() + ", boekwaarde begin: " + boekwaardeBegin
 					+ ", boekwaarde eind: " + boekwaarde);
