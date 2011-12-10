@@ -172,7 +172,7 @@ public class RekeningFileHelper {
 		Iterator<Kostmatch> iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
 			Kostmatch kostmatch = iterator.next();
-			if (omschrijving.contains(kostmatch.getMatchText())) {
+			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
 				return kostmatch.getKostenSoortId();
 			}
 		}		
@@ -180,7 +180,7 @@ public class RekeningFileHelper {
 		iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
 			Kostmatch kostmatch = iterator.next();
-			if (omschrijving.contains(kostmatch.getMatchText())) {
+			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
 				return kostmatch.getKostenSoortId();
 			}
 		}
