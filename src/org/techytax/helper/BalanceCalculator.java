@@ -215,13 +215,9 @@ public class BalanceCalculator {
 				Kost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getKostenSoortId();
-					if (id == KostConstanten.UITGAVE_DEZE_REKENING || id == KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF || id == KostConstanten.REISKOST || id == KostConstanten.AUTO_VAN_DE_ZAAK
-							|| id == KostConstanten.WEGEN_BELASTING || id == KostConstanten.ADVERTENTIE || id == KostConstanten.ZAKELIJK_ETENTJE) {
-						totalKost = totalKost.add(obj.getBedrag());
-						if (isIncludingVat) {
-							totalKost = totalKost.add(obj.getBtw());
-						}
+					totalKost = totalKost.add(obj.getBedrag());
+					if (isIncludingVat) {
+						totalKost = totalKost.add(obj.getBtw());
 					}
 				}
 			}
