@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2011 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -40,13 +40,8 @@ public class InsertActivaAction extends Action {
 
 		String forward = "success";
 		DepreciationHelper helper = new DepreciationHelper();
-		try {
-			User user = (User) request.getSession().getAttribute("user");
-			helper.toevoegenAfschrijvingenAanActiva(Long.toString(user.getId()));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		User user = (User) request.getSession().getAttribute("user");
+		helper.toevoegenAfschrijvingenAanActiva(Long.toString(user.getId()));
 
 		return mapping.findForward(forward);
 	}
