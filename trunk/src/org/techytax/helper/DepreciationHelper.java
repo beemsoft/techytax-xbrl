@@ -40,8 +40,8 @@ import org.techytax.util.DateHelper;
 public class DepreciationHelper {
 
 	/**
-	 * Split the cost into yearly depreciations. The number of depreciation terms
-	 * is read from the properties file. The restvalue is 10%.
+	 * Split the cost into yearly depreciations. The number of depreciation
+	 * terms is read from the properties file. The restvalue is 10%.
 	 * 
 	 * @param kost
 	 * @return
@@ -50,15 +50,13 @@ public class DepreciationHelper {
 		Properties props = PropsFactory.loadProperties();
 		String nofYearsString = props.getProperty("depreciation.terms");
 		int nofYears = Integer.parseInt(nofYearsString);
-		
+
 		// Use the net value.
 		BigDecimal aanschafKost = kost.getBedrag();
 		BigDecimal restWaarde = aanschafKost.divide(new BigDecimal(10));
-		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(restWaarde))
-				.divide(new BigDecimal(nofYears));
+		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(restWaarde)).divide(new BigDecimal(nofYears));
 		// afronden
-		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0,
-				BigDecimal.ROUND_UP);
+		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0, BigDecimal.ROUND_UP);
 		List<Kost> kostLijst = new ArrayList<Kost>();
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(DateHelper.stringToDate(kost.getDatum()));
@@ -71,13 +69,10 @@ public class DepreciationHelper {
 			Kost afschrijving = new Kost();
 			afschrijving.setBtw(new BigDecimal(0));
 			afschrijving.setKostenSoortId(KostConstanten.AFSCHRIJVING);
-			afschrijving
-					.setKostenSoortOmschrijving("costtype.depreciation");
+			afschrijving.setKostenSoortOmschrijving("costtype.depreciation");
 			afschrijving.setDatum(DateHelper.getDate(cal.getTime()));
 			afschrijving.setBedrag(jaarlijkseAfschrijving.setScale(2));
-			afschrijving.setOmschrijving("Afschrijving: " + (i + 1) + ", item "
-					+ kost.getId() + ", boekwaarde begin: " + boekwaardeBegin
-					+ ", boekwaarde eind: " + boekwaarde);
+			afschrijving.setOmschrijving("Afschrijving: " + (i + 1) + ", item " + kost.getId() + ", boekwaarde begin: " + boekwaardeBegin + ", boekwaarde eind: " + boekwaarde);
 			kostLijst.add(afschrijving);
 			cal.add(Calendar.YEAR, 1);
 			boekwaardeBegin = boekwaarde;
@@ -96,13 +91,9 @@ public class DepreciationHelper {
 		Periode periode = DateHelper.getPeriodeVorigJaar();
 		BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
 		BigDecimal totaalAfschrijvingenAuto = new BigDecimal("0");
-		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(
-				DateHelper.getDate(periode.getBeginDatum()), DateHelper
-						.getDate(periode.getEindDatum()), userId);
-		totaalAfschrijvingenAuto = BalanceCalculator
-				.getAfschrijvingAuto(aftrekpostenLijst);
-		totaalAfschrijvingenOverig = BalanceCalculator
-				.getOverigeAfschrijvingen(aftrekpostenLijst);
+		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), userId);
+		totaalAfschrijvingenAuto = BalanceCalculator.getAfschrijvingAuto(aftrekpostenLijst);
+		totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
 		Boekwaarde boekwaarde = new Boekwaarde();
 		int ditJaar = DateHelper.getYear(periode.getBeginDatum());
 		boekwaarde.setJaar(ditJaar);
@@ -110,17 +101,21 @@ public class DepreciationHelper {
 		boekwaarde.setUserId(Long.parseLong(userId));
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
 		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
-		boekwaarde.setId(0);
-		boekwaarde.setJaar(ditJaar);
-		boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenAuto.toBigInteger()));
-		boekwaarde.setUserId(Long.parseLong(userId));
-		boekwaardeDao.insertBoekwaarde(boekwaarde);
-		boekwaarde.setBalansId(Activa.MACHINERY);
-		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
-		boekwaarde.setId(0);
-		boekwaarde.setJaar(ditJaar);
-		boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
-		boekwaardeDao.insertBoekwaarde(boekwaarde);
-		return;
+		if (boekwaarde != null) {
+			boekwaarde.setId(0);
+			boekwaarde.setJaar(ditJaar);
+			boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenAuto.toBigInteger()));
+			boekwaarde.setUserId(Long.parseLong(userId));
+			boekwaardeDao.insertBoekwaarde(boekwaarde);
+
+			boekwaarde.setBalansId(Activa.MACHINERY);
+			boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+
+			boekwaarde.setId(0);
+			boekwaarde.setJaar(ditJaar);
+			boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
+			boekwaarde.setUserId(Long.parseLong(userId));
+			boekwaardeDao.insertBoekwaarde(boekwaarde);
+		}
 	}
 }
