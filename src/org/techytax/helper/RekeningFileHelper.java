@@ -30,9 +30,7 @@ import java.util.Vector;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
-import org.techytax.domain.Account;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
@@ -151,12 +149,10 @@ public class RekeningFileHelper {
 				}
 			} else {
 				kost.setOmschrijving(omschrijving);
-				kost = matchKost(kost, userId);
-				
-				if (kost.getKostenSoortId() == KostConstanten.INKOMSTEN_BELASTING) {
+				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					TaxCodeHelper.convertTaxCode(kost);
-					kost = matchKost(kost, userId);
-				}
+				} 
+				kost = matchKost(kost, userId);
 			}
 			return kost;
 		} catch (Exception e) {
