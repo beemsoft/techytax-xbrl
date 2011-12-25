@@ -19,73 +19,32 @@
  */
 package org.techytax.domain;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class Activa {
+public class Passivum {
 
-	public static final int CAR = 2;
-	public static final int CURRENT_ASSETS = 3;
-	public static final int MACHINERY = 1;
-
-	private BigDecimal aanschafKosten;
-	private BigDecimal bedrag;
-	private int boekjaar;
-	private BigDecimal btw;
 	private String omschrijving;
-	private BigInteger restwaarde;
+	private int boekjaar;
 	private BigInteger saldo;
-
-	public BigDecimal getAanschafKosten() {
-		return aanschafKosten;
-	}
-
-	public BigDecimal getBedrag() {
-		return bedrag;
-	}
 
 	public int getBoekjaar() {
 		return boekjaar;
-	}
-
-	public BigDecimal getBtw() {
-		return btw;
-	}
-
-	public String getOmschrijving() {
-		return omschrijving;
-	}
-
-	public BigInteger getRestwaarde() {
-		return restwaarde;
-	}
-
-	public BigInteger getSaldo() {
-		return saldo;
-	}
-
-	public void setAanschafKosten(BigDecimal aanschafKosten) {
-		this.aanschafKosten = aanschafKosten;
-	}
-
-	public void setBedrag(BigDecimal bedrag) {
-		this.bedrag = bedrag;
 	}
 
 	public void setBoekjaar(int boekjaar) {
 		this.boekjaar = boekjaar;
 	}
 
-	public void setBtw(BigDecimal btw) {
-		this.btw = btw;
+	public String getOmschrijving() {
+		return omschrijving;
 	}
 
 	public void setOmschrijving(String omschrijving) {
 		this.omschrijving = omschrijving;
 	}
 
-	public void setRestwaarde(BigInteger restwaarde) {
-		this.restwaarde = restwaarde;
+	public BigInteger getSaldo() {
+		return saldo;
 	}
 
 	public void setSaldo(BigInteger saldo) {

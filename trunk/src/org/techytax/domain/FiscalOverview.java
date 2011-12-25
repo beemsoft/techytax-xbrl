@@ -24,7 +24,7 @@ import java.util.List;
 
 public class FiscalOverview {
 
-	private List<Activa> activa;
+	private List<Activum> activa;
 
 	private int afschrijvingAuto;
 	
@@ -58,7 +58,7 @@ public class FiscalOverview {
 	
 	private int oudedagsReserveMaximaal;
 
-	private List<Passiva> passiva;
+	private List<Passivum> passiva;
 
 	private PrepaidTax prepaidTax;
 
@@ -66,7 +66,7 @@ public class FiscalOverview {
 	
 	private BigInteger investmentDeduction;
 	
-	public List<Activa> getActiva() {
+	public List<Activum> getActiva() {
 		return activa;
 	}
 	
@@ -136,7 +136,7 @@ public class FiscalOverview {
 		return oudedagsReserveMaximaal;
 	}	
 
-	public List<Passiva> getPassiva() {
+	public List<Passivum> getPassiva() {
 		return passiva;
 	}
 
@@ -148,7 +148,7 @@ public class FiscalOverview {
 		return profit;
 	}
 
-	public void setActiva(List<Activa> activa) {
+	public void setActiva(List<Activum> activa) {
 		this.activa = activa;
 	}
 
@@ -216,7 +216,7 @@ public class FiscalOverview {
 		this.oudedagsReserveMaximaal = oudedagsReserveMaximaal;
 	}
 
-	public void setPassiva(List<Passiva> passiva) {
+	public void setPassiva(List<Passivum> passiva) {
 		this.passiva = passiva;
 	}
 

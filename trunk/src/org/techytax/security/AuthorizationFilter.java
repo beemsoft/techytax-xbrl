@@ -84,7 +84,6 @@ public class AuthorizationFilter implements Filter {
 		list.add("updateKost");
 		list.add("afschrijvenKost");
 		list.add("insertKostLijst");
-		list.add("insertActiva");
 		list.add("insertAccount");
 		list.add("updateAccount");
 		list.add("insertAccountBalance");

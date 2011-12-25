@@ -22,7 +22,7 @@ package org.techytax.dao;
 import java.util.List;
 
 import org.techytax.domain.Boekwaarde;
-import org.techytax.domain.Restwaarde;
+import org.techytax.domain.RemainingValue;
 
 public class BoekwaardeDao extends BaseDao {
 
@@ -30,7 +30,7 @@ public class BoekwaardeDao extends BaseDao {
 		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));
 	}
 
-	private void encrypt(Restwaarde restwaarde) {
+	private void encrypt(RemainingValue restwaarde) {
 		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));
 	}
 
@@ -68,13 +68,18 @@ public class BoekwaardeDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Restwaarde> getAllRestwaardes() throws Exception {
+	public List<RemainingValue> getAllRestwaardes() throws Exception {
 		return sqlMap.queryForList("getAllRestwaardes", null);
 	}
 
-	public void updateRestwaarde(Restwaarde restwaarde) throws Exception {
+	public void updateRestwaarde(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("updateRestwaarde", restwaarde);
 	}
+	
+	public void insertRemainingValue(RemainingValue restwaarde) throws Exception {
+		encrypt(restwaarde);
+		sqlMap.insert("insertRestwaarde", restwaarde);
+	}	
 
 }
