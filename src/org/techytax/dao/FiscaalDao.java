@@ -21,27 +21,28 @@ package org.techytax.dao;
 
 import java.util.List;
 
-import org.techytax.domain.Activa;
+import org.techytax.domain.Activum;
 import org.techytax.domain.KeyYear;
-import org.techytax.domain.Passiva;
+import org.techytax.domain.Passivum;
 
 public class FiscaalDao extends BaseDao {
 
-	private void decrypt(Activa activa) {
+	private void decrypt(Activum activa) {
 		activa.setSaldo(intEncryptor.decrypt(activa.getSaldo()));
 		activa.setRestwaarde(intEncryptor.decrypt(activa.getRestwaarde()));
 		activa.setBedrag(decimalEncryptor.decrypt(activa.getBedrag()));
 		activa.setBtw(decimalEncryptor.decrypt(activa.getBtw()));
+		activa.setAanschafKosten(decimalEncryptor.decrypt(activa.getAanschafKosten()));
 	}
-
-	private void decrypt(Passiva passiva) {
+	
+	private void decrypt(Passivum passiva) {
 		passiva.setSaldo(intEncryptor.decrypt(passiva.getSaldo()));
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Activa> getActivaLijst(KeyYear key) throws Exception {
-		List<Activa> activaList = sqlMap.queryForList("getActivaLijst", key);
-		for (Activa activa : activaList) {
+	public List<Activum> getActivaLijst(KeyYear key) throws Exception {
+		List<Activum> activaList = sqlMap.queryForList("getActivaLijst", key);
+		for (Activum activa : activaList) {
 			decrypt(activa);
 			if (activa.getBedrag() != null) {
 				activa.setAanschafKosten(activa.getBedrag().add(activa.getBtw()));
@@ -51,12 +52,24 @@ public class FiscaalDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Passiva> getPassivaLijst(KeyYear key) throws Exception {
-		List<Passiva> passivaList = sqlMap.queryForList("getPassivaLijst", key);
-		for (Passiva passiva : passivaList) {
+	public List<Passivum> getPassivaLijst(KeyYear key) throws Exception {
+		List<Passivum> passivaList = sqlMap.queryForList("getPassivaLijst", key);
+		for (Passivum passiva : passivaList) {
 			decrypt(passiva);
 		}
 		return passivaList;
 	}
+	
+	public Integer insertActivum(Activum activa) throws Exception {
+		return (Integer)sqlMap.insert("insertActiva", activa);
+	}	
+	
+	public Activum getActivumByCostId(Activum activum) throws Exception {
+		activum = (Activum) sqlMap.queryForObject("getActivumByCostId", activum);
+		if (activum != null) {
+			decrypt(activum);
+		}
+		return activum;
+	}	
 
 }

@@ -23,14 +23,24 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.techytax.dao.FiscaalDao;
+import org.techytax.domain.Activum;
+import org.techytax.domain.BalanceType;
 import org.techytax.domain.Kost;
 
 public class InvestmentDeductionHelper {
 
-	public static BigInteger getInvestmentDeduction(List<Kost> costList) {
+	public static BigInteger getInvestmentDeduction(List<Kost> costList, long userId) throws Exception {
 		BigDecimal totalInvestment = new BigDecimal("0");
+		FiscaalDao fiscaalDao = new FiscaalDao();
 		for (Kost cost : costList) {
-			totalInvestment = totalInvestment.add(cost.getBedrag());
+			Activum activum = new Activum();
+			activum.setUserId(userId);
+			activum.setCostId(cost.getId());
+			activum = fiscaalDao.getActivumByCostId(activum);
+			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
+				totalInvestment = totalInvestment.add(cost.getBedrag());
+			}
 		}
 		return calculateInvestmentDeduction(totalInvestment);
 	}

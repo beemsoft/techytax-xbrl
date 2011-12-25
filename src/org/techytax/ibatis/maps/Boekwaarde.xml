@@ -22,28 +22,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Boekwaarde">
 	<typeAlias alias="boekwaarde" type="org.techytax.domain.Boekwaarde" />
-	<typeAlias alias="restwaarde" type="org.techytax.domain.Restwaarde" />	
+	<typeAlias alias="restwaarde" type="org.techytax.domain.RemainingValue" />	
 	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
-		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
 		FROM boekwaarde 
-		WHERE balans_id=#balansId# 
+		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#-1
 		AND user_id=#userId#
 	</select>
 	<select id="getAllBoekwaardes" resultClass="boekwaarde">
-		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
 		FROM boekwaarde
 	</select>	
 	<select id="getBoekwaardeDitJaar" parameterClass="boekwaarde" resultClass="boekwaarde">
-		SELECT id, balans_id as balansId, boekjaar as jaar, saldo 
+		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
 		FROM boekwaarde 
-		WHERE balans_id=#balansId# 
+		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#
 		AND user_id=#userId#
 	</select>	
 	<insert id="insertBoekwaarde" parameterClass="boekwaarde">
 		insert into boekwaarde
-		values(#id#,#userId#,#balansId#,#jaar#,#saldo#)
+		values(#id#,#userId#,#balanceType#,#jaar#,#saldo#)
 	</insert>
 	<update id="updateBoekwaarde" parameterClass="boekwaarde">
 		update boekwaarde set saldo = #saldo#
@@ -53,6 +53,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		SELECT id, restwaarde 
 		FROM restwaarde
 	</select>
+	<insert id="insertRestwaarde" parameterClass="restwaarde">
+		insert into restwaarde
+		values(#id#,#userId#,#activaId#,#restwaarde#)
+	</insert>	
 	<update id="updateRestwaarde" parameterClass="restwaarde">
 		update restwaarde set restwaarde = #restwaarde#
 		WHERE id = #id#

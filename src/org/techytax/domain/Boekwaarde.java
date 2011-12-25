@@ -23,14 +23,14 @@ import java.math.BigInteger;
 
 public class Boekwaarde {
 
-	private long balansId;
+	private BalanceType balanceType;
 	private long id = 0;
 	private int jaar;
 	private BigInteger saldo;
 	private long userId;
 
-	public long getBalansId() {
-		return balansId;
+	public BalanceType getBalanceType() {
+		return balanceType;
 	}
 
 	public long getId() {
@@ -49,8 +49,8 @@ public class Boekwaarde {
 		return userId;
 	}
 
-	public void setBalansId(long balansId) {
-		this.balansId = balansId;
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
 	}
 
 	public void setId(long id) {

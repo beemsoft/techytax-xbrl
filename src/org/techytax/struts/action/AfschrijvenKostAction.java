@@ -19,8 +19,6 @@
  */
 package org.techytax.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,27 +30,20 @@ import org.techytax.dao.BoekDao;
 import org.techytax.domain.Kost;
 import org.techytax.domain.User;
 import org.techytax.helper.DepreciationHelper;
+import org.techytax.struts.form.DepreciationForm;
 
 public class AfschrijvenKostAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			final HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		String forward = "success";
+		DepreciationForm depreciationForm = (DepreciationForm) form;
 		DepreciationHelper helper = new DepreciationHelper();
-		String id = (String) request.getParameter("id");
-		System.out.println("Afschrijven van kost: " + id);
+		long id = depreciationForm.getId();
 		BoekDao dao = new BoekDao();
 		User user = (User) request.getSession().getAttribute("user");
-		try {
-			Kost kost = dao.getKost(id, user.getId());
-			List<Kost> result = helper.verdeelKosten(kost);
-			request.getSession().setAttribute("kostLijst", result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		Kost kost = dao.getKost(Long.toString(id), user.getId());
+		helper.splitCost(kost, depreciationForm.isCar(), depreciationForm.getNofYears(), user.getId());
 		return mapping.findForward(forward);
 	}
 

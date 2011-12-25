@@ -21,10 +21,12 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
-public class Restwaarde {
+public class RemainingValue {
 
 	private long id = 0;
 	private BigInteger restwaarde;
+	private long userId;
+	private long activaId;
 
 	public long getId() {
 		return id;
@@ -40,6 +42,22 @@ public class Restwaarde {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getActivaId() {
+		return activaId;
+	}
+
+	public void setActivaId(long activaId) {
+		this.activaId = activaId;
 	}
 
 }

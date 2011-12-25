@@ -29,7 +29,8 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 
 	<typeHandler javaType="java.math.BigInteger" 
                  callback="org.techytax.ibatis.typehandler.BigIntegerTypeHandler"/>
-    <typeHandler javaType="org.techytax.domain.AccountType" callback="org.techytax.ibatis.typehandler.AccountTypeHandler"/>             
+    <typeHandler javaType="org.techytax.domain.AccountType" callback="org.techytax.ibatis.typehandler.AccountTypeHandler"/>
+    <typeHandler javaType="org.techytax.domain.BalanceType" callback="org.techytax.ibatis.typehandler.BalanceTypeHandler"/> 
                  
 	<transactionManager type="JDBC">
 		<dataSource type="SIMPLE">

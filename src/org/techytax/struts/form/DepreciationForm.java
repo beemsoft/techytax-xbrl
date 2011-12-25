@@ -17,41 +17,40 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.domain;
+package org.techytax.struts.form;
 
-import java.math.BigInteger;
+import org.apache.struts.action.ActionForm;
 
-public class Passiva {
+public class DepreciationForm extends ActionForm {
 
-	public static final int PENSION = 5;
-	public static final int NON_CURRENT_ASSETS = 4;
+	private static final long serialVersionUID = 1L;
 
-	private String omschrijving;
-	private int boekjaar;
-	private BigInteger saldo;
+	private long id = 0;
+	private int nofYears = 2;
+	private boolean car;
 
-	public int getBoekjaar() {
-		return boekjaar;
+	public long getId() {
+		return id;
 	}
 
-	public void setBoekjaar(int boekjaar) {
-		this.boekjaar = boekjaar;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public String getOmschrijving() {
-		return omschrijving;
+	public int getNofYears() {
+		return nofYears;
 	}
 
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
+	public void setNofYears(int nofYears) {
+		this.nofYears = nofYears;
 	}
 
-	public BigInteger getSaldo() {
-		return saldo;
+	public boolean isCar() {
+		return car;
 	}
 
-	public void setSaldo(BigInteger saldo) {
-		this.saldo = saldo;
+	public void setCar(boolean car) {
+		this.car = car;
 	}
 
 }

@@ -21,8 +21,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Fiscaal">
-	<typeAlias alias="activa" type="org.techytax.domain.Activa" />
-	<typeAlias alias="passiva" type="org.techytax.domain.Passiva" />	
+	<typeAlias alias="activum" type="org.techytax.domain.Activum" />
+	<typeAlias alias="passiva" type="org.techytax.domain.Passivum" />	
 	<typeAlias alias="aftrekpost" type="org.techytax.domain.Aftrekpost" />
 	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
 	<parameterMap id="periodeMap" class="java.util.Map">
@@ -46,7 +46,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and user_id = ? 
 	</select>
 	<select id="getActivaLijst" parameterClass="keyYear"
-		resultClass="activa">
+		resultClass="activum">
 		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
 		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
 		where
@@ -106,4 +106,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and boekwaarde.user_id = #userId#
 		order by omschrijving, boekjaar;
 	</select>
+	<insert id="insertActiva" parameterClass="activum">
+		insert into activa
+		values(#id#,#userId#,#balanceType#,#costId#,null)
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>		
+	</insert>
+	<select id="getActiva" parameterClass="activum" resultClass="activum">
+		SELECT id, user_id ad userId, balans_id as balanceType, kost_id as costId, einddatum as endDate 
+		FROM activa 
+		WHERE id = #id# 
+		AND user_id=#userId#
+	</select>
+	<update id="updateActiva" parameterClass="activum">
+		update activa set einddatum = #endDate#
+		WHERE id = #id#
+	</update>
+	<select id="getActivumByCostId" parameterClass="activum" resultClass="activum">
+		SELECT id, user_id as userId, balans_id as balanceType, kost_id as costId, einddatum as endDate 
+		FROM activa 
+		WHERE kost_id=#costId# 
+		AND user_id=#userId#
+	</select>				
 </sqlMap>

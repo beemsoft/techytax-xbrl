@@ -31,7 +31,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
+import org.techytax.dao.FiscaalDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.domain.Activum;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
@@ -45,7 +47,7 @@ public class EditKostAction extends Action {
 
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
-		Kost result = null;
+		Kost cost = null;
 		KostForm objForm = (KostForm) form;
 		User user = (User) request.getSession().getAttribute("user");
 
@@ -57,15 +59,24 @@ public class EditKostAction extends Action {
 					.getKostensoortLijst();
 			request.setAttribute("kostenSoortLijst", kostenSoortLijst);
 
-			result = boekDao.getKost(id, user.getId());
+			cost = boekDao.getKost(id, user.getId());
 
-			BeanUtils.copyProperties(objForm, result);
+			BeanUtils.copyProperties(objForm, cost);
 
-			long kostensoortId = result.getKostenSoortId();
+			long kostensoortId = cost.getKostenSoortId();
 			Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
 					.toString(kostensoortId));
 			if (kostensoort.isInvestering()) {
-				request.setAttribute("investering", "true");
+				Activum activum = new Activum();
+				activum.setCostId(cost.getId());
+				activum.setUserId(user.getId());
+				FiscaalDao fiscaalDao = new FiscaalDao();
+				activum = fiscaalDao.getActivumByCostId(activum);
+				if (activum == null) {
+					request.setAttribute("investment", "true");
+				} else {
+					request.setAttribute("depreciation", "true");					
+				}
 			}
 			forward="success";
 		}

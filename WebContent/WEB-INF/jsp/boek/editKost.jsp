@@ -19,17 +19,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+
+<%
+	String investment = (String)request.getAttribute("investment");
+	String depreciation = (String)request.getAttribute("depreciation");
+%>
+
 <h4><bean:message key="cost.edit.title"/></h4>
 <div class="margins">
 <html:form action="/updateKost.do">
 <html:hidden property="id"/>
 <jsp:include page="/WEB-INF/jsp/boek/kostDetails.jsp"/>
+<%
+	if (!"true".equals(depreciation)) {
+%>
 <html:submit><bean:message key="button.update"/></html:submit>
+<%
+	}
+%>
 </html:form>
 <html:errors/>
 <%
-	String afschrijving = (String)request.getAttribute("investering");
-	if ("true".equals(afschrijving)) {
+	if ("true".equals(investment)) {
 		String id = (String)request.getParameter("id");
 %>
 </div>
@@ -39,8 +50,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <bean:message key="cost.depreciate.descr"/>
 </p>
 
-<html:link action="/afschrijvenKost.do"><html:param name="id"><%=id%></html:param><bean:message key="cost.depreciate"/></html:link>
+<html:form action="/afschrijvenKost.do">
+<html:hidden property="id" value="<%=id%>"/>
+<html:select property="nofYears">
+<html:option value="2">2</html:option>
+<html:option value="3">3</html:option>
+<html:option value="4">4</html:option>
+<html:option value="5">5</html:option>
+</html:select>
+<html:checkbox property="car">Auto van de zaak</html:checkbox>
+<html:submit><bean:message key="cost.depreciate"/></html:submit>
+</html:form>
+</div>
+<%
+	} else if ("true".equals(depreciation)) {
+%>
+<div class="margins">
+<p>
+<bean:message key="cost.depreciated.descr"/>
+</p>
+</div>
 <%
 	}
 %>
-</div>
+

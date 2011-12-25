@@ -18,8 +18,8 @@ along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ page import="java.util.List"%>
-<%@ page import="org.techytax.domain.Activa"%>
-<%@ page import="org.techytax.domain.Passiva"%>
+<%@ page import="org.techytax.domain.Activum"%>
+<%@ page import="org.techytax.domain.Passivum"%>
 
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
@@ -122,11 +122,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<%
 		int totaalBegin = 0;
 		int totaalEind = 0;
-		List<Activa> res = overzicht.getActiva();
+		List<Activum> res = overzicht.getActiva();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
-				Activa obj = null;
+				Activum obj = null;
 				obj = res.get(i);
 				if (obj != null) {
 					int boekwaardeBegin = 0;
@@ -182,11 +182,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<%
 		totaalBegin = 0;
 		totaalEind = 0;
-		List<Passiva> passivaList = overzicht.getPassiva();
+		List<Passivum> passivaList = overzicht.getPassiva();
 		if (res != null) {
 			for (int i = 0; i < passivaList.size(); i++) {
 
-				Passiva obj = null;
+				Passivum obj = null;
 				obj = passivaList.get(i);
 				if (obj != null) {
 					int boekwaardeBegin = 0;
