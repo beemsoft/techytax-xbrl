@@ -62,11 +62,15 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void insertKost(Kost kost) throws Exception {
+		kost.setBedrag(kost.getBedrag().setScale(2));
+		kost.setBtw(kost.getBtw().setScale(2));
 		encrypt(kost);
 		sqlMap.insert("insertKost", kost);
 	}
 
 	public void insertPrivateExpense(Kost kost) throws Exception {
+		kost.setBedrag(kost.getBedrag().setScale(2));
+		kost.setBtw(kost.getBtw().setScale(2));		
 		sqlMap.insert("insertPrivateExpense", kost);
 	}
 
@@ -175,6 +179,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void updateKost(Kost kost) throws Exception {
+		kost.setBedrag(kost.getBedrag().setScale(2));
+		kost.setBtw(kost.getBtw().setScale(2));		
 		encrypt(kost);
 		sqlMap.insert("updateKost", kost);
 	}
