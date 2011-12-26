@@ -23,7 +23,9 @@ public class PrivatWithdrawal {
 
 	private int totaleOnttrekking;
 
-	private int withdrawalCash; // Onttrekking in contanten
+	private int withdrawalCash;
+	
+	private int withdrawalPrivateUsageBusinessCar;
 
 	public int getTotaleOnttrekking() {
 		return totaleOnttrekking;
@@ -39,6 +41,14 @@ public class PrivatWithdrawal {
 
 	public void setWithdrawalCash(int withdrawalCash) {
 		this.withdrawalCash = withdrawalCash;
+	}
+
+	public int getWithdrawalPrivateUsageBusinessCar() {
+		return withdrawalPrivateUsageBusinessCar;
+	}
+
+	public void setWithdrawalPrivateUsageBusinessCar(int withdrawalPrivateUsageBusinessCar) {
+		this.withdrawalPrivateUsageBusinessCar = withdrawalPrivateUsageBusinessCar;
 	}
 
 }

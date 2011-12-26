@@ -49,7 +49,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
 		<td></td>		
 	</tr>
-<% } %>
+<% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
 		<td align="right">-<%=overzicht.getAfschrijvingOverig()%></td>
@@ -62,17 +62,30 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">+<%=overzicht.getAfschrijvingOverigCorrectie()%></td>
 		<td></td>		
 	</tr>
-<% } %>	
+<% } %>
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.total"/></td>
 		<td></td>		
-		<td align="right"><%=overzicht.getAfschrijvingTotaal()%></td>
-	</tr>	
+		<td align="right">-<%=overzicht.getAfschrijvingTotaal()%></td>
+	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.income.car"/>:</td>
 		<td align="right">+<%=overzicht.getBijtellingAuto()%></td>
 		<td></td>		
 	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
+		<td align="right">-<%=overzicht.getAfschrijvingAuto()%></td>
+		<td></td>		
+	</tr>
+<% if (overzicht.getAfschrijvingAutoCorrectie() > 0) {
+%>	
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
+		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
+		<td></td>		
+	</tr>
+<% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car"/>:</td>
 		<td align="right">-<%=overzicht.getKostenAuto()%></td>
@@ -219,13 +232,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <h4><bean:message key="overview.fiscal.withdrawal"/></h4>
 <table class="overviewTable">
 	<tr>
-		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
-		<td align="right"><b><%=overzicht.getOnttrekking().getTotaleOnttrekking()%></b></td>
-	</tr>
-	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.cash"/>:</td>
 		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalCash()%></b></td>
-	</tr>	
+	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.withdrawal.car"/>:</td>
+		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalPrivateUsageBusinessCar()%></b></td>
+	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
+		<td align="right"><b><%=overzicht.getOnttrekking().getTotaleOnttrekking()%></b></td>
+	</tr>			
 </table>
 <h4><bean:message key="overview.fiscal.tax.prepaid"/></h4>
 <table class="overviewTable">

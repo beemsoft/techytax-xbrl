@@ -96,9 +96,14 @@ public class FiscalOverviewHelper {
 			overview.setAfschrijvingOverigCorrectie(depreciationCorrection);
 			int kostenAutoAftrekbaar = 0;
 			kostenAutoAftrekbaar = overview.getBijtellingAuto()
-					- overview.getKostenAuto();
+					- overview.getKostenAuto() - afschrijvingAuto.intValue();
 			if (kostenAutoAftrekbaar > 0) {
 				kostenAutoAftrekbaar = 0;
+			}
+			if (kostenAutoAftrekbaar < 0) {
+				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getBijtellingAuto());
+			} else {
+				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getKostenAuto());
 			}
 			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 		}
@@ -161,11 +166,16 @@ public class FiscalOverviewHelper {
 			boekwaarde.setUserId(userId);
 			boekwaardeDao.insertBoekwaarde(boekwaarde);
 		} else {
+			Boekwaarde vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+			BigInteger saldo = new BigInteger("0");
+			if (vorigeBoekwaarde != null) {
+				saldo = vorigeBoekwaarde.getSaldo();
+			}
 			List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum,
 					eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator
 					.calculateAccountBalance(rekeningLijst);
-			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
+			saldo = saldo.add(liquiditeit.getRekeningBalans().toBigInteger());
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
 			boekwaarde.setSaldo(saldo);
 			boekwaardeDao.updateBoekwaarde(boekwaarde);
@@ -260,7 +270,7 @@ public class FiscalOverviewHelper {
 		// Vul prive onttrekking in
 		int totalWithdrawal = profit - (bookTotalEnd - bookTotalBegin);
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
-		int withdrawalCash = totalWithdrawal - overview.getKostenAuto();
+		int withdrawalCash = totalWithdrawal - privatWithdrawal.getWithdrawalPrivateUsageBusinessCar();
 		privatWithdrawal.setWithdrawalCash(withdrawalCash);
 		overview.setOnttrekking(privatWithdrawal);
 		
