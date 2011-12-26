@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="boekwaarde" type="org.techytax.domain.Boekwaarde" />
 	<typeAlias alias="restwaarde" type="org.techytax.domain.RemainingValue" />	
 	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
-		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
+		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo, user_id as userId 
 		FROM boekwaarde 
 		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#-1
@@ -35,7 +35,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		FROM boekwaarde
 	</select>	
 	<select id="getBoekwaardeDitJaar" parameterClass="boekwaarde" resultClass="boekwaarde">
-		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
+		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo, user_id as userId 
 		FROM boekwaarde 
 		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#
