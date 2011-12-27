@@ -52,13 +52,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <html:form action="/afschrijvenKost.do">
 <html:hidden property="id" value="<%=id%>"/>
+<table>
+<tr>
+<td><bean:message key="cost.depreciate.years"/></td>
+<td>
 <html:select property="nofYears">
 <html:option value="2">2</html:option>
 <html:option value="3">3</html:option>
 <html:option value="4">4</html:option>
 <html:option value="5">5</html:option>
 </html:select>
-<html:checkbox property="car">Auto van de zaak</html:checkbox>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+<html:checkbox property="car"><bean:message key="cost.depreciate.car"/></html:checkbox>
+</td>
+</tr>
+</table>
 <html:submit><bean:message key="cost.depreciate"/></html:submit>
 </html:form>
 </div>
