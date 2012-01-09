@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -88,7 +88,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		where
 		boekwaarde.balans_id = balans.id and 
 		(boekjaar=#year# or boekjaar=#year#-1) and 
-		balanssoort.id = 3 and
+		balanssoort.id in (3,6) and
 		balans.balanssoort_id = balanssoort.id and 
 		boekwaarde.user_id = #userId#
 		
