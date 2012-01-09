@@ -174,35 +174,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND user_id = ?
 		ORDER BY ks.id asc
 	</select>	
-	<select id="getVatCorrectionPrivate" parameterMap="periodeMap"
-		resultClass="int">
-		SELECT sum(bedrag)
-		FROM kosten k, kostensoort ks 
-		WHERE k.kostensoort_id = ks.id 
-		AND	datum &gt;= ? 
-		AND datum &lt;= ? 
-		AND ks.id IN (36)
-		AND user_id = ?
-		ORDER BY datum asc
-	</select>
-	<select id="getBelastingKosten" parameterMap="periodeMap"
-		resultClass="int">
-		SELECT sum(bedrag) 
-		FROM kosten 
-		WHERE datum &gt;= ? 
-		AND datum &lt;= ? 
-		AND (kostensoort_id IN (29) OR omschrijving LIKE '%Voorlopige IB%')
-		AND user_id = ?
-	</select>
-	<select id="getBelastingTeruggave" parameterMap="periodeMap"
-		resultClass="int">
-		SELECT sum(bedrag) 
-		FROM kosten 
-		WHERE datum &gt;= ? 
-		AND datum &lt;= ? 
-		AND kostensoort_id IN (30)
-		AND user_id = ?
-	</select>
 	<insert id="insertKost" parameterClass="kost">
 		insert into kosten
 		values(#id#,#userId#,#bedrag#,#datum#,#omschrijving#,#btw#,#kostenSoortId#)
