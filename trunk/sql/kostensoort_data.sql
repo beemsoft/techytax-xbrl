@@ -81,7 +81,8 @@ INSERT INTO `kostensoort` VALUES
 (35,'costtype.vat.correction.depreciation',0,0,0,1,0),
 (36,'costtype.vat.correction.private',0,1,0,0,0),
 (38,'costtype.invoice.paid',1,0,1,0,0),
-(39,'costtype.invoice.sent',0,1,0,0,0);
+(39,'costtype.invoice.sent',0,1,0,0,0),
+(40,'costtype.repurchase',0,1,1,1,0);
 
 /*!40000 ALTER TABLE `kostensoort` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -20,6 +20,7 @@
 package org.techytax.helper;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Date;
@@ -202,8 +203,6 @@ public class BalanceCalculator {
 		Balans balans = new Balans();
 		balans.setTotaleBaten(totalBaat);
 		balans.setTotaleKosten(totalKost);
-		System.out.println("Totale kosten: " + totalKost);
-		System.out.println("Totale baten: " + totalBaat);
 		return balans;
 	}
 
@@ -224,7 +223,6 @@ public class BalanceCalculator {
 		}
 		Balans balans = new Balans();
 		balans.setTotaleKosten(totalKost);
-		System.out.println("Totale kosten current account: " + totalKost);
 		return balans;
 	}
 	
@@ -306,6 +304,18 @@ public class BalanceCalculator {
 		}
 		return null;
 	}
+	
+	public static BigInteger getRepurchase(List<Aftrekpost> aftrekpostenLijst) {
+		Iterator<Aftrekpost> iterator = aftrekpostenLijst.iterator();
+		BigDecimal repurchases = new BigDecimal("0");
+		while (iterator.hasNext()) {
+			Aftrekpost aftrekpost = iterator.next();
+			if (aftrekpost.getKostenSoortId() == KostConstanten.REPURCHASES) {
+				repurchases = repurchases.add(aftrekpost.getAftrekbaarBedrag());
+			}
+		}
+		return repurchases.toBigInteger();
+	}	
 
 	public static BigDecimal getOverigeAfschrijvingen(List<Aftrekpost> aftrekpostenLijst) {
 		Iterator<Aftrekpost> iterator = aftrekpostenLijst.iterator();

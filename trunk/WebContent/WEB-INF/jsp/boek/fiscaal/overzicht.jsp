@@ -38,6 +38,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=overzicht.getNettoOmzet()%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.fiscal.repurchase"/>:</td>
+		<td></td>
+		<td align="right">-<%=overzicht.getRepurchase()%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
 		<td align="right">-<%=overzicht.getAfschrijvingAuto()%></td>
 		<td></td>		
