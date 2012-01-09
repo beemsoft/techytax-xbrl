@@ -103,7 +103,7 @@ public class FiscalOverviewHelper {
 			if (kostenAutoAftrekbaar < 0) {
 				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getBijtellingAuto());
 			} else {
-				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getKostenAuto());
+				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getKostenAuto() + afschrijvingAuto.intValue());
 			}
 			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 		}
