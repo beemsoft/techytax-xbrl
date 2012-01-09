@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -143,9 +143,9 @@ public class FiscalOverviewHelper {
 		List<Kost> investmentKostList = boekDao.getInvestments(beginDatum, eindDatum, Long.toString(userId));
 		overview.setInvestmentDeduction(InvestmentDeductionHelper.getInvestmentDeduction(investmentKostList, userId));
 
-		// Maak activa balans op.
+		// Create/update activa
 
-		// Bereken liquide middelen.
+		// Current assets
 		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
 		Boekwaarde boekwaarde = new Boekwaarde();
 		boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
@@ -185,14 +185,16 @@ public class FiscalOverviewHelper {
 			boekwaardeDao.updateBoekwaarde(boekwaarde);
 		}
 		
+		// Machinery
+		
 		// Add or update boekwaarde
 		Periode periode = DateHelper.getPeriodeVorigJaar();
 		BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
 //		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(userId));
 		totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
 		Boekwaarde activumValue = new Boekwaarde();
-		int ditJaar = DateHelper.getYear(periode.getBeginDatum());
-		activumValue.setJaar(ditJaar);
+		int thisYear = DateHelper.getYear(periode.getBeginDatum());
+		activumValue.setJaar(thisYear);
 		activumValue.setBalanceType(BalanceType.MACHINERY);
 		activumValue.setUserId(userId);
 		activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
@@ -202,6 +204,32 @@ public class FiscalOverviewHelper {
 		} else {
 			// TODO
 		}	
+		
+		// Stock
+		activumValue = new Boekwaarde();
+		activumValue.setJaar(thisYear);
+		activumValue.setUserId(userId);
+		activumValue.setBalanceType(BalanceType.STOCK);
+		activumValue = boekwaardeDao.getBoekwaardeDitJaar(activumValue);
+		if (activumValue == null) {
+			activumValue = new Boekwaarde();
+			activumValue.setJaar(thisYear);
+			activumValue.setUserId(userId);
+			activumValue.setBalanceType(BalanceType.STOCK);
+			activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+			if (activumValue == null) {
+				activumValue = new Boekwaarde();
+				activumValue.setBalanceType(BalanceType.STOCK);
+				activumValue.setJaar(thisYear);
+				activumValue.setUserId(userId);				
+				activumValue.setSaldo(overview.getRepurchase());
+				boekwaardeDao.insertBoekwaarde(activumValue);
+			} else {
+				activumValue.setJaar(thisYear);
+				activumValue.setSaldo(activumValue.getSaldo().add(overview.getRepurchase()));
+				boekwaardeDao.insertBoekwaarde(activumValue);
+			}
+		}
 		
 		FiscaalDao fiscaalDao = new FiscaalDao();
 		KeyYear keyYear = new KeyYear();
