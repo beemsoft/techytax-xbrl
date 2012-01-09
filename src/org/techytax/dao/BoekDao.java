@@ -166,18 +166,6 @@ public class BoekDao extends BaseDao {
 		return groupedDeducatableCostList;
 	}
 
-	@Deprecated
-	public Integer getBelastingKosten(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		return (Integer) sqlMap.queryForObject("getBelastingKosten", map);
-	}
-
-	@Deprecated
-	public Integer getBelastingTeruggave(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		return (Integer) sqlMap.queryForObject("getBelastingTeruggave", map);
-	}
-
 	public void updateKost(Kost kost) throws Exception {
 		kost.setBedrag(kost.getBedrag().setScale(2));
 		kost.setBtw(kost.getBtw().setScale(2));		
@@ -202,12 +190,6 @@ public class BoekDao extends BaseDao {
 			decrypt(cost);
 		}
 		return costs;
-	}
-
-	@Deprecated
-	public Integer getVatCorrectionPrivate(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		return (Integer) sqlMap.queryForObject("getVatCorrectionPrivate", map);
 	}
 
 	@SuppressWarnings("unchecked")
