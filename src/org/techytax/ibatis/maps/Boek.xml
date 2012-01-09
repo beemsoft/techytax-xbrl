@@ -211,5 +211,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id
 		AND user_id = #userId#
+	</select>
+	<select id="getRepurchases" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id 
+		AND	datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND ks.id = 40
+		AND user_id = ? 
+		ORDER BY datum asc
 	</select>		
 </sqlMap>

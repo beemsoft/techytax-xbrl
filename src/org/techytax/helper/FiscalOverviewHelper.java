@@ -69,6 +69,10 @@ public class FiscalOverviewHelper {
 				beginDatum, eindDatum, Long.toString(userId));
 		overview.setJaar(jaar);
 		overview.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
+		
+		// Repurchase
+		BigInteger repurchase = BalanceCalculator.getRepurchase(aftrekpostenLijst);
+		overview.setRepurchase(repurchase);
 
 		// Business car costs
 		BigDecimal afschrijvingAuto = BalanceCalculator
@@ -306,6 +310,7 @@ public class FiscalOverviewHelper {
 
 	public static int calculateProfit(FiscalOverview overview) {
 		int nettoOmzet = overview.getNettoOmzet();
+		nettoOmzet -= overview.getRepurchase().intValue();
 		nettoOmzet += overview.getKostenAutoAftrekbaar();
 		nettoOmzet -= overview.getKostenOverigTransport();
 		nettoOmzet -= overview.getKostenOverig();

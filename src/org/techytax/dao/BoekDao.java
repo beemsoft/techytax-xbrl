@@ -243,5 +243,15 @@ public class BoekDao extends BaseDao {
 		}
 		return filteredCosts;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kost> getRepurchases(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getRepurchases", map);
+		for (Kost cost : costs) {
+			decrypt(cost);
+		}
+		return costs;
+	}	
 
 }

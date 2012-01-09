@@ -66,6 +66,8 @@ public class FiscalOverview {
 	
 	private BigInteger investmentDeduction;
 	
+	private BigInteger repurchase;
+	
 	public List<Activum> getActiva() {
 		return activa;
 	}
@@ -234,6 +236,14 @@ public class FiscalOverview {
 
 	public void setInvestmentDeduction(BigInteger investmentDeduction) {
 		this.investmentDeduction = investmentDeduction;
+	}
+
+	public BigInteger getRepurchase() {
+		return repurchase;
+	}
+
+	public void setRepurchase(BigInteger repurchase) {
+		this.repurchase = repurchase;
 	}
 
 }
