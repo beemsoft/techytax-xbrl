@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,18 +23,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BoekwaardeDao;
 import org.techytax.dao.FiscaalDao;
 import org.techytax.domain.Activum;
-import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Boekwaarde;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
-import org.techytax.domain.Periode;
 import org.techytax.domain.RemainingValue;
 import org.techytax.util.DateHelper;
 
