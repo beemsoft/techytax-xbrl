@@ -206,28 +206,30 @@ public class FiscalOverviewHelper {
 		}	
 		
 		// Stock
-		activumValue = new Boekwaarde();
-		activumValue.setJaar(thisYear);
-		activumValue.setUserId(userId);
-		activumValue.setBalanceType(BalanceType.STOCK);
-		activumValue = boekwaardeDao.getBoekwaardeDitJaar(activumValue);
-		if (activumValue == null) {
+		if (overview.getRepurchase() != null && overview.getRepurchase().intValue() > 0) {
 			activumValue = new Boekwaarde();
 			activumValue.setJaar(thisYear);
 			activumValue.setUserId(userId);
 			activumValue.setBalanceType(BalanceType.STOCK);
-			activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+			activumValue = boekwaardeDao.getBoekwaardeDitJaar(activumValue);
 			if (activumValue == null) {
 				activumValue = new Boekwaarde();
+				activumValue.setJaar(thisYear);
+				activumValue.setUserId(userId);
 				activumValue.setBalanceType(BalanceType.STOCK);
-				activumValue.setJaar(thisYear);
-				activumValue.setUserId(userId);				
-				activumValue.setSaldo(overview.getRepurchase());
-				boekwaardeDao.insertBoekwaarde(activumValue);
-			} else {
-				activumValue.setJaar(thisYear);
-				activumValue.setSaldo(activumValue.getSaldo().add(overview.getRepurchase()));
-				boekwaardeDao.insertBoekwaarde(activumValue);
+				activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+				if (activumValue == null) {
+					activumValue = new Boekwaarde();
+					activumValue.setBalanceType(BalanceType.STOCK);
+					activumValue.setJaar(thisYear);
+					activumValue.setUserId(userId);				
+					activumValue.setSaldo(overview.getRepurchase());
+					boekwaardeDao.insertBoekwaarde(activumValue);
+				} else {
+					activumValue.setJaar(thisYear);
+					activumValue.setSaldo(activumValue.getSaldo().add(overview.getRepurchase()));
+					boekwaardeDao.insertBoekwaarde(activumValue);
+				}
 			}
 		}
 		
