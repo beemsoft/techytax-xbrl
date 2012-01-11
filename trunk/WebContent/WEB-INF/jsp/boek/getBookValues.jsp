@@ -62,7 +62,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </table>
 </td>
 <td>
-<html:img page="/chart?chartType=bookValues&timestamp=<%=new java.util.Date().getTime()%>"/>;
+<html:img page="/chart?chartType=bookValues" />
 </td>
 </tr>
 </table>
