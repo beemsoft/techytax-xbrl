@@ -22,6 +22,7 @@ package org.techytax.dao;
 import java.util.List;
 
 import org.techytax.domain.Boekwaarde;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.RemainingValue;
 
 public class BoekwaardeDao extends BaseDao {
@@ -80,6 +81,24 @@ public class BoekwaardeDao extends BaseDao {
 	public void insertRemainingValue(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("insertRestwaarde", restwaarde);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Boekwaarde> getBookValues(KeyId key) throws Exception {
+		List<Boekwaarde> bookValues = sqlMap.queryForList("getBookValues", key);
+		for (Boekwaarde boekwaarde: bookValues) {
+			decrypt(boekwaarde);
+		}
+		return bookValues;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Boekwaarde> getBookValuesForChart(KeyId key) throws Exception {
+		List<Boekwaarde> bookValues = sqlMap.queryForList("getBookValuesForChart", key);
+		for (Boekwaarde boekwaarde: bookValues) {
+			decrypt(boekwaarde);
+		}
+		return bookValues;
 	}	
 
 }

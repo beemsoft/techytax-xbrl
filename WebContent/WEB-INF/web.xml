@@ -71,11 +71,22 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>TechyTaxChart</servlet-name>
+		<servlet-class>org.techytax.chart.ChartGeneratorServlet</servlet-class>
+		<load-on-startup>0</load-on-startup>
+	</servlet>	
 
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>TechyTaxChart</servlet-name>
+		<url-pattern>/chart</url-pattern>
+	</servlet-mapping>	
 
 	<!-- Never timeout -->
 	<session-config>
