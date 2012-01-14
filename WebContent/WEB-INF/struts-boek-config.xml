@@ -36,7 +36,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="vatReportForm" type="org.techytax.struts.form.VatReportForm" />
 		<form-bean name="auditReportForm" type="org.techytax.struts.form.AuditReportForm" />
 		<form-bean name="loginForm" type="org.techytax.struts.form.LoginForm" />
-		<form-bean name="depreciationForm" type="org.techytax.struts.form.DepreciationForm" />				
+		<form-bean name="depreciationForm" type="org.techytax.struts.form.DepreciationForm" />
+		<form-bean name="bookValueForm" type="org.techytax.struts.form.BookValueForm" />						
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -275,6 +276,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				path="/WEB-INF/jsp/boek/getBookValues.jsp">
 			</forward>
 		</action>
+		<action path="/updateActivum" type="org.techytax.struts.action.UpdateActivumAction"
+			name="depreciationForm" scope="request">
+			<forward name="success" path="/editKost.do"></forward>
+		</action>		
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />

@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
-public class Boekwaarde {
+public class BookValue {
 
 	private BalanceType balanceType;
 	private long id = 0;

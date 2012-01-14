@@ -71,7 +71,8 @@ public class AuthorizationFilter implements Filter {
 		list.add("getAccountBalance");
 		list.add("newAccountBalance");
 		list.add("sendAuditReport");
-		list.add("getBookValues");		
+		list.add("getBookValues");
+		list.add("updateActivum");
 		return list;
 	}
 

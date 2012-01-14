@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -178,7 +178,9 @@ public class BoekDao extends BaseDao {
 		key.setId(Long.parseLong(id));
 		key.setUserId(userId);
 		Kost cost = (Kost) sqlMap.queryForObject("getKost", key);
-		decrypt(cost);
+		if (cost != null) {
+			decrypt(cost);
+		}
 		return cost;
 	}
 

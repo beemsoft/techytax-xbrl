@@ -25,11 +25,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.BoekwaardeDao;
+import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscaalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
-import org.techytax.domain.Boekwaarde;
+import org.techytax.domain.BookValue;
 import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.RemainingValue;
@@ -83,7 +83,7 @@ public class DepreciationHelper {
 		Activum activum = new Activum();
 		activum.setUserId(userId);
 		activum.setCostId(kost.getId());
-		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
+		BookValueDao boekwaardeDao = new BookValueDao();
 		if (!isCar) {
 			activum.setBalanceType(BalanceType.MACHINERY);
 		} else {
@@ -99,7 +99,7 @@ public class DepreciationHelper {
 		boekwaardeDao.insertRemainingValue(remainingValue);
 		
 		// Add or update boekwaarde
-		Boekwaarde activumValue = new Boekwaarde();
+		BookValue activumValue = new BookValue();
 		activumValue.setJaar(bookYear);
 		activumValue.setBalanceType(activum.getBalanceType());
 		activumValue.setUserId(userId);
@@ -108,7 +108,7 @@ public class DepreciationHelper {
 			activumValue.setSaldo(activumValue.getSaldo().subtract(jaarlijkseAfschrijving.toBigInteger()));
 			boekwaardeDao.updateBoekwaarde(activumValue);
 		} else {
-			activumValue = new Boekwaarde();
+			activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(activum.getBalanceType());
 			activumValue.setUserId(userId);

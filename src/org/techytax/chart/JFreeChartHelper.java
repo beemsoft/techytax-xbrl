@@ -33,11 +33,11 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.techytax.domain.Boekwaarde;
+import org.techytax.domain.BookValue;
 
 public class JFreeChartHelper {
 
-    public static JFreeChart createChart(List<Boekwaarde> bookValues) {
+    public static JFreeChart createChart(List<BookValue> bookValues) {
     	
     	CategoryDataset dataset = createDataset(bookValues);
 
@@ -98,13 +98,13 @@ public class JFreeChartHelper {
 
     }	
 	
-    private static CategoryDataset createDataset(List<Boekwaarde> bookValues) {
+    private static CategoryDataset createDataset(List<BookValue> bookValues) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         
         int categoryYear = 0;
         String balanceType = null;
-        for (Boekwaarde bookValue : bookValues) {
+        for (BookValue bookValue : bookValues) {
         	int thisYear = bookValue.getJaar();
         	if (thisYear != categoryYear) {
         		categoryYear = thisYear;

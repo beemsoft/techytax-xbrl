@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -19,6 +19,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
+
+<%@ page import="org.techytax.domain.Activum"%>
 
 <%
 	String investment = (String)request.getAttribute("investment");
@@ -40,8 +42,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </html:form>
 <html:errors/>
 <%
+	String id = (String)request.getParameter("id");
 	if ("true".equals(investment)) {
-		String id = (String)request.getParameter("id");
+		
 %>
 </div>
 <h4><bean:message key="cost.depreciate"/></h4>
@@ -80,6 +83,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <p>
 <bean:message key="cost.depreciated.descr"/>
 </p>
+<html:form action="/updateActivum.do">
+<html:hidden property="id" value="<%=id%>"/>
+<table>
+<tr>
+<td><bean:message key="cost.depreciate.remaining.value"/>:</td>
+<td><html:text property="remainingValue"/></td>
+</tr>
+<tr>
+<td><bean:message key="cost.depreciate.enddate"/>:</td>
+<td><html:text property="endDate"/><a href="#"
+		onclick="cal13.select(document.forms[1].endDate,'datum','yyyy-MM-dd'); return false;"
+		title="Kies datum" name="datum" id="datum">select</a>
+</td>
+</tr>
+</table>
+<html:submit><bean:message key="button.update"/></html:submit>
+</html:form>
 </div>
 <%
 	}
