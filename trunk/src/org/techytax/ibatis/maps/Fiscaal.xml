@@ -106,27 +106,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and boekwaarde.user_id = #userId#
 		order by omschrijving, boekjaar;
 	</select>
-	<insert id="insertActiva" parameterClass="activum">
+	<insert id="insertActivum" parameterClass="activum">
 		insert into activa
 		values(#id#,#userId#,#balanceType#,#costId#,null)
 		<selectKey resultClass="int" keyProperty="id">
 			SELECT @@IDENTITY AS ID
 		</selectKey>		
 	</insert>
-	<select id="getActiva" parameterClass="activum" resultClass="activum">
-		SELECT id, user_id ad userId, balans_id as balanceType, kost_id as costId, einddatum as endDate 
-		FROM activa 
-		WHERE id = #id# 
-		AND user_id=#userId#
-	</select>
-	<update id="updateActiva" parameterClass="activum">
+	<update id="updateActivum" parameterClass="activum">
 		update activa set einddatum = #endDate#
-		WHERE id = #id#
+		where kost_id = #costId#
+		and user_id = #userId#
 	</update>
 	<select id="getActivumByCostId" parameterClass="activum" resultClass="activum">
-		SELECT id, user_id as userId, balans_id as balanceType, kost_id as costId, einddatum as endDate 
-		FROM activa 
-		WHERE kost_id=#costId# 
-		AND user_id=#userId#
+		SELECT activa.id, activa.user_id as userId, activa.balans_id as balanceType, activa.kost_id as costId, restwaarde.restwaarde, activa.einddatum as endDate
+		FROM activa, restwaarde
+		WHERE activa.user_id=#userId#
+		AND activa.id = restwaarde.activa_id
+		AND activa.kost_id=#costId# 
 	</select>				
 </sqlMap>

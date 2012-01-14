@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,6 +19,8 @@
  */
 package org.techytax.struts.form;
 
+import java.math.BigInteger;
+
 import org.apache.struts.action.ActionForm;
 
 public class DepreciationForm extends ActionForm {
@@ -28,6 +30,8 @@ public class DepreciationForm extends ActionForm {
 	private long id = 0;
 	private int nofYears = 2;
 	private boolean car;
+	private String endDate;
+	private BigInteger remainingValue;
 
 	public long getId() {
 		return id;
@@ -51,6 +55,22 @@ public class DepreciationForm extends ActionForm {
 
 	public void setCar(boolean car) {
 		this.car = car;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public BigInteger getRemainingValue() {
+		return remainingValue;
+	}
+
+	public void setRemainingValue(BigInteger remainingValue) {
+		this.remainingValue = remainingValue;
 	}
 
 }

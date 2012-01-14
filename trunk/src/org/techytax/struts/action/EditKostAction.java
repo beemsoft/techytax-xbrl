@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -37,13 +37,12 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.Kost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
+import org.techytax.struts.form.DepreciationForm;
 import org.techytax.struts.form.KostForm;
 
 public class EditKostAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form,
-			final HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
@@ -55,30 +54,35 @@ public class EditKostAction extends Action {
 			BoekDao boekDao = new BoekDao();
 			KostensoortDao kostensoortDao = new KostensoortDao();
 
-			List<Kostensoort> kostenSoortLijst = kostensoortDao
-					.getKostensoortLijst();
+			List<Kostensoort> kostenSoortLijst = kostensoortDao.getKostensoortLijst();
 			request.setAttribute("kostenSoortLijst", kostenSoortLijst);
 
 			cost = boekDao.getKost(id, user.getId());
 
-			BeanUtils.copyProperties(objForm, cost);
+			if (cost != null) {
 
-			long kostensoortId = cost.getKostenSoortId();
-			Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
-					.toString(kostensoortId));
-			if (kostensoort.isInvestering()) {
-				Activum activum = new Activum();
-				activum.setCostId(cost.getId());
-				activum.setUserId(user.getId());
-				FiscaalDao fiscaalDao = new FiscaalDao();
-				activum = fiscaalDao.getActivumByCostId(activum);
-				if (activum == null) {
-					request.setAttribute("investment", "true");
-				} else {
-					request.setAttribute("depreciation", "true");					
+				BeanUtils.copyProperties(objForm, cost);
+
+				long kostensoortId = cost.getKostenSoortId();
+				Kostensoort kostensoort = kostensoortDao.getKostensoort(Long.toString(kostensoortId));
+				if (kostensoort.isInvestering()) {
+					Activum activum = new Activum();
+					activum.setCostId(cost.getId());
+					activum.setUserId(user.getId());
+					FiscaalDao fiscaalDao = new FiscaalDao();
+					activum = fiscaalDao.getActivumByCostId(activum);
+					if (activum == null) {
+						request.setAttribute("investment", "true");
+					} else {
+						DepreciationForm depreciationForm = new DepreciationForm();
+						depreciationForm.setRemainingValue(activum.getRestwaarde());
+						depreciationForm.setEndDate(activum.getEndDate());
+						request.setAttribute("depreciation", "true");
+						request.setAttribute("depreciationForm", depreciationForm);						
+					}
 				}
 			}
-			forward="success";
+			forward = "success";
 		}
 		return mapping.findForward(forward);
 	}

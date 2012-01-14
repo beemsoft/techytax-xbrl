@@ -49,7 +49,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	%>
 
 	<tr valign="top">
-		<td><a href="editBoekValue.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
+		<td><a href="editBookValue.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
 		<td><%=obj.getDescription()%></td>
 		<td><%=obj.getJaar()%></td>
 		<td><%=obj.getSaldo()%></td>

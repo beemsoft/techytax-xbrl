@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.Properties;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.BoekwaardeDao;
+import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscaalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Balans;
-import org.techytax.domain.Boekwaarde;
+import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyYear;
 import org.techytax.domain.Kost;
@@ -64,7 +64,7 @@ public class FiscalOverviewHelper {
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen, false);
 
 		FiscaalDao fiscaalDao = new FiscaalDao();
-		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
+		BookValueDao boekwaardeDao = new BookValueDao();
 		BoekDao boekDao = new BoekDao();
 		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
 		overview.setJaar(bookYear);
@@ -128,11 +128,11 @@ public class FiscalOverviewHelper {
 		overview.setInvestmentDeduction(InvestmentDeductionHelper.getInvestmentDeduction(investmentKostList, userId));
 
 		// Create/update activa
-		Boekwaarde boekwaarde = null;
+		BookValue boekwaarde = null;
 		if (bookYear == currentBookYear) {
 
 			// Current assets
-			boekwaarde = new Boekwaarde();
+			boekwaarde = new BookValue();
 			boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
@@ -145,14 +145,14 @@ public class FiscalOverviewHelper {
 
 				BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
 				saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
-				boekwaarde = new Boekwaarde();
+				boekwaarde = new BookValue();
 				boekwaarde.setJaar(bookYear);
 				boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
 				boekwaarde.setSaldo(saldo);
 				boekwaarde.setUserId(userId);
 				boekwaardeDao.insertBoekwaarde(boekwaarde);
 			} else {
-				Boekwaarde vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+				BookValue vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
 				BigInteger saldo = new BigInteger("0");
 				if (vorigeBoekwaarde != null) {
 					saldo = vorigeBoekwaarde.getSaldo();
@@ -174,7 +174,7 @@ public class FiscalOverviewHelper {
 			// DateHelper.getDate(periode.getEindDatum()),
 			// Long.toString(userId));
 			totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
-			Boekwaarde activumValue = new Boekwaarde();
+			BookValue activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(BalanceType.MACHINERY);
 			activumValue.setUserId(userId);
@@ -188,19 +188,19 @@ public class FiscalOverviewHelper {
 
 			// Stock
 			if (overview.getRepurchase() != null && overview.getRepurchase().intValue() > 0) {
-				activumValue = new Boekwaarde();
+				activumValue = new BookValue();
 				activumValue.setJaar(bookYear);
 				activumValue.setUserId(userId);
 				activumValue.setBalanceType(BalanceType.STOCK);
 				activumValue = boekwaardeDao.getBoekwaardeDitJaar(activumValue);
 				if (activumValue == null) {
-					activumValue = new Boekwaarde();
+					activumValue = new BookValue();
 					activumValue.setJaar(bookYear);
 					activumValue.setUserId(userId);
 					activumValue.setBalanceType(BalanceType.STOCK);
 					activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
 					if (activumValue == null) {
-						activumValue = new Boekwaarde();
+						activumValue = new BookValue();
 						activumValue.setBalanceType(BalanceType.STOCK);
 						activumValue.setJaar(bookYear);
 						activumValue.setUserId(userId);
@@ -229,14 +229,14 @@ public class FiscalOverviewHelper {
 		int FOR = 0;
 		if (bookYear == currentBookYear) {
 			// Voer dezelfde FOR op.
-			boekwaarde = new Boekwaarde();
+			boekwaarde = new BookValue();
 			boekwaarde.setBalanceType(BalanceType.PENSION);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
 			boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 
 			if (boekwaarde == null) {
-				boekwaarde = new Boekwaarde();
+				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.PENSION);
 				boekwaarde.setJaar(bookYear);
 				boekwaarde.setUserId(userId);
@@ -262,13 +262,13 @@ public class FiscalOverviewHelper {
 
 		if (bookYear == currentBookYear) {
 			// Voer eigen vermogen op.
-			boekwaarde = new Boekwaarde();
+			boekwaarde = new BookValue();
 			boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
 			boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
 			if (boekwaarde == null) {
-				boekwaarde = new Boekwaarde();
+				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 				boekwaarde.setJaar(bookYear);
 				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));

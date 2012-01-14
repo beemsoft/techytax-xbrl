@@ -19,41 +19,63 @@
  */
 package org.techytax.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BookValueDao;
+import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
+import org.techytax.struts.form.BookValueForm;
 
-public class GetBookValuesAction extends Action {
+public class EditBookValueAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			final HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
 		String forward = "failure";
-		List<BookValue> result = null;
-
-		try {
-			BookValueDao dao = new BookValueDao();
+		String id = (String) request.getParameter("id");
+		User user = (User) request.getSession().getAttribute("user");
+		BookValue bookValue = null;
+		BookValueForm bookValueForm = (BookValueForm)form;
+		
+		if (StringUtils.isNotEmpty(id)) {
+			BookValueDao bookValueDao = new BookValueDao();
 			KeyId key = new KeyId();
-			User user = (User) request.getSession().getAttribute("user");
+			key.setId(Long.parseLong(id));
 			key.setUserId(user.getId());
-			result = dao.getBookValues(key);
-			request.setAttribute("bookValues", result);
-			forward = "success";
-		} catch (Exception e) {
-			throw e;
+			bookValue = bookValueDao.getBookValue(key);
+			BeanUtils.copyProperties(bookValueForm, bookValue);
+			
+			if (bookValue.getBalanceType() == BalanceType.CAR || bookValue.getBalanceType() == BalanceType.MACHINERY) {
+				
+			}
+//
+//			long kostensoortId = cost.getKostenSoortId();
+//			Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
+//					.toString(kostensoortId));
+//			if (kostensoort.isInvestering()) {
+//				Activum activum = new Activum();
+//				activum.setCostId(cost.getId());
+//				activum.setUserId(user.getId());
+//				FiscaalDao fiscaalDao = new FiscaalDao();
+//				activum = fiscaalDao.getActivumByCostId(activum);
+//				if (activum == null) {
+//					request.setAttribute("investment", "true");
+//				} else {
+//					request.setAttribute("depreciation", "true");					
+//				}
+//			}
+//			forward="success";
 		}
-
 		return mapping.findForward(forward);
 	}
 

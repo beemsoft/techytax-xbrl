@@ -23,8 +23,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import org.jfree.chart.JFreeChart;
-import org.techytax.dao.BoekwaardeDao;
-import org.techytax.domain.Boekwaarde;
+import org.techytax.dao.BookValueDao;
+import org.techytax.domain.BookValue;
 import org.techytax.domain.KeyId;
 
 public final class ChartFactory {
@@ -39,14 +39,14 @@ public final class ChartFactory {
 	};
 
 	public static BufferedImage createBookValueGraph(long userId) throws Exception {
-		BoekwaardeDao dao = new BoekwaardeDao();
+		BookValueDao dao = new BookValueDao();
 		KeyId key = new KeyId();
 		key.setUserId(userId);
-		List<Boekwaarde> bookValues = dao.getBookValuesForChart(key);
+		List<BookValue> bookValues = dao.getBookValuesForChart(key);
 		return createChart(bookValues);
 	}
 
-	private static BufferedImage createChart(List<Boekwaarde> bookValues) {
+	private static BufferedImage createChart(List<BookValue> bookValues) {
 		JFreeChart chart = JFreeChartHelper.createChart(bookValues);
 		return chart.createBufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB, null);
 	}

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Boekwaarde">
-	<typeAlias alias="boekwaarde" type="org.techytax.domain.Boekwaarde" />
+	<typeAlias alias="boekwaarde" type="org.techytax.domain.BookValue" />
 	<typeAlias alias="restwaarde" type="org.techytax.domain.RemainingValue" />
 	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
 	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
@@ -62,6 +62,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		update restwaarde set restwaarde = #restwaarde#
 		WHERE id = #id#
 	</update>
+	<update id="updateRemainingValueByActivumId" parameterClass="restwaarde">
+		update restwaarde set restwaarde = #restwaarde#
+		where activa_id = #activaId#
+		and user_id = #userId#
+	</update>	
 	<select id="getBookValues" parameterClass="key" resultClass="boekwaarde">
 		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
@@ -69,7 +74,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and b.balanssoort_id = bs.id 
 		and bw.balans_id = b.id 
 		order by boekjaar desc, balans_id asc
-	</select>		
+	</select>
+	<select id="getBookValue" parameterClass="key" resultClass="boekwaarde">
+		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
+		from boekwaarde as bw, balanssoort as bs, balans as b 
+		where user_id=#userId# 
+		and b.balanssoort_id = bs.id 
+		and bw.balans_id = b.id 
+		and bw.id = #id#
+	</select>			
 	<select id="getBookValuesForChart" parameterClass="key" resultClass="boekwaarde">
 		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 

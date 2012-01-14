@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,41 +27,45 @@ import org.techytax.domain.Passivum;
 
 public class FiscaalDao extends BaseDao {
 
-	private void decrypt(Activum activa) {
-		activa.setSaldo(intEncryptor.decrypt(activa.getSaldo()));
-		activa.setRestwaarde(intEncryptor.decrypt(activa.getRestwaarde()));
-		activa.setBedrag(decimalEncryptor.decrypt(activa.getBedrag()));
-		activa.setBtw(decimalEncryptor.decrypt(activa.getBtw()));
-		activa.setAanschafKosten(decimalEncryptor.decrypt(activa.getAanschafKosten()));
+	private void decrypt(Activum activum) {
+		activum.setSaldo(intEncryptor.decrypt(activum.getSaldo()));
+		activum.setRestwaarde(intEncryptor.decrypt(activum.getRestwaarde()));
+		activum.setBedrag(decimalEncryptor.decrypt(activum.getBedrag()));
+		activum.setBtw(decimalEncryptor.decrypt(activum.getBtw()));
+		activum.setAanschafKosten(decimalEncryptor.decrypt(activum.getAanschafKosten()));
 	}
 	
-	private void decrypt(Passivum passiva) {
-		passiva.setSaldo(intEncryptor.decrypt(passiva.getSaldo()));
+	private void decrypt(Passivum passivum) {
+		passivum.setSaldo(intEncryptor.decrypt(passivum.getSaldo()));
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Activum> getActivaLijst(KeyYear key) throws Exception {
-		List<Activum> activaList = sqlMap.queryForList("getActivaLijst", key);
-		for (Activum activa : activaList) {
-			decrypt(activa);
-			if (activa.getBedrag() != null) {
-				activa.setAanschafKosten(activa.getBedrag().add(activa.getBtw()));
+		List<Activum> activumList = sqlMap.queryForList("getActivaLijst", key);
+		for (Activum activum : activumList) {
+			decrypt(activum);
+			if (activum.getBedrag() != null) {
+				activum.setAanschafKosten(activum.getBedrag().add(activum.getBtw()));
 			}
 		}
-		return activaList;
+		return activumList;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Passivum> getPassivaLijst(KeyYear key) throws Exception {
-		List<Passivum> passivaList = sqlMap.queryForList("getPassivaLijst", key);
-		for (Passivum passiva : passivaList) {
-			decrypt(passiva);
+		List<Passivum> passivumList = sqlMap.queryForList("getPassivaLijst", key);
+		for (Passivum passivum : passivumList) {
+			decrypt(passivum);
 		}
-		return passivaList;
+		return passivumList;
 	}
 	
-	public Integer insertActivum(Activum activa) throws Exception {
-		return (Integer)sqlMap.insert("insertActiva", activa);
+	public Integer insertActivum(Activum activum) throws Exception {
+		return (Integer)sqlMap.insert("insertActivum", activum);
+	}
+	
+	public void updateActivum(Activum activum) throws Exception {
+		sqlMap.insert("updateActivum", activum);
 	}	
 	
 	public Activum getActivumByCostId(Activum activum) throws Exception {

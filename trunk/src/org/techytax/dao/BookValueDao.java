@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,13 +21,13 @@ package org.techytax.dao;
 
 import java.util.List;
 
-import org.techytax.domain.Boekwaarde;
+import org.techytax.domain.BookValue;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.RemainingValue;
 
-public class BoekwaardeDao extends BaseDao {
+public class BookValueDao extends BaseDao {
 
-	private void encrypt(Boekwaarde boekwaarde) {
+	private void encrypt(BookValue boekwaarde) {
 		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));
 	}
 
@@ -35,35 +35,35 @@ public class BoekwaardeDao extends BaseDao {
 		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));
 	}
 
-	private void decrypt(Boekwaarde boekwaarde) {
+	private void decrypt(BookValue boekwaarde) {
 		if (boekwaarde != null) {
 			boekwaarde.setSaldo(intEncryptor.decrypt(boekwaarde.getSaldo()));
 		}
 	}
 
-	public void insertBoekwaarde(Boekwaarde boekwaarde) throws Exception {
+	public void insertBoekwaarde(BookValue boekwaarde) throws Exception {
 		encrypt(boekwaarde);
 		sqlMap.insert("insertBoekwaarde", boekwaarde);
 	}
 
-	public Boekwaarde getVorigeBoekwaarde(Boekwaarde boekwaarde) throws Exception {
-		Boekwaarde vorigeBoekwaarde = (Boekwaarde) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
+	public BookValue getVorigeBoekwaarde(BookValue boekwaarde) throws Exception {
+		BookValue vorigeBoekwaarde = (BookValue) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
 		decrypt(vorigeBoekwaarde);
 		return vorigeBoekwaarde;
 	}
 
-	public Boekwaarde getBoekwaardeDitJaar(Boekwaarde boekwaarde) throws Exception {
-		Boekwaarde boekwaardeDitJaar = (Boekwaarde) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
+	public BookValue getBoekwaardeDitJaar(BookValue boekwaarde) throws Exception {
+		BookValue boekwaardeDitJaar = (BookValue) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
 		decrypt(boekwaardeDitJaar);
 		return boekwaardeDitJaar;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Boekwaarde> getAllBoekwaardes() throws Exception {
+	public List<BookValue> getAllBoekwaardes() throws Exception {
 		return sqlMap.queryForList("getAllBoekwaardes", null);
 	}
 
-	public void updateBoekwaarde(Boekwaarde boekwaarde) throws Exception {
+	public void updateBoekwaarde(BookValue boekwaarde) throws Exception {
 		encrypt(boekwaarde);
 		sqlMap.insert("updateBoekwaarde", boekwaarde);
 	}
@@ -78,24 +78,36 @@ public class BoekwaardeDao extends BaseDao {
 		sqlMap.insert("updateRestwaarde", restwaarde);
 	}
 	
+	public void updateRemainingValueByActivumId(RemainingValue restwaarde) throws Exception {
+		encrypt(restwaarde);
+		sqlMap.insert("updateRemainingValueByActivumId", restwaarde);
+	}	
+	
 	public void insertRemainingValue(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("insertRestwaarde", restwaarde);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Boekwaarde> getBookValues(KeyId key) throws Exception {
-		List<Boekwaarde> bookValues = sqlMap.queryForList("getBookValues", key);
-		for (Boekwaarde boekwaarde: bookValues) {
+	public List<BookValue> getBookValues(KeyId key) throws Exception {
+		List<BookValue> bookValues = sqlMap.queryForList("getBookValues", key);
+		for (BookValue boekwaarde: bookValues) {
 			decrypt(boekwaarde);
 		}
 		return bookValues;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Boekwaarde> getBookValuesForChart(KeyId key) throws Exception {
-		List<Boekwaarde> bookValues = sqlMap.queryForList("getBookValuesForChart", key);
-		for (Boekwaarde boekwaarde: bookValues) {
+	public BookValue getBookValue(KeyId key) throws Exception {
+		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValues", key);
+		decrypt(bookValue);
+		return bookValue;
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<BookValue> getBookValuesForChart(KeyId key) throws Exception {
+		List<BookValue> bookValues = sqlMap.queryForList("getBookValuesForChart", key);
+		for (BookValue boekwaarde: bookValues) {
 			decrypt(boekwaarde);
 		}
 		return bookValues;
