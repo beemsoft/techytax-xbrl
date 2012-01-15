@@ -279,7 +279,19 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/updateActivum" type="org.techytax.struts.action.UpdateActivumAction"
 			name="depreciationForm" scope="request">
 			<forward name="success" path="/editKost.do"></forward>
-		</action>		
+		</action>
+		<action path="/editBookValue" name="bookValueForm"
+			type="org.techytax.struts.action.EditBookValueAction" scope="request">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/editBookValue.jsp">
+			</forward>
+		</action>
+		<action path="/updateBookValue" name="bookValueForm" scope="request"
+			type="org.techytax.struts.action.UpdateBookValueAction">
+			<forward name="success"
+				path="/getBookValues.do">
+			</forward>
+		</action>						
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />

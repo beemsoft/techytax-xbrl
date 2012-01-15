@@ -22,38 +22,37 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BookValueDao;
+import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.struts.form.BookValueForm;
 
-public class EditBookValueAction extends Action {
+public class UpdateBookValueAction extends Action {
 
-	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String forward = "failure";
-		String id = (String) request.getParameter("id");
-		User user = (User) request.getSession().getAttribute("user");
-		BookValue bookValue = null;
 		BookValueForm bookValueForm = (BookValueForm) form;
 
-		if (StringUtils.isNotEmpty(id)) {
-			BookValueDao bookValueDao = new BookValueDao();
-			KeyId key = new KeyId();
-			key.setId(Long.parseLong(id));
-			key.setUserId(user.getId());
-			bookValue = bookValueDao.getBookValue(key);
-			BeanUtils.copyProperties(bookValueForm, bookValue);
-			forward = "success";
-		}
-		return mapping.findForward(forward);
-	}
+		BookValue bookValue = new BookValue();
 
+		bookValue.setId(bookValueForm.getId());
+		bookValue.setSaldo(bookValueForm.getSaldo());
+		bookValue.setBalanceType(BalanceType.valueOf(bookValueForm.getBalanceType()));
+
+		User user = (User) request.getSession().getAttribute("user");
+		
+		bookValue.setUserId(user.getId());
+		
+		BookValueDao bookValueDao = new BookValueDao();
+		
+		bookValueDao.updateBookValue(bookValue);
+
+		return mapping.findForward("success");
+
+	}
 }

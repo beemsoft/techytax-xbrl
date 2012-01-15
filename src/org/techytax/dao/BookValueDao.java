@@ -63,7 +63,7 @@ public class BookValueDao extends BaseDao {
 		return sqlMap.queryForList("getAllBoekwaardes", null);
 	}
 
-	public void updateBoekwaarde(BookValue boekwaarde) throws Exception {
+	public void updateBookValue(BookValue boekwaarde) throws Exception {
 		encrypt(boekwaarde);
 		sqlMap.insert("updateBoekwaarde", boekwaarde);
 	}
@@ -99,7 +99,7 @@ public class BookValueDao extends BaseDao {
 	
 	@SuppressWarnings("unchecked")
 	public BookValue getBookValue(KeyId key) throws Exception {
-		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValues", key);
+		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValue", key);
 		decrypt(bookValue);
 		return bookValue;
 	}	

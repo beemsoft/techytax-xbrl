@@ -56,7 +56,7 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 	<sqlMap resource="org/techytax/ibatis/maps/Kostmatch.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/Btwmatch.xml" />		
 	<sqlMap resource="org/techytax/ibatis/maps/Fiscaal.xml" />
-	<sqlMap resource="org/techytax/ibatis/maps/Boekwaarde.xml" />
+	<sqlMap resource="org/techytax/ibatis/maps/BookValue.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/Account.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/User.xml" />		
 </sqlMapConfig>

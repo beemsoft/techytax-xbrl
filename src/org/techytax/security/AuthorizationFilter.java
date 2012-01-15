@@ -73,6 +73,8 @@ public class AuthorizationFilter implements Filter {
 		list.add("sendAuditReport");
 		list.add("getBookValues");
 		list.add("updateActivum");
+		list.add("editBookValue");
+		list.add("updateBookValue");		
 		return list;
 	}
 
