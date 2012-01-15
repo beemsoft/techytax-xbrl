@@ -31,7 +31,7 @@ public class BookValueForm extends ActionForm {
 	private long id = 0;
 	private BigInteger saldo;
 	private int jaar;
-	private BalanceType balanceType;
+	private String balanceType;
 	private String description;
 	public long getId() {
 		return id;
@@ -51,10 +51,10 @@ public class BookValueForm extends ActionForm {
 	public void setJaar(int jaar) {
 		this.jaar = jaar;
 	}
-	public BalanceType getBalanceType() {
+	public String getBalanceType() {
 		return balanceType;
 	}
-	public void setBalanceType(BalanceType balanceType) {
+	public void setBalanceType(String balanceType) {
 		this.balanceType = balanceType;
 	}
 	public String getDescription() {

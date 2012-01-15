@@ -106,7 +106,7 @@ public class DepreciationHelper {
 		activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
 		if (activumValue != null) {
 			activumValue.setSaldo(activumValue.getSaldo().subtract(jaarlijkseAfschrijving.toBigInteger()));
-			boekwaardeDao.updateBoekwaarde(activumValue);
+			boekwaardeDao.updateBookValue(activumValue);
 		} else {
 			activumValue = new BookValue();
 			activumValue.setJaar(bookYear);

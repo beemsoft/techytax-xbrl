@@ -162,7 +162,7 @@ public class FiscalOverviewHelper {
 				saldo = saldo.add(liquiditeit.getRekeningBalans().toBigInteger());
 				saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
 				boekwaarde.setSaldo(saldo);
-				boekwaardeDao.updateBoekwaarde(boekwaarde);
+				boekwaardeDao.updateBookValue(boekwaarde);
 			}
 
 			// Machinery
@@ -276,7 +276,7 @@ public class FiscalOverviewHelper {
 				boekwaardeDao.insertBoekwaarde(boekwaarde);
 			} else {
 				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
-				boekwaardeDao.updateBoekwaarde(boekwaarde);
+				boekwaardeDao.updateBookValue(boekwaarde);
 			}
 		}
 

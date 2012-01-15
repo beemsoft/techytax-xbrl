@@ -20,54 +20,54 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <!DOCTYPE sqlMap 
           PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap namespace="Boekwaarde">
-	<typeAlias alias="boekwaarde" type="org.techytax.domain.BookValue" />
-	<typeAlias alias="restwaarde" type="org.techytax.domain.RemainingValue" />
+<sqlMap namespace="BookValue">
+	<typeAlias alias="bookValue" type="org.techytax.domain.BookValue" />
+	<typeAlias alias="remainingValue" type="org.techytax.domain.RemainingValue" />
 	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
-	<select id="getVorigeBoekwaarde" parameterClass="boekwaarde" resultClass="boekwaarde">
+	<select id="getVorigeBoekwaarde" parameterClass="bookValue" resultClass="bookValue">
 		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo, user_id as userId 
 		FROM boekwaarde 
 		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#-1
 		AND user_id=#userId#
 	</select>
-	<select id="getAllBoekwaardes" resultClass="boekwaarde">
+	<select id="getAllBoekwaardes" resultClass="bookValue">
 		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo 
 		FROM boekwaarde
 	</select>	
-	<select id="getBoekwaardeDitJaar" parameterClass="boekwaarde" resultClass="boekwaarde">
+	<select id="getBoekwaardeDitJaar" parameterClass="bookValue" resultClass="bookValue">
 		SELECT id, balans_id as balanceType, boekjaar as jaar, saldo, user_id as userId 
 		FROM boekwaarde 
 		WHERE balans_id=#balanceType# 
 		AND boekjaar=#jaar#
 		AND user_id=#userId#
 	</select>	
-	<insert id="insertBoekwaarde" parameterClass="boekwaarde">
+	<insert id="insertBoekwaarde" parameterClass="bookValue">
 		insert into boekwaarde
 		values(#id#,#userId#,#balanceType#,#jaar#,#saldo#)
 	</insert>
-	<update id="updateBoekwaarde" parameterClass="boekwaarde">
+	<update id="updateBoekwaarde" parameterClass="bookValue">
 		update boekwaarde set saldo = #saldo#
 		WHERE id = #id#
 	</update>	
-	<select id="getAllRestwaardes" resultClass="restwaarde">
+	<select id="getAllRestwaardes" resultClass="remainingValue">
 		SELECT id, restwaarde 
 		FROM restwaarde
 	</select>
-	<insert id="insertRestwaarde" parameterClass="restwaarde">
+	<insert id="insertRestwaarde" parameterClass="remainingValue">
 		insert into restwaarde
 		values(#id#,#userId#,#activaId#,#restwaarde#)
 	</insert>	
-	<update id="updateRestwaarde" parameterClass="restwaarde">
+	<update id="updateRestwaarde" parameterClass="remainingValue">
 		update restwaarde set restwaarde = #restwaarde#
 		WHERE id = #id#
 	</update>
-	<update id="updateRemainingValueByActivumId" parameterClass="restwaarde">
+	<update id="updateRemainingValueByActivumId" parameterClass="remainingValue">
 		update restwaarde set restwaarde = #restwaarde#
 		where activa_id = #activaId#
 		and user_id = #userId#
 	</update>	
-	<select id="getBookValues" parameterClass="key" resultClass="boekwaarde">
+	<select id="getBookValues" parameterClass="key" resultClass="bookValue">
 		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
@@ -75,15 +75,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and bw.balans_id = b.id 
 		order by boekjaar desc, balans_id asc
 	</select>
-	<select id="getBookValue" parameterClass="key" resultClass="boekwaarde">
-		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
+	<select id="getBookValue" parameterClass="key" resultClass="bookValue">
+		select bw.id, omschrijving as description, bs.id as balanceType, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
 		and b.balanssoort_id = bs.id 
 		and bw.balans_id = b.id 
 		and bw.id = #id#
 	</select>			
-	<select id="getBookValuesForChart" parameterClass="key" resultClass="boekwaarde">
+	<select id="getBookValuesForChart" parameterClass="key" resultClass="bookValue">
 		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
