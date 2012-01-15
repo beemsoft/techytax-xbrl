@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
-<%@ page import="org.techytax.domain.Activum"%>
-
 <%
 	String investment = (String)request.getAttribute("investment");
 	String depreciation = (String)request.getAttribute("depreciation");

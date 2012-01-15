@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ page import="org.techytax.domain.Boekwaarde"%>
+<%@ page import="org.techytax.domain.BookValue"%>
 <%@ page import="java.util.List"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
 <%
-	List<Boekwaarde> res = (List<Boekwaarde>) request.getAttribute("bookValues");
+	List<BookValue> res = (List<BookValue>) request.getAttribute("bookValues");
 %>
 
 <h4><bean:message key="bookvalues.title"/></h4>
@@ -43,8 +43,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
-				Boekwaarde obj = null;
-				obj = (Boekwaarde) res.get(i);
+				BookValue obj = null;
+				obj = (BookValue) res.get(i);
 				if (obj != null) {
 	%>
 
