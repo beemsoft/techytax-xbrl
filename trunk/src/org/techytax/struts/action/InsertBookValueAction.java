@@ -32,12 +32,11 @@ import org.techytax.domain.BookValue;
 import org.techytax.domain.User;
 import org.techytax.struts.form.BookValueForm;
 
-public class UpdateBookValueAction extends Action {
+public class InsertBookValueAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		BookValueForm bookValueForm = (BookValueForm) form;
-
 		BookValue bookValue = new BookValue();
 
 		bookValue.setId(bookValueForm.getId());
@@ -46,13 +45,12 @@ public class UpdateBookValueAction extends Action {
 		bookValue.setJaar(bookValueForm.getJaar());
 
 		User user = (User) request.getSession().getAttribute("user");
-		
-		bookValue.setUserId(user.getId());
-		
-		BookValueDao bookValueDao = new BookValueDao();
-		
-		bookValueDao.updateBookValue(bookValue);
 
+		bookValue.setUserId(user.getId());
+
+		BookValueDao bookValueDao = new BookValueDao();
+
+		bookValueDao.insertBookValue(bookValue);
 		return mapping.findForward("success");
 
 	}

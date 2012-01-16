@@ -28,6 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <h4><bean:message key="bookvalues.title"/></h4>
 <div class="margins">
+<a href="newBookValue.do"><bean:message key="bookvalue.new"/></a>
 <table>
 <tr>
 <td valign="top">

@@ -103,7 +103,7 @@ public class DepreciationHelper {
 		activumValue.setJaar(bookYear);
 		activumValue.setBalanceType(activum.getBalanceType());
 		activumValue.setUserId(userId);
-		activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+		activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
 		if (activumValue != null) {
 			activumValue.setSaldo(activumValue.getSaldo().subtract(jaarlijkseAfschrijving.toBigInteger()));
 			boekwaardeDao.updateBookValue(activumValue);
@@ -114,7 +114,7 @@ public class DepreciationHelper {
 			activumValue.setUserId(userId);
 			aanschafKost = aanschafKost.setScale(0, BigDecimal.ROUND_UP);
 			activumValue.setSaldo(aanschafKost.toBigInteger().subtract(jaarlijkseAfschrijving.toBigInteger()));
-			boekwaardeDao.insertBoekwaarde(activumValue);
+			boekwaardeDao.insertBookValue(activumValue);
 		}		
 	}
 
