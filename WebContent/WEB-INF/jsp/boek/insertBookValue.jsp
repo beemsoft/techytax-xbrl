@@ -17,16 +17,13 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ taglib uri="struts-html" prefix="html"%>
+<%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
-<h4><bean:message key="bookvalue.edit" /></h4>
+<h4><bean:message key="bookvalue.new"/></h4>
 <div class="margins">
-<html:form action="/updateBookValue.do">
-	<html:hidden property="id" />
-	<jsp:include page="/WEB-INF/jsp/boek/bookValueDetails.jsp" />
-	<html:submit>
-		<bean:message key="button.update" />
-	</html:submit>
+<html:form action="/insertBookValue.do">
+<jsp:include page="/WEB-INF/jsp/boek/bookValueDetails.jsp"/>
+<html:submit><bean:message key="button.add"/></html:submit>
 </html:form>
 </div>
 

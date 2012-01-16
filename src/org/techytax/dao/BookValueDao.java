@@ -41,18 +41,18 @@ public class BookValueDao extends BaseDao {
 		}
 	}
 
-	public void insertBoekwaarde(BookValue boekwaarde) throws Exception {
+	public void insertBookValue(BookValue boekwaarde) throws Exception {
 		encrypt(boekwaarde);
 		sqlMap.insert("insertBoekwaarde", boekwaarde);
 	}
 
-	public BookValue getVorigeBoekwaarde(BookValue boekwaarde) throws Exception {
+	public BookValue getPreviousBookValue(BookValue boekwaarde) throws Exception {
 		BookValue vorigeBoekwaarde = (BookValue) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
 		decrypt(vorigeBoekwaarde);
 		return vorigeBoekwaarde;
 	}
 
-	public BookValue getBoekwaardeDitJaar(BookValue boekwaarde) throws Exception {
+	public BookValue getBookValueThisYear(BookValue boekwaarde) throws Exception {
 		BookValue boekwaardeDitJaar = (BookValue) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
 		decrypt(boekwaardeDitJaar);
 		return boekwaardeDitJaar;

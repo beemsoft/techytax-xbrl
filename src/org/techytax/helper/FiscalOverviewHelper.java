@@ -136,7 +136,7 @@ public class FiscalOverviewHelper {
 			boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
-			boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
+			boekwaarde = boekwaardeDao.getBookValueThisYear(boekwaarde);
 
 			if (boekwaarde == null) {
 				String startDate = props.getProperty("start.date");
@@ -150,9 +150,9 @@ public class FiscalOverviewHelper {
 				boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
 				boekwaarde.setSaldo(saldo);
 				boekwaarde.setUserId(userId);
-				boekwaardeDao.insertBoekwaarde(boekwaarde);
+				boekwaardeDao.insertBookValue(boekwaarde);
 			} else {
-				BookValue vorigeBoekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+				BookValue vorigeBoekwaarde = boekwaardeDao.getPreviousBookValue(boekwaarde);
 				BigInteger saldo = new BigInteger("0");
 				if (vorigeBoekwaarde != null) {
 					saldo = vorigeBoekwaarde.getSaldo();
@@ -178,7 +178,7 @@ public class FiscalOverviewHelper {
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(BalanceType.MACHINERY);
 			activumValue.setUserId(userId);
-			activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+			activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
 			if (activumValue != null) {
 				activumValue.setSaldo(activumValue.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
 				// boekwaardeDao.insertBoekwaarde(activumValue);
@@ -192,24 +192,24 @@ public class FiscalOverviewHelper {
 				activumValue.setJaar(bookYear);
 				activumValue.setUserId(userId);
 				activumValue.setBalanceType(BalanceType.STOCK);
-				activumValue = boekwaardeDao.getBoekwaardeDitJaar(activumValue);
+				activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
 				if (activumValue == null) {
 					activumValue = new BookValue();
 					activumValue.setJaar(bookYear);
 					activumValue.setUserId(userId);
 					activumValue.setBalanceType(BalanceType.STOCK);
-					activumValue = boekwaardeDao.getVorigeBoekwaarde(activumValue);
+					activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
 					if (activumValue == null) {
 						activumValue = new BookValue();
 						activumValue.setBalanceType(BalanceType.STOCK);
 						activumValue.setJaar(bookYear);
 						activumValue.setUserId(userId);
 						activumValue.setSaldo(overview.getRepurchase());
-						boekwaardeDao.insertBoekwaarde(activumValue);
+						boekwaardeDao.insertBookValue(activumValue);
 					} else {
 						activumValue.setJaar(bookYear);
 						activumValue.setSaldo(activumValue.getSaldo().add(overview.getRepurchase()));
-						boekwaardeDao.insertBoekwaarde(activumValue);
+						boekwaardeDao.insertBookValue(activumValue);
 					}
 				}
 			}
@@ -233,21 +233,21 @@ public class FiscalOverviewHelper {
 			boekwaarde.setBalanceType(BalanceType.PENSION);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
-			boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
+			boekwaarde = boekwaardeDao.getBookValueThisYear(boekwaarde);
 
 			if (boekwaarde == null) {
 				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.PENSION);
 				boekwaarde.setJaar(bookYear);
 				boekwaarde.setUserId(userId);
-				boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
+				boekwaarde = boekwaardeDao.getPreviousBookValue(boekwaarde);
 
 				if (boekwaarde != null) {
 					FOR = boekwaarde.getSaldo().intValue();
 					boekwaarde.setId(0);
 					boekwaarde.setJaar(bookYear);
 					boekwaarde.setUserId(userId);
-					boekwaardeDao.insertBoekwaarde(boekwaarde);
+					boekwaardeDao.insertBookValue(boekwaarde);
 				}
 			} else {
 				FOR = boekwaarde.getSaldo().intValue();
@@ -266,14 +266,14 @@ public class FiscalOverviewHelper {
 			boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
-			boekwaarde = boekwaardeDao.getBoekwaardeDitJaar(boekwaarde);
+			boekwaarde = boekwaardeDao.getBookValueThisYear(boekwaarde);
 			if (boekwaarde == null) {
 				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 				boekwaarde.setJaar(bookYear);
 				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
 				boekwaarde.setUserId(userId);
-				boekwaardeDao.insertBoekwaarde(boekwaarde);
+				boekwaardeDao.insertBookValue(boekwaarde);
 			} else {
 				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
 				boekwaardeDao.updateBookValue(boekwaarde);

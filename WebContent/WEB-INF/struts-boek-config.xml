@@ -291,7 +291,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<forward name="success"
 				path="/getBookValues.do">
 			</forward>
-		</action>						
+		</action>
+		<action path="/newBookValue" type="org.techytax.struts.action.NewBookValueAction">
+			<forward name="success"
+				path="/WEB-INF/jsp/boek/insertBookValue.jsp">
+			</forward>
+		</action>
+		<action path="/insertBookValue" type="org.techytax.struts.action.InsertBookValueAction"
+			name="bookValueForm">
+			<forward name="success" path="/getBookValues.do"></forward>
+		</action>
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />
