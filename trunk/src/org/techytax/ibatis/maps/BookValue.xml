@@ -47,7 +47,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		values(#id#,#userId#,#balanceType#,#jaar#,#saldo#)
 	</insert>
 	<update id="updateBoekwaarde" parameterClass="bookValue">
-		update boekwaarde set saldo = #saldo#
+		update boekwaarde set saldo = #saldo#, balans_id = #balanceType#, boekjaar = #jaar#
 		WHERE id = #id#
 	</update>	
 	<select id="getAllRestwaardes" resultClass="remainingValue">

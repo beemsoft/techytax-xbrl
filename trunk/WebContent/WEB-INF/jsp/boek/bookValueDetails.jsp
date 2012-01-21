@@ -39,12 +39,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="label.type" />:</td>
 		<td><html:select property="balanceType">
-			<html:option value="MACHINERY">Apparaten</html:option>
+			<html:option value="MACHINERY">Machines</html:option>
 			<html:option value="CAR">Auto</html:option>
 			<html:option value="CURRENT_ASSETS">Liquide middelen</html:option>
 			<html:option value="NON_CURRENT_ASSETS">Eigen vermogen</html:option>
 			<html:option value="PENSION">Oudedagsreserve</html:option>
-			<html:option value="STOCK">Voorraad</html:option>			
+			<html:option value="STOCK">Voorraad</html:option>
+			<html:option value="OFFICE">Bedrijfsruimte</html:option>			
 		</html:select></td>
 	</tr>
 </table>
