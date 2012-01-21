@@ -222,5 +222,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND ks.id = 40
 		AND user_id = ? 
 		ORDER BY datum asc
-	</select>		
+	</select>
+	<select id="getInterest" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT id, bedrag 
+		FROM kosten 
+		WHERE datum &gt;= ? 
+		AND datum &lt;= ? 
+		AND kostensoort_id = 33 
+		AND user_id = ?
+	</select>			
 </sqlMap>

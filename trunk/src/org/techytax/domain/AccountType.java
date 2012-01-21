@@ -20,7 +20,7 @@
 package org.techytax.domain;
 
 public enum AccountType {
-	PRIVATE("account.type.private"), BUSINESS("account.type.business"), SAVINGS("account.type.savings"), MORTGAGE_LOAN("account.type.mortgage.loan"), MORTGAGE_SAVINGS("account.type.mortgage.savings");
+	PRIVATE("account.type.private"), BUSINESS("account.type.business"), BUSINESS_SAVINGS("account.type.savings"), MORTGAGE_LOAN("account.type.mortgage.loan"), MORTGAGE_SAVINGS("account.type.mortgage.savings"), PRIVATE_SAVINGS("account.type.private.savings");
 
 	private String key;
 
@@ -42,14 +42,17 @@ public enum AccountType {
 			accountType = BUSINESS;
 			break;
 		case 2:
-			accountType = SAVINGS;
+			accountType = BUSINESS_SAVINGS;
 			break;
 		case 3:
 			accountType = MORTGAGE_LOAN;
 			break;
 		case 4:
 			accountType = MORTGAGE_SAVINGS;
-			break;	
+			break;
+		case 5:
+			accountType = PRIVATE_SAVINGS;
+			break;			
 		default:
 			accountType = null;
 			break;

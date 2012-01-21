@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -49,7 +49,7 @@ public class NewKostAction extends Action {
 
 			List<Kostensoort> kostenSoortLijst = kostensoortDao.getKostensoortLijst();
 			request.setAttribute("kostenSoortLijst", kostenSoortLijst);
-			request.setAttribute("kostForm", kostForm);
+			request.getSession().setAttribute("kostForm", kostForm);
 
 		} catch (Exception e) {
 			e.printStackTrace();

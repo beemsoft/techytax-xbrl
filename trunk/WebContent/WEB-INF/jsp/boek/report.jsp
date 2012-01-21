@@ -159,12 +159,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </table>
 
 <%
-	} else if (res != null && res.size() > 0
-				&& balansForm.getBalansSoort().equals("afschrijvingen")) {
-%>
-<a href="<%=request.getContextPath()%>/insertActiva.do"><bean:message
-	key="cost.depreciate.process" /></a>
-<%
 	} else if (balansForm.getBalansSoort().equals("private")) {
 		%>
 		<table>

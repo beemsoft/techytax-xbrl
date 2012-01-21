@@ -74,6 +74,6 @@ public class FiscaalDao extends BaseDao {
 			decrypt(activum);
 		}
 		return activum;
-	}	
+	}
 
 }

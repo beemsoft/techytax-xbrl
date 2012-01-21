@@ -81,7 +81,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>
 		</action>
 		<action path="/newKost" type="org.techytax.struts.action.NewKostAction"
-			scope="session">
+			name="kostForm" scope="session">
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/insertKost.jsp">
 			</forward>
