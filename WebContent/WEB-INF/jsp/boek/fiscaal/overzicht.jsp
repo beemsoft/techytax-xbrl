@@ -38,6 +38,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=overzicht.getNettoOmzet()%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.fiscal.interest"/>:</td>
+		<td></td>		
+		<td align="right">+<%=overzicht.getInterestFromBusinessSavings()%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.fiscal.repurchase"/>:</td>
 		<td></td>
 		<td align="right">-<%=overzicht.getRepurchase()%></td>
@@ -104,7 +109,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.transport"/>:</td>
 		<td></td>		
-		<td align="right"><%=overzicht.getKostenOverigTransport()%></td>
+		<td align="right">-<%=overzicht.getKostenOverigTransport()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.other"/>:</td>

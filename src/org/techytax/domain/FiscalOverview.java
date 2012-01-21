@@ -68,6 +68,8 @@ public class FiscalOverview {
 	
 	private BigInteger repurchase;
 	
+	private BigInteger interestFromBusinessSavings;
+	
 	public List<Activum> getActiva() {
 		return activa;
 	}
@@ -244,6 +246,14 @@ public class FiscalOverview {
 
 	public void setRepurchase(BigInteger repurchase) {
 		this.repurchase = repurchase;
+	}
+
+	public BigInteger getInterestFromBusinessSavings() {
+		return interestFromBusinessSavings;
+	}
+
+	public void setInterestFromBusinessSavings(BigInteger interestFromBusinessSavings) {
+		this.interestFromBusinessSavings = interestFromBusinessSavings;
 	}
 
 }

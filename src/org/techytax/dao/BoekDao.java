@@ -20,12 +20,14 @@
 package org.techytax.dao;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.techytax.domain.Activum;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kost;
@@ -49,10 +51,10 @@ public class BoekDao extends BaseDao {
 		if (cost.getBedrag().doubleValue() != 0) {
 			cost.setBedrag(decimalEncryptor.decrypt(cost.getBedrag()));
 		}
-		if (cost.getBtw().doubleValue() != 0) {
+		if (cost.getBtw() != null && cost.getBtw().doubleValue() != 0) {
 			cost.setBtw(decimalEncryptor.decrypt(cost.getBtw()));
 		}
-		if (StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
+		if (cost.getOmschrijving() != null && StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
 			cost.setOmschrijving(textEncryptor.decrypt(cost.getOmschrijving()));
 		}
 	}
@@ -254,6 +256,29 @@ public class BoekDao extends BaseDao {
 			decrypt(cost);
 		}
 		return costs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BigInteger getInterest(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getInterest", map);
+		BigInteger interest = new BigInteger("0");
+		for (Kost cost : costs) {
+			decrypt(cost);
+			interest = interest.add(cost.getBedrag().toBigInteger());
+		}
+		return interest;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public  BigInteger getTotalCostForActivumThisYear(Activum activum) throws Exception {
+		BigInteger totalCost = new BigInteger("0");
+		List<Kost> costs = sqlMap.queryForList("getCostListForActivum", activum);
+		for (Kost cost : costs) {
+			decrypt(cost);
+			totalCost = totalCost.add(cost.getBedrag().toBigInteger());
+		}
+		return totalCost;
 	}	
 
 }

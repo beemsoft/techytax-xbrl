@@ -45,7 +45,7 @@ public class InsertKostAction extends Action {
 			throws Exception {
 
 		final ActionErrors errors = new ActionErrors();
-		KostForm kostForm = (KostForm) form;
+		KostForm kostForm = (KostForm)request.getSession().getAttribute("kostForm");
 		User user = (User) request.getSession().getAttribute("user");
 		Kost kost = new Kost();
 		BeanUtils.copyProperties(kost, kostForm);

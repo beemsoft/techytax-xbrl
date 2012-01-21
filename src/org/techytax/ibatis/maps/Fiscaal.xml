@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="activum" type="org.techytax.domain.Activum" />
 	<typeAlias alias="passiva" type="org.techytax.domain.Passivum" />	
 	<typeAlias alias="aftrekpost" type="org.techytax.domain.Aftrekpost" />
+	<typeAlias alias="cost" type="org.techytax.domain.Kost" />	
 	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
@@ -61,8 +62,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	    and boekwaarde.user_id = #userId#
 	    and restwaarde.user_id = #userId# 
 		
-		group by balans.balanssoort_id
-		
 		union
 		
 		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
@@ -79,8 +78,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	    and boekwaarde.user_id = #userId#
 	    and restwaarde.user_id = #userId#  
 		
-		group by balans.balanssoort_id 
-		
 		union 
 		 
 		select balanssoort.omschrijving, NULL, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL 
@@ -92,7 +89,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		balans.balanssoort_id = balanssoort.id and 
 		boekwaarde.user_id = #userId#
 		
-		order by omschrijving, boekjaar;
+		order by omschrijving, bedrag, boekjaar;
 	</select>
 	<select id="getPassivaLijst" parameterClass="keyYear"
 		resultClass="passiva">
@@ -124,5 +121,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		WHERE activa.user_id=#userId#
 		AND activa.id = restwaarde.activa_id
 		AND activa.kost_id=#costId# 
+	</select>
+	<select id="getCostListForActivum" parameterClass="activum" resultClass="cost">
+		select kosten.* 
+		from kosten, activa 
+		where kosten.id = activa.kost_id 
+		and datum > #endDate# 
+		and balans_id=#balanceType# 
+		and kosten.user_id=#userId#;
 	</select>				
 </sqlMap>

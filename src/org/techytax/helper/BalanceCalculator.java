@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -413,8 +413,6 @@ public class BalanceCalculator {
 				}
 			}
 		}
-		System.out.println("Expenses: " + monthlyExpenses);
-		System.out.println("nofmonths: " + nofMonths);
 		if (nofMonths == 0) {
 			return monthlyExpenses;
 		} else {

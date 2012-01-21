@@ -58,7 +58,7 @@ public class FiscalOverviewHelper {
 
 		Date datum = DateHelper.stringToDate(beginDatum);
 		int bookYear = DateHelper.getYear(datum);
-		int currentBookYear = DateHelper.getYear(new Date());
+		int currentBookYear = DateHelper.getYear(new Date()) - 1;
 
 		// Maak winst-en-verlies rekening op
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen, false);
@@ -73,6 +73,10 @@ public class FiscalOverviewHelper {
 		// Repurchase
 		BigInteger repurchase = BalanceCalculator.getRepurchase(aftrekpostenLijst);
 		overview.setRepurchase(repurchase);
+
+		// Interest
+		BigInteger interest = boekDao.getInterest(beginDatum, eindDatum, Long.toString(userId));
+		overview.setInterestFromBusinessSavings(interest);
 
 		// Business car costs
 		BigDecimal afschrijvingAuto = BalanceCalculator.getAfschrijvingAuto(aftrekpostenLijst);
@@ -166,24 +170,68 @@ public class FiscalOverviewHelper {
 			}
 
 			// Machinery
-
-			// Add or update boekwaarde
 			BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
-			// List<Aftrekpost> aftrekpostenLijst =
-			// boekDao.getDeductableCosts(DateHelper.getDate(periode.getBeginDatum()),
-			// DateHelper.getDate(periode.getEindDatum()),
-			// Long.toString(userId));
 			totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
+			
 			BookValue activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(BalanceType.MACHINERY);
 			activumValue.setUserId(userId);
-			activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
-			if (activumValue != null) {
-				activumValue.setSaldo(activumValue.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
-				// boekwaardeDao.insertBoekwaarde(activumValue);
+			
+			BookValue previousBookValue = boekwaardeDao.getPreviousBookValue(activumValue);
+			BookValue currentBookValue = activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
+			
+			Activum activum = new Activum();
+			activum.setUserId(userId);
+			activum.setBalanceType(BalanceType.MACHINERY);
+			activum.setEndDate(beginDatum);
+			BigInteger totalCost = boekDao.getTotalCostForActivumThisYear(activum);
+
+			if (previousBookValue != null) {
+				if (currentBookValue == null) {
+					previousBookValue.setId(0);
+					previousBookValue.setSaldo(previousBookValue.getSaldo().add(totalCost).subtract(totaalAfschrijvingenOverig.toBigInteger()));
+					boekwaardeDao.insertBookValue(activumValue);
+				} else {
+					activumValue.setSaldo(previousBookValue.getSaldo().add(totalCost).subtract(totaalAfschrijvingenOverig.toBigInteger()));
+					boekwaardeDao.updateBookValue(activumValue);
+				}
+
 			} else {
-				// TODO
+				activumValue = new BookValue();
+				activumValue.setBalanceType(BalanceType.MACHINERY);
+				activumValue.setJaar(bookYear);
+				activumValue.setUserId(userId);
+				activumValue.setSaldo(overview.getRepurchase());
+				boekwaardeDao.insertBookValue(activumValue);
+			}
+
+			// Car
+			BigInteger carDepreciation = BigInteger.valueOf(overview.getAfschrijvingAuto());
+			activumValue = new BookValue();
+			activumValue.setJaar(bookYear);
+			activumValue.setBalanceType(BalanceType.CAR);
+			activumValue.setUserId(userId);
+			activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
+			BigInteger carBookValue = activumValue.getSaldo();
+			if (activumValue != null) {
+				activumValue.setJaar(bookYear);
+				activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
+				if (activumValue == null) {
+					activumValue = new BookValue();
+					activumValue.setBalanceType(BalanceType.CAR);
+					activumValue.setUserId(userId);
+					activumValue.setJaar(bookYear);
+					activumValue.setSaldo(carBookValue.subtract(carDepreciation));
+					boekwaardeDao.insertBookValue(activumValue);
+				} else {
+					activumValue.setBalanceType(BalanceType.CAR);
+					activumValue.setUserId(userId);
+					activumValue.setJaar(bookYear);
+					activumValue.setSaldo(carBookValue.subtract(carDepreciation));
+					boekwaardeDao.updateBookValue(activumValue);
+				}
+			} else {
 			}
 
 			// Stock
@@ -324,6 +372,7 @@ public class FiscalOverviewHelper {
 
 	public static int calculateProfit(FiscalOverview overview) {
 		int nettoOmzet = overview.getNettoOmzet();
+		nettoOmzet += overview.getInterestFromBusinessSavings().intValue();
 		nettoOmzet -= overview.getRepurchase().intValue();
 		nettoOmzet += overview.getKostenAutoAftrekbaar();
 		nettoOmzet -= overview.getKostenOverigTransport();

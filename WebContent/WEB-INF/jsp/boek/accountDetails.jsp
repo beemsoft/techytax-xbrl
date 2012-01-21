@@ -55,6 +55,7 @@ var cal13 = new CalendarPopup();
 				<html:option value="2"><bean:message key="account.type.savings"/></html:option>
 				<html:option value="3"><bean:message key="account.type.mortgage.loan"/></html:option>
 				<html:option value="4"><bean:message key="account.type.mortgage.savings"/></html:option>
+				<html:option value="5"><bean:message key="account.type.private.savings"/></html:option>				
 			</html:select>
 		</td>
 	</tr>		
