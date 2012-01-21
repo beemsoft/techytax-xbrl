@@ -37,7 +37,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `balans` WRITE;
 /*!40000 ALTER TABLE `balans` DISABLE KEYS */;
-INSERT INTO `balans` VALUES (6,6),(5,5),(4,4),(3,3),(2,2),(1,1);
+INSERT INTO `balans` VALUES (7,7),(6,6),(5,5),(4,4),(3,3),(2,2),(1,1);
 /*!40000 ALTER TABLE `balans` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,7 +61,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `balanssoort` WRITE;
 /*!40000 ALTER TABLE `balanssoort` DISABLE KEYS */;
-INSERT INTO `balanssoort` VALUES (1,'Machines'),(2,'Auto'),(3,'Liquide middelen'),(6,'Voorraad'),(5,'Oudedagsreserve'),(4,'Eigen vermogen');
+INSERT INTO `balanssoort` VALUES (1,'Machines'),(2,'Auto'),(3,'Liquide middelen'),(4,'Eigen vermogen'),(5,'Oudedagsreserve'),(6,'Voorraad'),(7,'Bedrijfsruimte');
 /*!40000 ALTER TABLE `balanssoort` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
