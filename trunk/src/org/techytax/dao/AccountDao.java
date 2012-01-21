@@ -130,6 +130,7 @@ public class AccountDao extends BaseDao {
 
 	public void insertAccountBalance(AccountBalance accountBalance)
 			throws Exception {
+		accountBalance.setBalance(accountBalance.getBalance().setScale(2));
 		encrypt(accountBalance);
 		sqlMap.insert("insertAccountBalance", accountBalance);
 	}
