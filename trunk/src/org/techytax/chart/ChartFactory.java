@@ -25,6 +25,7 @@ import java.util.List;
 import org.jfree.chart.JFreeChart;
 import org.techytax.dao.BookValueDao;
 import org.techytax.domain.BookValue;
+import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyId;
 
 public final class ChartFactory {
@@ -43,12 +44,21 @@ public final class ChartFactory {
 		KeyId key = new KeyId();
 		key.setUserId(userId);
 		List<BookValue> bookValues = dao.getBookValuesForChart(key);
-		return createChart(bookValues);
+		return createBarChart(bookValues);
 	}
 
-	private static BufferedImage createChart(List<BookValue> bookValues) {
-		JFreeChart chart = JFreeChartHelper.createChart(bookValues);
+	private static BufferedImage createBarChart(List<BookValue> bookValues) {
+		JFreeChart chart = JFreeChartHelper.createBarChart(bookValues);
 		return chart.createBufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB, null);
 	}
-	
+
+	public static BufferedImage createProfitAndLossPieChart(FiscalOverview overview) throws Exception {
+		return createPieChart(overview);
+	}
+
+	private static BufferedImage createPieChart(FiscalOverview overview) {
+		JFreeChart chart = JFreeChartHelper.createPieChart(overview);
+		return chart.createBufferedImage(770, 230, BufferedImage.TYPE_INT_RGB, null);
+	}
+
 }
