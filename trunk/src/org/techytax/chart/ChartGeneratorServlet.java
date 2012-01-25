@@ -49,6 +49,9 @@ public class ChartGeneratorServlet extends HttpServlet {
 			} else if (chartType.equals("profitAndLoss")) {
 				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
 				image = ChartFactory.createProfitAndLossPieChart(overview);
+			} else if (chartType.equals("activa")) {
+				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
+				image = ChartFactory.createActivaPieChart(overview);
 			} else {
 				return;
 			}
