@@ -67,7 +67,7 @@ public final class ChartFactory {
 
 	public static BufferedImage createActivaPieChart(FiscalOverview overview) {
 		JFreeChart chart = JFreeChartHelper.createPieChartForActiva(overview);
-		return chart.createBufferedImage(770, 230, BufferedImage.TYPE_INT_RGB, null);
+		return chart.createBufferedImage(700, 230, BufferedImage.TYPE_INT_RGB, null);
 	}	
 
 }
