@@ -26,7 +26,7 @@ import java.util.GregorianCalendar;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.FiscaalDao;
+import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -89,7 +89,7 @@ public class DepreciationHelper {
 		} else {
 			activum.setBalanceType(BalanceType.CAR);
 		}
-		FiscaalDao fiscaalDao = new FiscaalDao();
+		FiscalDao fiscaalDao = new FiscalDao();
 		Integer activumId = fiscaalDao.insertActivum(activum);
 		// Add remaining value
 		RemainingValue remainingValue = new RemainingValue();

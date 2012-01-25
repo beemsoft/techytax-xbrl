@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ page import="java.util.List"%>
 <%@ page import="org.techytax.domain.Activum"%>
 <%@ page import="org.techytax.domain.Passivum"%>
+<%@ page import="org.techytax.report.domain.*"%>
 
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
@@ -143,25 +144,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="overview.fiscal.value.rest"/></th>
 	</tr>
 	<%
-		int totaalBegin = 0;
-		int totaalEind = 0;
-		List<Activum> res = overzicht.getActiva();
+		List<ReportActivum> res = overzicht.getActivaReport().getActiva();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
-				Activum obj = null;
+				ReportActivum obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					int boekwaardeBegin = 0;
-					if (obj.getBoekjaar() == boekjaar - 1) {
-						boekwaardeBegin = obj.getSaldo().intValue();
-						totaalBegin += boekwaardeBegin;						
-						i++;
-						if (i < res.size()) {
-							obj = res.get(i);
-						}							
-					}
-					totaalEind += obj.getSaldo().intValue();
 	%>
 	<tr>
 		<td><%=obj.getOmschrijving() %></td>
@@ -172,8 +161,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			}
 		%>
 		<td align="right"><%=aanschafkosten %></td>
-		<td align="right"><%=boekwaardeBegin %></td>
-		<td align="right"><%=obj.getSaldo() %></td>
+		<td align="right"><%=obj.getBookValueBegin() %></td>
+		<td align="right"><%=obj.getBookValueEnd() %></td>
 		<% 
 			String restwaarde = "";
 			if (obj.getRestwaarde() != null) {
@@ -190,8 +179,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="label.total"/></td>
 		<td></td>
-		<td align="right"><%=totaalBegin %></td>
-		<td align="right"><b><%=totaalEind %></b></td>
+		<td align="right"><%=overzicht.getActivaReport().getTotalBeginValue() %></td>
+		<td align="right"><b><%=overzicht.getActivaReport().getTotalEndValue() %></b></td>
 		<td></td>
 	</tr>
 </table>
@@ -203,8 +192,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="overview.fiscal.value.end"/></th>
 	</tr>
 		<%
-		totaalBegin = 0;
-		totaalEind = 0;
+		int totaalBegin = 0;
+		int totaalEind = 0;
 		List<Passivum> passivaList = overzicht.getPassiva();
 		if (res != null) {
 			for (int i = 0; i < passivaList.size(); i++) {

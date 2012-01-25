@@ -28,7 +28,7 @@ import java.util.Properties;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.FiscaalDao;
+import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.BalanceType;
@@ -63,7 +63,7 @@ public class FiscalOverviewHelper {
 		// Maak winst-en-verlies rekening op
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen, false);
 
-		FiscaalDao fiscaalDao = new FiscaalDao();
+		FiscalDao fiscaalDao = new FiscalDao();
 		BookValueDao boekwaardeDao = new BookValueDao();
 		BoekDao boekDao = new BoekDao();
 		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
@@ -350,10 +350,12 @@ public class FiscalOverviewHelper {
 	private static int getBalansTotaal(List<Activum> activaLijst, int fiscaalJaar) {
 		Iterator<Activum> iterator = activaLijst.iterator();
 		int totaal = 0;
+		String previousBalance = null;
 		while (iterator.hasNext()) {
 			Activum activa = iterator.next();
-			if (activa.getBoekjaar() == fiscaalJaar) {
+			if (activa.getBoekjaar() == fiscaalJaar && (previousBalance == null || !activa.getOmschrijving().equals(previousBalance))) {
 				totaal += activa.getSaldo().intValue();
+				previousBalance = activa.getOmschrijving();
 			}
 		}
 		return totaal;
