@@ -25,19 +25,24 @@ import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
 import org.techytax.domain.BookValue;
+import org.techytax.domain.FiscalOverview;
 
 public class JFreeChartHelper {
 
-    public static JFreeChart createChart(List<BookValue> bookValues) {
+    public static JFreeChart createBarChart(List<BookValue> bookValues) {
     	
     	CategoryDataset dataset = createDataset(bookValues);
 
@@ -114,7 +119,47 @@ public class JFreeChartHelper {
         }
 
         return dataset;
+    }
+    
+    public static JFreeChart createPieChart(FiscalOverview overview) {
+    	
+    	PieDataset dataset = createDataset(overview);
+    	
+        // set a theme using the new shadow generator feature available in
+        // 1.0.14 - for backwards compatibility it is not enabled by default
+        ChartFactory.setChartTheme(new StandardChartTheme("JFree/Shadow",
+                true));
 
-    }	
-	
+        JFreeChart chart = ChartFactory.createPieChart(
+            "Winst en verlies",  // chart title
+            dataset,             // data
+            true,                // include legend
+            true,
+            false
+        );
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setSectionOutlinesVisible(false);
+        plot.setNoDataMessage("No data available");
+        return chart;
+
+    }    
+    
+    private static PieDataset createDataset(FiscalOverview overview) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        if (overview.getWinst() >= 0) {
+            dataset.setValue("Winst", overview.getWinst());        	
+        } else {
+            dataset.setValue("Verlies", Math.abs(overview.getWinst()));
+        }
+        dataset.setValue("Rente-opbrengsten", overview.getInterestFromBusinessSavings());
+        dataset.setValue("Andere kosten", overview.getKostenOverig());
+        dataset.setValue("Transport kosten", overview.getKostenOverigTransport());
+        dataset.setValue("Auto kosten", Math.abs(overview.getKostenAutoAftrekbaar()));
+        dataset.setValue("Afschrijving auto", overview.getAfschrijvingAuto());
+        dataset.setValue("Afschrijving overig", overview.getAfschrijvingOverig());
+        return dataset;
+    }   
+    
+   
 }

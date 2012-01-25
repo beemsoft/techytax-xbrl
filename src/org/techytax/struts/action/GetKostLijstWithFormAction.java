@@ -132,8 +132,11 @@ public class GetKostLijstWithFormAction extends Action {
 				forward = "success";
 			} else {
 				if (action.equals("Fiscaal overzicht")) {
-					FiscalOverview overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result, user.getId());
-					request.setAttribute("overzicht", overview);
+					FiscalOverview overview = (FiscalOverview) request.getSession().getAttribute("overview"); 
+					if (overview == null) {
+						overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result, user.getId());
+						request.getSession().setAttribute("overview", overview);
+					}
 					forward = "fiscaal";
 				} else {
 					forward = "success";

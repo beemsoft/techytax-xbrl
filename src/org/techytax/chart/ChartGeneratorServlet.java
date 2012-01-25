@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.User;
 
 @SuppressWarnings("serial")
@@ -45,6 +46,9 @@ public class ChartGeneratorServlet extends HttpServlet {
 
 			if (chartType.equals("bookValues")) {
 				image = ChartFactory.createBookValueGraph(user.getId());
+			} else if (chartType.equals("profitAndLoss")) {
+				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
+				image = ChartFactory.createProfitAndLossPieChart(overview);
 			} else {
 				return;
 			}

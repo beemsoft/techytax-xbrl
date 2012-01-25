@@ -22,118 +22,128 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ page import="org.techytax.domain.Passivum"%>
 <%@ page import="org.techytax.report.domain.*"%>
 
+<%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
-<jsp:useBean id="overzicht" class="org.techytax.domain.FiscalOverview"
-	scope="request" />
+<jsp:useBean id="overview" class="org.techytax.domain.FiscalOverview"
+	scope="session" />
 <jsp:useBean id="user" class="org.techytax.domain.User"
 	scope="session" />	
 	
 <%
-	int boekjaar = overzicht.getJaar();
+	int boekjaar = overview.getJaar();
 %>
 <h4 class="section"><bean:message key="overview.fiscal.title"/> <%=boekjaar%> - <%=user.getCompanyName() %></h4>
 <h4><bean:message key="overview.fiscal.statement"/></h4>
+<table>
+<tr>
+<td>
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.turnover.net"/>:</td>
 		<td></td>		
-		<td align="right"><%=overzicht.getNettoOmzet()%></td>
+		<td align="right"><%=overview.getNettoOmzet()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.interest"/>:</td>
 		<td></td>		
-		<td align="right">+<%=overzicht.getInterestFromBusinessSavings()%></td>
+		<td align="right">+<%=overview.getInterestFromBusinessSavings()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.repurchase"/>:</td>
 		<td></td>
-		<td align="right">-<%=overzicht.getRepurchase()%></td>
+		<td align="right">-<%=overview.getRepurchase()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
-		<td align="right">-<%=overzicht.getAfschrijvingAuto()%></td>
+		<td align="right">-<%=overview.getAfschrijvingAuto()%></td>
 		<td></td>		
 	</tr>
-<% if (overzicht.getAfschrijvingAutoCorrectie() > 0) {
+<% if (overview.getAfschrijvingAutoCorrectie() > 0) {
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
-		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
+		<td align="right">+<%=overview.getAfschrijvingAutoCorrectie()%></td>
 		<td></td>		
 	</tr>
 <% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
-		<td align="right">-<%=overzicht.getAfschrijvingOverig()%></td>
+		<td align="right">-<%=overview.getAfschrijvingOverig()%></td>
 		<td></td>		
 	</tr>
-<% if (overzicht.getAfschrijvingOverigCorrectie() > 0) {
+<% if (overview.getAfschrijvingOverigCorrectie() > 0) {
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.other.correction"/>:</td>
-		<td align="right">+<%=overzicht.getAfschrijvingOverigCorrectie()%></td>
+		<td align="right">+<%=overview.getAfschrijvingOverigCorrectie()%></td>
 		<td></td>		
 	</tr>
 <% } %>
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.total"/></td>
 		<td></td>		
-		<td align="right">-<%=overzicht.getAfschrijvingTotaal()%></td>
+		<td align="right">-<%=overview.getAfschrijvingTotaal()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.income.car"/>:</td>
-		<td align="right">+<%=overzicht.getBijtellingAuto()%></td>
+		<td align="right">+<%=overview.getBijtellingAuto()%></td>
 		<td></td>		
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
-		<td align="right">-<%=overzicht.getAfschrijvingAuto()%></td>
+		<td align="right">-<%=overview.getAfschrijvingAuto()%></td>
 		<td></td>		
 	</tr>
-<% if (overzicht.getAfschrijvingAutoCorrectie() > 0) {
+<% if (overview.getAfschrijvingAutoCorrectie() > 0) {
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
-		<td align="right">+<%=overzicht.getAfschrijvingAutoCorrectie()%></td>
+		<td align="right">+<%=overview.getAfschrijvingAutoCorrectie()%></td>
 		<td></td>		
 	</tr>
 <% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car"/>:</td>
-		<td align="right">-<%=overzicht.getKostenAuto()%></td>
+		<td align="right">-<%=overview.getKostenAuto()%></td>
 		<td></td>		
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car.deductable"/></td>
 		<td></td>		
-		<td align="right"><%=overzicht.getKostenAutoAftrekbaar()%></td>
+		<td align="right"><%=overview.getKostenAutoAftrekbaar()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.transport"/>:</td>
 		<td></td>		
-		<td align="right">-<%=overzicht.getKostenOverigTransport()%></td>
+		<td align="right">-<%=overview.getKostenOverigTransport()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.other"/>:</td>
 		<td></td>		
-		<td align="right">-<%=overzicht.getKostenOverig()%></td>
+		<td align="right">-<%=overview.getKostenOverig()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.profit"/>:</td>
 		<td></td>		
-		<td align="right"><b><%=overzicht.getWinst()%></b></td>
+		<td align="right"><b><%=overview.getWinst()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.pension"/>:</td>
 		<td></td>		
-		<td align="right">(<%=overzicht.getOudedagsReserveMaximaal()%>)</td>
+		<td align="right">(<%=overview.getOudedagsReserveMaximaal()%>)</td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.investment.deduction"/>:</td>
 		<td></td>		
-		<td align="right">(<%=overzicht.getInvestmentDeduction()%>)</td>
+		<td align="right">(<%=overview.getInvestmentDeduction()%>)</td>
 	</tr>	
+</table>
+</td>
+<td>
+<html:img page="/chart?chartType=profitAndLoss" />
+</td>
+</tr>
 </table>
 
 <h4><bean:message key="overview.fiscal.activa"/></h4>
@@ -146,7 +156,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="overview.fiscal.value.rest"/></th>
 	</tr>
 	<%
-		List<ReportActivum> res = overzicht.getActivaReport().getActiva();
+		List<ReportActivum> res = overview.getActivaReport().getActiva();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
@@ -181,8 +191,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="label.total"/></td>
 		<td></td>
-		<td align="right"><%=overzicht.getActivaReport().getTotalBeginValue() %></td>
-		<td align="right"><b><%=overzicht.getActivaReport().getTotalEndValue() %></b></td>
+		<td align="right"><%=overview.getActivaReport().getTotalBeginValue() %></td>
+		<td align="right"><b><%=overview.getActivaReport().getTotalEndValue() %></b></td>
 		<td></td>
 	</tr>
 </table>
@@ -196,7 +206,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<%
 		int totaalBegin = 0;
 		int totaalEind = 0;
-		List<Passivum> passivaList = overzicht.getPassiva();
+		List<Passivum> passivaList = overview.getPassiva();
 		if (res != null) {
 			for (int i = 0; i < passivaList.size(); i++) {
 
@@ -234,25 +244,25 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.cash"/>:</td>
-		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalCash()%></b></td>
+		<td align="right"><b><%=overview.getOnttrekking().getWithdrawalCash()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.car"/>:</td>
-		<td align="right"><b><%=overzicht.getOnttrekking().getWithdrawalPrivateUsageBusinessCar()%></b></td>
+		<td align="right"><b><%=overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.withdrawal.total"/>:</td>
-		<td align="right"><b><%=overzicht.getOnttrekking().getTotaleOnttrekking()%></b></td>
+		<td align="right"><b><%=overview.getOnttrekking().getTotaleOnttrekking()%></b></td>
 	</tr>			
 </table>
 <h4><bean:message key="overview.fiscal.tax.prepaid"/></h4>
 <table class="overviewTable">
 	<tr>
 		<td><bean:message key="overview.fiscal.tax.prepaid.income"/>:</td>
-		<td align="right"><b><%=overzicht.getPrepaidTax().getPrepaidIncome()%></b></td>
+		<td align="right"><b><%=overview.getPrepaidTax().getPrepaidIncome()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.tax.prepaid.health"/>:</td>
-		<td align="right"><b><%=overzicht.getPrepaidTax().getPrepaidHealth()%></b></td>
+		<td align="right"><b><%=overview.getPrepaidTax().getPrepaidHealth()%></b></td>
 	</tr>	
 </table>
