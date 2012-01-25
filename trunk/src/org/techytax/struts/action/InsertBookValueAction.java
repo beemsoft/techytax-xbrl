@@ -51,6 +51,8 @@ public class InsertBookValueAction extends Action {
 		BookValueDao bookValueDao = new BookValueDao();
 
 		bookValueDao.insertBookValue(bookValue);
+		request.getSession().removeAttribute("overview");
+		
 		return mapping.findForward("success");
 
 	}

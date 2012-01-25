@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -50,6 +50,8 @@ public class UpdateKostAction extends Action {
 		BoekDao boekDao = new BoekDao();
 
 		boekDao.updateKost(kost);
+		request.getSession().removeAttribute("overview");
+		
 		KostensoortDao kostensoortDao = new KostensoortDao();
 
 		List<Kostensoort> kostenSoortLijst = kostensoortDao.getKostensoortLijst();

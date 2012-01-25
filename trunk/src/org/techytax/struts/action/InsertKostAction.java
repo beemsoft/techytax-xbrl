@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -52,7 +52,10 @@ public class InsertKostAction extends Action {
 		kost.setId(0);
 		kost.setUserId(user.getId());
 		BoekDao boekDao = new BoekDao();
+		
 		boekDao.insertKost(kost);
+		request.getSession().removeAttribute("overview");
+		
 		KostensoortDao kostensoortDao = new KostensoortDao();
 		List<Kostensoort> kostenSoortLijst = kostensoortDao
 				.getKostensoortLijst();
