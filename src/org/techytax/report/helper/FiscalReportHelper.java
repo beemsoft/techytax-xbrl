@@ -67,17 +67,21 @@ public class FiscalReportHelper {
 				}
 				reportActivum.setBookValueBegin(activumBegin.getSaldo());
 
-				if (i < activaArray.length) {
+				if (i + 1 < activaArray.length) {
 					activumEnd = activaArray[i + 1];
 					reportActivum.setBookValueEnd(activumEnd.getSaldo());
 					i += 2;
 					if (i < activaArray.length) {
 						activumBegin = activaArray[i];
 					}
+				} else {
+					i++;
 				}
 			}
 			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
-			totalEnd = totalEnd.add(reportActivum.getBookValueEnd());
+			if (reportActivum.getBookValueEnd() != null) {
+				totalEnd = totalEnd.add(reportActivum.getBookValueEnd());
+			}
 			reportActiva.add(reportActivum);
 			description = null;
 
@@ -92,7 +96,7 @@ public class FiscalReportHelper {
 		FiscalDao fiscalDao = new FiscalDao();
 		KeyYear key = new KeyYear();
 		key.setYear(2011);
-		key.setUserId(1);
+		key.setUserId(0);
 		try {
 			List<Activum> activa = fiscalDao.getActivaLijst(key);
 			ActivaReport report = getActivaReport(activa);
