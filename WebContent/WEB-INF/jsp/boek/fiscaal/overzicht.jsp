@@ -147,6 +147,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </table>
 
 <h4><bean:message key="overview.fiscal.activa"/></h4>
+<table>
+<tr>
+<td>
 <table border="1" class="overviewTable">
 	<tr>
 		<th><bean:message key="overview.fiscal.activa.type"/></th>
@@ -196,6 +199,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td></td>
 	</tr>
 </table>
+</td>
+<td>
+<html:img page="/chart?chartType=activa" />
+</td>
+</tr>
+</table>
+
 <h4><bean:message key="overview.fiscal.passiva"/></h4>
 <table border="1" class="overviewTable">
 	<tr>
