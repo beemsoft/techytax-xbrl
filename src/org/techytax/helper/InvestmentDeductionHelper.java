@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.techytax.dao.FiscaalDao;
+import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Kost;
@@ -32,7 +32,7 @@ public class InvestmentDeductionHelper {
 
 	public static BigInteger getInvestmentDeduction(List<Kost> costList, long userId) throws Exception {
 		BigDecimal totalInvestment = new BigDecimal("0");
-		FiscaalDao fiscaalDao = new FiscaalDao();
+		FiscalDao fiscaalDao = new FiscalDao();
 		for (Kost cost : costList) {
 			Activum activum = new Activum();
 			activum.setUserId(userId);
