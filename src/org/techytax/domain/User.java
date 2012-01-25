@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -26,7 +26,9 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
 
-	private boolean blocked;
+	private boolean blocked;	
+	
+	private String companyName;
 
 	private String email;
 
@@ -48,13 +50,8 @@ public class User implements Serializable {
 
 	private String username;
 
-	public boolean isFrozen() {
-		boolean frozen = false;
-		Date currentDate = new Date();
-		if (freezeStartDate != null && freezeStartDate.before(currentDate) && (freezeEndDate == null || freezeEndDate.after(currentDate))) {
-			frozen = true;
-		}
-		return frozen;
+	public String getCompanyName() {
+		return companyName;
 	}
 
 	public String getEmail() {
@@ -108,6 +105,15 @@ public class User implements Serializable {
 		return blocked;
 	}
 
+	public boolean isFrozen() {
+		boolean frozen = false;
+		Date currentDate = new Date();
+		if (freezeStartDate != null && freezeStartDate.before(currentDate) && (freezeEndDate == null || freezeEndDate.after(currentDate))) {
+			frozen = true;
+		}
+		return frozen;
+	}
+
 	public boolean isGuest() {
 		return hasRole("guest");
 	}
@@ -126,6 +132,10 @@ public class User implements Serializable {
 
 	public void setBlocked(boolean blocked) {
 		this.blocked = blocked;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public void setEmail(String email) {

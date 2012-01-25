@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -26,11 +26,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 <jsp:useBean id="overzicht" class="org.techytax.domain.FiscalOverview"
 	scope="request" />
+<jsp:useBean id="user" class="org.techytax.domain.User"
+	scope="session" />	
 	
 <%
 	int boekjaar = overzicht.getJaar();
 %>
-<h4 class="section"><bean:message key="overview.fiscal.title"/> <%=boekjaar%></h4>
+<h4 class="section"><bean:message key="overview.fiscal.title"/> <%=boekjaar%> - <%=user.getCompanyName() %></h4>
 <h4><bean:message key="overview.fiscal.statement"/></h4>
 <table class="overviewTable">
 	<tr>
