@@ -52,6 +52,7 @@ public class UpdateBookValueAction extends Action {
 		BookValueDao bookValueDao = new BookValueDao();
 		
 		bookValueDao.updateBookValue(bookValue);
+		request.getSession().removeAttribute("overview");
 
 		return mapping.findForward("success");
 
