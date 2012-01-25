@@ -150,7 +150,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table>
 <tr>
 <td>
-<table border="1" class="overviewTable">
+<table border="1" class="overviewTable" width="300px"">
 	<tr>
 		<th><bean:message key="overview.fiscal.activa.type"/></th>
 		<th><bean:message key="overview.fiscal.initial.cost"/></th>
