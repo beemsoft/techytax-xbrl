@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.FiscaalDao;
+import org.techytax.dao.FiscalDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Kost;
@@ -69,7 +69,7 @@ public class EditKostAction extends Action {
 					Activum activum = new Activum();
 					activum.setCostId(cost.getId());
 					activum.setUserId(user.getId());
-					FiscaalDao fiscaalDao = new FiscaalDao();
+					FiscalDao fiscaalDao = new FiscalDao();
 					activum = fiscaalDao.getActivumByCostId(activum);
 					if (activum == null) {
 						request.setAttribute("investment", "true");

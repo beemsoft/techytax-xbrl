@@ -28,7 +28,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.FiscaalDao;
+import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.RemainingValue;
 import org.techytax.domain.User;
@@ -40,7 +40,7 @@ public class UpdateActivumAction extends Action {
 		DepreciationForm depreciationForm = (DepreciationForm) form;
 		User user = (User) request.getSession().getAttribute("user");
 
-		FiscaalDao fiscaalDao = new FiscaalDao();
+		FiscalDao fiscaalDao = new FiscalDao();
 		Activum activum = new Activum();
 		activum.setUserId(user.getId());
 		activum.setCostId(depreciationForm.getId());
