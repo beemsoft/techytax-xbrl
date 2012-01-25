@@ -213,8 +213,8 @@ public class FiscalOverviewHelper {
 			activumValue.setBalanceType(BalanceType.CAR);
 			activumValue.setUserId(userId);
 			activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
-			BigInteger carBookValue = activumValue.getSaldo();
 			if (activumValue != null) {
+				BigInteger carBookValue = activumValue.getSaldo();
 				activumValue.setJaar(bookYear);
 				activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
 				if (activumValue == null) {
