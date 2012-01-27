@@ -26,23 +26,24 @@ import java.util.List;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.KeyYear;
-import org.techytax.report.domain.ActivaReport;
-import org.techytax.report.domain.ReportActivum;
+import org.techytax.domain.Passivum;
+import org.techytax.report.domain.BalanceReport;
+import org.techytax.report.domain.ReportBalance;
 
 public class FiscalReportHelper {
 
-	public static ActivaReport getActivaReport(List<Activum> activa) {
-		ActivaReport report = new ActivaReport();
+	public static BalanceReport getActivaReport(List<Activum> activa) {
+		BalanceReport report = new BalanceReport();
 		Activum[] activaArray2 = new Activum[activa.size()];
 		Activum[] activaArray = activa.toArray(activaArray2);
-		List<ReportActivum> reportActiva = new ArrayList<ReportActivum>();
+		List<ReportBalance> reportActiva = new ArrayList<ReportBalance>();
 		BigInteger totalBegin  = new BigInteger("0");
 		BigInteger totalEnd = new BigInteger("0");
 		String description = null;
 		int i = 0;
 		do {
 
-			ReportActivum reportActivum = new ReportActivum();
+			ReportBalance reportActivum = new ReportBalance();
 			Activum activumBegin = activaArray[i];
 			Activum activumEnd = null;
 
@@ -91,6 +92,39 @@ public class FiscalReportHelper {
 		report.setTotalEndValue(totalEnd);
 		return report;
 	}
+	
+	public static BalanceReport getPassivaReport(List<Passivum> passiva) {
+		BalanceReport report = new BalanceReport();
+		Passivum[] passivaArray2 = new Passivum[passiva.size()];
+		Passivum[] passivaArray = passiva.toArray(passivaArray2);
+		List<ReportBalance> reportBalance = new ArrayList<ReportBalance>();
+		BigInteger totalBegin  = new BigInteger("0");
+		BigInteger totalEnd = new BigInteger("0");
+		int i = 0;
+		do {
+
+			ReportBalance reportActivum = new ReportBalance();
+			Passivum passivumBegin = passivaArray[i];
+			reportActivum.setBookValueBegin(passivumBegin.getSaldo());
+			reportActivum.setOmschrijving(passivumBegin.getOmschrijving());
+			Passivum passivumEnd = null;
+			if (i+1 < passivaArray.length) {
+				passivumEnd = passivaArray[i+1];
+				reportActivum.setBookValueEnd(passivumEnd.getSaldo());
+			}
+
+			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
+			if (reportActivum.getBookValueEnd() != null) {
+				totalEnd = totalEnd.add(reportActivum.getBookValueEnd());
+			}
+			reportBalance.add(reportActivum);
+			i+=2;
+		} while (i < passivaArray.length);
+		report.setActiva(reportBalance);
+		report.setTotalBeginValue(totalBegin);
+		report.setTotalEndValue(totalEnd);
+		return report;
+	}	
 
 	public static void main(String[] args) {
 		FiscalDao fiscalDao = new FiscalDao();
@@ -98,11 +132,12 @@ public class FiscalReportHelper {
 		key.setYear(2011);
 		key.setUserId(0);
 		try {
-			List<Activum> activa = fiscalDao.getActivaLijst(key);
-			ActivaReport report = getActivaReport(activa);
+//			List<Activum> activa = fiscalDao.getActivaLijst(key);
+//			BalanceReport report = getActivaReport(activa);
+			List<Passivum> passiva = fiscalDao.getPassivaLijst(key);
+			BalanceReport report = getPassivaReport(passiva);
 			System.out.println("Test");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

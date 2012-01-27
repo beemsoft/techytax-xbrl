@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%@ page import="java.util.List"%>
 <%@ page import="org.techytax.domain.Activum"%>
 <%@ page import="org.techytax.domain.Passivum"%>
-<%@ page import="org.techytax.report.domain.*"%>
+<%@ page import="org.techytax.report.domain.ReportBalance"%>
 
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
@@ -150,7 +150,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <table>
 <tr>
 <td>
-<table border="1" class="overviewTable" width="300px"">
+<table border="1" class="overviewTable" width="300px">
 	<tr>
 		<th><bean:message key="overview.fiscal.activa.type"/></th>
 		<th><bean:message key="overview.fiscal.initial.cost"/></th>
@@ -159,11 +159,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<th><bean:message key="overview.fiscal.value.rest"/></th>
 	</tr>
 	<%
-		List<ReportActivum> res = overview.getActivaReport().getActiva();
+		List<ReportBalance> res = overview.getActivaReport().getBalanceList();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 
-				ReportActivum obj = null;
+				ReportBalance obj = null;
 				obj = res.get(i);
 				if (obj != null) {
 	%>
@@ -207,37 +207,28 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </table>
 
 <h4><bean:message key="overview.fiscal.passiva"/></h4>
-<table border="1" class="overviewTable">
+<table>
+<tr>
+<td>
+<table border="1" class="overviewTable" width="300px">
 	<tr>
 		<th><bean:message key="overview.fiscal.passiva.type"/></th>
 		<th><bean:message key="overview.fiscal.value.begin"/></th>
 		<th><bean:message key="overview.fiscal.value.end"/></th>
 	</tr>
 		<%
-		int totaalBegin = 0;
-		int totaalEind = 0;
-		List<Passivum> passivaList = overview.getPassiva();
+		res = overview.getPassivaReport().getBalanceList();	
 		if (res != null) {
-			for (int i = 0; i < passivaList.size(); i++) {
+			for (int i = 0; i < res.size(); i++) {
 
-				Passivum obj = null;
-				obj = passivaList.get(i);
+				ReportBalance obj = null;
+				obj = res.get(i);
 				if (obj != null) {
-					int boekwaardeBegin = 0;
-					if (obj.getBoekjaar() == boekjaar - 1) {
-						boekwaardeBegin = obj.getSaldo().intValue();
-						totaalBegin += boekwaardeBegin;							
-						i++;
-						if (i < res.size()) {
-							obj = passivaList.get(i);
-						}					
-					}
-					totaalEind += obj.getSaldo().intValue();
 	%>
 	<tr>
 		<td><%=obj.getOmschrijving() %></td>
-		<td align="right"><%=boekwaardeBegin %></td>
-		<td align="right"><%=obj.getSaldo() %></td>
+		<td align="right"><%=obj.getBookValueBegin() %></td>
+		<td align="right"><%=obj.getBookValueEnd() %></td>
 	</tr>
 	<%
 			}
@@ -246,9 +237,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	%>
 	<tr>
 		<td><bean:message key="label.total"/></td>
-		<td align="right"><%=totaalBegin %></td>
-		<td align="right"><b><%=totaalEind %></b></td>
+		<td align="right"><%=overview.getPassivaReport().getTotalBeginValue() %></td>
+		<td align="right"><b><%=overview.getPassivaReport().getTotalEndValue() %></b></td>
 	</tr>
+</table>
+</td>
+<td>
+<html:img page="/chart?chartType=passiva" />
+</td>
+</tr>
 </table>
 <h4><bean:message key="overview.fiscal.withdrawal"/></h4>
 <table class="overviewTable">
