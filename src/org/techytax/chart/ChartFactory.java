@@ -52,21 +52,18 @@ public final class ChartFactory {
 		return chart.createBufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB, null);
 	}
 
-	public static BufferedImage createProfitAndLossPieChart(FiscalOverview overview) throws Exception {
-		return createPieChart(overview);
-	}
-
-	private static BufferedImage createPieChart(FiscalOverview overview) {
+	public static BufferedImage createProfitAndLossPieChart(FiscalOverview overview) {
 		JFreeChart chart = JFreeChartHelper.createPieChartForProfitAndLoss(overview);
 		return chart.createBufferedImage(770, 230, BufferedImage.TYPE_INT_RGB, null);
 	}
 	
-	public static BufferedImage createActivaChart(FiscalOverview overview) throws Exception {
-		return createActivaPieChart(overview);
-	}
-
 	public static BufferedImage createActivaPieChart(FiscalOverview overview) {
 		JFreeChart chart = JFreeChartHelper.createPieChartForActiva(overview);
+		return chart.createBufferedImage(700, 230, BufferedImage.TYPE_INT_RGB, null);
+	}
+	
+	public static BufferedImage createPassivaPieChart(FiscalOverview overview) {
+		JFreeChart chart = JFreeChartHelper.createPieChartForPassiva(overview);
 		return chart.createBufferedImage(700, 230, BufferedImage.TYPE_INT_RGB, null);
 	}	
 

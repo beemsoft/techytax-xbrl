@@ -20,7 +20,6 @@
 package org.techytax.chart;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.GradientPaint;
 import java.util.List;
 
@@ -42,8 +41,8 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.TableOrder;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
-import org.techytax.report.domain.ActivaReport;
-import org.techytax.report.domain.ReportActivum;
+import org.techytax.report.domain.BalanceReport;
+import org.techytax.report.domain.ReportBalance;
 
 public class JFreeChartHelper {
 
@@ -176,14 +175,42 @@ public class JFreeChartHelper {
 
 	private static CategoryDataset createDatasetForActiva(FiscalOverview overview) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		ActivaReport report = overview.getActivaReport();
+		BalanceReport report = overview.getActivaReport();
 		String title1 = Integer.toString(overview.getJaar()-1);
 		String title2 = Integer.toString(overview.getJaar());		
-		for (ReportActivum activum : report.getActiva()) {
+		for (ReportBalance activum : report.getBalanceList()) {
 			dataset.addValue(activum.getBookValueBegin(), title1, activum.getOmschrijving());
 			dataset.addValue(activum.getBookValueEnd(), title2, activum.getOmschrijving());			
 		}
  		return dataset;
 	}
+	
+	public static JFreeChart createPieChartForPassiva(FiscalOverview overview) {
+
+		CategoryDataset dataset = createDatasetForPassiva(overview);
+
+		final JFreeChart chart = ChartFactory.createMultiplePieChart("Passiva", // chart
+																				// title
+				dataset, // dataset
+				TableOrder.BY_ROW, true, // include legend
+				true, false);
+		final MultiplePiePlot plot = (MultiplePiePlot) chart.getPlot();
+		final JFreeChart subchart = plot.getPieChart();
+		final PiePlot p = (PiePlot) subchart.getPlot();
+
+		return chart;
+	}
+
+	private static CategoryDataset createDatasetForPassiva(FiscalOverview overview) {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		BalanceReport report = overview.getPassivaReport();
+		String title1 = Integer.toString(overview.getJaar()-1);
+		String title2 = Integer.toString(overview.getJaar());		
+		for (ReportBalance activum : report.getBalanceList()) {
+			dataset.addValue(activum.getBookValueBegin(), title1, activum.getOmschrijving());
+			dataset.addValue(activum.getBookValueEnd(), title2, activum.getOmschrijving());			
+		}
+ 		return dataset;
+	}	
 
 }

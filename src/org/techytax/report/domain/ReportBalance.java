@@ -22,7 +22,7 @@ package org.techytax.report.domain;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class ReportActivum {
+public class ReportBalance {
 
 	private BigDecimal aanschafKosten;
 	private BigInteger bookValueBegin;

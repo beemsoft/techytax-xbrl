@@ -22,18 +22,18 @@ package org.techytax.report.domain;
 import java.math.BigInteger;
 import java.util.List;
 
-public class ActivaReport {
+public class BalanceReport {
 
-	private List<ReportActivum> activa;
+	private List<ReportBalance> balanceList;
 	private BigInteger totalBeginValue;
 	private BigInteger totalEndValue;
 
-	public List<ReportActivum> getActiva() {
-		return activa;
+	public List<ReportBalance> getBalanceList() {
+		return balanceList;
 	}
 
-	public void setActiva(List<ReportActivum> activa) {
-		this.activa = activa;
+	public void setActiva(List<ReportBalance> balanceList) {
+		this.balanceList = balanceList;
 	}
 
 	public BigInteger getTotalBeginValue() {

@@ -22,7 +22,7 @@ package org.techytax.domain;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.techytax.report.domain.ActivaReport;
+import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.helper.FiscalReportHelper;
 
 public class FiscalOverview {
@@ -77,8 +77,12 @@ public class FiscalOverview {
 		return activa;
 	}
 	
-	public ActivaReport getActivaReport() {
+	public BalanceReport getActivaReport() {
 		return FiscalReportHelper.getActivaReport(activa);
+	}
+	
+	public BalanceReport getPassivaReport() {
+		return FiscalReportHelper.getPassivaReport(passiva);
 	}	
 	
 	public int getAfschrijvingAuto() {
