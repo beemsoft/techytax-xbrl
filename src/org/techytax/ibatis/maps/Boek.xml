@@ -231,5 +231,24 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND datum &lt;= ? 
 		AND kostensoort_id = 33 
 		AND user_id = ?
+	</select>
+	<select id="getInvoices" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT id, bedrag, datum, btw, kostensoort_id as kostenSoortId 
+		FROM kosten
+		where kostensoort_id in (38,39) 
+		and datum &gt;= ? 
+		and datum &lt;= ? 
+		and user_id=? 
+		order by datum
+	</select>
+	<select id="getVatDebt" parameterMap="periodeMap"
+		resultClass="kost">
+		SELECT id, bedrag, datum, btw, kostensoort_id as kostenSoortId 
+		FROM kosten
+		where kostensoort_id = 39 
+		and datum &gt;= ? 
+		and datum &lt;= ? 
+		and user_id=? 
 	</select>			
 </sqlMap>

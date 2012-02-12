@@ -20,7 +20,7 @@
 package org.techytax.domain;
 
 public enum BalanceType {
-	NONE, MACHINERY, CAR, CURRENT_ASSETS, NON_CURRENT_ASSETS, PENSION, STOCK, OFFICE;
+	NONE, MACHINERY, CAR, CURRENT_ASSETS, NON_CURRENT_ASSETS, PENSION, STOCK, OFFICE, VAT_TO_BE_PAID, INVOICES_TO_BE_PAID;
 	
 	public static BalanceType getInstance(int type) {
 		BalanceType balanceType;
@@ -45,7 +45,13 @@ public enum BalanceType {
 			break;
 		case 7:
 			balanceType = OFFICE;
-			break;				
+			break;
+		case 8:
+			balanceType = VAT_TO_BE_PAID;
+			break;
+		case 9:
+			balanceType = INVOICES_TO_BE_PAID;
+			break;			
 		default:
 			balanceType = NONE;
 			break;

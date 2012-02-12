@@ -1,7 +1,6 @@
 package org.techytax.helper;
 
 import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +30,7 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.T
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
 
 import org.techytax.domain.Kost;
+import org.techytax.domain.User;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
@@ -54,7 +54,7 @@ public class AuditFileHelper {
 		return transaction;
 	}
 	
-	public static String createAuditFile(List<Kost> costList) throws DatatypeConfigurationException {
+	public static String createAuditFile(List<Kost> costList, User user) throws DatatypeConfigurationException {
 
 		
 		JAXBContext jc = null;
@@ -72,10 +72,11 @@ public class AuditFileHelper {
 			ObjectFactory objectFactory = new ObjectFactory();
 			Auditfile auditfile = objectFactory.createAuditfile();
 			Company company = objectFactory.createAuditfileCompany();
-			company.setCompanyIdent(props.getProperty("company.id"));
-			company.setCompanyName(props.getProperty("company.name"));
+			company.setCompanyIdent(user.getCompanyName());
+			company.setCompanyName(user.getCompanyName());
 			company.setTaxRegIdent(props.getProperty("tax.id"));
 			company.setTaxRegistrationCountry(props.getProperty("tax.country"));
+
 //			company.setCustomersSuppliers(value)   not yet filled by TechyTax
 			GeneralLedger generalLedger = objectFactory.createAuditfileCompanyGeneralLedger();
 			Basics basics = objectFactory.createAuditfileCompanyGeneralLedgerBasics();
@@ -107,7 +108,7 @@ public class AuditFileHelper {
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("1.5");
+			header.setSoftwareVersion("1.7.1");
 
 			auditfile.setHeader(header);
 			

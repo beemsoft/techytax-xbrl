@@ -22,7 +22,6 @@ package org.techytax.struts.form;
 import java.math.BigInteger;
 
 import org.apache.struts.action.ActionForm;
-import org.techytax.domain.BalanceType;
 
 public class BookValueForm extends ActionForm {
 

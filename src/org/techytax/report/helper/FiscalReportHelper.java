@@ -76,6 +76,9 @@ public class FiscalReportHelper {
 						activumBegin = activaArray[i];
 					}
 				} else {
+					activumEnd = activumBegin;
+					reportActivum.setBookValueBegin(new BigInteger("0"));
+					reportActivum.setBookValueEnd(activumEnd.getSaldo());
 					i++;
 				}
 			}
@@ -111,7 +114,12 @@ public class FiscalReportHelper {
 			if (i+1 < passivaArray.length) {
 				passivumEnd = passivaArray[i+1];
 				reportActivum.setBookValueEnd(passivumEnd.getSaldo());
+			} else {
+				passivumEnd = passivumBegin;
+				reportActivum.setBookValueBegin(new BigInteger("0"));
+				reportActivum.setBookValueEnd(passivumEnd.getSaldo());
 			}
+			
 
 			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
 			if (reportActivum.getBookValueEnd() != null) {

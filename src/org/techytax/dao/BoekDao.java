@@ -279,6 +279,34 @@ public class BoekDao extends BaseDao {
 			totalCost = totalCost.add(cost.getBedrag().toBigInteger());
 		}
 		return totalCost;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BigDecimal getInvoiceBalance(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getInvoices", map);
+		BigDecimal invoiceBalance = new BigDecimal("0");
+		for (Kost cost : costs) {
+			decrypt(cost);
+			if (cost.getKostenSoortId() == KostConstanten.INVOICE_SENT) {
+				invoiceBalance = invoiceBalance.add(cost.getBedrag()).add(cost.getBtw());	
+			} else if (cost.getKostenSoortId() == KostConstanten.INVOICE_PAID) {
+				invoiceBalance = invoiceBalance.subtract(cost.getBedrag()).subtract(cost.getBtw());
+			}			
+		}
+		return invoiceBalance;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BigDecimal getVatDebt(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getVatDebt", map);
+		BigDecimal vatBalance = new BigDecimal("0");
+		for (Kost cost : costs) {
+			decrypt(cost);
+			vatBalance = vatBalance.add(cost.getBtw());	
+		}
+		return vatBalance;
 	}	
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -37,7 +37,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="auditReportForm" type="org.techytax.struts.form.AuditReportForm" />
 		<form-bean name="loginForm" type="org.techytax.struts.form.LoginForm" />
 		<form-bean name="depreciationForm" type="org.techytax.struts.form.DepreciationForm" />
-		<form-bean name="bookValueForm" type="org.techytax.struts.form.BookValueForm" />						
+		<form-bean name="bookValueForm" type="org.techytax.struts.form.BookValueForm" />
+		<form-bean name="settlementForm" type="org.techytax.struts.form.SettlementForm" />							
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -106,12 +107,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				path="/WEB-INF/jsp/boek/editKostensoort.jsp">
 			</forward>
 		</action>
-		<action path="/newKostensoort" type="org.techytax.struts.action.NewKostensoortAction"
-			scope="request" >
-			<forward name="success"
-				path="/WEB-INF/jsp/boek/insertKostensoort.jsp">
-			</forward>
-		</action>
+		<action path="/newKostensoort" forward="/WEB-INF/jsp/boek/insertKostensoort.jsp"/>
 		<action path="/insertKostensoort" type="org.techytax.struts.action.InsertKostensoortAction"
 			name="kostensoortForm">
 			<forward name="success" path="/getKostensoortLijst.do"></forward>
@@ -220,12 +216,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				path="/WEB-INF/jsp/boek/editAccount.jsp">
 			</forward>
 		</action>
-		<action path="/newAccount" type="org.techytax.struts.action.NewAccountAction"
-			scope="request">
-			<forward name="success"
-				path="/WEB-INF/jsp/boek/insertAccount.jsp">
-			</forward>
-		</action>
+		<action path="/newAccount" forward="/WEB-INF/jsp/boek/insertAccount.jsp"/>
 		<action path="/insertAccount" type="org.techytax.struts.action.InsertAccountAction"
 			name="accountForm">
 			<forward name="success" path="/getAccounts.do"></forward>
@@ -292,11 +283,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				path="/getBookValues.do">
 			</forward>
 		</action>
-		<action path="/newBookValue" type="org.techytax.struts.action.NewBookValueAction">
-			<forward name="success"
-				path="/WEB-INF/jsp/boek/insertBookValue.jsp">
-			</forward>
-		</action>
+		<action path="/newBookValue" forward="/WEB-INF/jsp/boek/insertBookValue.jsp"/>
 		<action path="/insertBookValue" type="org.techytax.struts.action.InsertBookValueAction"
 			name="bookValueForm">
 			<forward name="success" path="/getBookValues.do"></forward>

@@ -45,6 +45,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><%=overview.getNettoOmzet()%></td>
 	</tr>
 	<tr>
+		<td><bean:message key="overview.turnover.net.unpaid"/>:</td>
+		<td></td>		
+		<td align="right">+<%=overview.getNetTurnOverNotYetPaid()%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.fiscal.interest"/>:</td>
 		<td></td>		
 		<td align="right">+<%=overview.getInterestFromBusinessSavings()%></td>

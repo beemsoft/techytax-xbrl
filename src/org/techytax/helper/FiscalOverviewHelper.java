@@ -40,6 +40,7 @@ import org.techytax.domain.Kost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passivum;
+import org.techytax.domain.Periode;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivatWithdrawal;
 import org.techytax.props.PropsFactory;
@@ -47,7 +48,7 @@ import org.techytax.util.DateHelper;
 
 public class FiscalOverviewHelper {
 
-	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Kost> boekingen, long userId) throws Exception {
+	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Kost> costList, long userId) throws Exception {
 
 		// Load properties
 		Properties props = PropsFactory.loadProperties();
@@ -60,18 +61,25 @@ public class FiscalOverviewHelper {
 		int bookYear = DateHelper.getYear(datum);
 		int currentBookYear = DateHelper.getYear(new Date()) - 1;
 
-		// Maak winst-en-verlies rekening op
-		Balans btwBalans = BalanceCalculator.calculateBtwBalance(boekingen, false);
+		// Calculate Profit & Loss
+		Balans btwBalans = BalanceCalculator.calculateBtwBalance(costList, false);
 
 		FiscalDao fiscaalDao = new FiscalDao();
 		BookValueDao boekwaardeDao = new BookValueDao();
 		BoekDao boekDao = new BoekDao();
-		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
+		List<Aftrekpost> deductableCosts = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
 		overview.setJaar(bookYear);
 		overview.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
 
+		// Turnover net unpaid
+		// TODO: start with bookvalue from previous year
+		BigDecimal turnoverUnpaid = boekDao.getInvoiceBalance(beginDatum, DateHelper.getFinalInvoiceDate(eindDatum), Long.toString(userId));
+		BigDecimal turnoverUnpaidNet = new BigDecimal(turnoverUnpaid.doubleValue() / 1.19d);
+		turnoverUnpaidNet = turnoverUnpaidNet.setScale(2, BigDecimal.ROUND_HALF_UP);
+		overview.setNetTurnOverNotYetPaid(turnoverUnpaidNet.toBigInteger());
+
 		// Repurchase
-		BigInteger repurchase = BalanceCalculator.getRepurchase(aftrekpostenLijst);
+		BigInteger repurchase = BalanceCalculator.getRepurchase(deductableCosts);
 		overview.setRepurchase(repurchase);
 
 		// Interest
@@ -79,11 +87,11 @@ public class FiscalOverviewHelper {
 		overview.setInterestFromBusinessSavings(interest);
 
 		// Business car costs
-		BigDecimal afschrijvingAuto = BalanceCalculator.getAfschrijvingAuto(aftrekpostenLijst);
+		BigDecimal afschrijvingAuto = BalanceCalculator.getAfschrijvingAuto(deductableCosts);
 		if (afschrijvingAuto != null) {
 			overview.setAfschrijvingAuto(afschrijvingAuto.intValue());
-			overview.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(aftrekpostenLijst).intValue());
-			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(aftrekpostenLijst).intValue());
+			overview.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(deductableCosts).intValue());
+			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
 			List<Kost> corrections = boekDao.getVatCorrectionDepreciation(beginDatum, eindDatum, Long.toString(userId));
 			Iterator<Kost> iterator = corrections.iterator();
 			int depreciationCorrection = 0;
@@ -108,14 +116,14 @@ public class FiscalOverviewHelper {
 			}
 			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 		}
-		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
+		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
 		if (depreciationOther != null) {
-			overview.setAfschrijvingOverig(BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst).intValue());
+			overview.setAfschrijvingOverig(BalanceCalculator.getOverigeAfschrijvingen(deductableCosts).intValue());
 		}
 		overview.setAfschrijvingTotaal(overview.getAfschrijvingAuto() - overview.getAfschrijvingAutoCorrectie() + overview.getAfschrijvingOverig() - overview.getAfschrijvingOverigCorrectie());
 
-		overview.setKostenOverigTransport(BalanceCalculator.getReiskosten(aftrekpostenLijst).intValue());
-		overview.setKostenOverig(BalanceCalculator.getEtenskosten(aftrekpostenLijst).add(BalanceCalculator.getAlgemeneKosten(aftrekpostenLijst)).intValue());
+		overview.setKostenOverigTransport(BalanceCalculator.getReiskosten(deductableCosts).intValue());
+		overview.setKostenOverig(BalanceCalculator.getEtenskosten(deductableCosts).add(BalanceCalculator.getAlgemeneKosten(deductableCosts)).intValue());
 
 		int profit = calculateProfit(overview);
 		overview.setProfit(profit);
@@ -171,16 +179,16 @@ public class FiscalOverviewHelper {
 
 			// Machinery
 			BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
-			totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
-			
+			totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
+
 			BookValue activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(BalanceType.MACHINERY);
 			activumValue.setUserId(userId);
-			
+
 			BookValue previousBookValue = boekwaardeDao.getPreviousBookValue(activumValue);
 			BookValue currentBookValue = activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
-			
+
 			Activum activum = new Activum();
 			activum.setUserId(userId);
 			activum.setBalanceType(BalanceType.MACHINERY);
@@ -261,6 +269,24 @@ public class FiscalOverviewHelper {
 					}
 				}
 			}
+
+			if (turnoverUnpaid != null && turnoverUnpaid.compareTo(new BigDecimal("0")) == 1) {
+				// Invoices yet to be paid
+				activumValue = new BookValue();
+				activumValue.setJaar(bookYear);
+				activumValue.setBalanceType(BalanceType.INVOICES_TO_BE_PAID);
+				activumValue.setUserId(userId);
+				activumValue.setSaldo(turnoverUnpaid.toBigInteger());
+
+				currentBookValue = boekwaardeDao.getBookValueThisYear(activumValue);
+
+				if (currentBookValue == null) {
+					boekwaardeDao.insertBookValue(activumValue);
+				} else {
+					boekwaardeDao.updateBookValue(activumValue);
+				}
+			}
+
 		}
 
 		KeyYear keyYear = new KeyYear();
@@ -275,6 +301,7 @@ public class FiscalOverviewHelper {
 
 		// Maak passiva balans op.
 		int FOR = 0;
+		BigDecimal vatDebt = new BigDecimal("0");
 		if (bookYear == currentBookYear) {
 			// Voer dezelfde FOR op.
 			boekwaarde = new BookValue();
@@ -300,6 +327,25 @@ public class FiscalOverviewHelper {
 			} else {
 				FOR = boekwaarde.getSaldo().intValue();
 			}
+
+			Periode lastVatPeriod = DateHelper.getLastVatPeriodPreviousYear();
+			vatDebt = boekDao.getVatDebt(DateHelper.getDate(lastVatPeriod.getBeginDatum()), DateHelper.getDate(lastVatPeriod.getEindDatum()), Long.toString(userId));
+
+			if (vatDebt != null && vatDebt.compareTo(new BigDecimal("0")) == 1) {
+				boekwaarde = new BookValue();
+				boekwaarde.setJaar(bookYear);
+				boekwaarde.setBalanceType(BalanceType.VAT_TO_BE_PAID);
+				boekwaarde.setUserId(userId);
+				boekwaarde.setSaldo(vatDebt.toBigInteger());
+
+				BookValue currentBookValue = boekwaardeDao.getBookValueThisYear(boekwaarde);
+
+				if (currentBookValue == null) {
+					boekwaardeDao.insertBookValue(boekwaarde);
+				} else {
+					boekwaardeDao.updateBookValue(boekwaarde);
+				}
+			}
 		}
 
 		// Get balance totals
@@ -309,21 +355,22 @@ public class FiscalOverviewHelper {
 		overview.setBookTotalEnd(bookTotalEnd);
 
 		if (bookYear == currentBookYear) {
-			// Voer eigen vermogen op.
+			// Non current assets
 			boekwaarde = new BookValue();
 			boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
 			boekwaarde = boekwaardeDao.getBookValueThisYear(boekwaarde);
+			BigInteger bookTotalNonCurrentAssets = BigInteger.valueOf(bookTotalEnd - FOR - vatDebt.intValue()); 
 			if (boekwaarde == null) {
 				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
 				boekwaarde.setJaar(bookYear);
-				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
+				boekwaarde.setSaldo(bookTotalNonCurrentAssets);
 				boekwaarde.setUserId(userId);
 				boekwaardeDao.insertBookValue(boekwaarde);
 			} else {
-				boekwaarde.setSaldo(BigInteger.valueOf(bookTotalEnd - FOR));
+				boekwaarde.setSaldo(bookTotalNonCurrentAssets);
 				boekwaardeDao.updateBookValue(boekwaarde);
 			}
 		}
@@ -334,7 +381,7 @@ public class FiscalOverviewHelper {
 		List<Passivum> passivaLijst = fiscaalDao.getPassivaLijst(key);
 		overview.setPassiva(passivaLijst);
 
-		// Vul prive onttrekking in
+		// Private withdrawals
 		int totalWithdrawal = profit - (bookTotalEnd - bookTotalBegin);
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		int withdrawalCash = totalWithdrawal - privatWithdrawal.getWithdrawalPrivateUsageBusinessCar();
@@ -375,6 +422,7 @@ public class FiscalOverviewHelper {
 	public static int calculateProfit(FiscalOverview overview) {
 		int nettoOmzet = overview.getNettoOmzet();
 		nettoOmzet += overview.getInterestFromBusinessSavings().intValue();
+		nettoOmzet += overview.getNetTurnOverNotYetPaid().intValue();
 		nettoOmzet -= overview.getRepurchase().intValue();
 		nettoOmzet += overview.getKostenAutoAftrekbaar();
 		nettoOmzet -= overview.getKostenOverigTransport();

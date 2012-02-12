@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -47,7 +47,7 @@ public class SendAuditReportAction extends Action {
 		User user = (User) request.getSession().getAttribute("user");
 		List<Kost> costList = boekDao.getAuditList(auditReportForm.getBeginDatum(), auditReportForm.getEindDatum(), Long.toString(user.getId()));
 		try {
-			String message = AuditFileHelper.createAuditFile(costList);
+			String message = AuditFileHelper.createAuditFile(costList, user);
 			MailHelper.sendAuditReport(message, user.getEmail());
 
 		} catch (Exception e) {
