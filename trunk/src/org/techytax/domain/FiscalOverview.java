@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,50 +28,29 @@ import org.techytax.report.helper.FiscalReportHelper;
 public class FiscalOverview {
 
 	private List<Activum> activa;
-
 	private int afschrijvingAuto;
-	
 	private int afschrijvingAutoCorrectie;
-
 	private int afschrijvingOverig;
-	
 	private int afschrijvingOverigCorrectie;
-	
 	private int afschrijvingTotaal;
-
 	private int bijtellingAuto;
-
 	private int bookTotalBegin;
-
 	private int bookTotalEnd;
-
 	private int jaar;
-
 	private int kostenAuto;
-	
 	private int kostenAutoAftrekbaar;	
-
 	private int kostenOverig;
-
 	private int kostenOverigTransport;
-
 	private int nettoOmzet;
-
 	private PrivatWithdrawal onttrekking;
-	
 	private int oudedagsReserveMaximaal;
-
 	private List<Passivum> passiva;
-
 	private PrepaidTax prepaidTax;
-
 	private int profit;
-	
 	private BigInteger investmentDeduction;
-	
 	private BigInteger repurchase;
-	
 	private BigInteger interestFromBusinessSavings;
+	private BigInteger netTurnOverNotYetPaid;
 	
 	public List<Activum> getActiva() {
 		return activa;
@@ -265,6 +244,14 @@ public class FiscalOverview {
 
 	public void setInterestFromBusinessSavings(BigInteger interestFromBusinessSavings) {
 		this.interestFromBusinessSavings = interestFromBusinessSavings;
+	}
+
+	public BigInteger getNetTurnOverNotYetPaid() {
+		return netTurnOverNotYetPaid;
+	}
+
+	public void setNetTurnOverNotYetPaid(BigInteger netTurnOverNotYetPaid) {
+		this.netTurnOverNotYetPaid = netTurnOverNotYetPaid;
 	}
 
 }

@@ -37,7 +37,7 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `balans` WRITE;
 /*!40000 ALTER TABLE `balans` DISABLE KEYS */;
-INSERT INTO `balans` VALUES (7,7),(6,6),(5,5),(4,4),(3,3),(2,2),(1,1);
+INSERT INTO `balans` VALUES (8,8),(9,9),(7,7),(6,6),(5,5),(4,4),(3,3),(2,2),(1,1);
 /*!40000 ALTER TABLE `balans` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -50,7 +50,7 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `balanssoort` (
   `id` bigint(20) NOT NULL auto_increment,
-  `omschrijving` varchar(20) NOT NULL,
+  `omschrijving` varchar(40) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
@@ -61,7 +61,16 @@ SET character_set_client = @saved_cs_client;
 
 LOCK TABLES `balanssoort` WRITE;
 /*!40000 ALTER TABLE `balanssoort` DISABLE KEYS */;
-INSERT INTO `balanssoort` VALUES (1,'Machines'),(2,'Auto'),(3,'Liquide middelen'),(4,'Eigen vermogen'),(5,'Oudedagsreserve'),(6,'Voorraad'),(7,'Bedrijfsruimte');
+INSERT INTO `balanssoort` VALUES 
+(1,'Machines'),
+(2,'Auto'),
+(3,'Liquide middelen'),
+(4,'Eigen vermogen'),
+(5,'Oudedagsreserve'),
+(6,'Voorraad'),
+(7,'Bedrijfsruimte'),
+(8,'Schuld omzetbelasting'),
+(9,'Vorderingen op handelsdebiteuren');
 /*!40000 ALTER TABLE `balanssoort` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

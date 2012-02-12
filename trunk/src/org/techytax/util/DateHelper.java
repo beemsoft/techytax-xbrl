@@ -54,7 +54,15 @@ public class DateHelper {
 		SimpleDateFormat format = new SimpleDateFormat(timePattern);
 		String timeString = format.format(date);
 		return timeString;
-	}	
+	}
+	
+	public static String getFinalInvoiceDate(String date_str) throws Exception {
+		Date date = stringToDate(date_str);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 15);
+		return getDate(cal.getTime());
+	}
 	
 	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
 		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
@@ -78,7 +86,7 @@ public class DateHelper {
 		return cal.get(Calendar.MONTH);
 	}
 
-	public static Periode getPeriodeVorigJaar() {
+	public static Periode getPeriodPreviousYear() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		cal.add(Calendar.YEAR, -1);
@@ -93,6 +101,23 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;
 	}
+	
+	public static Periode getLastVatPeriodPreviousYear() {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.add(Calendar.YEAR, -1);
+		cal.set(Calendar.MONTH, Calendar.OCTOBER);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDatum = cal.getTime();
+		cal.add(Calendar.YEAR, 1);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 15);
+		Date eindDatum = cal.getTime();
+		Periode periode = new Periode();
+		periode.setBeginDatum(beginDatum);
+		periode.setEindDatum(eindDatum);
+		return periode;
+	}	
 
 	public static int getYear(Date date) {
 		Calendar cal = GregorianCalendar.getInstance();

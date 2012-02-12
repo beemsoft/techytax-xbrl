@@ -45,7 +45,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<html:option value="NON_CURRENT_ASSETS">Eigen vermogen</html:option>
 			<html:option value="PENSION">Oudedagsreserve</html:option>
 			<html:option value="STOCK">Voorraad</html:option>
-			<html:option value="OFFICE">Bedrijfsruimte</html:option>			
+			<html:option value="OFFICE">Bedrijfsruimte</html:option>
+			<html:option value="VAT_TO_BE_PAID">Schuld omzetbelasting</html:option>						
+			<html:option value="INVOICES_TO_BE_PAID">Vorderingen op handelsdebiteuren</html:option>			
 		</html:select></td>
 	</tr>
 </table>

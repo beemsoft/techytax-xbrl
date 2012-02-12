@@ -21,6 +21,7 @@ package org.techytax.chart;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.jfree.chart.ChartFactory;
@@ -148,7 +149,6 @@ public class JFreeChartHelper {
 		} else {
 			dataset.setValue("Verlies", Math.abs(overview.getWinst()));
 		}
-		dataset.setValue("Rente-opbrengsten", overview.getInterestFromBusinessSavings());
 		dataset.setValue("Andere kosten", overview.getKostenOverig());
 		dataset.setValue("Transport kosten", overview.getKostenOverigTransport());
 		dataset.setValue("Auto kosten", Math.abs(overview.getKostenAutoAftrekbaar()));
@@ -179,8 +179,12 @@ public class JFreeChartHelper {
 		String title1 = Integer.toString(overview.getJaar()-1);
 		String title2 = Integer.toString(overview.getJaar());		
 		for (ReportBalance activum : report.getBalanceList()) {
-			dataset.addValue(activum.getBookValueBegin(), title1, activum.getOmschrijving());
-			dataset.addValue(activum.getBookValueEnd(), title2, activum.getOmschrijving());			
+			if (activum.getBookValueBegin().compareTo(new BigInteger("0")) == 1) {
+				dataset.addValue(activum.getBookValueBegin(), title1, activum.getOmschrijving());
+			}
+			if (activum.getBookValueEnd().compareTo(new BigInteger("0")) == 1) {
+				dataset.addValue(activum.getBookValueEnd(), title2, activum.getOmschrijving());
+			}
 		}
  		return dataset;
 	}
@@ -206,9 +210,13 @@ public class JFreeChartHelper {
 		BalanceReport report = overview.getPassivaReport();
 		String title1 = Integer.toString(overview.getJaar()-1);
 		String title2 = Integer.toString(overview.getJaar());		
-		for (ReportBalance activum : report.getBalanceList()) {
-			dataset.addValue(activum.getBookValueBegin(), title1, activum.getOmschrijving());
-			dataset.addValue(activum.getBookValueEnd(), title2, activum.getOmschrijving());			
+		for (ReportBalance passivum : report.getBalanceList()) {
+			if (passivum.getBookValueBegin().compareTo(new BigInteger("0")) == 1) {
+				dataset.addValue(passivum.getBookValueBegin(), title1, passivum.getOmschrijving());
+			}
+			if (passivum.getBookValueEnd().compareTo(new BigInteger("0")) == 1) {
+				dataset.addValue(passivum.getBookValueEnd(), title2, passivum.getOmschrijving());
+			}
 		}
  		return dataset;
 	}	
