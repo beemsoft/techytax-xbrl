@@ -267,6 +267,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right"><b><%=overview.getOnttrekking().getTotaleOnttrekking()%></b></td>
 	</tr>			
 </table>
+<h4><bean:message key="overview.fiscal.private.deposit"/></h4>
+<table class="overviewTable">
+	<tr>
+		<td><bean:message key="overview.fiscal.private.deposit"/>:</td>
+		<td align="right"><b><%=overview.getPrivateDeposit()%></b></td>
+	</tr>
+</table>
 <h4><bean:message key="overview.fiscal.tax.prepaid"/></h4>
 <table class="overviewTable">
 	<tr>
