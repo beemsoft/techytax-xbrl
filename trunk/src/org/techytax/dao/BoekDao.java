@@ -307,6 +307,18 @@ public class BoekDao extends BaseDao {
 			vatBalance = vatBalance.add(cost.getBtw());	
 		}
 		return vatBalance;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BigDecimal getCostsWithPrivateMoney(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Kost> costs = sqlMap.queryForList("getCostsWithPrivateMoney", map);
+		BigDecimal costsWithPrivateMoney = new BigDecimal("0");
+		for (Kost cost : costs) {
+			decrypt(cost);
+			costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getBedrag()).add(cost.getBtw());	
+		}
+		return costsWithPrivateMoney;
 	}	
 
 }

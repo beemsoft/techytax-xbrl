@@ -51,6 +51,7 @@ public class FiscalOverview {
 	private BigInteger repurchase;
 	private BigInteger interestFromBusinessSavings;
 	private BigInteger netTurnOverNotYetPaid;
+	private BigInteger privateDeposit;
 	
 	public List<Activum> getActiva() {
 		return activa;
@@ -252,6 +253,14 @@ public class FiscalOverview {
 
 	public void setNetTurnOverNotYetPaid(BigInteger netTurnOverNotYetPaid) {
 		this.netTurnOverNotYetPaid = netTurnOverNotYetPaid;
+	}
+
+	public BigInteger getPrivateDeposit() {
+		return privateDeposit;
+	}
+
+	public void setPrivateDeposit(BigInteger privateDeposit) {
+		this.privateDeposit = privateDeposit;
 	}
 
 }

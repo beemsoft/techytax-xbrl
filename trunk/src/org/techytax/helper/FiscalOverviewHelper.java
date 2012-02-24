@@ -381,8 +381,11 @@ public class FiscalOverviewHelper {
 		List<Passivum> passivaLijst = fiscaalDao.getPassivaLijst(key);
 		overview.setPassiva(passivaLijst);
 
+		BigDecimal privateDeposit = boekDao.getCostsWithPrivateMoney(beginDatum, eindDatum, Long.toString(userId));
+		overview.setPrivateDeposit(privateDeposit.toBigInteger());
+		
 		// Private withdrawals
-		int totalWithdrawal = profit - (bookTotalEnd - bookTotalBegin);
+		int totalWithdrawal = profit - (bookTotalEnd - bookTotalBegin) + privateDeposit.intValue();
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		int withdrawalCash = totalWithdrawal - privatWithdrawal.getWithdrawalPrivateUsageBusinessCar();
 		privatWithdrawal.setWithdrawalCash(withdrawalCash);
