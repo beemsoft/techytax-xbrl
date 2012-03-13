@@ -206,12 +206,14 @@ public class FiscalOverviewHelper {
 				}
 
 			} else {
-				activumValue = new BookValue();
-				activumValue.setBalanceType(BalanceType.MACHINERY);
-				activumValue.setJaar(bookYear);
-				activumValue.setUserId(userId);
-				activumValue.setSaldo(overview.getRepurchase());
-				boekwaardeDao.insertBookValue(activumValue);
+				if (overview.getRepurchase().compareTo(new BigInteger("0")) == 1) {
+					activumValue = new BookValue();
+					activumValue.setBalanceType(BalanceType.MACHINERY);
+					activumValue.setJaar(bookYear);
+					activumValue.setUserId(userId);
+					activumValue.setSaldo(overview.getRepurchase());
+					boekwaardeDao.insertBookValue(activumValue);
+				}
 			}
 
 			// Car
