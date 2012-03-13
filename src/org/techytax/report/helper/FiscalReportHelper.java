@@ -67,9 +67,10 @@ public class FiscalReportHelper {
 					}
 				}
 				reportActivum.setBookValueBegin(activumBegin.getSaldo());
-
-				if (i + 1 < activaArray.length) {
-					activumEnd = activaArray[i + 1];
+				if (i+1 < activaArray.length) {
+					activumEnd = activaArray[i+1];
+				}
+				if (i + 1 < activaArray.length && activumEnd.getOmschrijving().equals(description)) {
 					reportActivum.setBookValueEnd(activumEnd.getSaldo());
 					i += 2;
 					if (i < activaArray.length) {
@@ -106,27 +107,33 @@ public class FiscalReportHelper {
 		int i = 0;
 		do {
 
-			ReportBalance reportActivum = new ReportBalance();
+			ReportBalance reportPassivum = new ReportBalance();
 			Passivum passivumBegin = passivaArray[i];
-			reportActivum.setBookValueBegin(passivumBegin.getSaldo());
-			reportActivum.setOmschrijving(passivumBegin.getOmschrijving());
+			reportPassivum.setBookValueBegin(passivumBegin.getSaldo());
+			reportPassivum.setOmschrijving(passivumBegin.getOmschrijving());
 			Passivum passivumEnd = null;
 			if (i+1 < passivaArray.length) {
 				passivumEnd = passivaArray[i+1];
-				reportActivum.setBookValueEnd(passivumEnd.getSaldo());
+			}
+			if (i+1 < passivaArray.length && passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving())) {
+				reportPassivum.setBookValueEnd(passivumEnd.getSaldo());
 			} else {
 				passivumEnd = passivumBegin;
-				reportActivum.setBookValueBegin(new BigInteger("0"));
-				reportActivum.setBookValueEnd(passivumEnd.getSaldo());
+				reportPassivum.setBookValueBegin(new BigInteger("0"));
+				reportPassivum.setBookValueEnd(passivumEnd.getSaldo());
 			}
 			
 
-			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
-			if (reportActivum.getBookValueEnd() != null) {
-				totalEnd = totalEnd.add(reportActivum.getBookValueEnd());
+			totalBegin = totalBegin.add(reportPassivum.getBookValueBegin());
+			if (reportPassivum.getBookValueEnd() != null) {
+				totalEnd = totalEnd.add(reportPassivum.getBookValueEnd());
 			}
-			reportBalance.add(reportActivum);
-			i+=2;
+			reportBalance.add(reportPassivum);
+			if (passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving())) {
+				i+=1;
+			} else {
+				i+=2;
+			}
 		} while (i < passivaArray.length);
 		report.setActiva(reportBalance);
 		report.setTotalBeginValue(totalBegin);
@@ -138,7 +145,7 @@ public class FiscalReportHelper {
 		FiscalDao fiscalDao = new FiscalDao();
 		KeyYear key = new KeyYear();
 		key.setYear(2011);
-		key.setUserId(0);
+		key.setUserId(14);
 		try {
 //			List<Activum> activa = fiscalDao.getActivaLijst(key);
 //			BalanceReport report = getActivaReport(activa);
