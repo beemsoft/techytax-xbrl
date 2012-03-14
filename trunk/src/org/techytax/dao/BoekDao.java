@@ -60,7 +60,9 @@ public class BoekDao extends BaseDao {
 	}
 
 	private void decrypt(Aftrekpost deductableCost) {
-		deductableCost.setAftrekbaarBedrag(decimalEncryptor.decrypt(deductableCost.getAftrekbaarBedrag()));
+		if (deductableCost.getAftrekbaarBedrag() != null && deductableCost.getAftrekbaarBedrag().doubleValue() != 0) {		
+			deductableCost.setAftrekbaarBedrag(decimalEncryptor.decrypt(deductableCost.getAftrekbaarBedrag()));
+		}
 	}
 
 	public void insertKost(Kost kost) throws Exception {
