@@ -52,7 +52,7 @@ public class SecurityServiceImpl implements SecurityService {
 		Date currentDate = new Date();
 		try {
 			user.setLatestOnlineTime(currentDate);
-			userDao.updateUser(user);
+			userDao.updateUserTimeStamp(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
