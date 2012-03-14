@@ -272,7 +272,7 @@ public class FiscalOverviewHelper {
 				}
 			}
 
-			if (turnoverUnpaid != null && turnoverUnpaid.compareTo(new BigDecimal("0")) == 1) {
+			if (turnoverUnpaid != null && turnoverUnpaid.compareTo(new BigDecimal("0")) != 0) {
 				// Invoices yet to be paid
 				activumValue = new BookValue();
 				activumValue.setJaar(bookYear);
@@ -285,6 +285,7 @@ public class FiscalOverviewHelper {
 				if (currentBookValue == null) {
 					boekwaardeDao.insertBookValue(activumValue);
 				} else {
+					activumValue.setId(currentBookValue.getId());
 					boekwaardeDao.updateBookValue(activumValue);
 				}
 			}
@@ -345,6 +346,7 @@ public class FiscalOverviewHelper {
 				if (currentBookValue == null) {
 					boekwaardeDao.insertBookValue(boekwaarde);
 				} else {
+					boekwaarde.setId(currentBookValue.getId());
 					boekwaardeDao.updateBookValue(boekwaarde);
 				}
 			}
