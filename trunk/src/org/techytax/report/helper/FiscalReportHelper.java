@@ -48,6 +48,7 @@ public class FiscalReportHelper {
 			Activum activumEnd = null;
 
 			while (i < activaArray.length && (description == null || description.equals(activumBegin.getOmschrijving()))) {
+				activumBegin = activaArray[i];
 				description = activumBegin.getOmschrijving();
 				reportActivum.setOmschrijving(description);
 				if (activumBegin.getAanschafKosten() != null) {
@@ -81,6 +82,7 @@ public class FiscalReportHelper {
 					reportActivum.setBookValueBegin(new BigInteger("0"));
 					reportActivum.setBookValueEnd(activumEnd.getSaldo());
 					i++;
+					break;
 				}
 			}
 			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
