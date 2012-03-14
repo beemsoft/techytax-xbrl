@@ -48,7 +48,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</insert>
 	<update id="updateBoekwaarde" parameterClass="bookValue">
 		update boekwaarde set saldo = #saldo#, balans_id = #balanceType#, boekjaar = #jaar#
-		WHERE id = #id#
+		where id = #id#
+		and user_id = #userId#
 	</update>	
 	<select id="getAllRestwaardes" resultClass="remainingValue">
 		SELECT id, restwaarde 
@@ -60,7 +61,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</insert>	
 	<update id="updateRestwaarde" parameterClass="remainingValue">
 		update restwaarde set restwaarde = #restwaarde#
-		WHERE id = #id#
+		where id = #id#
+		and user_id = #userId#
 	</update>
 	<update id="updateRemainingValueByActivumId" parameterClass="remainingValue">
 		update restwaarde set restwaarde = #restwaarde#
