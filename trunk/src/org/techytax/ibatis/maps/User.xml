@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	<update id="updateUserTimeStamp" parameterClass="user">
 		update user 
-		latestOnlineTime = #latestOnlineTime#
+		set latestOnlineTime = #latestOnlineTime#
 		WHERE id = #id#
 	</update>	
 </sqlMap>
