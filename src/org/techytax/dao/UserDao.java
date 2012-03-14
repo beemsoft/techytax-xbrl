@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,8 +23,8 @@ import org.techytax.domain.User;
 
 public class UserDao extends BaseDao {
 
-	public void updateUser(User user) throws Exception {
-		sqlMap.insert("updateUser", user);
+	public void updateUserTimeStamp(User user) throws Exception {
+		sqlMap.insert("updateUserTimeStamp", user);
 	}
 
 	public User getUser(String username) throws Exception {
