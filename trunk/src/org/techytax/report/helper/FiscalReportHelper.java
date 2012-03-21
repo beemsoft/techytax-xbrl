@@ -131,7 +131,7 @@ public class FiscalReportHelper {
 				totalEnd = totalEnd.add(reportPassivum.getBookValueEnd());
 			}
 			reportBalance.add(reportPassivum);
-			if (passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving())) {
+			if (passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving()) && passivumBegin.getBoekjaar() == passivumEnd.getBoekjaar()) {
 				i+=1;
 			} else {
 				i+=2;
