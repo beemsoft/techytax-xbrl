@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -71,7 +71,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<html:link action="getBookValues.do">
 			<bean:message key="menu.bookvalues" />
 			<span> <bean:message key="menu.bookvalues.descr" /></span>
-		</html:link>		
+		</html:link>
+		<html:link action="toSettlement.do">
+			<bean:message key="menu.settlement" />
+			<span> <bean:message key="menu.settlement.descr" /></span>
+		</html:link>				
 		</div>
 		</div>
 		</td>
