@@ -42,25 +42,42 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="overview.turnover.net"/>:</td>
 		<td></td>		
+		<td></td>		
 		<td align="right"><%=overview.getNettoOmzet()%></td>
+		<td></td>		
 	</tr>
 	<tr>
 		<td><bean:message key="overview.turnover.net.unpaid"/>:</td>
 		<td></td>		
+		<td></td>		
 		<td align="right">+<%=overview.getNetTurnOverNotYetPaid()%></td>
+		<td></td>		
+	</tr>
+	<tr>
+		<td><bean:message key="overview.turnover.net.total"/>:</td>
+		<td></td>		
+		<td></td>		
+		<td></td>		
+		<td align="right"><%=overview.getNetTurnOverTotal()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.interest"/>:</td>
+		<td></td>		
+		<td></td>		
 		<td></td>		
 		<td align="right">+<%=overview.getInterestFromBusinessSavings()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.repurchase"/>:</td>
+		<td></td>		
+		<td></td>		
 		<td></td>
 		<td align="right">-<%=overview.getRepurchase()%></td>
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
+		<td></td>
+		<td></td>				
 		<td align="right">-<%=overview.getAfschrijvingAuto()%></td>
 		<td></td>		
 	</tr>
@@ -68,12 +85,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
+		<td></td>
+		<td></td>						
 		<td align="right">+<%=overview.getAfschrijvingAutoCorrectie()%></td>
 		<td></td>		
 	</tr>
 <% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.other"/>:</td>
+		<td></td>
+		<td></td>		
 		<td align="right">-<%=overview.getAfschrijvingOverig()%></td>
 		<td></td>		
 	</tr>
@@ -81,6 +102,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.other.correction"/>:</td>
+		<td></td>
+		<td></td>		
 		<td align="right">+<%=overview.getAfschrijvingOverigCorrectie()%></td>
 		<td></td>		
 	</tr>
@@ -88,58 +111,94 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.total"/></td>
 		<td></td>		
+		<td></td>
+		<td></td>						
 		<td align="right">-<%=overview.getAfschrijvingTotaal()%></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.income.car"/>:</td>
 		<td align="right">+<%=overview.getBijtellingAuto()%></td>
-		<td></td>		
+		<td></td>
+		<td></td>				
+		<td></td>				
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car"/>:</td>
 		<td align="right">-<%=overview.getAfschrijvingAuto()%></td>
+		<td></td>
 		<td></td>		
+		<td></td>				
 	</tr>
 <% if (overview.getAfschrijvingAutoCorrectie() > 0) {
 %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.depreciation.car.correction"/>:</td>
 		<td align="right">+<%=overview.getAfschrijvingAutoCorrectie()%></td>
+		<td></td>
 		<td></td>		
+		<td></td>				
 	</tr>
 <% } %>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car"/>:</td>
 		<td align="right">-<%=overview.getKostenAuto()%></td>
 		<td></td>		
+		<td></td>
+		<td></td>				
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.car.deductable"/></td>
 		<td></td>		
 		<td align="right"><%=overview.getKostenAutoAftrekbaar()%></td>
+		<td></td>		
+		<td></td>		
 	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.transport"/>:</td>
-		<td></td>		
+		<td></td>
 		<td align="right">-<%=overview.getKostenOverigTransport()%></td>
+		<td></td>		
+		<td></td>		
 	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.cost.car.and.transport"/>:</td>
+		<td></td>
+		<td></td>		
+		<td align="right"><%=overview.getCarAndTransportCosts()%></td>
+		<td></td>		
+	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.other"/>:</td>
+		<td></td>
 		<td></td>		
 		<td align="right">-<%=overview.getKostenOverig()%></td>
+		<td></td>		
 	</tr>
 	<tr>
+		<td><bean:message key="overview.fiscal.cost.other.total"/>:</td>
+		<td></td>
+		<td></td>
+		<td></td>				
+		<td align="right"><%=overview.getOtherCostsTotal()%></td>
+	</tr>	
+	<tr>
 		<td><bean:message key="overview.fiscal.profit"/>:</td>
+		<td></td>
+		<td></td>				
 		<td></td>		
 		<td align="right"><b><%=overview.getWinst()%></b></td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.pension"/>:</td>
+		<td></td>
+		<td></td>				
 		<td></td>		
 		<td align="right">(<%=overview.getOudedagsReserveMaximaal()%>)</td>
 	</tr>
 	<tr>
 		<td><bean:message key="overview.fiscal.investment.deduction"/>:</td>
+		<td></td>
+		<td></td>				
 		<td></td>		
 		<td align="right">(<%=overview.getInvestmentDeduction()%>)</td>
 	</tr>	
@@ -244,6 +303,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><bean:message key="label.total"/></td>
 		<td align="right"><%=overview.getPassivaReport().getTotalBeginValue() %></td>
 		<td align="right"><b><%=overview.getPassivaReport().getTotalEndValue() %></b></td>
+	</tr>
+</table>
+<table>
+	<tr>
+		<td><bean:message key="overview.fiscal.enterprise.capital"/>:</td>
+		<td align="right"><b><%=overview.getEnterpriseCapital()%></b></td>
 	</tr>
 </table>
 </td>
