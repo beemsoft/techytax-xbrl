@@ -384,6 +384,7 @@ public class FiscalOverviewHelper {
 		key.setYear(bookYear);
 		List<Passivum> passivaLijst = fiscaalDao.getPassivaLijst(key);
 		overview.setPassiva(passivaLijst);
+		overview.setEnterpriseCapital(getEnterpriseCapital(passivaLijst, bookYear));
 
 		BigDecimal privateDeposit = boekDao.getCostsWithPrivateMoney(beginDatum, eindDatum, Long.toString(userId));
 		overview.setPrivateDeposit(privateDeposit.toBigInteger());
@@ -399,6 +400,16 @@ public class FiscalOverviewHelper {
 		PrepaidTax prepaidTax = TaxCodeHelper.findPrepaidTax(bookYear, Long.toString(userId));
 		overview.setPrepaidTax(prepaidTax);
 		return overview;
+	}
+	
+	private static BigInteger getEnterpriseCapital(List<Passivum> passiva, int bookYear) {
+		BigInteger enterpriseCapital = new BigInteger("0");
+		for (Passivum passivum : passiva) {
+			if (passivum.getBoekjaar() == bookYear &&  passivum.getBalanceType() != BalanceType.VAT_TO_BE_PAID) {
+				enterpriseCapital = enterpriseCapital.add(passivum.getSaldo());
+			}
+		}
+		return enterpriseCapital;
 	}
 
 	private static int getBalansTotaal(List<Activum> activaLijst, int fiscaalJaar) {

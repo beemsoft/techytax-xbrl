@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -26,6 +26,7 @@ public class Passivum {
 	private String omschrijving;
 	private int boekjaar;
 	private BigInteger saldo;
+	private BalanceType balanceType;
 
 	public int getBoekjaar() {
 		return boekjaar;
@@ -49,6 +50,14 @@ public class Passivum {
 
 	public void setSaldo(BigInteger saldo) {
 		this.saldo = saldo;
+	}
+
+	public BalanceType getBalanceType() {
+		return balanceType;
+	}
+
+	public void setBalanceType(BalanceType balanceType) {
+		this.balanceType = balanceType;
 	}
 
 }

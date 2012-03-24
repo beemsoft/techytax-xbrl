@@ -52,6 +52,19 @@ public class FiscalOverview {
 	private BigInteger interestFromBusinessSavings;
 	private BigInteger netTurnOverNotYetPaid;
 	private BigInteger privateDeposit;
+	private BigInteger enterpriseCapital;
+	
+	public int getNetTurnOverTotal() {
+		return nettoOmzet + netTurnOverNotYetPaid.intValue();
+	}
+	
+	public int getCarAndTransportCosts() {
+		return kostenAutoAftrekbaar - kostenOverigTransport;
+	}
+	
+	public int getOtherCostsTotal() {
+		return getCarAndTransportCosts() - kostenOverig;
+	}	
 	
 	public List<Activum> getActiva() {
 		return activa;
@@ -261,6 +274,14 @@ public class FiscalOverview {
 
 	public void setPrivateDeposit(BigInteger privateDeposit) {
 		this.privateDeposit = privateDeposit;
+	}
+
+	public BigInteger getEnterpriseCapital() {
+		return enterpriseCapital;
+	}
+
+	public void setEnterpriseCapital(BigInteger enterpriseCapital) {
+		this.enterpriseCapital = enterpriseCapital;
 	}
 
 }

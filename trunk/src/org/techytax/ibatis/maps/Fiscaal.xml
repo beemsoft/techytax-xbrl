@@ -93,7 +93,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	<select id="getPassivaLijst" parameterClass="keyYear"
 		resultClass="passiva">
-		select balanssoort.omschrijving, boekwaarde.boekjaar, boekwaarde.saldo 
+		select balanssoort.omschrijving, boekwaarde.boekjaar, boekwaarde.saldo, balans_id as balanceType 
 		from balans, balanssoort, boekwaarde 
 		where
 		boekwaarde.balans_id = balans.id and 
