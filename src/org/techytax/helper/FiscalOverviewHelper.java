@@ -206,7 +206,7 @@ public class FiscalOverviewHelper {
 				}
 
 			} else {
-				if (overview.getRepurchase().compareTo(new BigInteger("0")) == 1) {
+				if (totalCost.compareTo(new BigInteger("0")) == 1) {
 					activumValue = new BookValue();
 					activumValue.setBalanceType(BalanceType.MACHINERY);
 					activumValue.setJaar(bookYear);
