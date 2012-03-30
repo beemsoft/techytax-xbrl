@@ -207,12 +207,17 @@ public class FiscalOverviewHelper {
 
 			} else {
 				if (totalCost.compareTo(new BigInteger("0")) == 1) {
-					activumValue = new BookValue();
-					activumValue.setBalanceType(BalanceType.MACHINERY);
-					activumValue.setJaar(bookYear);
-					activumValue.setUserId(userId);
-					activumValue.setSaldo(overview.getRepurchase());
-					boekwaardeDao.insertBookValue(activumValue);
+					if (currentBookValue == null) {
+						activumValue = new BookValue();
+						activumValue.setBalanceType(BalanceType.MACHINERY);
+						activumValue.setJaar(bookYear);
+						activumValue.setUserId(userId);
+						activumValue.setSaldo(totalCost);
+						boekwaardeDao.insertBookValue(activumValue);
+					} else {
+						currentBookValue.setSaldo(totalCost);
+						boekwaardeDao.updateBookValue(currentBookValue);
+					}
 				}
 			}
 
