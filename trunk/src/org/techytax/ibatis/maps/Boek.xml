@@ -95,7 +95,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
 		AND datum &lt;= ? 
-		AND ks.id IN (2,3,9,13,14,16,27,28,31)
+		AND ks.id IN (2,3,9,13,14,16,27,28,31,41)
 		AND user_id = ?
 		ORDER BY datum asc
 	</select>
