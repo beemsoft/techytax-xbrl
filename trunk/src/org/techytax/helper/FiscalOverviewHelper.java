@@ -79,7 +79,8 @@ public class FiscalOverviewHelper {
 		overview.setNetTurnOverNotYetPaid(turnoverUnpaidNet.toBigInteger());
 
 		// Repurchase
-		BigInteger repurchase = BalanceCalculator.getRepurchase(deductableCosts);
+//		BigInteger repurchase = BalanceCalculator.getRepurchase(deductableCosts);
+		BigInteger repurchase = new BigInteger("0");
 		overview.setRepurchase(repurchase);
 
 		// Interest
@@ -115,6 +116,12 @@ public class FiscalOverviewHelper {
 				privatWithdrawal.setWithdrawalPrivateUsageBusinessCar(overview.getKostenAuto() + afschrijvingAuto.intValue());
 			}
 			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
+		} else {
+			// Private car
+			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
+			int kostenAutoAftrekbaar = 0;
+			kostenAutoAftrekbaar = -overview.getKostenAuto();
+			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);			
 		}
 		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
 		if (depreciationOther != null) {
