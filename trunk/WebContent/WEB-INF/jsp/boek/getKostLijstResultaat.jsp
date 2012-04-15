@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ page import="org.techytax.domain.Kost"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<%@ page import="org.techytax.domain.Cost"%>
 <%@ page import="java.util.List"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
@@ -29,7 +31,7 @@ var cal13 = new CalendarPopup();
 <jsp:useBean id="balansForm" scope="session" type="org.techytax.struts.form.BalansForm" />
 
 <%
-	List<Kost> res = (List<Kost>) request.getAttribute("kostLijst");
+	List<Cost> res = (List<Cost>) request.getAttribute("kostLijst");
 %>
 
 <h4><bean:message key="cost.list"/></h4>
@@ -91,8 +93,8 @@ var cal13 = new CalendarPopup();
 <jsp:include page="report.jsp"></jsp:include>
 
 <%
-			if (balansForm != null && balansForm.getBalansSoort() != null && balansForm.getBalansSoort().equals("private")) 
-			{
+	if (balansForm != null && balansForm.getBalansSoort() != null && balansForm.getBalansSoort().equals("private")) 
+	{
 %>
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
@@ -104,38 +106,38 @@ var cal13 = new CalendarPopup();
 	</tr>
 
 	<%
-				if (res != null)
+		if (res != null)
+			{
+				for (int i = 0; i < res.size(); i++) 
 				{
-					for (int i = 0; i < res.size(); i++) 
+					Cost obj = null;
+					obj = (Cost) res.get(i);
+					if (obj != null)
 					{
-						Kost obj = null;
-						obj = (Kost) res.get(i);
-						if (obj != null)
+						String incoming = "-";
+						if (obj.isIncoming()) 
 						{
-							String incoming = "-";
-							if (obj.isIncoming()) 
-							{
-								incoming = "+";
-							}					
+							incoming = "+";
+						}
 	%>
 
 	<tr valign="top">
 		<td><a href="editKost.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
-		<td><%=obj.getDatum()%></td>
-		<td align="right"><%=obj.getBedrag()%></td>
+		<td><%=obj.getDate()%></td>
+		<td align="right"><%=obj.getAmount()%></td>
 		<td><%=incoming%></td>
-		<td><%=obj.getOmschrijving()%></td>
+		<td><%=obj.getDescription()%></td>
 	</tr>
 	<%
-						}
+		}
 
-					}
-				}
+		}
+			}
 	%>
 </table>
 <%
-			} else 
-			{
+	} else 
+	{
 %>
 <table cellspacing="0" border="1" class="overviewTable">
 	<tr>
@@ -148,22 +150,22 @@ var cal13 = new CalendarPopup();
 	</tr>
 
 	<%
-				if (res != null) 
-				{
-					for (int i = 0; i < res.size(); i++) 
-					{
-						Kost obj = null;
-						obj = (Kost) res.get(i);
-						if (obj != null) 
-						{
+		if (res != null) 
+			{
+		for (int i = 0; i < res.size(); i++) 
+		{
+			Cost obj = null;
+			obj = (Cost) res.get(i);
+			if (obj != null) 
+			{
 	%>
 
 	<tr valign="top">
 		<td><a href="editKost.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
-		<td><%=obj.getDatum()%></td>
-		<td align="right"><%=obj.getBedrag()%></td>
-		<td align="right"><%=obj.getBtw()%></td>
-		<td><%=obj.getOmschrijving()%></td>
+		<td><%=obj.getDate()%></td>
+		<td align="right"><%=obj.getAmount()%></td>
+		<td align="right"><%=obj.getVat()%></td>
+		<td><%=obj.getDescription()%></td>
 		<td><bean:message key="<%=obj.getKostenSoortOmschrijving()%>"/></td>
 	</tr>
 	<%
