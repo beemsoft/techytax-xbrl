@@ -32,7 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Kostensoort;
-import org.techytax.struts.form.KostForm;
+import org.techytax.struts.form.CostForm;
 import org.techytax.util.DateHelper;
 
 public class NewKostAction extends Action {
@@ -42,14 +42,14 @@ public class NewKostAction extends Action {
 			throws Exception {
 
 		try {
-			KostForm kostForm = new KostForm();
-			kostForm.setDatum(DateHelper.getDate(new Date()));
-			kostForm.setBtw(new BigDecimal("0"));
+			CostForm costForm = new CostForm();
+			costForm.setDate(DateHelper.getDate(new Date()));
+			costForm.setVat(new BigDecimal("0"));
 			KostensoortDao kostensoortDao = new KostensoortDao();
 
 			List<Kostensoort> kostenSoortLijst = kostensoortDao.getKostensoortLijst();
 			request.setAttribute("kostenSoortLijst", kostenSoortLijst);
-			request.getSession().setAttribute("kostForm", kostForm);
+			request.getSession().setAttribute("costForm", costForm);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -29,7 +29,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.struts.form.BalansForm;
 
 public class GetPrivateExpensesAction extends Action {
@@ -39,7 +39,7 @@ public class GetPrivateExpensesAction extends Action {
 			throws Exception {
 
 		String forward = "failure";
-		List<Kost> result = null;
+		List<Cost> result = null;
 
 		try {
 			BoekDao boekDao = new BoekDao();

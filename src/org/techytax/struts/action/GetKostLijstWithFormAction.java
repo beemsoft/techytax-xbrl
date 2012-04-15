@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Balans;
 import org.techytax.domain.FiscalOverview;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.Reiskosten;
@@ -52,7 +52,7 @@ public class GetKostLijstWithFormAction extends Action {
 		final ActionErrors errors = new ActionErrors();
 		String forward = "failure";
 
-		List<Kost> result = null;
+		List<Cost> result = null;
 		BalansForm balansForm = (BalansForm) form;
 		if (balansForm.getBalansSoort() == null && StringUtils.isEmpty(balansForm.getSearchTerm())) {
 			Periode periode = DateHelper.getPeriodPreviousYear();
@@ -93,14 +93,14 @@ public class GetKostLijstWithFormAction extends Action {
 					request.setAttribute("balans", liquiditeit.getRekeningBalans());
 					request.setAttribute("sparen", liquiditeit.getSpaarBalans());
 					request.setAttribute("private", liquiditeit.getPriveBalans());
-					List<Kost> result2 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "btwBalans", userId);
+					List<Cost> result2 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "btwBalans", userId);
 					Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 					BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(result);
 					request.setAttribute("brutoOmzet", balans.getBrutoOmzet().add(totalPaidInvoices));
-					List<Kost> result3 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "tax", userId);
+					List<Cost> result3 = boekDao.getKostLijst(balansForm.getBeginDatum(), balansForm.getEindDatum(), "tax", userId);
 					BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
 					request.setAttribute("taxBalans", taxBalance);
-					List<Kost> result4 = boekDao.getCostListCurrentAccount(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);
+					List<Cost> result4 = boekDao.getCostListCurrentAccount(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);
 					BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
 					request.setAttribute("costBalance", costBalance);
 					BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance).subtract(
@@ -110,7 +110,7 @@ public class GetKostLijstWithFormAction extends Action {
 					Balans balans = BalanceCalculator.calculatCostBalance(result);
 					request.setAttribute("kosten", balans.getTotaleKosten());
 					request.setAttribute("baten", balans.getTotaleBaten());
-					List<Kost> result4 = boekDao.getCostListCurrentAccount(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);
+					List<Cost> result4 = boekDao.getCostListCurrentAccount(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);
 					Balans balanceCurrentAccount = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, false);
 					request.setAttribute("costCurrentAccount", balanceCurrentAccount.getTotaleKosten());
 				} else if (balansSoort.equals("reiskostenBalans")) {
