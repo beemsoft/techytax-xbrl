@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -17,16 +17,21 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="sitemesh-decorator" prefix="decorator"%>
 <%@ taglib uri="sitemesh-page" prefix="page"%>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <%@ taglib uri="struts-logic" prefix="logic"%>
 
-<html>
+
+<html:html>
 <head>
 
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+
+
 
 <SCRIPT LANGUAGE="JavaScript" SRC="script/CalendarPopup.js"></SCRIPT>
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
@@ -63,4 +68,4 @@ function scrollToItem(id) {
 		</tr>
 </table>
 </body>
-</html>
+</html:html>
