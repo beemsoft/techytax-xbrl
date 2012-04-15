@@ -61,7 +61,7 @@ h4.section { font-size:1.1875em; }
 
 #contentCell table.headerTable td { font-size:0.69em; }
 
-div#links {position: absolute; top: 81px; left: 0; width: 166px; height: 700px; font: 16px Verdana, sans-serif; z-index: 100;}
+div#links {position: absolute; top: 81px; left: 0; width: 180px; height: 700px; font: 16px Verdana, sans-serif; z-index: 100;}
 div#links a {display: block; text-align: center; font: bold 1em sans-serif; 
    padding: 5px 10px; margin: 0 0 1px; border-width: 0; 
    text-decoration: none; color: #FFC; background: #444;
@@ -72,7 +72,7 @@ div#links a:hover {color: #411; background: #AAA;
 /* Edit hover span for the position of the menu desciption. */
 div#links a span {display: none;}
 div#links a:hover span {display: block;
-   position: absolute; top: 350px; left: 0; width: 125px;
+   position: absolute; top: 410px; left: 0; width: 125px;
    padding: 5px; margin: 10px; z-index: 100;
    color: #FFF; background: #4b93fe;
    font: 10px Verdana, sans-serif; text-align: center;}
