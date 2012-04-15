@@ -30,7 +30,7 @@ import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.RemainingValue;
 import org.techytax.util.DateHelper;
@@ -44,16 +44,16 @@ public class DepreciationHelper {
 	 * @param kost
 	 * @return
 	 */
-	public void splitCost(Kost kost, boolean isCar, int nofYears, long userId) throws Exception {
+	public void splitCost(Cost kost, boolean isCar, int nofYears, long userId) throws Exception {
 		BoekDao boekDao = new BoekDao();
 		// Use the net value.
-		BigDecimal aanschafKost = kost.getBedrag();
+		BigDecimal aanschafKost = kost.getAmount();
 		BigInteger restWaarde = aanschafKost.divide(new BigDecimal(10)).toBigInteger();
 		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(new BigDecimal(restWaarde))).divide(new BigDecimal(nofYears));
 		// afronden
 		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0, BigDecimal.ROUND_UP);
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(DateHelper.stringToDate(kost.getDatum()));
+		cal.setTime(DateHelper.stringToDate(kost.getDate()));
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		int bookYear = cal.get(Calendar.YEAR);
@@ -61,17 +61,17 @@ public class DepreciationHelper {
 		BigDecimal boekwaarde = aanschafKost.subtract(jaarlijkseAfschrijving);
 		boekwaarde = boekwaarde.setScale(0, BigDecimal.ROUND_UP);
 		for (int i = 0; i < nofYears; i++) {
-			Kost afschrijving = new Kost();
-			afschrijving.setBtw(new BigDecimal(0));
+			Cost afschrijving = new Cost();
+			afschrijving.setVat(new BigDecimal(0));
 			if (isCar) {
-				afschrijving.setKostenSoortId(KostConstanten.AFSCHRIJVING_AUTO);
+				afschrijving.setCostTypeId(KostConstanten.AFSCHRIJVING_AUTO);
 			} else {
-				afschrijving.setKostenSoortId(KostConstanten.AFSCHRIJVING);
+				afschrijving.setCostTypeId(KostConstanten.AFSCHRIJVING);
 			}
 			afschrijving.setKostenSoortOmschrijving("costtype.depreciation");
-			afschrijving.setDatum(DateHelper.getDate(cal.getTime()));
-			afschrijving.setBedrag(jaarlijkseAfschrijving.setScale(2));
-			afschrijving.setOmschrijving("Afschrijving: " + (i + 1) + ", item " + kost.getId() + ", boekwaarde begin: " + boekwaardeBegin + ", boekwaarde eind: " + boekwaarde);
+			afschrijving.setDate(DateHelper.getDate(cal.getTime()));
+			afschrijving.setAmount(jaarlijkseAfschrijving.setScale(2));
+			afschrijving.setDescription("Afschrijving: " + (i + 1) + ", item " + kost.getId() + ", boekwaarde begin: " + boekwaardeBegin + ", boekwaarde eind: " + boekwaarde);
 			afschrijving.setUserId(userId);
 			boekDao.insertKost(afschrijving);
 			cal.add(Calendar.YEAR, 1);

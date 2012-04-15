@@ -34,7 +34,7 @@ import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Balans;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Liquiditeit;
@@ -45,7 +45,7 @@ public class BalanceCalculator {
 
 	private static KostensoortDao dao = new KostensoortDao();
 
-	public static Balans calculateBtwBalance(List<Kost> res, boolean isForAccountBalance) throws Exception {
+	public static Balans calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
 		BigDecimal totalBtwOut = new BigDecimal(0);
 		BigDecimal totalBtwIn = new BigDecimal(0);
@@ -54,26 +54,26 @@ public class BalanceCalculator {
 		BigDecimal nettoOmzet = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
 
-					long id = obj.getKostenSoortId();
-					if (obj.getKostenSoortId() == KostConstanten.INVOICE_SENT && isForAccountBalance) {
+					long id = obj.getCostTypeId();
+					if (obj.getCostTypeId() == KostConstanten.INVOICE_SENT && isForAccountBalance) {
 						// skip
 					} else {
 						Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
 						if (kostensoort.isBtwVerrekenbaar()) {
 							if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == KostConstanten.INVOICE_SENT) {
-								totalBtwIn = totalBtwIn.add(obj.getBtw());
-								brutoOmzet = brutoOmzet.add(obj.getBedrag());
-								nettoOmzet = nettoOmzet.add(obj.getBedrag());
-								brutoOmzet = brutoOmzet.add(obj.getBtw());
+								totalBtwIn = totalBtwIn.add(obj.getVat());
+								brutoOmzet = brutoOmzet.add(obj.getAmount());
+								nettoOmzet = nettoOmzet.add(obj.getAmount());
+								brutoOmzet = brutoOmzet.add(obj.getVat());
 							} else {
 								if (kostensoort.getKostenSoortId() == KostConstanten.VAT_CORRECTION_CAR_PRIVATE) {
-									totalBtwCorrection = totalBtwCorrection.add(obj.getBtw());
+									totalBtwCorrection = totalBtwCorrection.add(obj.getVat());
 								} else {
-									totalBtwOut = totalBtwOut.add(obj.getBtw());
+									totalBtwOut = totalBtwOut.add(obj.getVat());
 								}
 							}
 						}
@@ -118,7 +118,7 @@ public class BalanceCalculator {
 		return null;
 	}
 
-	public static Liquiditeit calculateAccountBalance(List<Kost> res) throws Exception {
+	public static Liquiditeit calculateAccountBalance(List<Cost> res) throws Exception {
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalInleg = new BigDecimal(0);
 		BigDecimal totalOpname = new BigDecimal(0);
@@ -126,31 +126,31 @@ public class BalanceCalculator {
 		Liquiditeit liquiditeit = new Liquiditeit();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getKostenSoortId();
-					String descr = obj.getOmschrijving();
+					long id = obj.getCostTypeId();
+					String descr = obj.getDescription();
 					Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
 					if (kostensoort.isBalansMeetellen()) {
 						if (kostensoort.isBijschrijving()) {
-							totalKost = totalKost.add(obj.getBedrag());
-							totalKost = totalKost.add(obj.getBtw());
+							totalKost = totalKost.add(obj.getAmount());
+							totalKost = totalKost.add(obj.getVat());
 							if (descr.contains("prive inleg") || id == KostConstanten.FROM_PRIVATE_ACCOUNT) {
-								totalInleg = totalInleg.add(obj.getBedrag());
+								totalInleg = totalInleg.add(obj.getAmount());
 							}
 							if (descr.equals("Inleg vanaf spaarrekening") || descr.startsWith("VAN Toprekening")
 									|| descr.startsWith("VAN Profijtrekening") || id == KostConstanten.FROM_SAVINGS_ACCOUNT) {
-								totalSparen = totalSparen.subtract(obj.getBedrag());
+								totalSparen = totalSparen.subtract(obj.getAmount());
 							}
 						} else {
-							totalKost = totalKost.subtract(obj.getBedrag());
-							totalKost = totalKost.subtract(obj.getBtw());
+							totalKost = totalKost.subtract(obj.getAmount());
+							totalKost = totalKost.subtract(obj.getVat());
 							if (descr.contains("naar spaarrekening") || descr.startsWith("NAAR Toprekening")
 									|| descr.startsWith("NAAR Profijtrekening") || descr.startsWith("NAAR Spaardeposito") || id == KostConstanten.TO_SAVINGS_ACCOUNT) {
-								totalSparen = totalSparen.add(obj.getBedrag());
+								totalSparen = totalSparen.add(obj.getAmount());
 							} else if (descr.contains("prive opname") || descr.contains("OPL. CHIPKNIP") || id == KostConstanten.TO_PRIVATE_ACCOUNT) {
-								totalOpname = totalOpname.add(obj.getBedrag());
+								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
 					}
@@ -173,29 +173,29 @@ public class BalanceCalculator {
 		return kostensoort.isBalansMeetellen() && kostensoort.isBijschrijving();
 	}
 
-	public static Balans calculatCostBalance(List<Kost> res) {
+	public static Balans calculatCostBalance(List<Cost> res) {
 
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalBaat = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getKostenSoortId();
+					long id = obj.getCostTypeId();
 					if (id == KostConstanten.INKOMST_DEZE_REKENING) {
-						totalBaat = totalBaat.add(obj.getBedrag());
+						totalBaat = totalBaat.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
 					} else if (id == KostConstanten.UITGAVE_DEZE_REKENING || id == KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF || id == KostConstanten.REISKOST_ANDERE_REKENING_FOUTIEF
 							|| id == KostConstanten.REISKOST || id == KostConstanten.AUTO_VAN_DE_ZAAK || id == KostConstanten.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == KostConstanten.WEGEN_BELASTING
 							|| id == KostConstanten.UITGAVE_CREDIT_CARD || id == KostConstanten.UITGAVE_ANDERE_REKENING || id == KostConstanten.ADVERTENTIE) {
-						totalKost = totalKost.add(obj.getBedrag());
+						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
 					} else if (id == KostConstanten.ZAKELIJK_ETENTJE || id == KostConstanten.BUSINESS_FOOD_OTHER_ACCOUNT) {
 						// Do not apply tax deduction to this cost.
-						totalKost = totalKost.add(obj.getBedrag());
+						totalKost = totalKost.add(obj.getAmount());
 					}
 				}
 			}
@@ -206,17 +206,17 @@ public class BalanceCalculator {
 		return balans;
 	}
 
-	public static Balans calculateCostBalanceCurrentAccount(List<Kost> res, boolean isIncludingVat) {
+	public static Balans calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
 
 		BigDecimal totalKost = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					totalKost = totalKost.add(obj.getBedrag());
+					totalKost = totalKost.add(obj.getAmount());
 					if (isIncludingVat) {
-						totalKost = totalKost.add(obj.getBtw());
+						totalKost = totalKost.add(obj.getVat());
 					}
 				}
 			}
@@ -226,16 +226,16 @@ public class BalanceCalculator {
 		return balans;
 	}
 	
-	public static BigDecimal calculateTotalPaidInvoices(List<Kost> res) {
+	public static BigDecimal calculateTotalPaidInvoices(List<Cost> res) {
 		BigDecimal total = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getKostenSoortId();
+					long id = obj.getCostTypeId();
 					if (id == KostConstanten.INVOICE_PAID) {
-						total = total.add(obj.getBedrag()).add(obj.getBtw());
+						total = total.add(obj.getAmount()).add(obj.getVat());
 					}
 				}
 			}
@@ -243,7 +243,7 @@ public class BalanceCalculator {
 		return total;
 	}	
 
-	public static Reiskosten calculatTravelCostBalance(List<Kost> res) {
+	public static Reiskosten calculatTravelCostBalance(List<Cost> res) {
 		Reiskosten reiskosten = new Reiskosten();
 		BigDecimal totalKostOV = new BigDecimal(0);
 		BigDecimal totalKostAuto = new BigDecimal(0);
@@ -251,18 +251,18 @@ public class BalanceCalculator {
 		BigDecimal totalVatCorrection = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getKostenSoortId();
+					long id = obj.getCostTypeId();
 					if (id == KostConstanten.REISKOST || id == KostConstanten.REISKOST_ANDERE_REKENING_FOUTIEF) {
-						totalKostOV = totalKostOV.add(obj.getBedrag());
+						totalKostOV = totalKostOV.add(obj.getAmount());
 					} else if (id == KostConstanten.AUTO_VAN_DE_ZAAK || id == KostConstanten.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == KostConstanten.WEGEN_BELASTING) {
-						totalKostAuto = totalKostAuto.add(obj.getBedrag());
-						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getBedrag());
-						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getBtw());
+						totalKostAuto = totalKostAuto.add(obj.getAmount());
+						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getAmount());
+						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getVat());
 					} else if (id == KostConstanten.VAT_CORRECTION_CAR_PRIVATE) {
-						totalVatCorrection = totalVatCorrection.add(obj.getBtw());
+						totalVatCorrection = totalVatCorrection.add(obj.getVat());
 					}
 				}
 			}
@@ -274,17 +274,17 @@ public class BalanceCalculator {
 		return reiskosten;
 	}
 
-	public static Balans calculateTaxBalance(List<Kost> res) throws Exception {
+	public static Balans calculateTaxBalance(List<Cost> res) throws Exception {
 		BigDecimal total = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					if (obj.getKostenSoortId() == KostConstanten.INKOMSTEN_BELASTING_TERUGGAVE) {
-						total = total.subtract(obj.getBedrag());
+					if (obj.getCostTypeId() == KostConstanten.INKOMSTEN_BELASTING_TERUGGAVE) {
+						total = total.subtract(obj.getAmount());
 					} else {
-						total = total.add(obj.getBedrag());
+						total = total.add(obj.getAmount());
 					}
 				}
 			}
@@ -390,24 +390,24 @@ public class BalanceCalculator {
 		return kosten.multiply(new BigDecimal(KostConstanten.FOOD_TAXFREE_PERCENTAGE));
 	}
 
-	public static BigDecimal calculatMonthlyPrivateExpenses(List<Kost> res) throws Exception {
+	public static BigDecimal calculatMonthlyPrivateExpenses(List<Cost> res) throws Exception {
 		BigDecimal monthlyExpenses = new BigDecimal(0);
 		int nofMonths = 0;
 		int lastMonth = -1;
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
-				Kost obj = null;
+				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
 					if (!obj.isIncoming()) {
-						if (!obj.getOmschrijving().contains("spaarrekening") && !obj.getOmschrijving().contains("inleg")) {
-							Date datum = DateHelper.stringToDate(obj.getDatum());
+						if (!obj.getDescription().contains("spaarrekening") && !obj.getDescription().contains("inleg")) {
+							Date datum = DateHelper.stringToDate(obj.getDate());
 							int month = DateHelper.getMonth(datum);
 							if (month != lastMonth) {
 								lastMonth = month;
 								nofMonths++;
 							}
-							monthlyExpenses = monthlyExpenses.add(obj.getBedrag());
+							monthlyExpenses = monthlyExpenses.add(obj.getAmount());
 						}
 					}
 				}

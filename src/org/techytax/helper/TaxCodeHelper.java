@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Periode;
 import org.techytax.domain.PrepaidTax;
@@ -31,11 +31,11 @@ import org.techytax.util.DateHelper;
 
 public class TaxCodeHelper {
 
-	public static Kost convertTaxCode(Kost cost) {
-		String description = cost.getOmschrijving();
+	public static Cost convertTaxCode(Cost cost) {
+		String description = cost.getDescription();
 		int endIndex = description.indexOf("AC");
 		if (endIndex != -1) {
-			String taxCode = cost.getOmschrijving().substring(endIndex - 16, endIndex);
+			String taxCode = cost.getDescription().substring(endIndex - 16, endIndex);
 			String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
 			String fullDescription = "";
 			String taxType = convertedTaxCode.substring(12, 13);
@@ -43,7 +43,7 @@ public class TaxCodeHelper {
 			String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
 
 			if (taxType.equals("B")) {
-				cost.setKostenSoortId(KostConstanten.OMZET_BELASTING);
+				cost.setCostTypeId(KostConstanten.OMZET_BELASTING);
 				yearIndicator = convertedTaxCode.substring(17, 18);
 				fullDescription = "Omzetbelasting";
 			} else if (taxType.equals("W")) {
@@ -52,7 +52,7 @@ public class TaxCodeHelper {
 				fullDescription = "Zorgverzekeringswet";
 			} else if (taxType.equals("M")) {
 				fullDescription = "Motorrijtuigenbelasting";
-				cost.setKostenSoortId(KostConstanten.WEGEN_BELASTING);
+				cost.setCostTypeId(KostConstanten.WEGEN_BELASTING);
 			} else if (taxType.equals("O")) {
 				fullDescription = "Omzetbelasting teruggaaf";
 			} else if (taxType.equals("H")) {
@@ -63,7 +63,7 @@ public class TaxCodeHelper {
 			if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
 				taxYear = Integer.toString((Integer.parseInt(taxYear) - 10));
 			}
-			cost.setOmschrijving(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
+			cost.setDescription(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
 		}
 		return cost;
 
@@ -74,15 +74,15 @@ public class TaxCodeHelper {
 		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
 		BoekDao boekDao = new BoekDao();
 		try {
-			List<Kost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
+			List<Cost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
 			int prepaidIncomeTax = 0;
 			int prepaidHealthTax = 0;
-			for (Kost tax : taxList) {
-				if (tax.getOmschrijving().contains("Inkomstenbelasting " + year)) {
-					prepaidIncomeTax += tax.getBedrag().intValue();
+			for (Cost tax : taxList) {
+				if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
+					prepaidIncomeTax += tax.getAmount().intValue();
 				}
-				if (tax.getOmschrijving().contains("Zorgverzekeringswet " + year)) {
-					prepaidHealthTax += tax.getBedrag().intValue();
+				if (tax.getDescription().contains("Zorgverzekeringswet " + year)) {
+					prepaidHealthTax += tax.getAmount().intValue();
 				}
 			}
 			prepaidTax.setPrepaidHealth(prepaidHealthTax);
@@ -94,9 +94,9 @@ public class TaxCodeHelper {
 	}
 
 	public static void main(String[] args) {
-		Kost cost = new Kost();
-		cost.setOmschrijving("AC");
-		System.out.println(convertTaxCode(cost).getOmschrijving());
+		Cost cost = new Cost();
+		cost.setDescription("AC");
+		System.out.println(convertTaxCode(cost).getDescription());
 	}
 
 }

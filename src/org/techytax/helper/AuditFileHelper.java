@@ -29,7 +29,7 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
 
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
@@ -37,24 +37,24 @@ import org.techytax.util.DateHelper;
 
 public class AuditFileHelper {
 	
-	private static Transaction createTransaction(Kost cost) throws Exception {
+	private static Transaction createTransaction(Cost cost) throws Exception {
 		ObjectFactory objectFactory = new ObjectFactory();
 		Transaction transaction = objectFactory.createAuditfileCompanyTransactionsJournalTransaction();
-		transaction.setAmnt(cost.getBedrag());
-		transaction.setDesc(cost.getOmschrijving().trim());
+		transaction.setAmnt(cost.getAmount());
+		transaction.setDesc(cost.getDescription().trim());
 		transaction.setNr(Long.toString(cost.getId()));
-		transaction.setTrDt(DateHelper.getDate(cost.getDatum()));
-		if (cost.getBtw() != null && cost.getBtw().floatValue() > 0) {
+		transaction.setTrDt(DateHelper.getDate(cost.getDate()));
+		if (cost.getVat() != null && cost.getVat().floatValue() > 0) {
 			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
 			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
-			vat.setVatAmnt(cost.getBtw());
+			vat.setVatAmnt(cost.getVat());
 			trLine.getVat().add(vat);
 			transaction.getTrLine().add(trLine);
 		}
 		return transaction;
 	}
 	
-	public static String createAuditFile(List<Kost> costList, User user) throws DatatypeConfigurationException {
+	public static String createAuditFile(List<Cost> costList, User user) throws DatatypeConfigurationException {
 
 		
 		JAXBContext jc = null;
@@ -102,8 +102,8 @@ public class AuditFileHelper {
 			
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencyCodeType.EUR);
-			Kost firstCost = (Kost)costList.get(0);
-			Date firstDate = DateHelper.stringToDate(firstCost.getDatum());
+			Cost firstCost = (Cost)costList.get(0);
+			Date firstDate = DateHelper.stringToDate(firstCost.getDate());
 			int year = DateHelper.getYear(firstDate);
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
@@ -120,7 +120,7 @@ public class AuditFileHelper {
 			Journal journal = null;
 			
 			ResourceBundle resource = ResourceBundle.getBundle("properties/messages", new Locale("NL"));
-			for (Kost cost: costList) {
+			for (Cost cost: costList) {
 				String kostenSoortOmschrijving = cost.getKostenSoortOmschrijving();
 				Transaction transaction = createTransaction(cost);
 				if (!kostenSoortOmschrijving.equals(currentKostenSoortOmschrijving)) {
