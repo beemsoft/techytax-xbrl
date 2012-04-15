@@ -30,32 +30,32 @@ import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 
 public class BoekDao extends BaseDao {
 
-	private void encrypt(Kost cost) {
-		if (cost.getBedrag().doubleValue() != 0) {
-			cost.setBedrag(decimalEncryptor.encrypt(cost.getBedrag()));
+	private void encrypt(Cost cost) {
+		if (cost.getAmount().doubleValue() != 0) {
+			cost.setAmount(decimalEncryptor.encrypt(cost.getAmount()));
 		}
-		if (cost.getBtw().doubleValue() != 0) {
-			cost.setBtw(decimalEncryptor.encrypt(cost.getBtw()));
+		if (cost.getVat().doubleValue() != 0) {
+			cost.setVat(decimalEncryptor.encrypt(cost.getVat()));
 		}
-		if (StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
-			cost.setOmschrijving(textEncryptor.encrypt(cost.getOmschrijving()));
+		if (StringUtils.isNotEmpty(cost.getDescription().trim())) {
+			cost.setDescription(textEncryptor.encrypt(cost.getDescription()));
 		}
 	}
 
-	private void decrypt(Kost cost) {
-		if (cost.getBedrag().doubleValue() != 0) {
-			cost.setBedrag(decimalEncryptor.decrypt(cost.getBedrag()));
+	private void decrypt(Cost cost) {
+		if (cost.getAmount().doubleValue() != 0) {
+			cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
 		}
-		if (cost.getBtw() != null && cost.getBtw().doubleValue() != 0) {
-			cost.setBtw(decimalEncryptor.decrypt(cost.getBtw()));
+		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
+			cost.setVat(decimalEncryptor.decrypt(cost.getVat()));
 		}
-		if (cost.getOmschrijving() != null && StringUtils.isNotEmpty(cost.getOmschrijving().trim())) {
-			cost.setOmschrijving(textEncryptor.decrypt(cost.getOmschrijving()));
+		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
+			cost.setDescription(textEncryptor.decrypt(cost.getDescription()));
 		}
 	}
 
@@ -65,37 +65,37 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	public void insertKost(Kost kost) throws Exception {
-		kost.setBedrag(kost.getBedrag().setScale(2));
-		kost.setBtw(kost.getBtw().setScale(2));
+	public void insertKost(Cost kost) throws Exception {
+		kost.setAmount(kost.getAmount().setScale(2));
+		kost.setVat(kost.getVat().setScale(2));
 		encrypt(kost);
 		sqlMap.insert("insertKost", kost);
 	}
 
-	public void insertPrivateExpense(Kost kost) throws Exception {
-		kost.setBedrag(kost.getBedrag().setScale(2));
-		kost.setBtw(kost.getBtw().setScale(2));		
+	public void insertPrivateExpense(Cost kost) throws Exception {
+		kost.setAmount(kost.getAmount().setScale(2));
+		kost.setVat(kost.getVat().setScale(2));		
 		sqlMap.insert("insertPrivateExpense", kost);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getKostLijst(String userId) throws Exception {
-		List<Kost> costs = sqlMap.queryForList("getKostLijst", userId);
-		for (Kost cost : costs) {
+	public List<Cost> getKostLijst(String userId) throws Exception {
+		List<Cost> costs = sqlMap.queryForList("getKostLijst", userId);
+		for (Cost cost : costs) {
 			decrypt(cost);
 		}
 		return costs;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getPrivateExpenses() throws Exception {
+	public List<Cost> getPrivateExpenses() throws Exception {
 		return sqlMap.queryForList("getPrivateExpenses", null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getKostLijst(String beginDatum, String eindDatum, String balansSoort, String userId) throws Exception {
+	public List<Cost> getKostLijst(String beginDatum, String eindDatum, String balansSoort, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = null;
+		List<Cost> costs = null;
 		if (balansSoort != null) {
 			if (balansSoort.equals("alles")) {
 				costs = sqlMap.queryForList("getCompleteKostLijst", map);
@@ -120,7 +120,7 @@ public class BoekDao extends BaseDao {
 			}
 		}
 		if (costs != null) {
-			for (Kost cost : costs) {
+			for (Cost cost : costs) {
 				decrypt(cost);
 			}
 		}
@@ -128,11 +128,11 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Kost> getCostListCurrentAccount(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getCostListCurrentAccount(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getKostenBalansCurrentAccountLijst", map);
+		List<Cost> costs = sqlMap.queryForList("getKostenBalansCurrentAccountLijst", map);
 		if (costs != null) {
-			for (Kost cost : costs) {
+			for (Cost cost : costs) {
 				decrypt(cost);
 			}
 		}
@@ -170,18 +170,18 @@ public class BoekDao extends BaseDao {
 		return groupedDeducatableCostList;
 	}
 
-	public void updateKost(Kost kost) throws Exception {
-		kost.setBedrag(kost.getBedrag().setScale(2));
-		kost.setBtw(kost.getBtw().setScale(2));		
+	public void updateKost(Cost kost) throws Exception {
+		kost.setAmount(kost.getAmount().setScale(2));
+		kost.setVat(kost.getVat().setScale(2));		
 		encrypt(kost);
 		sqlMap.insert("updateKost", kost);
 	}
 
-	public Kost getKost(String id, long userId) throws Exception {
+	public Cost getKost(String id, long userId) throws Exception {
 		KeyId key = new KeyId();
 		key.setId(Long.parseLong(id));
 		key.setUserId(userId);
-		Kost cost = (Kost) sqlMap.queryForObject("getKost", key);
+		Cost cost = (Cost) sqlMap.queryForObject("getKost", key);
 		if (cost != null) {
 			decrypt(cost);
 		}
@@ -189,43 +189,43 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getVatCorrectionDepreciation(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getVatCorrectionDepreciation(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getVatCorrectionDepreciation", map);
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getVatCorrectionDepreciation", map);
+		for (Cost cost : costs) {
 			decrypt(cost);
 		}
 		return costs;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getTaxList(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getTaxList(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getTaxList", map);
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getTaxList", map);
+		for (Cost cost : costs) {
 			decrypt(cost);
 		}
 		return costs;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getAuditList(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getAuditList(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getAuditList", map);
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getAuditList", map);
+		for (Cost cost : costs) {
 			decrypt(cost);
 		}
 		return costs;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getInvestments(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getInvestments(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getInvesteringenLijst", map);
-		List<Kost> filteredCosts = new ArrayList<Kost>();
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getInvesteringenLijst", map);
+		List<Cost> filteredCosts = new ArrayList<Cost>();
+		for (Cost cost : costs) {
 			decrypt(cost);
-			if (cost.getBedrag().compareTo(new BigDecimal(KostConstanten.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
+			if (cost.getAmount().compareTo(new BigDecimal(KostConstanten.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
 				filteredCosts.add(cost);
 			}
 		}
@@ -233,17 +233,17 @@ public class BoekDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> getAllCosts() throws Exception {
+	public List<Cost> getAllCosts() throws Exception {
 		return sqlMap.queryForList("getAllCosts", null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Kost> searchCosts(String searchTerm, String userId) throws Exception {
-		List<Kost> costs = sqlMap.queryForList("getAllCostsForUser", userId);
-		List<Kost> filteredCosts = new ArrayList<Kost>();
-		for (Kost cost : costs) {
+	public List<Cost> searchCosts(String searchTerm, String userId) throws Exception {
+		List<Cost> costs = sqlMap.queryForList("getAllCostsForUser", userId);
+		List<Cost> filteredCosts = new ArrayList<Cost>();
+		for (Cost cost : costs) {
 			decrypt(cost);
-			if (cost.getOmschrijving().toUpperCase().contains(searchTerm.toUpperCase())) {
+			if (cost.getDescription().toUpperCase().contains(searchTerm.toUpperCase())) {
 				filteredCosts.add(cost);
 			}
 		}
@@ -251,10 +251,10 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Kost> getRepurchases(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<Cost> getRepurchases(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getRepurchases", map);
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getRepurchases", map);
+		for (Cost cost : costs) {
 			decrypt(cost);
 		}
 		return costs;
@@ -263,11 +263,11 @@ public class BoekDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public BigInteger getInterest(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getInterest", map);
+		List<Cost> costs = sqlMap.queryForList("getInterest", map);
 		BigInteger interest = new BigInteger("0");
-		for (Kost cost : costs) {
+		for (Cost cost : costs) {
 			decrypt(cost);
-			interest = interest.add(cost.getBedrag().toBigInteger());
+			interest = interest.add(cost.getAmount().toBigInteger());
 		}
 		return interest;
 	}
@@ -275,10 +275,10 @@ public class BoekDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public  BigInteger getTotalCostForActivumThisYear(Activum activum) throws Exception {
 		BigInteger totalCost = new BigInteger("0");
-		List<Kost> costs = sqlMap.queryForList("getCostListForActivum", activum);
-		for (Kost cost : costs) {
+		List<Cost> costs = sqlMap.queryForList("getCostListForActivum", activum);
+		for (Cost cost : costs) {
 			decrypt(cost);
-			totalCost = totalCost.add(cost.getBedrag().toBigInteger());
+			totalCost = totalCost.add(cost.getAmount().toBigInteger());
 		}
 		return totalCost;
 	}
@@ -286,14 +286,14 @@ public class BoekDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public BigDecimal getInvoiceBalance(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getInvoices", map);
+		List<Cost> costs = sqlMap.queryForList("getInvoices", map);
 		BigDecimal invoiceBalance = new BigDecimal("0");
-		for (Kost cost : costs) {
+		for (Cost cost : costs) {
 			decrypt(cost);
-			if (cost.getKostenSoortId() == KostConstanten.INVOICE_SENT) {
-				invoiceBalance = invoiceBalance.add(cost.getBedrag()).add(cost.getBtw());	
-			} else if (cost.getKostenSoortId() == KostConstanten.INVOICE_PAID) {
-				invoiceBalance = invoiceBalance.subtract(cost.getBedrag()).subtract(cost.getBtw());
+			if (cost.getCostTypeId() == KostConstanten.INVOICE_SENT) {
+				invoiceBalance = invoiceBalance.add(cost.getAmount()).add(cost.getVat());	
+			} else if (cost.getCostTypeId() == KostConstanten.INVOICE_PAID) {
+				invoiceBalance = invoiceBalance.subtract(cost.getAmount()).subtract(cost.getVat());
 			}			
 		}
 		return invoiceBalance;
@@ -302,11 +302,11 @@ public class BoekDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public BigDecimal getVatDebt(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getVatDebt", map);
+		List<Cost> costs = sqlMap.queryForList("getVatDebt", map);
 		BigDecimal vatBalance = new BigDecimal("0");
-		for (Kost cost : costs) {
+		for (Cost cost : costs) {
 			decrypt(cost);
-			vatBalance = vatBalance.add(cost.getBtw());	
+			vatBalance = vatBalance.add(cost.getVat());	
 		}
 		return vatBalance;
 	}
@@ -314,11 +314,11 @@ public class BoekDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public BigDecimal getCostsWithPrivateMoney(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Kost> costs = sqlMap.queryForList("getCostsWithPrivateMoney", map);
+		List<Cost> costs = sqlMap.queryForList("getCostsWithPrivateMoney", map);
 		BigDecimal costsWithPrivateMoney = new BigDecimal("0");
-		for (Kost cost : costs) {
+		for (Cost cost : costs) {
 			decrypt(cost);
-			costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getBedrag()).add(cost.getBtw());	
+			costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getAmount()).add(cost.getVat());	
 		}
 		return costsWithPrivateMoney;
 	}	

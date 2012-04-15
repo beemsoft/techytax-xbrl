@@ -31,8 +31,12 @@ public class FiscalDao extends BaseDao {
 		activum.setSaldo(intEncryptor.decrypt(activum.getSaldo()));
 		activum.setRestwaarde(intEncryptor.decrypt(activum.getRestwaarde()));
 		activum.setBedrag(decimalEncryptor.decrypt(activum.getBedrag()));
-		activum.setBtw(decimalEncryptor.decrypt(activum.getBtw()));
-		activum.setAanschafKosten(decimalEncryptor.decrypt(activum.getAanschafKosten()));
+		if (activum.getBtw() != null && activum.getBtw().doubleValue() != 0) {
+			activum.setBtw(decimalEncryptor.decrypt(activum.getBtw()));
+		}
+		if (activum.getAanschafKosten() != null && activum.getAanschafKosten().doubleValue() != 0) {
+			activum.setAanschafKosten(decimalEncryptor.decrypt(activum.getAanschafKosten()));
+		}
 	}
 	
 	private void decrypt(Passivum passivum) {
