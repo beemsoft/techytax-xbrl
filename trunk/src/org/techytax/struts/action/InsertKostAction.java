@@ -24,7 +24,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -33,10 +32,10 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
-import org.techytax.struts.form.KostForm;
+import org.techytax.struts.form.CostForm;
 
 public class InsertKostAction extends Action {
 
@@ -45,15 +44,19 @@ public class InsertKostAction extends Action {
 			throws Exception {
 
 		final ActionErrors errors = new ActionErrors();
-		KostForm kostForm = (KostForm)request.getSession().getAttribute("kostForm");
+		CostForm costForm = (CostForm)request.getSession().getAttribute("costForm");
 		User user = (User) request.getSession().getAttribute("user");
-		Kost kost = new Kost();
-		BeanUtils.copyProperties(kost, kostForm);
-		kost.setId(0);
-		kost.setUserId(user.getId());
+		Cost cost = new Cost();
+		cost.setAmount(costForm.getAmount());
+		cost.setCostTypeId(costForm.getCostTypeId());
+		cost.setDate(costForm.getDate());
+		cost.setDescription(costForm.getDescription());
+		cost.setVat(costForm.getVat());
+		cost.setId(0);
+		cost.setUserId(user.getId());
 		BoekDao boekDao = new BoekDao();
 		
-		boekDao.insertKost(kost);
+		boekDao.insertKost(cost);
 		request.getSession().removeAttribute("overview");
 		
 		KostensoortDao kostensoortDao = new KostensoortDao();

@@ -34,7 +34,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
 import org.techytax.helper.RekeningFileHelper;
@@ -66,7 +66,7 @@ public class UploadFileAction extends Action {
 			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
 			InputStream is = myFile.getInputStream();
 
-			List<Kost> result = RekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
+			List<Cost> result = RekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
 			e.printStackTrace();

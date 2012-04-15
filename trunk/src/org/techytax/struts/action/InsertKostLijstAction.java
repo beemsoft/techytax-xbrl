@@ -29,7 +29,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 
 public class InsertKostLijstAction extends Action {
@@ -40,11 +40,11 @@ public class InsertKostLijstAction extends Action {
 			throws Exception {
 
 		BoekDao boekDao = new BoekDao();
-		List<Kost> kostLijst = (List<Kost>) request.getSession().getAttribute("kostLijst");
+		List<Cost> kostLijst = (List<Cost>) request.getSession().getAttribute("kostLijst");
 		User user = (User) request.getSession().getAttribute("user");
-		Kost kost = null;
+		Cost kost = null;
 		for (int i = 0; i < kostLijst.size(); i++) {
-			kost = (Kost) kostLijst.get(i);
+			kost = (Cost) kostLijst.get(i);
 			kost.setId(0);
 			kost.setUserId(user.getId());
 			boekDao.insertKost(kost);

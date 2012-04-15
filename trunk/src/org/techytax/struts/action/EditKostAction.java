@@ -19,6 +19,7 @@
  */
 package org.techytax.struts.action;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +34,13 @@ import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Activum;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
+import org.techytax.struts.form.CostForm;
 import org.techytax.struts.form.DepreciationForm;
-import org.techytax.struts.form.KostForm;
 
 public class EditKostAction extends Action {
 
@@ -46,8 +48,8 @@ public class EditKostAction extends Action {
 
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
-		Kost cost = null;
-		KostForm objForm = (KostForm) form;
+		Cost cost = null;
+		CostForm objForm = (CostForm) form;
 		User user = (User) request.getSession().getAttribute("user");
 
 		if (StringUtils.isNotEmpty(id)) {
@@ -62,8 +64,11 @@ public class EditKostAction extends Action {
 			if (cost != null) {
 
 				BeanUtils.copyProperties(objForm, cost);
+				// Initialize split cost
+				objForm.setSplitAmount(new BigDecimal("0"));
+				objForm.setSplitVat(new BigDecimal("0"));
 
-				long kostensoortId = cost.getKostenSoortId();
+				long kostensoortId = cost.getCostTypeId();
 				Kostensoort kostensoort = kostensoortDao.getKostensoort(Long.toString(kostensoortId));
 				if (kostensoort.isInvestering()) {
 					Activum activum = new Activum();
@@ -80,6 +85,11 @@ public class EditKostAction extends Action {
 						request.setAttribute("depreciation", "true");
 						request.setAttribute("depreciationForm", depreciationForm);						
 					}
+				}
+				if (kostensoort.isForSettlement()) {
+					SettlementDao settlementDao = new SettlementDao();
+					long percentage = settlementDao.getPercentage(user.getId());
+					request.setAttribute("settlementPercentage", Long.toString(percentage));
 				}
 			}
 			forward = "success";

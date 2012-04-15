@@ -27,7 +27,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BoekDao;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.helper.DepreciationHelper;
 import org.techytax.struts.form.DepreciationForm;
@@ -42,7 +42,7 @@ public class AfschrijvenKostAction extends Action {
 		long id = depreciationForm.getId();
 		BoekDao dao = new BoekDao();
 		User user = (User) request.getSession().getAttribute("user");
-		Kost kost = dao.getKost(Long.toString(id), user.getId());
+		Cost kost = dao.getKost(Long.toString(id), user.getId());
 		helper.splitCost(kost, depreciationForm.isCar(), depreciationForm.getNofYears(), user.getId());
 		return mapping.findForward(forward);
 	}
