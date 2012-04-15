@@ -36,7 +36,7 @@ import org.techytax.domain.Balans;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyYear;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passivum;
@@ -48,7 +48,7 @@ import org.techytax.util.DateHelper;
 
 public class FiscalOverviewHelper {
 
-	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Kost> costList, long userId) throws Exception {
+	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Cost> costList, long userId) throws Exception {
 
 		// Load properties
 		Properties props = PropsFactory.loadProperties();
@@ -93,15 +93,15 @@ public class FiscalOverviewHelper {
 			overview.setAfschrijvingAuto(afschrijvingAuto.intValue());
 			overview.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(deductableCosts).intValue());
 			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
-			List<Kost> corrections = boekDao.getVatCorrectionDepreciation(beginDatum, eindDatum, Long.toString(userId));
-			Iterator<Kost> iterator = corrections.iterator();
+			List<Cost> corrections = boekDao.getVatCorrectionDepreciation(beginDatum, eindDatum, Long.toString(userId));
+			Iterator<Cost> iterator = corrections.iterator();
 			int depreciationCorrection = 0;
 			while (iterator.hasNext()) {
-				Kost correctionKost = iterator.next();
-				if (correctionKost.getOmschrijving().contains("auto")) {
-					overview.setAfschrijvingAutoCorrectie(correctionKost.getBedrag().intValue());
+				Cost correctionKost = iterator.next();
+				if (correctionKost.getDescription().contains("auto")) {
+					overview.setAfschrijvingAutoCorrectie(correctionKost.getAmount().intValue());
 				} else {
-					depreciationCorrection += correctionKost.getBedrag().intValue();
+					depreciationCorrection += correctionKost.getAmount().intValue();
 				}
 			}
 			overview.setAfschrijvingOverigCorrectie(depreciationCorrection);
@@ -143,7 +143,7 @@ public class FiscalOverviewHelper {
 		}
 		overview.setOudedagsReserveMaximaal(maximaleFor);
 
-		List<Kost> investmentKostList = boekDao.getInvestments(beginDatum, eindDatum, Long.toString(userId));
+		List<Cost> investmentKostList = boekDao.getInvestments(beginDatum, eindDatum, Long.toString(userId));
 		overview.setInvestmentDeduction(InvestmentDeductionHelper.getInvestmentDeduction(investmentKostList, userId));
 
 		// Create/update activa
@@ -159,7 +159,7 @@ public class FiscalOverviewHelper {
 
 			if (boekwaarde == null) {
 				String startDate = props.getProperty("start.date");
-				List<Kost> rekeningLijst = boekDao.getKostLijst(startDate, eindDatum, "rekeningBalans", Long.toString(userId));
+				List<Cost> rekeningLijst = boekDao.getKostLijst(startDate, eindDatum, "rekeningBalans", Long.toString(userId));
 				liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 
 				BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
@@ -176,7 +176,7 @@ public class FiscalOverviewHelper {
 				if (vorigeBoekwaarde != null) {
 					saldo = vorigeBoekwaarde.getSaldo();
 				}
-				List<Kost> rekeningLijst = boekDao.getKostLijst(beginDatum, eindDatum, "rekeningBalans", Long.toString(userId));
+				List<Cost> rekeningLijst = boekDao.getKostLijst(beginDatum, eindDatum, "rekeningBalans", Long.toString(userId));
 				liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 				saldo = saldo.add(liquiditeit.getRekeningBalans().toBigInteger());
 				saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());

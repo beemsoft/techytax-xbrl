@@ -31,7 +31,7 @@ import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
@@ -65,16 +65,16 @@ public class RekeningFileHelper {
 		return accountDao.getAccountType(accountNumber, userId);
 	}
 
-	public static List<Kost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) {
+	public static List<Cost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) {
 		kostensoortList = kostensoortList2;
-		List<Kost> kostLijst = new ArrayList<Kost>();
+		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			Kost kost = null;
+			Cost kost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				kost = verwerkRegel(regel, regelNummer, userId);
@@ -115,20 +115,20 @@ public class RekeningFileHelper {
 	 * @param labels
 	 * @param request
 	 */
-	public static Kost verwerkRegel(String[] regel, int regelNummer, String userId) {
-		Kost kost = new Kost();
+	public static Cost verwerkRegel(String[] regel, int regelNummer, String userId) {
+		Cost kost = new Cost();
 		// Controleer of het aantal waarden in de regel klopt.
 		try {
 			String datum = regel[0];
-			kost.setDatum(datum.substring(0, 4) + "-" + datum.substring(4, 6)
+			kost.setDate(datum.substring(0, 4) + "-" + datum.substring(4, 6)
 					+ "-" + datum.substring(6, 8));
 			BigDecimal bedrag = new BigDecimal(regel[6].replace(',', '.'));
-			kost.setBedrag(bedrag);
+			kost.setAmount(bedrag);
 			if (regel[5].equals("Af")) {
 				kost.setIncoming(false);
 			} else {
-				kost.setOmschrijving("Inleg vanaf spaarrekening");
-				kost.setKostenSoortId(KostConstanten.INLEG);
+				kost.setDescription("Inleg vanaf spaarrekening");
+				kost.setCostTypeId(KostConstanten.INLEG);
 				kost.setIncoming(true);				
 			}			
 			String omschrijving = regel[1] + " " + regel[8];
@@ -137,18 +137,18 @@ public class RekeningFileHelper {
 				// Dit is waarschijnlijk een opname van de spaarrekening.
 				if (regel[2].equals(regel[3])) {
 					if (regel[5].equals("Af")) {
-						kost.setOmschrijving("Opname naar spaarrekening");
-						kost.setKostenSoortId(KostConstanten.OPNAME);
+						kost.setDescription("Opname naar spaarrekening");
+						kost.setCostTypeId(KostConstanten.OPNAME);
 					} else {
-						kost.setOmschrijving("Inleg vanaf spaarrekening");
-						kost.setKostenSoortId(KostConstanten.INLEG);
+						kost.setDescription("Inleg vanaf spaarrekening");
+						kost.setCostTypeId(KostConstanten.INLEG);
 					}
 					kost.setKostenSoortOmschrijving(getKostOmschrijving(kost
-							.getKostenSoortId()));
-					kost.setBtw(new BigDecimal("0"));
+							.getCostTypeId()));
+					kost.setVat(new BigDecimal("0"));
 				}
 			} else {
-				kost.setOmschrijving(omschrijving);
+				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					TaxCodeHelper.convertTaxCode(kost);
 				} 
@@ -183,13 +183,13 @@ public class RekeningFileHelper {
 		return 0;
 	}
 
-	private static Kost matchKost(Kost kost, String userId) throws Exception {
+	private static Cost matchKost(Cost kost, String userId) throws Exception {
 		long kostensoortId = KostConstanten.ONBEPAALD;
-		BigDecimal bedrag = kost.getBedrag();
+		BigDecimal bedrag = kost.getAmount();
 		BigDecimal btwBedrag = new BigDecimal(0);
 		boolean berekenBtw_hoog = false;
 		boolean berekenBtw_laag = false;
-		kostensoortId = findKostensoort(kost.getOmschrijving(), userId);
+		kostensoortId = findKostensoort(kost.getDescription(), userId);
 		KostensoortDao kostensoortDao = new KostensoortDao();
 		Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
 				.toString(kostensoortId));
@@ -209,9 +209,9 @@ public class RekeningFileHelper {
 			bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
 			btwBedrag = bedrag.subtract(bd);
 		}
-		kost.setBtw(btwBedrag);
-		kost.setBedrag(bd);
-		kost.setKostenSoortId(kostensoortId);
+		kost.setVat(btwBedrag);
+		kost.setAmount(bd);
+		kost.setCostTypeId(kostensoortId);
 		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
 		return kost;
 	}

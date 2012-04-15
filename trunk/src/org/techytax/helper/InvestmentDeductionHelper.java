@@ -26,20 +26,20 @@ import java.util.List;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
-import org.techytax.domain.Kost;
+import org.techytax.domain.Cost;
 
 public class InvestmentDeductionHelper {
 
-	public static BigInteger getInvestmentDeduction(List<Kost> costList, long userId) throws Exception {
+	public static BigInteger getInvestmentDeduction(List<Cost> costList, long userId) throws Exception {
 		BigDecimal totalInvestment = new BigDecimal("0");
 		FiscalDao fiscaalDao = new FiscalDao();
-		for (Kost cost : costList) {
+		for (Cost cost : costList) {
 			Activum activum = new Activum();
 			activum.setUserId(userId);
 			activum.setCostId(cost.getId());
 			activum = fiscaalDao.getActivumByCostId(activum);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
-				totalInvestment = totalInvestment.add(cost.getBedrag());
+				totalInvestment = totalInvestment.add(cost.getAmount());
 			}
 		}
 		return calculateInvestmentDeduction(totalInvestment);
