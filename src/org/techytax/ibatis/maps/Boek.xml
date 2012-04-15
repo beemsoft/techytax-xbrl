@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -21,22 +21,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
           PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
           "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap namespace="Kost">
-	<typeAlias alias="kost" type="org.techytax.domain.Kost" />
+	<typeAlias alias="cost" type="org.techytax.domain.Cost" />
 	<typeAlias alias="key" type="org.techytax.domain.KeyId" />	
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
 		<parameter property="eindDatum" javaType="string" />
 		<parameter property="userId" javaType="string" />
 	</parameterMap>
-	<parameterMap id="kostMap" class="java.util.Map">
-		<parameter property="datum" javaType="string" />
-		<parameter property="bedrag" javaType="string" />
-		<parameter property="userId" javaType="string" />		
-	</parameterMap>
 
 	<select id="getKostLijst" parameterClass="string"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.omschrijving as kostenSoortOmschrijving, ks.id as kostenSoortId 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten	k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND datum &lt;= CURDATE()
@@ -45,8 +40,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		LIMIT 10
 	</select>
 	<select id="getCompleteKostLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -55,8 +50,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>	
 	<select id="getBtwBalansLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -67,8 +62,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getRekeningBalansLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -78,8 +73,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getKostenBalansLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -89,8 +84,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>	
 	<select id="getKostenBalansCurrentAccountLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -100,8 +95,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getReisKostenBalansLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -111,8 +106,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getInvesteringenLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND datum &gt;= ? 
@@ -122,8 +117,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getAfschrijvingenLijst" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND datum &gt;= ? 
@@ -133,8 +128,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getPrivateExpenses" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT id, amount as bedrag, is_incoming as isIncoming, datum, description as omschrijving 
+		resultClass="cost">
+		SELECT id, amount, is_incoming as isIncoming, datum as date, description 
 		FROM private_expenses 
 		WHERE datum &gt;= ? 
 		AND datum &lt;= ? 
@@ -143,8 +138,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		datum asc
 	</select>
 	<select id="getTaxList" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND datum &gt;= ? 
@@ -154,8 +149,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>	
 	<select id="getVatCorrectionDepreciation" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -165,8 +160,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getAuditList" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -174,47 +169,47 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND user_id = ?
 		ORDER BY ks.id asc
 	</select>	
-	<insert id="insertKost" parameterClass="kost">
+	<insert id="insertKost" parameterClass="cost">
 		insert into kosten
-		values(#id#,#userId#,#bedrag#,#datum#,#omschrijving#,#btw#,#kostenSoortId#)
+		values(#id#,#userId#,#amount#,#date#,#description#,#vat#,#costTypeId#)
 		<selectKey resultClass="int" keyProperty="id">
 			SELECT @@IDENTITY AS ID
 		</selectKey>
 	</insert>
-	<insert id="insertPrivateExpense" parameterClass="kost">
+	<insert id="insertPrivateExpense" parameterClass="cost">
 		insert into private_expenses
-		values(#id#,#userId#,#bedrag#,#isIncoming#,#datum#,#omschrijving#)
+		values(#id#,#userId#,#amount#,#isIncoming#,#date#,#description#)
 		<selectKey resultClass="int" keyProperty="id">
 			SELECT @@IDENTITY AS ID
 		</selectKey>
 	</insert>	
-	<select id="getKost" parameterClass="key" resultClass="kost">
-		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as kostenSoortId 
+	<select id="getKost" parameterClass="key" resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId 
 		FROM kosten k, kostensoort ks 
 		WHERE k.id = #id#
 		AND k.kostensoort_id = ks.id
 		AND user_id = #userId#
 	</select>
-	<update id="updateKost" parameterClass="kost">
-		update kosten set bedrag = #bedrag#, btw = #btw#, datum = #datum#, omschrijving = #omschrijving#, kostensoort_id = #kostenSoortId# 
+	<update id="updateKost" parameterClass="cost">
+		update kosten set bedrag = #amount#, btw = #vat#, datum = #date#, omschrijving = #description#, kostensoort_id = #costTypeId# 
 		WHERE id = #id# 
 		AND user_id = #userId#
 	</update>
 	<select id="getAllCosts" parameterClass="string"
-		resultClass="kost">
-		SELECT id, bedrag, datum, btw, omschrijving, kostensoort_id as kostenSoortId  
+		resultClass="cost">
+		SELECT id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId  
 		FROM kosten 
 	</select>
 	<select id="getAllCostsForUser" parameterClass="string"
-		resultClass="kost">
-		SELECT k.id, bedrag, btw, datum, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id
 		AND user_id = #userId#
 	</select>
 	<select id="getRepurchases" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT k.id, bedrag, datum, btw, k.omschrijving, ks.id as kostenSoortId, ks.omschrijving as kostenSoortOmschrijving 
+		resultClass="cost">
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
 		FROM kosten k, kostensoort ks 
 		WHERE k.kostensoort_id = ks.id 
 		AND	datum &gt;= ? 
@@ -224,8 +219,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		ORDER BY datum asc
 	</select>
 	<select id="getInterest" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT id, bedrag 
+		resultClass="cost">
+		SELECT id, bedrag as amount 
 		FROM kosten 
 		WHERE datum &gt;= ? 
 		AND datum &lt;= ? 
@@ -233,8 +228,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND user_id = ?
 	</select>
 	<select id="getInvoices" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT id, bedrag, datum, btw, kostensoort_id as kostenSoortId 
+		resultClass="cost">
+		SELECT id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId 
 		FROM kosten
 		where kostensoort_id in (38,39) 
 		and datum &gt;= ? 
@@ -243,16 +238,16 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		order by datum
 	</select>
 	<select id="getVatDebt" parameterMap="periodeMap"
-		resultClass="kost">
-		SELECT id, bedrag, datum, btw, kostensoort_id as kostenSoortId 
+		resultClass="cost">
+		SELECT id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId 
 		FROM kosten
 		where kostensoort_id = 39 
 		and datum &gt;= ? 
 		and datum &lt;= ? 
 		and user_id=? 
 	</select>
-	<select id="getCostsWithPrivateMoney" parameterMap="periodeMap" resultClass="kost">
-		select id, bedrag, btw 
+	<select id="getCostsWithPrivateMoney" parameterMap="periodeMap" resultClass="cost">
+		select id, bedrag as amount, btw as vat 
 		from kosten 
 		where kostensoort_id in (6,7,8,19,20,21,22,26) 
 		and datum &gt;= ? 

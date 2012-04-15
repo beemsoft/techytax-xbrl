@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="activum" type="org.techytax.domain.Activum" />
 	<typeAlias alias="passiva" type="org.techytax.domain.Passivum" />	
 	<typeAlias alias="aftrekpost" type="org.techytax.domain.Aftrekpost" />
-	<typeAlias alias="cost" type="org.techytax.domain.Kost" />	
+	<typeAlias alias="cost" type="org.techytax.domain.Cost" />	
 	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
