@@ -26,28 +26,18 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
 
-	private boolean blocked;	
-	
+	private boolean blocked;
+	private String companyAddress;
 	private String companyName;
-
 	private String email;
-
 	private Date freezeEndDate;
-
 	private Date freezeStartDate;
-
 	private String fullName;
-
 	private long id;
-
 	private Date latestOnlineTime;
-
 	private boolean paid;
-
 	private String password;
-
 	private String role;
-
 	private String username;
 
 	public String getCompanyName() {
@@ -176,6 +166,14 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getCompanyAddress() {
+		return companyAddress;
+	}
+
+	public void setCompanyAddress(String companyAddress) {
+		this.companyAddress = companyAddress;
 	}
 
 }

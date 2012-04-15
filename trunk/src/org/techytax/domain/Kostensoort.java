@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -60,6 +60,10 @@ public class Kostensoort {
 
 	public boolean isBijschrijving() {
 		return bijschrijving;
+	}
+	
+	public boolean isForSettlement() {
+		return kostenSoortId == KostConstanten.SETTLEMENT;
 	}
 
 	public void setBijschrijving(boolean bijschrijving) {
