@@ -51,7 +51,8 @@ public interface KostConstanten {
 	public static final int VAT_CORRECTION_CAR_PRIVATE = 36;
 	public static final int INVOICE_PAID = 38;	
 	public static final int INVOICE_SENT = 39;
-	public static final int REPURCHASES = 40;	
+	public static final int REPURCHASES = 40;
+	public static final int SETTLEMENT = 41;
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009
