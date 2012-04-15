@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -17,17 +17,19 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ page import="org.techytax.domain.Kost"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<%@ page import="org.techytax.domain.Cost"%>
 <%@ page import="java.util.List"%>
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
 <%
-	List<Kost> res = (List<Kost>) session.getAttribute("kostLijst");
+	List<Cost> res = (List<Cost>) session.getAttribute("kostLijst");
 %>
 
 <h4><bean:message key="load.data"/></h4>
-<a href="<%=request.getContextPath() %>/insertPrivateExpenses.do"><bean:message key="load.data.process"/></a>
+<a href="<%=request.getContextPath()%>/insertPrivateExpenses.do"><bean:message key="load.data.process"/></a>
 
 <table cellspacing="0" border="1" class="overviewTable">
 <tr>
@@ -38,23 +40,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 </tr>
 
 <%
-if (res != null) {
+	if (res != null) {
 	for (int i=0; i<res.size(); i++) { 
 
-		Kost obj = null;	
-		obj = (Kost) res.get(i);
+		Cost obj = null;	
+		obj = (Cost) res.get(i);
 		if (obj != null) {
-			String incoming = "-";
-			if (obj.isIncoming()) {
-				incoming = "+";
-			}
+	String incoming = "-";
+	if (obj.isIncoming()) {
+		incoming = "+";
+	}
 %>
 
 <tr valign="top">
-<td><%=obj.getDatum()%></td>
-<td align="right"><%=obj.getBedrag()%></td>
+<td><%=obj.getDate()%></td>
+<td align="right"><%=obj.getAmount()%></td>
 <td><%=incoming%></td>
-<td><%=obj.getOmschrijving()%></td>
+<td><%=obj.getDescription()%></td>
 </tr>
 <%
 		}

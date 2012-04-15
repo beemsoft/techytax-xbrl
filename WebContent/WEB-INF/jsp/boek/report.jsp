@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -17,7 +17,9 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
-<%@ page import="org.techytax.domain.Kost"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<%@ page import="org.techytax.domain.Cost"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.math.BigDecimal"%>
 <%@ taglib uri="struts-html" prefix="html"%>
@@ -26,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	type="org.techytax.struts.form.BalansForm" />
 
 <%
-	List<Kost> res = (List<Kost>) request.getAttribute("kostLijst");
+	List<Cost> res = (List<Cost>) request.getAttribute("kostLijst");
 	if (balansForm != null && balansForm.getBalansSoort() != null) {
 		if (balansForm.getBalansSoort().equals("btwBalans")) {
 %>

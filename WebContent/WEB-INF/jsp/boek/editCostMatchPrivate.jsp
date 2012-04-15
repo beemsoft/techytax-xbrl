@@ -1,5 +1,5 @@
 <%--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <h4><bean:message key="costtype.match.edit" /></h4>

@@ -17,23 +17,30 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 
 <%
 	String investment = (String)request.getAttribute("investment");
 	String depreciation = (String)request.getAttribute("depreciation");
+	String settlementPercentage = (String)request.getAttribute("settlementPercentage");
 %>
 
 <h4><bean:message key="cost.edit.title"/></h4>
 <div class="margins">
 <html:form action="/updateKost.do">
 <html:hidden property="id"/>
+
 <jsp:include page="/WEB-INF/jsp/boek/kostDetails.jsp"/>
 <%
 	if (!"true".equals(depreciation)) {
 %>
 <html:submit><bean:message key="button.update"/></html:submit>
+<html:button styleId="splitButton" titleKey="cost.edit.split.tooltip" property="splitsen">
+	<bean:message key="cost.edit.split"/>
+</html:button>
 <%
 	}
 %>
@@ -102,4 +109,33 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <%
 	}
 %>
+
+				<script type="text/javascript">
+
+
+	$(function() {
+
+	
+		$( "#splitButton" ).click(function() {
+			  doPercentage();
+			  $("#splitDescription").val($("#description").val());
+			  $("#split,#original").show();
+			  $(this).hide();
+		});		
+
+	});
+
+	var perc = <%=settlementPercentage%>;
+
+
+	function doPercentage() {
+		var currentAmount = costForm.amount.value;
+		var currentVat = costForm.vat.value;
+		costForm.splitAmount.value = Math.round(100 * (currentAmount / ((100 + perc)/ 100)))/100;
+		costForm.amount.value = Math.round(100 * (currentAmount * (perc/(100+perc))))/100;
+		costForm.splitVat.value = Math.round(100 * (currentVat / ((100 + perc)/ 100)))/100;
+		costForm.vat.value = Math.round(100 * (currentVat * (perc/(100+perc))))/100;
+	}		
+
+	</script>
 
