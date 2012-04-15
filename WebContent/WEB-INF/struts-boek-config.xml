@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 	<!-- Form Beans -->
 	<form-beans>
-		<form-bean name="kostForm" type="org.techytax.struts.form.KostForm" />
+		<form-bean name="costForm" type="org.techytax.struts.form.CostForm" />
 		<form-bean name="balansForm" type="org.techytax.struts.form.BalansForm" />
 		<form-bean name="kostensoortForm" type="org.techytax.struts.form.KostensoortForm" />
 		<form-bean name="kostmatchForm" type="org.techytax.struts.form.KostmatchForm" />
@@ -72,23 +72,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			</forward>		
 		</action>
 		<action path="/updateKost" type="org.techytax.struts.action.UpdateKostAction"
-			name="kostForm" scope="session">
+			name="costForm" scope="session">
 			<forward name="success" path="/editKost.do"></forward>
 		</action>
-		<action path="/editKost" name="kostForm"
+		<action path="/editKost" name="costForm"
 			type="org.techytax.struts.action.EditKostAction" scope="session">
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/editKost.jsp">
 			</forward>
 		</action>
 		<action path="/newKost" type="org.techytax.struts.action.NewKostAction"
-			name="kostForm" scope="session">
+			name="costForm" scope="session">
 			<forward name="success"
 				path="/WEB-INF/jsp/boek/insertKost.jsp">
 			</forward>
 		</action>
 		<action path="/insertKost" type="org.techytax.struts.action.InsertKostAction"
-			name="kostForm" scope="session" >
+			name="costForm" scope="session" >
 			<forward name="success" path="/WEB-INF/jsp/boek/insertKost.jsp"></forward>
 		</action>
 		<action path="/getKostensoortLijst"
@@ -288,9 +288,23 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			name="bookValueForm">
 			<forward name="success" path="/getBookValues.do"></forward>
 		</action>
+		<action path="/toSettlement" type="org.techytax.struts.action.ToSettlementAction"
+			name="settlementForm">
+			<forward name="success" path="/WEB-INF/jsp/boek/settlement.jsp"></forward>
+		</action>
+		<action path="/updateSettlement" type="org.techytax.struts.action.UpdateSettlementAction"
+			name="settlementForm">
+			<forward name="success" path="/WEB-INF/jsp/boek/settlement.jsp"></forward>
+		</action>			
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />
 	<message-resources parameter="properties.messages_en_US" />	
+	<message-resources parameter="properties.messages_el">
+	    <set-property property="escape" value="true"/>
+      	<set-property key="mode" value="JSTL"/>
+    </message-resources>
+	<message-resources parameter="properties.messages_es" />
+	<message-resources parameter="properties.messages_fr" />	
 	<message-resources parameter="properties.messages" />
 </struts-config>
