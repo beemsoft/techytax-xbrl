@@ -74,6 +74,7 @@ public class AuthorizationFilter implements Filter {
 		list.add("getBookValues");
 		list.add("editBookValue");
 		list.add("newBookValue");
+		list.add("toSettlement");		
 		return list;
 	}
 
@@ -93,7 +94,8 @@ public class AuthorizationFilter implements Filter {
 		list.add("sendVatReport");
 		list.add("updateActivum");	
 		list.add("updateBookValue");
-		list.add("insertBookValue");		
+		list.add("insertBookValue");
+		list.add("updateSettlement");		
 		return list;
 	}
 

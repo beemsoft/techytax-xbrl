@@ -19,17 +19,22 @@
  */
 package org.techytax.struts.form;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class SettlementForm {
+import org.apache.struts.action.ActionForm;
+
+public class SettlementForm extends ActionForm {
 	
 	private static final long serialVersionUID = 1L;
 
 	private String address;
 	private String description;
 	private String startDate;
+	private Integer purchasePrice;
+	private BigDecimal startupCosts;
 	private int nofSquareMetersBusiness;
-	private int nofSquareMetersTotal;
+	private int nofSquareMetersPrivate;
 	private BigInteger wozValue;
 	private BigInteger terrainValue; // Waarde van de grond, die bij het pand hoort
 	private int nofYearsForDepreciation;
@@ -69,12 +74,12 @@ public class SettlementForm {
 		this.nofSquareMetersBusiness = nofSquareMetersBusiness;
 	}
 
-	public int getNofSquareMetersTotal() {
-		return nofSquareMetersTotal;
+	public int getNofSquareMetersPrivate() {
+		return nofSquareMetersPrivate;
 	}
 
-	public void setNofSquareMetersTotal(int nofSquareMetersTotal) {
-		this.nofSquareMetersTotal = nofSquareMetersTotal;
+	public void setNofSquareMetersPrivate(int nofSquareMetersPrivate) {
+		this.nofSquareMetersPrivate = nofSquareMetersPrivate;
 	}
 
 	public BigInteger getWozValue() {
@@ -123,6 +128,22 @@ public class SettlementForm {
 
 	public void setFictiefRendement(BigInteger fictiefRendement) {
 		this.fictiefRendement = fictiefRendement;
+	}
+
+	public BigDecimal getStartupCosts() {
+		return startupCosts;
+	}
+
+	public void setStartupCosts(BigDecimal startupCosts) {
+		this.startupCosts = startupCosts;
+	}
+
+	public Integer getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Integer purchasePrice) {
+		this.purchasePrice = purchasePrice;
 	}
 
 }
