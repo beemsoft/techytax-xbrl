@@ -123,7 +123,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND activa.kost_id=#costId# 
 	</select>
 	<select id="getCostListForActivum" parameterClass="activum" resultClass="cost">
-		select kosten.* 
+		select kosten.id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId 
 		from kosten, activa 
 		where kosten.id = activa.kost_id 
 		and datum > #endDate# 
