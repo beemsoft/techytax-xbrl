@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="struts-html" prefix="html"%>
 <%@ taglib uri="struts-bean" prefix="bean"%>
 <%@ taglib uri="struts-logic" prefix="logic"%>
@@ -28,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<div class="margins">
 		<h4><bean:message key="program.title" /></h4>
 		<p>
-		Version: @version@
+		<bean:message key="label.version" />: @version@
 		</p>	
 		</td>		
 		<div id="links">
