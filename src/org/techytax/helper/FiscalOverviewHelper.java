@@ -410,7 +410,7 @@ public class FiscalOverviewHelper {
 		overview.setOnttrekking(privatWithdrawal);
 
 		// Prepaid taxes
-		PrepaidTax prepaidTax = TaxCodeHelper.findPrepaidTax(bookYear, Long.toString(userId));
+		PrepaidTax prepaidTax = DutchTaxCodeHelper.findPrepaidTax(bookYear, Long.toString(userId));
 		overview.setPrepaidTax(prepaidTax);
 		return overview;
 	}
