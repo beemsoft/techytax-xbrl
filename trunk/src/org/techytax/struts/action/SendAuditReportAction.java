@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
-import org.techytax.helper.AuditFileHelper;
+import org.techytax.helper.DutchAuditFileHelper;
 import org.techytax.mail.MailHelper;
 import org.techytax.struts.form.AuditReportForm;
 
@@ -47,7 +47,7 @@ public class SendAuditReportAction extends Action {
 		User user = (User) request.getSession().getAttribute("user");
 		List<Cost> costList = boekDao.getAuditList(auditReportForm.getBeginDatum(), auditReportForm.getEindDatum(), Long.toString(user.getId()));
 		try {
-			String message = AuditFileHelper.createAuditFile(costList, user);
+			String message = DutchAuditFileHelper.createAuditFile(costList, user);
 			MailHelper.sendAuditReport(message, user.getEmail());
 
 		} catch (Exception e) {
