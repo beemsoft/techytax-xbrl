@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -150,7 +150,7 @@ public class RekeningFileHelper {
 			} else {
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
-					TaxCodeHelper.convertTaxCode(kost);
+					DutchTaxCodeHelper.convertTaxCode(kost);
 				} 
 				kost = matchKost(kost, userId);
 			}
