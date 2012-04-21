@@ -22,12 +22,14 @@ package org.techytax.chart;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.Globals;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.User;
 
@@ -43,18 +45,18 @@ public class ChartGeneratorServlet extends HttpServlet {
 			User user = (User) httpServletRequest.getSession().getAttribute("user");
 
 			String chartType = httpServletRequest.getParameter("chartType");
-
+			Locale locale = (Locale)httpServletRequest.getSession().getAttribute(Globals.LOCALE_KEY);
 			if (chartType.equals("bookValues")) {
-				image = ChartFactory.createBookValueGraph(user.getId());
+				image = ChartFactory.createBookValueGraph(user.getId(), locale);
 			} else if (chartType.equals("profitAndLoss")) {
 				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
-				image = ChartFactory.createProfitAndLossPieChart(overview);
+				image = ChartFactory.createProfitAndLossPieChart(overview, locale);
 			} else if (chartType.equals("activa")) {
 				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
-				image = ChartFactory.createActivaPieChart(overview);
+				image = ChartFactory.createActivaPieChart(overview, locale);
 			} else if (chartType.equals("passiva")) {
 				FiscalOverview overview = (FiscalOverview) httpServletRequest.getSession().getAttribute("overview");
-				image = ChartFactory.createPassivaPieChart(overview);
+				image = ChartFactory.createPassivaPieChart(overview, locale);
 			} else {
 				return;
 			}

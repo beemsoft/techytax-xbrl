@@ -38,7 +38,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<form-bean name="loginForm" type="org.techytax.struts.form.LoginForm" />
 		<form-bean name="depreciationForm" type="org.techytax.struts.form.DepreciationForm" />
 		<form-bean name="bookValueForm" type="org.techytax.struts.form.BookValueForm" />
-		<form-bean name="settlementForm" type="org.techytax.struts.form.SettlementForm" />							
+		<form-bean name="settlementForm" type="org.techytax.struts.form.SettlementForm" />
+		<form-bean name="languageForm" type="org.techytax.struts.form.LanguageForm" />									
 	</form-beans>
 
 	<!-- Global Exceptions -->
@@ -295,7 +296,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<action path="/updateSettlement" type="org.techytax.struts.action.UpdateSettlementAction"
 			name="settlementForm">
 			<forward name="success" path="/WEB-INF/jsp/boek/settlement.jsp"></forward>
-		</action>			
+		</action>
+		<action path="/setLanguage" type="org.techytax.struts.action.SetLanguageAction"
+			name="languageForm" >
+			<forward name="success" path="/index.jsp"></forward>
+		</action>					
 	</action-mappings>
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />

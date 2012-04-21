@@ -19,46 +19,34 @@
  */
 package org.techytax.struts.action;
 
-import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BookValueDao;
-import org.techytax.domain.BookValue;
-import org.techytax.domain.KeyId;
-import org.techytax.domain.User;
-import org.techytax.helper.Translator;
+import org.techytax.struts.form.LanguageForm;
 
-public class GetBookValuesAction extends Action {
-
-	public ActionForward execute(ActionMapping mapping, ActionForm form, final HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		String forward = "failure";
-		List<BookValue> bookValues = null;
-
-		try {
-			BookValueDao dao = new BookValueDao();
-			KeyId key = new KeyId();
-			User user = (User) request.getSession().getAttribute("user");
-			key.setUserId(user.getId());
-			bookValues = dao.getBookValues(key);
-			for (BookValue bookValue : bookValues) {
-				bookValue.setDescription(Translator.translateKey(bookValue.getDescription(), (Locale) request.getSession().getAttribute(Globals.LOCALE_KEY)));
-			}
-			request.setAttribute("bookValues", bookValues);
-			forward = "success";
-		} catch (Exception e) {
-			throw e;
-		}
-
-		return mapping.findForward(forward);
+public final class SetLanguageAction extends Action {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpSession session = request.getSession();
+		LanguageForm languageForm = (LanguageForm) form;
+		session.setAttribute(Globals.LOCALE_KEY, getLocale(languageForm.getLocale()));
+		return mapping.findForward("success");
 	}
-
+	
+	private Locale getLocale(String locale) {
+		StringTokenizer tokenizer = new StringTokenizer(locale, "_");
+		if (tokenizer.countTokens() > 1) {
+			return new Locale(tokenizer.nextToken(), tokenizer.nextToken());
+		} else {
+			return new Locale(locale);
+		}
+	}
 }

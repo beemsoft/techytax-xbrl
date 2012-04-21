@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Locale;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -42,20 +43,20 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.util.TableOrder;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
+import org.techytax.helper.Translator;
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.domain.ReportBalance;
 
 public class JFreeChartHelper {
 
-	public static JFreeChart createBarChart(List<BookValue> bookValues) {
+	public static JFreeChart createBarChart(List<BookValue> bookValues, String title, String domainAxisLabel, String rangeAxisLabel) {
 
 		CategoryDataset dataset = createDataset(bookValues);
 
 		// create the chart...
-		JFreeChart chart = ChartFactory.createBarChart("Boekwaarde overzicht", // chart
-																				// title
-				"Jaar", // domain axis label
-				"Saldo", // range axis label
+		JFreeChart chart = ChartFactory.createBarChart(title,
+				domainAxisLabel,
+				rangeAxisLabel,
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation
 				true, // include legend
@@ -121,16 +122,15 @@ public class JFreeChartHelper {
 		return dataset;
 	}
 
-	public static JFreeChart createPieChartForProfitAndLoss(FiscalOverview overview) {
+	public static JFreeChart createPieChartForProfitAndLoss(FiscalOverview overview, Locale locale) {
 
-		PieDataset dataset = createDatasetForProfitAndLoss(overview);
+		PieDataset dataset = createDatasetForProfitAndLoss(overview, locale);
 
 		// set a theme using the new shadow generator feature available in
 		// 1.0.14 - for backwards compatibility it is not enabled by default
 		ChartFactory.setChartTheme(new StandardChartTheme("JFree/Shadow", true));
 
-		JFreeChart chart = ChartFactory.createPieChart("Winst en verlies", // chart
-																			// title
+		JFreeChart chart = ChartFactory.createPieChart(Translator.translateKey("overview.fiscal.statement", locale),
 				dataset, // data
 				true, // include legend
 				true, false);
@@ -142,27 +142,26 @@ public class JFreeChartHelper {
 
 	}
 
-	private static PieDataset createDatasetForProfitAndLoss(FiscalOverview overview) {
+	private static PieDataset createDatasetForProfitAndLoss(FiscalOverview overview, Locale locale) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		if (overview.getWinst() >= 0) {
-			dataset.setValue("Winst", overview.getWinst());
+			dataset.setValue(Translator.translateKey("overview.fiscal.profit", locale), overview.getWinst());
 		} else {
-			dataset.setValue("Verlies", Math.abs(overview.getWinst()));
+			dataset.setValue(Translator.translateKey("overview.fiscal.loss", locale), Math.abs(overview.getWinst()));
 		}
-		dataset.setValue("Andere kosten", overview.getKostenOverig());
-		dataset.setValue("Transport kosten", overview.getKostenOverigTransport());
-		dataset.setValue("Auto kosten", Math.abs(overview.getKostenAutoAftrekbaar()));
-		dataset.setValue("Afschrijving auto", overview.getAfschrijvingAuto());
-		dataset.setValue("Afschrijving overig", overview.getAfschrijvingOverig());
+		dataset.setValue(Translator.translateKey("overview.fiscal.cost.other", locale), overview.getKostenOverig());
+		dataset.setValue(Translator.translateKey("overview.fiscal.cost.transport", locale), overview.getKostenOverigTransport());
+		dataset.setValue(Translator.translateKey("overview.fiscal.cost.car.deductable", locale), Math.abs(overview.getKostenAutoAftrekbaar()));
+		dataset.setValue(Translator.translateKey("overview.fiscal.depreciation.car", locale), overview.getAfschrijvingAuto());
+		dataset.setValue(Translator.translateKey("overview.fiscal.depreciation.other", locale), overview.getAfschrijvingOverig());
 		return dataset;
 	}
 
-	public static JFreeChart createPieChartForActiva(FiscalOverview overview) {
+	public static JFreeChart createPieChartForActiva(FiscalOverview overview, String title) {
 
 		CategoryDataset dataset = createDatasetForActiva(overview);
 
-		final JFreeChart chart = ChartFactory.createMultiplePieChart("Activa", // chart
-																				// title
+		final JFreeChart chart = ChartFactory.createMultiplePieChart(title,
 				dataset, // dataset
 				TableOrder.BY_ROW, true, // include legend
 				true, false);
@@ -189,12 +188,11 @@ public class JFreeChartHelper {
  		return dataset;
 	}
 	
-	public static JFreeChart createPieChartForPassiva(FiscalOverview overview) {
+	public static JFreeChart createPieChartForPassiva(FiscalOverview overview, String title) {
 
 		CategoryDataset dataset = createDatasetForPassiva(overview);
 
-		final JFreeChart chart = ChartFactory.createMultiplePieChart("Passiva", // chart
-																				// title
+		final JFreeChart chart = ChartFactory.createMultiplePieChart(title,
 				dataset, // dataset
 				TableOrder.BY_ROW, true, // include legend
 				true, false);
