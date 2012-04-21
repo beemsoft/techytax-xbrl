@@ -37,6 +37,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.techytax.domain.User;
+import org.techytax.struts.form.LanguageForm;
 
 public class AuthorizationFilter implements Filter {
 	private String onErrorUrl;
@@ -74,7 +75,7 @@ public class AuthorizationFilter implements Filter {
 		list.add("getBookValues");
 		list.add("editBookValue");
 		list.add("newBookValue");
-		list.add("toSettlement");		
+		list.add("toSettlement");
 		return list;
 	}
 
@@ -119,7 +120,7 @@ public class AuthorizationFilter implements Filter {
 		User user = (User) session.getAttribute("user");
 		ActionErrors errors = new ActionErrors();
 		String action = req.getRequestURI().replaceAll(".*/", "").replace(".do", "");
-		if (!action.equals("login") && !action.equals("toLogin") && !action.equals("logout")) {
+		if (!action.equals("login") && !action.equals("toLogin") && !action.equals("logout") && !action.equals("setLanguage")) {
 			if (user == null) {
 				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.authentication.required"));
 			} else {
@@ -142,6 +143,12 @@ public class AuthorizationFilter implements Filter {
 					errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.authorization.required"));
 				}
 			}
+		}
+		// Initialize language
+		if (session.getAttribute("languageForm") == null) {
+			LanguageForm languageForm = new LanguageForm();
+			languageForm.setLocale(request.getLocale().toString());
+			session.setAttribute("languageForm", languageForm);
 		}
 		if (errors.isEmpty()) {
 			chain.doFilter(request, response);

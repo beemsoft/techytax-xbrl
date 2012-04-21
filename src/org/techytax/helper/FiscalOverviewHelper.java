@@ -24,6 +24,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.techytax.dao.BoekDao;
@@ -34,9 +35,9 @@ import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Balans;
 import org.techytax.domain.BookValue;
+import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyYear;
-import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passivum;
@@ -48,7 +49,7 @@ import org.techytax.util.DateHelper;
 
 public class FiscalOverviewHelper {
 
-	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Cost> costList, long userId) throws Exception {
+	public static FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, List<Cost> costList, long userId, Locale locale) throws Exception {
 
 		// Load properties
 		Properties props = PropsFactory.loadProperties();
@@ -79,7 +80,8 @@ public class FiscalOverviewHelper {
 		overview.setNetTurnOverNotYetPaid(turnoverUnpaidNet.toBigInteger());
 
 		// Repurchase
-//		BigInteger repurchase = BalanceCalculator.getRepurchase(deductableCosts);
+		// BigInteger repurchase =
+		// BalanceCalculator.getRepurchase(deductableCosts);
 		BigInteger repurchase = new BigInteger("0");
 		overview.setRepurchase(repurchase);
 
@@ -121,7 +123,7 @@ public class FiscalOverviewHelper {
 			overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
 			int kostenAutoAftrekbaar = 0;
 			kostenAutoAftrekbaar = -overview.getKostenAuto();
-			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);			
+			overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 		}
 		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
 		if (depreciationOther != null) {
@@ -308,6 +310,9 @@ public class FiscalOverviewHelper {
 		keyYear.setYear(bookYear);
 		keyYear.setUserId(userId);
 		List<Activum> activaLijst = fiscaalDao.getActivaLijst(keyYear);
+		for (Activum activum : activaLijst) {
+			activum.setOmschrijving(Translator.translateKey(activum.getOmschrijving(), locale));
+		}
 
 		if (!checkActivaOpgegeven(activaLijst, bookYear)) {
 			throw new Exception("errors.fiscal.activa");
@@ -377,7 +382,7 @@ public class FiscalOverviewHelper {
 			boekwaarde.setJaar(bookYear);
 			boekwaarde.setUserId(userId);
 			boekwaarde = boekwaardeDao.getBookValueThisYear(boekwaarde);
-			BigInteger bookTotalNonCurrentAssets = BigInteger.valueOf(bookTotalEnd - FOR - vatDebt.intValue()); 
+			BigInteger bookTotalNonCurrentAssets = BigInteger.valueOf(bookTotalEnd - FOR - vatDebt.intValue());
 			if (boekwaarde == null) {
 				boekwaarde = new BookValue();
 				boekwaarde.setBalanceType(BalanceType.NON_CURRENT_ASSETS);
@@ -395,13 +400,17 @@ public class FiscalOverviewHelper {
 		key.setUserId(userId);
 		key.setYear(bookYear);
 		List<Passivum> passivaLijst = fiscaalDao.getPassivaLijst(key);
+		for (Passivum passivum: passivaLijst) {
+			passivum.setOmschrijving(Translator.translateKey(passivum.getOmschrijving(), locale));
+		}
+		
 		overview.setPassiva(passivaLijst);
 		BigInteger enterpriseCapital = getEnterpriseCapital(passivaLijst, bookYear);
 		overview.setEnterpriseCapital(enterpriseCapital);
 
 		BigDecimal privateDeposit = boekDao.getCostsWithPrivateMoney(beginDatum, eindDatum, Long.toString(userId));
 		overview.setPrivateDeposit(privateDeposit.toBigInteger());
-		
+
 		// Private withdrawals
 		int totalWithdrawal = profit - (enterpriseCapital.intValue() - bookTotalBegin) + privateDeposit.intValue();
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
@@ -414,11 +423,11 @@ public class FiscalOverviewHelper {
 		overview.setPrepaidTax(prepaidTax);
 		return overview;
 	}
-	
+
 	private static BigInteger getEnterpriseCapital(List<Passivum> passiva, int bookYear) {
 		BigInteger enterpriseCapital = new BigInteger("0");
 		for (Passivum passivum : passiva) {
-			if (passivum.getBoekjaar() == bookYear &&  passivum.getBalanceType() != BalanceType.VAT_TO_BE_PAID) {
+			if (passivum.getBoekjaar() == bookYear && passivum.getBalanceType() != BalanceType.VAT_TO_BE_PAID) {
 				enterpriseCapital = enterpriseCapital.add(passivum.getSaldo());
 			}
 		}

@@ -21,11 +21,13 @@ package org.techytax.struts.action;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -134,7 +136,8 @@ public class GetKostLijstWithFormAction extends Action {
 				if (action.equals("Fiscaal overzicht")) {
 					FiscalOverview overview = (FiscalOverview) request.getSession().getAttribute("overview"); 
 					if (overview == null) {
-						overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result, user.getId());
+						Locale locale = (Locale)request.getSession().getAttribute(Globals.LOCALE_KEY);
+						overview = FiscalOverviewHelper.createFiscalOverview(balansForm.getBeginDatum(), balansForm.getEindDatum(), result, user.getId(), locale);
 						request.getSession().setAttribute("overview", overview);
 					}
 					forward = "fiscaal";
