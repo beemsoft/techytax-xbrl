@@ -76,7 +76,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<td><a href="editKostmatch.do?id=<%=obj.getId()%>"><%=obj.getMatchText()%></a></td>
 			<logic:equal value="true" property="btwVerrekenbaar"
 				name="kostensoortForm">
-				<td><a href="editBtwmatch.do?id=<%=obj.getId()%>"><%=obj.getBtwType()%></a></td>
+				<td><a href="editBtwmatch.do?id=<%=obj.getId()%>"><bean:message key="<%=obj.getVatType().getKey()%>"/></a></td>
 			</logic:equal>
 		</tr>
 		<%
@@ -117,7 +117,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<td><a href="editCostMatchPrivate.do?id=<%=obj.getId()%>"><%=obj.getMatchText()%></a></td>
 			<logic:equal value="true" property="btwVerrekenbaar"
 				name="kostensoortForm">
-				<td><a href="editBtwMatchPrivate.do?id=<%=obj.getId()%>"><%=obj.getBtwType()%></a></td>
+				<td><a href="editBtwMatchPrivate.do?id=<%=obj.getId()%>"><bean:message key="<%=obj.getVatType().getKey()%>"/></a></td>
 			</logic:equal>
 			<td><a href="deleteCostMatchPrivate.do?id=<%=obj.getId()%>&kostenSoortId=<%=obj.getKostenSoortId()%>">delete</a></td>
 		</tr>

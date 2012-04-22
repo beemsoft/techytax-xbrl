@@ -30,6 +30,7 @@ import java.util.Vector;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.dao.SettlementDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
@@ -65,7 +66,10 @@ public class RekeningFileHelper {
 		return accountDao.getAccountType(accountNumber, userId);
 	}
 
-	public static List<Cost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) {
+	public static List<Cost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
+		SettlementDao settlementDao = new SettlementDao();
+		long percentage = settlementDao.getPercentage(Long.parseLong(userId));
+		
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
@@ -78,7 +82,22 @@ public class RekeningFileHelper {
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				kost = verwerkRegel(regel, regelNummer, userId);
-				kostLijst.add(kost);
+				if (kost.getCostTypeId() != KostConstanten.SETTLEMENT) {
+					kostLijst.add(kost);
+				} else {
+					// Administrative split
+					BigDecimal originalAmount = kost.getAmount();
+//					BigDemical originalVat = kost.getVat();
+//					kost.setAmount(originalAmount.doubleValue() / ())
+//					costForm.splitAmount.value = Math.round(100 * (currentAmount / ((100 + perc)/ 100)))/100;
+//					costForm.amount.value = Math.round(100 * (currentAmount * (perc/(100+perc))))/100;
+//					costForm.splitVat.value = Math.round(100 * (currentVat / ((100 + perc)/ 100)))/100;
+//					costForm.vat.value = Math.round(100 * (currentVat * (perc/(100+perc))))/100;
+//					
+//					bd = new BigDecimal(bedrag.doubleValue() / 1.19d);
+//					bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+//					btwBedrag = bedrag.subtract(bd);
+				}
 			}
 
 		} catch (IOException e) {
@@ -87,9 +106,6 @@ public class RekeningFileHelper {
 		return kostLijst;
 	}
 
-	/**
-	 * 
-	 */
 	private static void verwerkRecords() throws IOException {
 		int regelNummer = 0;
 
@@ -104,17 +120,6 @@ public class RekeningFileHelper {
 		}
 	}
 
-	/**
-	 * Lees een regel. Haal alle personen op. Haal alle blokken op. Als de
-	 * persoon in de regel nog niet bekend is, voeg deze dan toe. Als het blok
-	 * in de regel nog niet bekend is, voeg deze dan toe. Voeg het reviewobject
-	 * toe.
-	 * 
-	 * @param regel
-	 * @param regelNummer
-	 * @param labels
-	 * @param request
-	 */
 	public static Cost verwerkRegel(String[] regel, int regelNummer, String userId) {
 		Cost kost = new Cost();
 		// Controleer of het aantal waarden in de regel klopt.
@@ -185,8 +190,6 @@ public class RekeningFileHelper {
 
 	private static Cost matchKost(Cost kost, String userId) throws Exception {
 		long kostensoortId = KostConstanten.ONBEPAALD;
-		BigDecimal bedrag = kost.getAmount();
-		BigDecimal btwBedrag = new BigDecimal(0);
 		boolean berekenBtw_hoog = false;
 		boolean berekenBtw_laag = false;
 		kostensoortId = findKostensoort(kost.getDescription(), userId);
@@ -196,21 +199,13 @@ public class RekeningFileHelper {
 		if (kostensoort.isBtwVerrekenbaar()) {
 			berekenBtw_hoog = true;
 		}
-		BigDecimal bd = bedrag;
+		kost.setVat(new BigDecimal("0"));
 		if (berekenBtw_hoog) {
-			int decimalPlace = 2;
-			bd = new BigDecimal(bedrag.doubleValue() / 1.19d);
-			bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-			btwBedrag = bedrag.subtract(bd);
+			CostSplitter.splitPercentagFromAmount(kost, 19);
 		}
 		if (berekenBtw_laag) {
-			int decimalPlace = 2;
-			bd = new BigDecimal(bedrag.doubleValue() / 1.06d);
-			bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-			btwBedrag = bedrag.subtract(bd);
+			CostSplitter.splitPercentagFromAmount(kost, 6);
 		}
-		kost.setVat(btwBedrag);
-		kost.setAmount(bd);
 		kost.setCostTypeId(kostensoortId);
 		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
 		return kost;
@@ -227,23 +222,14 @@ public class RekeningFileHelper {
 		return "Onbepaald";
 	}
 
-	/**
-	 * @return
-	 */
 	public String getFileName() {
 		return fileName;
 	}
 
-	/**
-	 * @return
-	 */
 	public Vector<String> getLabels() {
 		return labels;
 	}
 
-	/**
-	 * @return
-	 */
 	public static Vector<String[]> getRegels() {
 		return regels;
 	}

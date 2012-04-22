@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -18,41 +18,14 @@ along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 <%@ page isErrorPage="true" %>
-<%@ page language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="struts-html" prefix="html" %>
 <%@ taglib uri="struts-bean" prefix="bean" %>
 <%@ taglib uri="struts-logic" prefix="logic" %>
 <%@ taglib uri="i18n" prefix="i18n" %>
-<html:html>
-<head>
-<style type="text/css" media="screen, print">
-<!--
-@import url(css/default.css);
--->
-</style>
-<title>Foutmelding</title>
-</head>
-
-<body>
  
-<!--	Hoofdscherm	-->
-<div class="main">
-
-			<p class="invoerblokken">
-				<table class="invoerblokken">
-					<tr>
-						<td class="foutmeldingen">
-							<p class="foutmeldingen">
-							<i18n:formatDateTime value="<%= new java.util.Date() %>" dateStyle="long" timeStyle="medium"/> - 
-							Er is een fout opgetreden in de applicatie.
-							<br><html:errors/>
-							</p>
-						</td>
-					</tr>
-				</table>
-
-
+<h4 class="section">Error</h4>
+<div class="margins">
+<i18n:formatDateTime value="<%= new java.util.Date() %>" dateStyle="long" timeStyle="medium"/>
+<html:errors/>
 </div>
-
-</body>
-</html:html>

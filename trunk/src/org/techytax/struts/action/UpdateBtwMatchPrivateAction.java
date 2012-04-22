@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,13 +22,13 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.BtwmatchDao;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.VatType;
 import org.techytax.struts.form.KostmatchForm;
 
 public class UpdateBtwMatchPrivateAction extends Action {
@@ -39,7 +39,10 @@ public class UpdateBtwMatchPrivateAction extends Action {
 
 		KostmatchForm kostmatchForm = (KostmatchForm) form;
 		Kostmatch kostmatch = new Kostmatch();
-		BeanUtils.copyProperties(kostmatch, kostmatchForm);
+		kostmatch.setId(kostmatchForm.getId());
+		kostmatch.setKostenSoortId(kostmatchForm.getKostenSoortId());
+		kostmatch.setMatchText(kostmatchForm.getMatchText());
+		kostmatch.setVatType(VatType.getInstance(kostmatchForm.getVatType()));
 		BtwmatchDao btwmatchDao = new BtwmatchDao();
 		btwmatchDao.updateBtwMatchPrivate(kostmatch);
 		request.setAttribute("kostenSoortId", Long.toString(kostmatch

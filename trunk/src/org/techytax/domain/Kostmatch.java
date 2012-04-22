@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,7 +20,7 @@
 package org.techytax.domain;
 
 public class Kostmatch {
-	private String btwType;
+	private VatType vatType;
 
 	private long id = 0;
 
@@ -30,8 +30,8 @@ public class Kostmatch {
 
 	private long userId;
 
-	public String getBtwType() {
-		return btwType;
+	public VatType getVatType() {
+		return vatType;
 	}
 
 	public long getId() {
@@ -50,8 +50,8 @@ public class Kostmatch {
 		return userId;
 	}
 
-	public void setBtwType(String btwType) {
-		this.btwType = btwType;
+	public void setVatType(VatType vatType) {
+		this.vatType = vatType;
 	}
 
 	public void setId(long id) {

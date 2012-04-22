@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -44,7 +44,7 @@ public class EditBtwmatchAction extends Action {
 			throws Exception {
 
 		Kostmatch kostmatch = null;
-		KostmatchForm objForm = (KostmatchForm) form;
+		KostmatchForm costMatchForm = (KostmatchForm) form;
 
 		String forward = "failure";
 		String id = (String) request.getParameter("id");
@@ -54,7 +54,7 @@ public class EditBtwmatchAction extends Action {
 				KostmatchDao kostmatchDao = new KostmatchDao();
 
 				kostmatch = kostmatchDao.getKostmatch(id);
-				if (kostmatch.getBtwType() == null) {
+				if (kostmatch.getVatType() == null) {
 					BtwmatchDao btwmatchDao = new BtwmatchDao();
 					Btwmatch btwmatch = btwmatchDao.getBtwmatch(id);
 					if (btwmatch == null) {
@@ -64,7 +64,8 @@ public class EditBtwmatchAction extends Action {
 
 				log.debug("result=" + kostmatch);
 
-				BeanUtils.copyProperties(objForm, kostmatch);
+				BeanUtils.copyProperties(costMatchForm, kostmatch);
+				costMatchForm.setVatType(kostmatch.getVatType().name());
 
 				forward = "success";
 			} catch (Exception e) {
