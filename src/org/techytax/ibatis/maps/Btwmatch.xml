@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -32,11 +32,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		values(#id#,#kostmatchId#,#btwType#)
 	</insert>	
 	<update id="updateBtwmatch" parameterClass="kostmatch">
-		update btwmatch set btw_type = #btwType#
+		update btwmatch set btw_type = #vatType#
 		WHERE kostmatch_id = #id#
 	</update>
 	<update id="updateBtwMatchPrivate" parameterClass="kostmatch">
-		update btwmatch_private set btw_type = #btwType#
+		update btwmatch_private set btw_type = #vatType#
 		WHERE kostmatch_id = #id#
 	</update>	
 	<select id="getBtwmatch" parameterClass="string" resultClass="btwmatch">

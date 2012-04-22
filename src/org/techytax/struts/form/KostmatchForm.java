@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -31,7 +31,7 @@ public class KostmatchForm extends ActionForm {
 
 	private String matchText;
 
-	private String btwType;
+	private String vatType;
 
 	public long getId() {
 		return id;
@@ -57,12 +57,12 @@ public class KostmatchForm extends ActionForm {
 		this.matchText = matchText;
 	}
 
-	public String getBtwType() {
-		return btwType;
+	public String getVatType() {
+		return vatType;
 	}
 
-	public void setBtwType(String btwType) {
-		this.btwType = btwType;
+	public void setVatType(String vatType) {
+		this.vatType = vatType;
 	}
 
 }

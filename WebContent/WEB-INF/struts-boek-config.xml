@@ -43,7 +43,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</form-beans>
 
 	<!-- Global Exceptions -->
-	<global-exceptions></global-exceptions>
+	<global-exceptions>
+	    <exception
+	      key="errors.general"
+	      type="java.lang.Exception"
+	      path="/jsp/error.jsp" />
+	</global-exceptions>
 
 	<!-- Global Forwards -->
 	<global-forwards>

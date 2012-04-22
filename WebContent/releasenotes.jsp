@@ -6,9 +6,11 @@
 Changes:
 </p>
 <ul>
+<li>Improved global error handling.</li>
 <li>Added translations for the following languages: Portuguese (Brazilian), Spanish, French, Greek.</li>
-<li>Added administratitive splitting (Administratief splitsen) of costs.</li>
-<li>Extended settlement (bedrijfsruimte) administration.</li>
+<li>Added administratitive splitting (Administratief splitsen) of costs. Administrative splitting is automatically done
+during the import of settlement (bedrijfsruimte) costs.</li>
+<li>Extended settlement (bedrijfsruimte) administration. You can enter the square meters for private and business use of a settlement.</li>
 <li>Don't use repurchases in profit calculation.</li>
 <li>Added cost deduction for private car usage.</li>
 </ul>
@@ -16,6 +18,7 @@ Changes:
 Bugfixes:
 </p>
 <ul>
+<li>Fixed vat calculation during cost import.</li>
 <li>Fixed bookvalue calculation for machinery.</li>
 <li>Fixed double-check of current account balance.</li>
 </ul>

@@ -59,7 +59,7 @@ public class EditBtwMatchPrivateAction extends Action {
 				key.setId(Long.parseLong(id));
 				key.setUserId(user.getId());
 				kostmatch = kostmatchDao.getCostMatchPrivate(key);
-				if (kostmatch.getBtwType() == null) {
+				if (kostmatch.getVatType() == null) {
 					BtwmatchDao btwmatchDao = new BtwmatchDao();
 					Btwmatch btwmatch = btwmatchDao.getBtwMatchPrivate(id);
 					if (btwmatch == null) {

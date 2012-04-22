@@ -77,6 +77,7 @@ public class EditKostensoortAction extends Action {
 				forward = "success";
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw e;
 			}
 		}
 		return mapping.findForward(forward);

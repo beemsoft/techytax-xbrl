@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,7 +22,6 @@ package org.techytax.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -30,6 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.User;
+import org.techytax.domain.VatType;
 import org.techytax.struts.form.KostmatchForm;
 
 public class UpdateCostMatchPrivateAction extends Action {
@@ -40,10 +40,13 @@ public class UpdateCostMatchPrivateAction extends Action {
 
 		KostmatchForm kostmatchForm = (KostmatchForm) form;
 		Kostmatch costMatch = new Kostmatch();
-		BeanUtils.copyProperties(costMatch, kostmatchForm);
-		KostmatchDao kostmatchDao = new KostmatchDao();
 		User user = (User) request.getSession().getAttribute("user");
-		costMatch.setUserId(user.getId());
+		costMatch.setUserId(user.getId());		
+		costMatch.setId(kostmatchForm.getId());
+		costMatch.setKostenSoortId(kostmatchForm.getKostenSoortId());
+		costMatch.setMatchText(kostmatchForm.getMatchText());
+		costMatch.setVatType(VatType.getInstance(kostmatchForm.getVatType()));
+		KostmatchDao kostmatchDao = new KostmatchDao();
 		kostmatchDao.updateCostMatchPrivate(costMatch);
 		request.setAttribute("kostenSoortId", Long.toString(costMatch
 				.getKostenSoortId()));

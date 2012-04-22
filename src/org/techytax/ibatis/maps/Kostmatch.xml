@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -33,13 +33,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		WHERE user_id = #value#
 	</select>	
 	<select id="getKostmatchLijstForId" parameterClass="string" resultClass="kostmatch">
-		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as vatType
 		FROM kostmatch as k 
 		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
 		WHERE k.kostensoort_id = #value#;
 	</select>
 	<select id="getCostMatchPrivateListForId" parameterClass="key" resultClass="kostmatch">
-		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as vatType
 		FROM kostmatch_private as k 
 		LEFT OUTER JOIN btwmatch_private as b ON k.id = b.kostmatch_id 
 		WHERE k.kostensoort_id = #id#
@@ -60,14 +60,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</delete>
 	<select id="getKostmatch" parameterClass="string"
 		resultClass="kostmatch">
-		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as vatType
 		FROM kostmatch as k 
 		LEFT OUTER JOIN btwmatch as b ON k.id = b.kostmatch_id 
 		WHERE k.id = #value#;
 	</select>
 	<select id="getCostMatchPrivate" parameterClass="key"
 		resultClass="kostmatch">
-		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as btwType
+		SELECT k.id, kostensoort_id as kostenSoortId, match_text as matchText, b.btw_type as vatType
 		FROM kostmatch_private as k 
 		LEFT OUTER JOIN btwmatch_private as b ON k.id = b.kostmatch_id 
 		WHERE k.id = #id#
