@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -37,7 +38,9 @@ public final class SetLanguageAction extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
 		LanguageForm languageForm = (LanguageForm) form;
-		session.setAttribute(Globals.LOCALE_KEY, getLocale(languageForm.getLocale()));
+		if (StringUtils.isNotEmpty(languageForm.getLocale())) {
+			session.setAttribute(Globals.LOCALE_KEY, getLocale(languageForm.getLocale()));
+		}
 		return mapping.findForward("success");
 	}
 	
