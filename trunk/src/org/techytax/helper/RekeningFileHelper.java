@@ -29,13 +29,16 @@ import java.util.Vector;
 
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.VatMatchDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.SettlementDao;
 import org.techytax.domain.AccountType;
+import org.techytax.domain.VatMatch;
 import org.techytax.domain.Cost;
 import org.techytax.domain.KostConstanten;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.VatType;
 
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
@@ -58,7 +61,7 @@ public class RekeningFileHelper {
 
 	private RekeningFileHelper() {
 	}
-	
+
 	public static AccountType getAccountType(String fileName, long userId) throws Exception {
 		int index = fileName.indexOf("_");
 		String accountNumber = fileName.substring(0, index);
@@ -69,7 +72,7 @@ public class RekeningFileHelper {
 	public static List<Cost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
 		SettlementDao settlementDao = new SettlementDao();
 		long percentage = settlementDao.getPercentage(Long.parseLong(userId));
-		
+
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
@@ -81,22 +84,26 @@ public class RekeningFileHelper {
 			Cost kost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				kost = verwerkRegel(regel, regelNummer, userId);
+				kost = processLine(regel, regelNummer, userId);
 				if (kost.getCostTypeId() != KostConstanten.SETTLEMENT) {
 					kostLijst.add(kost);
 				} else {
 					// Administrative split
 					BigDecimal originalAmount = kost.getAmount();
-//					BigDemical originalVat = kost.getVat();
-//					kost.setAmount(originalAmount.doubleValue() / ())
-//					costForm.splitAmount.value = Math.round(100 * (currentAmount / ((100 + perc)/ 100)))/100;
-//					costForm.amount.value = Math.round(100 * (currentAmount * (perc/(100+perc))))/100;
-//					costForm.splitVat.value = Math.round(100 * (currentVat / ((100 + perc)/ 100)))/100;
-//					costForm.vat.value = Math.round(100 * (currentVat * (perc/(100+perc))))/100;
-//					
-//					bd = new BigDecimal(bedrag.doubleValue() / 1.19d);
-//					bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-//					btwBedrag = bedrag.subtract(bd);
+					// BigDemical originalVat = kost.getVat();
+					// kost.setAmount(originalAmount.doubleValue() / ())
+					// costForm.splitAmount.value = Math.round(100 *
+					// (currentAmount / ((100 + perc)/ 100)))/100;
+					// costForm.amount.value = Math.round(100 * (currentAmount *
+					// (perc/(100+perc))))/100;
+					// costForm.splitVat.value = Math.round(100 * (currentVat /
+					// ((100 + perc)/ 100)))/100;
+					// costForm.vat.value = Math.round(100 * (currentVat *
+					// (perc/(100+perc))))/100;
+					//					
+					// bd = new BigDecimal(bedrag.doubleValue() / 1.19d);
+					// bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+					// btwBedrag = bedrag.subtract(bd);
 				}
 			}
 
@@ -120,43 +127,29 @@ public class RekeningFileHelper {
 		}
 	}
 
-	public static Cost verwerkRegel(String[] regel, int regelNummer, String userId) {
+	public static Cost processLine(String[] line, int lineNumber, String userId) {
 		Cost kost = new Cost();
-		// Controleer of het aantal waarden in de regel klopt.
 		try {
-			String datum = regel[0];
-			kost.setDate(datum.substring(0, 4) + "-" + datum.substring(4, 6)
-					+ "-" + datum.substring(6, 8));
-			BigDecimal bedrag = new BigDecimal(regel[6].replace(',', '.'));
+			String datum = line[0];
+			kost.setDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8));
+			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			kost.setAmount(bedrag);
-			if (regel[5].equals("Af")) {
+			if (line[5].equals("Af")) {
 				kost.setIncoming(false);
 			} else {
-				kost.setDescription("Inleg vanaf spaarrekening");
-				kost.setCostTypeId(KostConstanten.INLEG);
-				kost.setIncoming(true);				
-			}			
-			String omschrijving = regel[1] + " " + regel[8];
+				kost.setIncoming(true);
+			}
+			String omschrijving = line[1] + " " + line[8];
 
 			if (omschrijving.trim().equals("")) {
-				// Dit is waarschijnlijk een opname van de spaarrekening.
-				if (regel[2].equals(regel[3])) {
-					if (regel[5].equals("Af")) {
-						kost.setDescription("Opname naar spaarrekening");
-						kost.setCostTypeId(KostConstanten.OPNAME);
-					} else {
-						kost.setDescription("Inleg vanaf spaarrekening");
-						kost.setCostTypeId(KostConstanten.INLEG);
-					}
-					kost.setKostenSoortOmschrijving(getKostOmschrijving(kost
-							.getCostTypeId()));
-					kost.setVat(new BigDecimal("0"));
-				}
+				kost.setCostTypeId(KostConstanten.UNDETERMINED);
+				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
+				kost.setVat(new BigDecimal("0"));
 			} else {
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
-				} 
+				}
 				kost = matchKost(kost, userId);
 			}
 			return kost;
@@ -167,44 +160,50 @@ public class RekeningFileHelper {
 		return null;
 	}
 
-	private static long findKostensoort(String omschrijving, String userId) throws Exception {
+	private static Kostmatch findCostMatch(String omschrijving, String userId) throws Exception {
 		KostmatchDao kostmatchDao = new KostmatchDao();
 		List<Kostmatch> kostmatchList = kostmatchDao.getCostMatchPrivateList(userId);
 		Iterator<Kostmatch> iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
 			Kostmatch kostmatch = iterator.next();
 			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-				return kostmatch.getKostenSoortId();
+				return kostmatch;
 			}
-		}		
+		}
 		kostmatchList = kostmatchDao.getKostmatchLijst();
 		iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
 			Kostmatch kostmatch = iterator.next();
 			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-				return kostmatch.getKostenSoortId();
+				return kostmatch;
 			}
 		}
-		return 0;
+		return null;
 	}
 
 	private static Cost matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = KostConstanten.ONBEPAALD;
-		boolean berekenBtw_hoog = false;
-		boolean berekenBtw_laag = false;
-		kostensoortId = findKostensoort(kost.getDescription(), userId);
-		KostensoortDao kostensoortDao = new KostensoortDao();
-		Kostensoort kostensoort = kostensoortDao.getKostensoort(Long
-				.toString(kostensoortId));
-		if (kostensoort.isBtwVerrekenbaar()) {
-			berekenBtw_hoog = true;
-		}
+		long kostensoortId = KostConstanten.UNDETERMINED;
 		kost.setVat(new BigDecimal("0"));
-		if (berekenBtw_hoog) {
-			CostSplitter.splitPercentagFromAmount(kost, 19);
-		}
-		if (berekenBtw_laag) {
-			CostSplitter.splitPercentagFromAmount(kost, 6);
+		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
+		if (costMatch != null) {
+			kostensoortId = costMatch.getKostenSoortId();
+			KostensoortDao kostensoortDao = new KostensoortDao();
+			Kostensoort costType = kostensoortDao.getKostensoort(Long.toString(kostensoortId));
+			if (costType.isBtwVerrekenbaar()) {
+				VatMatchDao vatMatchDao = new VatMatchDao();
+				VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));
+				if (vatMatch == null) {
+					vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(costMatch.getId()));
+				}
+				if (vatMatch != null) {
+					if (vatMatch.getVatType() == VatType.HIGH) {
+						CostSplitter.splitPercentagFromAmount(kost, 19);
+					}
+					if (vatMatch.getVatType() == VatType.LOW) {
+						CostSplitter.splitPercentagFromAmount(kost, 6);
+					}
+				}
+			}
 		}
 		kost.setCostTypeId(kostensoortId);
 		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
@@ -219,7 +218,7 @@ public class RekeningFileHelper {
 				return kostensoort.getOmschrijving();
 			}
 		}
-		return "Onbepaald";
+		return "costtype.none";
 	}
 
 	public String getFileName() {
@@ -232,6 +231,19 @@ public class RekeningFileHelper {
 
 	public static Vector<String[]> getRegels() {
 		return regels;
+	}
+
+	public static void main(String[] args) throws Exception {
+		KostensoortDao kostensoortDao = new KostensoortDao();
+		kostensoortList = kostensoortDao.getKostensoortLijst();
+		Cost cost = new Cost();
+		cost.setAmount(new BigDecimal("100"));
+		cost.setDescription("77820003 85-PFP-8 3E MND TIJDVAK 10/01/12-1");
+		cost.setUserId(1);
+		Cost matchedCost = matchKost(cost, "1");
+		System.out.println("Test: " + matchedCost.getCostTypeId());
+		System.out.println("Test: " + matchedCost.getVat());
+
 	}
 
 }

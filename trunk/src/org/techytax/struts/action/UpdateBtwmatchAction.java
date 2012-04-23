@@ -26,7 +26,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BtwmatchDao;
+import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.VatType;
 import org.techytax.struts.form.KostmatchForm;
@@ -43,8 +43,8 @@ public class UpdateBtwmatchAction extends Action {
 		kostmatch.setKostenSoortId(kostmatchForm.getKostenSoortId());
 		kostmatch.setMatchText(kostmatchForm.getMatchText());
 		kostmatch.setVatType(VatType.valueOf(kostmatchForm.getVatType()));
-		BtwmatchDao btwmatchDao = new BtwmatchDao();
-		btwmatchDao.updateBtwmatch(kostmatch);
+		VatMatchDao btwmatchDao = new VatMatchDao();
+		btwmatchDao.updateVatMatch(kostmatch);
 		request.setAttribute("kostenSoortId", Long.toString(kostmatch
 				.getKostenSoortId()));
 		return mapping.findForward("success");

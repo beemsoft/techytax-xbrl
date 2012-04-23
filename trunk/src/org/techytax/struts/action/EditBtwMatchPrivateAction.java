@@ -30,9 +30,9 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BtwmatchDao;
+import org.techytax.dao.VatMatchDao;
 import org.techytax.dao.KostmatchDao;
-import org.techytax.domain.Btwmatch;
+import org.techytax.domain.VatMatch;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.User;
@@ -60,10 +60,10 @@ public class EditBtwMatchPrivateAction extends Action {
 				key.setUserId(user.getId());
 				kostmatch = kostmatchDao.getCostMatchPrivate(key);
 				if (kostmatch.getVatType() == null) {
-					BtwmatchDao btwmatchDao = new BtwmatchDao();
-					Btwmatch btwmatch = btwmatchDao.getBtwMatchPrivate(id);
+					VatMatchDao btwmatchDao = new VatMatchDao();
+					VatMatch btwmatch = btwmatchDao.getVatMatchPrivate(id);
 					if (btwmatch == null) {
-						btwmatchDao.insertBtwMatchPrivate(kostmatch);
+						btwmatchDao.insertVatMatchPrivate(kostmatch);
 					}
 				}
 
