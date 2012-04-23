@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 public interface KostConstanten {
 
-	public static final int ONBEPAALD = 0;
+	public static final int UNDETERMINED = 0;
 	public static final int INKOMST_DEZE_REKENING = 1;
 	public static final int UITGAVE_DEZE_REKENING = 2;
 	public static final int UITGAVE_DEZE_REKENING_FOUTIEF = 3;

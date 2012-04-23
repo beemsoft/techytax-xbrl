@@ -1,0 +1,57 @@
+<!--
+Copyright 2012 Hans Beemsterboer
+
+This file is part of the TechyTax program.
+
+TechyTax is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+TechyTax is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TechyTax; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+          "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="VatMatch">
+	<typeAlias alias="kostmatch" type="org.techytax.domain.Kostmatch" />
+	<typeAlias alias="vatMatch" type="org.techytax.domain.VatMatch" />	
+	<insert id="insertVatMatch" parameterClass="vatMatch">
+		insert into btwmatch
+		values(#id#,#kostmatchId#,#vatType#)
+	</insert>
+	<insert id="insertVatMatchPrivate" parameterClass="vatMatch">
+		insert into btwmatch_private
+		values(#id#,#kostmatchId#,#vatType#)
+	</insert>	
+	<update id="updateVatMatch" parameterClass="kostmatch">
+		update btwmatch set btw_type = #vatType#
+		WHERE kostmatch_id = #id#
+	</update>
+	<update id="updateVatMatchPrivate" parameterClass="kostmatch">
+		update btwmatch_private set btw_type = #vatType#
+		WHERE kostmatch_id = #id#
+	</update>	
+	<select id="getVatMatch" parameterClass="string" resultClass="vatMatch">
+		SELECT id, kostmatch_id, btw_type as vatType 
+		FROM btwmatch
+		WHERE kostmatch_id = #value#
+	</select>
+	<select id="getVatMatchPrivate" parameterClass="string" resultClass="vatMatch">
+		SELECT id, kostmatch_id, btw_type as vatType
+		FROM btwmatch_private
+		WHERE kostmatch_id = #value#
+	</select>
+	<delete id="deleteVatMatchPrivate" parameterClass="string">
+		delete
+		from btwmatch_private
+		where kostmatch_id = #value#
+	</delete>		
+</sqlMap>

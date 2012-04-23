@@ -27,7 +27,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.techytax.dao.BtwmatchDao;
+import org.techytax.dao.VatMatchDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
@@ -47,8 +47,8 @@ public class DeleteCostMatchPrivateAction extends Action {
 			key.setId(Long.parseLong(id));
 			key.setUserId(user.getId());
 			Kostmatch costMatch = dao.getCostMatchPrivate(key);
-			BtwmatchDao btwMatchDao = new BtwmatchDao();
-			btwMatchDao.deleteBtwMatchPrivate(Long.toString(costMatch.getId()));
+			VatMatchDao btwMatchDao = new VatMatchDao();
+			btwMatchDao.deleteVatMatchPrivate(Long.toString(costMatch.getId()));
 			costMatch.setUserId(user.getId());
 			dao.deleteCostMatchPrivate(costMatch);
 		}
