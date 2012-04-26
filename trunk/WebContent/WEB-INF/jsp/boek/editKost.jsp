@@ -131,10 +131,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	function doPercentage() {
 		var currentAmount = costForm.amount.value;
 		var currentVat = costForm.vat.value;
-		costForm.splitAmount.value = Math.round(100 * (currentAmount * (perc/100)))/100;
-		costForm.amount.value =      Math.round(100 * (currentAmount * ((100-perc)/100)))/100;
-		costForm.splitVat.value =    Math.round(100 * (currentVat *    (perc/100)))/100;
-		costForm.vat.value =         Math.round(100 * (currentVat *    ((100-perc)/100)))/100;
+		costForm.splitAmount.value = Math.round(100 * (currentAmount * ((100-perc)/100)))/100;
+		costForm.amount.value =      Math.round(100 * (currentAmount * (perc/100)))/100;
+		costForm.splitVat.value =    Math.round(100 * (currentVat *    ((100-perc)/100)))/100;
+		costForm.vat.value =         Math.round(100 * (currentVat *    (perc/100)))/100;
 	}		
 
 	</script>
