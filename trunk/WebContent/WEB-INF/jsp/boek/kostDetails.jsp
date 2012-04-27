@@ -63,7 +63,7 @@ var cal13 = new CalendarPopup();
 	<tr>
 		<td><bean:message key="label.date"/>:</td>
 		<td><html:text property="date" /><a href="#"
-			onclick="cal13.select(document.forms[0].date,'date','yyyy-MM-dd'); return false;"
+			onclick="cal13.select(document.forms[1].date,'date','yyyy-MM-dd'); return false;"
 			title="Kies datum" name="date" id="date">select</a></td>
 	</tr>
 	<tr>
