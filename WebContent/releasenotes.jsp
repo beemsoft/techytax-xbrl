@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <h4 class="section">Release Notes</h4>
 <div style="width:600">
-<h4>1.9 (upcoming)</h4>
+<h4>1.9 (2012-04-27)</h4>
 <p>
 Changes:
 </p>
