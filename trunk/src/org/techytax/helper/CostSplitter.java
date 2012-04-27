@@ -35,10 +35,23 @@ public class CostSplitter {
 		cost.setVat(originalAmount.subtract(splitAmount));
 	}
 	
+	public static void applyPercentage(Cost cost, int percentage) {
+		int decimalPlace = 2;
+		BigDecimal splitAmount = new BigDecimal(cost.getAmount().doubleValue() * (percentage / 100d));
+		splitAmount = splitAmount.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		BigDecimal splitVat = new BigDecimal(cost.getVat().doubleValue() * (percentage / 100d));
+		splitVat = splitVat.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);		
+		cost.setAmount(splitAmount);
+		cost.setVat(splitVat);
+	}	
+	
 	public static void main(String[] args) {
 		Cost cost = new Cost();
 		cost.setAmount(new BigDecimal("10"));
 		splitPercentagFromAmount(cost, 19);
+		System.out.println(cost.getAmount());
+		System.out.println(cost.getVat());
+		applyPercentage(cost, 8);
 		System.out.println(cost.getAmount());
 		System.out.println(cost.getVat());
 	}

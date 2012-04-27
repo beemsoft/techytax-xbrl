@@ -71,7 +71,6 @@ public class RekeningFileHelper {
 
 	public static List<Cost> readFile(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
 		SettlementDao settlementDao = new SettlementDao();
-		long percentage = settlementDao.getPercentage(Long.parseLong(userId));
 
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
@@ -81,29 +80,26 @@ public class RekeningFileHelper {
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			Cost kost = null;
+			Cost cost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				kost = processLine(regel, regelNummer, userId);
-				if (kost.getCostTypeId() != KostConstanten.SETTLEMENT) {
-					kostLijst.add(kost);
+				cost = processLine(regel, regelNummer, userId);
+				if (cost.getCostTypeId() != KostConstanten.SETTLEMENT) {
+					kostLijst.add(cost);
 				} else {
 					// Administrative split
-					BigDecimal originalAmount = kost.getAmount();
-					// BigDemical originalVat = kost.getVat();
-					// kost.setAmount(originalAmount.doubleValue() / ())
-					// costForm.splitAmount.value = Math.round(100 *
-					// (currentAmount / ((100 + perc)/ 100)))/100;
-					// costForm.amount.value = Math.round(100 * (currentAmount *
-					// (perc/(100+perc))))/100;
-					// costForm.splitVat.value = Math.round(100 * (currentVat /
-					// ((100 + perc)/ 100)))/100;
-					// costForm.vat.value = Math.round(100 * (currentVat *
-					// (perc/(100+perc))))/100;
-					//					
-					// bd = new BigDecimal(bedrag.doubleValue() / 1.19d);
-					// bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-					// btwBedrag = bedrag.subtract(bd);
+					long percentage = settlementDao.getPercentage(Long.parseLong(userId));
+					Cost splitCost = new Cost();
+					splitCost.setAmount(cost.getAmount());
+					splitCost.setVat(cost.getVat());
+					splitCost.setCostTypeId(KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF);
+					splitCost.setDate(cost.getDate());
+					splitCost.setDescription(cost.getDescription());
+					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
+					CostSplitter.applyPercentage(splitCost, (int)(100-percentage));
+					CostSplitter.applyPercentage(cost, (int)percentage);
+					kostLijst.add(cost);
+					kostLijst.add(splitCost);
 				}
 			}
 
