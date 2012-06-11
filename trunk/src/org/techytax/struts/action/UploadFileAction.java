@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -63,10 +63,10 @@ public class UploadFileAction extends Action {
 			}
 
 			KostensoortDao dao = new KostensoortDao();
-			List<Kostensoort> kostensoortLijst = dao.getKostensoortLijst();
+			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
 			InputStream is = myFile.getInputStream();
 
-			List<Cost> result = RekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
+			List<Cost> result = RekeningFileHelper.readFileForIngBank(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
 			e.printStackTrace();
