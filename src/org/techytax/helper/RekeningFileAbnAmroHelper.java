@@ -45,15 +45,15 @@ import org.techytax.domain.VatType;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 
-public class RekeningFileHelper {
+public class RekeningFileAbnAmroHelper {
 
-	private static LabeledCSVParser parser = null;
+	private static CSVParser parser = null;
 
 	private static Vector<String[]> regels = null;
 
 	private static List<Kostensoort> kostensoortList = null;
 
-	private RekeningFileHelper() {
+	private RekeningFileAbnAmroHelper() {
 	}
 
 	public static AccountType getAccountType(String fileName, long userId) throws Exception {
@@ -63,21 +63,24 @@ public class RekeningFileHelper {
 		return accountDao.getAccountType(accountNumber, userId);
 	}
 
-	public static List<Cost> readFileForIngBank(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
+	public static List<Cost> readFileForAbnAmroBank(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
 		SettlementDao settlementDao = new SettlementDao();
 
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
-			parser = new LabeledCSVParser(new CSVParser(in));
-//			parser.changeDelimiter('\t');
-			System.out.println(parser.getLabels()[0]);
+			parser = new CSVParser(in);
+			parser.changeDelimiter('\t');
+
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
 			Cost cost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
+				for (int i=0; i< regel.length; i++) {
+					System.out.print(regel[i]+" ");
+				}
 				cost = processLine(regel, regelNummer, userId);
 				if (cost.getCostTypeId() != KostConstanten.SETTLEMENT) {
 					kostLijst.add(cost);
@@ -121,16 +124,17 @@ public class RekeningFileHelper {
 	private static Cost processLine(String[] line, int lineNumber, String userId) {
 		Cost kost = new Cost();
 		try {
-			String datum = line[0];
+			String datum = line[2];
 			kost.setDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8));
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
-			kost.setAmount(bedrag);
-			if (line[5].equals("Af")) {
+			if (bedrag.compareTo(new BigDecimal("0")) == -1) {
 				kost.setIncoming(false);
 			} else {
 				kost.setIncoming(true);
 			}
-			String omschrijving = line[1] + " " + line[8];
+			bedrag = bedrag.abs();
+			kost.setAmount(bedrag);
+			String omschrijving = line[7];
 
 			if (omschrijving.trim().equals("")) {
 				kost.setCostTypeId(KostConstanten.UNDETERMINED);
@@ -221,7 +225,7 @@ public class RekeningFileHelper {
 		KostensoortDao dao = new KostensoortDao();
 		List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
 
-		List<Cost> result = RekeningFileHelper.readFileForIngBank(new BufferedReader(new InputStreamReader(fis)), kostensoortLijst, "1");
+		List<Cost> result = RekeningFileAbnAmroHelper.readFileForAbnAmroBank(new BufferedReader(new InputStreamReader(fis)), kostensoortLijst, "1");
 	}
 
 }
