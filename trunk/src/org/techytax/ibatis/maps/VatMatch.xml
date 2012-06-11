@@ -30,6 +30,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<insert id="insertVatMatchPrivate" parameterClass="vatMatch">
 		insert into btwmatch_private
 		values(#id#,#kostmatchId#,#vatType#)
+	</insert>
+	<insert id="insertVatMatchPrivateComplete" parameterClass="kostmatch">
+		insert into btwmatch_private
+		values(0,#id#,#vatType#)
 	</insert>	
 	<update id="updateVatMatch" parameterClass="kostmatch">
 		update btwmatch set btw_type = #vatType#
