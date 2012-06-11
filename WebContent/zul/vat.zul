@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?page title="TechyTax"?>
+<zk xmlns:html="http://www.w3.org/1999/xhtml">
+<!--
+hello.zul
+
+{{IS_NOTE
+	Purpose:
+		
+	Description:
+		
+	History:
+		Thu Mar 23 21:03:20     2006, Created by tomyeh
+}}IS_NOTE
+
+Copyright (C) 2006 Potix Corporation. All Rights Reserved.
+
+{{IS_RIGHT
+}}IS_RIGHT
+-->
+<!--This zul file was use for watchdog checking, You have to tell mis if you need to modify-->
+<window title="TechyTax" border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
+	Bereken je omzetbelasting in vijf stappen.
+<hbox hflex="true">
+	<tabbox width="1500px">
+		<tabs>
+			<tab label="1: Transacties downloaden"/>
+			<tab label="2: Transacties selecteren"/>
+			<tab id="matchTab" label="3: Transacties matchen"/>
+			<tab label="4: Account saldo controleren"/>
+			<tab label="5: btw saldo"/>
+		</tabs>
+		<tabpanels>
+			<tabpanel>Download je transacties van je online bankieren pagina.
+				<vbox>
+					<toolbarbutton href="https://mijn.ing.nl/" target="other" image="/images/logo_ing.gif" />
+					<toolbarbutton href="https://www.abnamro.nl/nl/logon/" target="other" image="/images/logo_abn_amro.gif" />
+				</vbox>
+				<hbox width="500px">
+				Op dit moment ondersteunt TechyTax alleen transactie bestanden van de ING en ABN-AMRO. Zorg bij het downloaden van
+				het bestand dat de juiste periode wordt geselecteerd. Nadat je het bestand hebt gedownload, kun je verdergaan
+				naar het volgende tabblad.
+				Let op: Sla het .TAB bestand van ABN-AMRO op als .TXT bestand.
+				Tip: Maak een backup van de gedownloade bestanden.
+				</hbox>
+			</tabpanel>
+			<tabpanel>Hier kun je het gedownloade bestand met transacties selecteren.
+				<vbox>
+					<button id="uploadBtn" label="Selecteer download-bestand" upload="true"/>
+				</vbox>
+				Hierna kun je de transacties bekijken en eventueel matchen in het volgende tabblad.
+				De transacties worden niet meteen ingeladen in TechyTax.
+				
+			</tabpanel>
+			<tabpanel apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">This is panel 3
+				<vbox>
+					<grid id="costGrid" hflex="true" mold="paging" pageSize="6">
+						<columns sizable="true">
+							<column label="Description" width="700px"/>
+							<column label="Datum" width="100px"/>
+							<column label="Bedrag" width="100px"/>
+							<column label="btw" width="100px"/>
+							<column label="type" width="200px"/>
+						</columns>
+						<template name="model">
+							<row value="${each}">
+								<label value="${each.description}" />
+								<label value="${each.date}" />
+								<label value="${each.amount}" />
+								<label value="${each.vat}" />
+								<label value="${each.kostenSoortOmschrijving}" />
+							</row>
+						</template>
+					</grid>
+Prive matches hebben voorrang boven algemene matches	
+					<button id="reloadBtn" label="Herladen" mold="os" />				
+					<hbox>
+						
+						<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="350px" >
+							<listhead>
+								<listheader label="Description" width="300px"/>
+							</listhead>
+							<template name="model" var="costType">
+								<listitem>
+									<listcell label="@load(costType.omschrijving)" />
+								</listitem>
+							</template>
+						</listbox>
+						<vbox hflex="true">
+							<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="200px" width="350px" >
+								<listhead>
+									<listheader label="Private matches" width="300px"/>
+								</listhead>
+								<template name="model" var="privateMatch">
+									<listitem>
+										<listcell label="@load(privateMatch.matchText)" />
+									</listitem>
+								</template>
+							</listbox>
+							<toolbar>
+								<button label="New" onClick="@command('newMatch')" />
+								<button label="Save" onClick="@command('saveMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
+								<button label="Delete" onClick="@command('deleteMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
+							</toolbar>
+							<radiogroup id="vat" selectedItem="@bind(vm.selectedVatType)" />
+							<groupbox visible="@load(not empty vm.selectedPrivateMatch)" mold="3d" width="350px">
+								<grid hflex="true" >
+									<columns>
+										<column/>
+										<column/>
+									</columns>
+									<rows>
+										<row>Match tekst <textbox value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')"/></row>
+									</rows>
+								</grid>
+								<grid visible="@load(vm.vatVisible)">
+									<columns>
+										<column/>
+										<column/>
+										<column/>
+									</columns>
+									<rows>
+										<row>
+							        		<radio id="vatNone" label="Geen" value="NONE" radiogroup="vat" />
+							                <radio id="vatLow" label="Laag" value="LOW" radiogroup="vat" />
+							                <radio id="vatHigh" label="Hoog" value="HIGH" radiogroup="vat" />
+    									</row>										
+									</rows>
+								</grid>								
+							</groupbox>													
+						</vbox>
+						<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="350px" >
+							<listhead>
+								<listheader label="Algemene matches" width="300px"/>
+							</listhead>
+							<template name="model" var="privateMatch">
+								<listitem>
+									<listcell label="@load(privateMatch.matchText)" />
+								</listitem>
+							</template>
+						</listbox>										
+
+						
+					</hbox>
+				</vbox>		
+			</tabpanel>
+			<tabpanel>This is panel 4</tabpanel>
+			<tabpanel>This is panel 5</tabpanel>
+		</tabpanels>
+	</tabbox>
+</hbox>	
+</window>
+</zk>

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -32,6 +32,11 @@ public class KostensoortDao extends BaseDao {
 	public List<Kostensoort> getKostensoortLijst() throws Exception {
 		return sqlMap.queryForList("getKostensoortLijst", null);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kostensoort> getCostTypesForAccount() throws Exception {
+		return sqlMap.queryForList("getCostTypesForAccount", null);
+	}	
 
 	public void updateKostensoort(Kostensoort kostensoort) throws Exception {
 		sqlMap.insert("updateKostensoort", kostensoort);

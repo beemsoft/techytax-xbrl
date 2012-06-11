@@ -52,6 +52,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<insert id="insertCostMatchPrivate" parameterClass="kostmatch">
 		insert into kostmatch_private
 		values(#id#,#userId#,#kostenSoortId#,#matchText#)
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>		
 	</insert>	
 	<delete id="deleteCostMatchPrivate" parameterClass="kostmatch">
 		delete from kostmatch_private

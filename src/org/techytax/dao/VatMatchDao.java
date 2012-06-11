@@ -43,6 +43,10 @@ public class VatMatchDao extends BaseDao {
 		btwmatch.setKostmatchId(kostmatch.getId());
 		sqlMap.insert("insertVatMatchPrivate", btwmatch);
 	}
+	
+	public void insertVatMatchPrivateComplete(Kostmatch kostmatch) throws Exception {
+		sqlMap.insert("insertVatMatchPrivateComplete", kostmatch);
+	}	
 
 	public void deleteVatMatchPrivate(String kostMatchId) throws Exception {
 		sqlMap.delete("deleteVatMatchPrivate", kostMatchId);

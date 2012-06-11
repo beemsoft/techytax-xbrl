@@ -1,5 +1,5 @@
 <!--
-Copyright 2009 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -25,6 +25,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<select id="getKostensoortLijst" resultClass="kostensoort">
 		SELECT id as kostenSoortId, omschrijving, bijschrijving, btwVerrekenbaar, balansMeetellen, aftrekbaar, investering FROM kostensoort
 	</select>
+	
+	<select id="getCostTypesForAccount" resultClass="kostensoort">
+		SELECT id as kostenSoortId, omschrijving, btwVerrekenbaar, balansMeetellen FROM kostensoort where balansMeetellen=true
+	</select>	
 
 	<insert id="insertKostensoort" parameterClass="kostensoort">
 		insert into kostensoort

@@ -42,9 +42,11 @@ public class KostmatchDao extends BaseDao {
 		sqlMap.insert("insertKostmatch", kostmatch);
 	}
 
-	public void insertCostMatchPrivate(Kostmatch costMatch) throws Exception {
+	public Integer insertCostMatchPrivate(Kostmatch costMatch) throws Exception {
 		encrypt(costMatch);
-		sqlMap.insert("insertCostMatchPrivate", costMatch);
+		Integer insertedId = (Integer) sqlMap.insert("insertCostMatchPrivate", costMatch);
+		decrypt(costMatch);
+		return insertedId;
 	}
 
 	public void deleteCostMatchPrivate(Kostmatch costMatch) throws Exception {
@@ -86,6 +88,7 @@ public class KostmatchDao extends BaseDao {
 	public void updateCostMatchPrivate(Kostmatch costMatch) throws Exception {
 		encrypt(costMatch);
 		sqlMap.insert("updateCostMatchPrivate", costMatch);
+		decrypt(costMatch);
 	}
 
 	public Kostmatch getKostmatch(String id) throws Exception {
@@ -94,7 +97,9 @@ public class KostmatchDao extends BaseDao {
 
 	public Kostmatch getCostMatchPrivate(KeyId key) throws Exception {
 		Kostmatch costMatch = (Kostmatch) sqlMap.queryForObject("getCostMatchPrivate", key);
-		decrypt(costMatch);
+		if (costMatch != null) {
+			decrypt(costMatch);
+		}
 		return costMatch;
 	}
 
