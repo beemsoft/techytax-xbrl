@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
@@ -26,6 +27,7 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
@@ -39,6 +41,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	
 	@Wire
 	private Tab matchTab;
+	
+	@Wire
+	private Tab controleTab;	
 	
 	private Media media = null;
 	
@@ -112,6 +117,26 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		}		
 	}
+	
+	@Listen("onClick=#importBtn")
+	public void importTransactions(Event event) {
+		User user = UserCredentialManager.getUser();
+		BoekDao boekDao = new BoekDao();
+		try {
+			ListModel<Cost> result = costGrid.getModel();
+			Cost kost = null;
+			for (int i = 0; i < result.getSize(); i++) {
+				kost = (Cost) result.getElementAt(i);
+				kost.setId(0);
+				kost.setUserId(user.getId());
+//				boekDao.insertKost(kost);
+			}
+			controleTab.setSelected(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}		
+	}	
 	
 	@Override
 	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {

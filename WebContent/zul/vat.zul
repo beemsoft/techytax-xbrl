@@ -3,23 +3,24 @@
 <?page title="TechyTax"?>
 <zk xmlns:html="http://www.w3.org/1999/xhtml">
 <!--
-hello.zul
+Copyright 2012 Hans Beemsterboer
 
-{{IS_NOTE
-	Purpose:
-		
-	Description:
-		
-	History:
-		Thu Mar 23 21:03:20     2006, Created by tomyeh
-}}IS_NOTE
+This file is part of the TechyTax program.
 
-Copyright (C) 2006 Potix Corporation. All Rights Reserved.
+TechyTax is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
 
-{{IS_RIGHT
-}}IS_RIGHT
+TechyTax is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TechyTax; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
-<!--This zul file was use for watchdog checking, You have to tell mis if you need to modify-->
 <window title="TechyTax" border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
 	Bereken je omzetbelasting in vijf stappen.
 <hbox hflex="true">
@@ -28,7 +29,7 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 			<tab label="1: Transacties downloaden"/>
 			<tab label="2: Transacties selecteren"/>
 			<tab id="matchTab" label="3: Transacties matchen"/>
-			<tab label="4: Account saldo controleren"/>
+			<tab id="controleTab" label="4: Account saldo controleren"/>
 			<tab label="5: btw saldo"/>
 		</tabs>
 		<tabpanels>
@@ -74,7 +75,8 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 						</template>
 					</grid>
 Prive matches hebben voorrang boven algemene matches	
-					<button id="reloadBtn" label="Herladen" mold="os" />				
+					<button id="reloadBtn" label="Herladen" mold="os" />
+					<button id="importBtn" label="Importeren in TechyTax" mold="os" />								
 					<hbox>
 						
 						<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="350px" >
