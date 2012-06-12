@@ -1,10 +1,16 @@
 <?page title="TechyTax - Login"?>
-<window id="loginWin" border="normal" width="300px" title="You are using: ${desktop.webApp.version}" apply="org.techytax.zk.login.LoginViewCtrl">
-<grid>
+<window id="loginWin" border="normal" title="TechyTax 1.10" apply="org.techytax.zk.login.LoginViewCtrl">
+<hbox>
+<vbox>
+<grid width="300px">
  <rows> 
- <row> Name: <textbox id="nameTxb"/></row> 
-<row> Password:<textbox id="passwordTxb" type="password"/></row> 
+ <row> Naam: <textbox id="nameTxb"/></row> 
+<row> Wachtwoord:<textbox id="passwordTxb" type="password"/></row> 
 </rows> 
 </grid>
-<button id="confirmBtn" label="confirm"/> <label id="mesgLbl"/> 
+<button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" mold="os" /> <label id="mesgLbl"/>
+</vbox>
+<button label="Ga naar de originele TechyTax applicatie" href="/index.jsp" mold="os" />
+</hbox> 
+<image src="/images/under_construction_800x600.jpg" />
 </window> 
