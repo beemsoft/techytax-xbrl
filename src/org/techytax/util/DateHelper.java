@@ -117,7 +117,55 @@ public class DateHelper {
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
 		return periode;
-	}	
+	}
+	
+	public static Periode getLatestVatPeriod() {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		int month = cal.get(Calendar.MONTH);
+		int quarter = getQuarter(month);
+		int lastMonth = quarter * 3;
+		int firstMonth = quarter * 3 - 3;
+		cal.set(Calendar.MONTH, firstMonth);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDatum = cal.getTime();
+		cal.set(Calendar.MONTH, lastMonth);
+		cal.set(Calendar.DAY_OF_MONTH, 0);
+		Date eindDatum = cal.getTime();
+		Periode periode = new Periode();
+		periode.setBeginDatum(beginDatum);
+		periode.setEindDatum(eindDatum);
+		return periode;		
+	}
+	
+	private static int getQuarter(int month) {
+		int quarter = 1;
+		switch (month) {
+		case 1:
+		case 2:
+		case 3:
+			quarter = 1;
+			break;
+		case 4:
+		case 5:
+		case 6:
+			quarter = 2;
+			break;
+		case 7:
+		case 8:
+		case 9:
+			quarter = 3;
+			break;
+		case 10:
+		case 11:
+		case 0:
+			quarter = 4;
+			break;			
+		default:
+			break;
+		}
+		return quarter;
+	}
 
 	public static int getYear(Date date) {
 		Calendar cal = GregorianCalendar.getInstance();
@@ -161,6 +209,11 @@ public class DateHelper {
 			return true;
 		}		
 		return false;
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getLatestVatPeriod().getBeginDatum());
+		System.out.println(getLatestVatPeriod().getEindDatum());		
 	}
 
 }

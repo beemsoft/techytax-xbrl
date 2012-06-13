@@ -9,10 +9,12 @@ import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
+import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.security.AuthenticationException;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
@@ -38,6 +40,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Wire
 	private Grid costGrid;
+	
+	@Wire
+	private Grid vatGrid;	
 	
 	@Wire
 	private Tab matchTab;
@@ -131,6 +136,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				kost.setUserId(user.getId());
 //				boekDao.insertKost(kost);
 			}
+			
+			Periode vatPeriod = DateHelper.getLatestVatPeriod();
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
+			for (Cost cost : vatCosts) {
+				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+			}			
+			ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
+			vatGrid.setModel(costModel);			
 			controleTab.setSelected(true);
 		} catch (Exception e) {
 			e.printStackTrace();
