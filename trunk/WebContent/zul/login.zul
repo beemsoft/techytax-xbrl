@@ -8,7 +8,7 @@
 <row> Wachtwoord:<textbox id="passwordTxb" type="password"/></row> 
 </rows> 
 </grid>
-<button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" mold="os" /> <label id="mesgLbl"/>
+<button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" mold="os" /> Demo: guest/guest
 </vbox>
 <button label="Ga naar de originele TechyTax applicatie" href="/index.jsp" mold="os" />
 </hbox> 
