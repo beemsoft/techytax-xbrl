@@ -2,15 +2,21 @@ package org.techytax.zk.vat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.helper.BalanceCalculator;
 import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.security.AuthenticationException;
@@ -29,6 +35,7 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Tab;
@@ -40,18 +47,28 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Wire
 	private Grid costGrid;
-	
+
 	@Wire
-	private Grid vatGrid;	
-	
+	private Grid vatGrid;
+
+	@Wire
+	private Label vatOut;
+	@Wire
+	private Label vatIn;
+	@Wire
+	private Label vatBalance;
+	@Wire
+	private Label turnoverGross;
+	@Wire
+	private Label turnoverNet;	
+
 	@Wire
 	private Tab matchTab;
-	
+
 	@Wire
-	private Tab controleTab;	
-	
+	private Tab controleTab;
+
 	private Media media = null;
-	
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
@@ -62,7 +79,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 			KostensoortDao dao = new KostensoortDao();
 			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
-			
+
 			media = event.getMedia();
 			BufferedReader reader = new BufferedReader(media.getReaderData());
 			String firstLine = reader.readLine();
@@ -73,7 +90,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			} else {
 				result = RekeningFileAbnAmroHelper.readFileForAbnAmroBank(reader, kostensoortLijst, Long.toString(user.getId()));
 			}
-			 
+
 			for (Cost cost : result) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
@@ -88,7 +105,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		}
 	}
-	
+
 	@Listen("onClick=#reloadBtn")
 	public void reload(Event event) {
 		User user = UserCredentialManager.getUser();
@@ -97,7 +114,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 			KostensoortDao dao = new KostensoortDao();
 			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
-			
+
 			BufferedReader reader = new BufferedReader(media.getReaderData());
 			String firstLine = reader.readLine();
 			reader = new BufferedReader(media.getReaderData());
@@ -107,7 +124,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			} else {
 				result = RekeningFileAbnAmroHelper.readFileForAbnAmroBank(reader, kostensoortLijst, Long.toString(user.getId()));
 			}
-			 
+
 			for (Cost cost : result) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
@@ -120,45 +137,61 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-		}		
+		}
 	}
-	
+
+	private static String format(BigDecimal amount) {
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.'); 
+        DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
+		return df.format(amount.doubleValue());
+	}
+
 	@Listen("onClick=#importBtn")
 	public void importTransactions(Event event) {
 		User user = UserCredentialManager.getUser();
 		BoekDao boekDao = new BoekDao();
 		try {
 			ListModel<Cost> result = costGrid.getModel();
-			Cost kost = null;
-			for (int i = 0; i < result.getSize(); i++) {
-				kost = (Cost) result.getElementAt(i);
-				kost.setId(0);
-				kost.setUserId(user.getId());
-//				boekDao.insertKost(kost);
+			if (result != null) {
+				Cost kost = null;
+
+				for (int i = 0; i < result.getSize(); i++) {
+					kost = (Cost) result.getElementAt(i);
+					kost.setId(0);
+					kost.setUserId(user.getId());
+					// boekDao.insertKost(kost);
+				}
 			}
-			
 			Periode vatPeriod = DateHelper.getLatestVatPeriod();
 			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-			}			
+			}
 			ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
-			vatGrid.setModel(costModel);			
+			vatGrid.setModel(costModel);
+			Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+			vatOut.setValue(format(balans.getTotaleKosten()));
+			vatIn.setValue(format(balans.getTotaleBaten()));
+			vatBalance.setValue(format(balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
+			turnoverGross.setValue(format(balans.getBrutoOmzet()));
+			turnoverNet.setValue(format(balans.getNettoOmzet()));
 			controleTab.setSelected(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 
-		}		
-	}	
-	
+		}
+	}
+
 	@Override
 	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
-		ComponentInfo componentInfo =  super.doBeforeCompose(page, parent, compInfo);
+		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
 		User user = UserCredentialManager.getUser();
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		}
 		return componentInfo;
 	}
-	
+
 }

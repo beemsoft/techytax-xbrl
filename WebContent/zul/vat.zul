@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			<tab label="1: Transacties downloaden"/>
 			<tab label="2: Transacties selecteren"/>
 			<tab id="matchTab" label="3: Transacties matchen"/>
-			<tab id="controleTab" label="4: btw saldo"/>
+			<tab id="controleTab" label="4: btw overzicht"/>
 		</tabs>
 		<tabpanels>
 			<tabpanel>Download je transacties van je online bankieren pagina.
@@ -146,7 +146,23 @@ Prive matches hebben voorrang boven algemene matches
 					</hbox>
 				</vbox>		
 			</tabpanel>
-			<tabpanel>This is panel 4
+			<tabpanel>btw overzicht
+				<hbox>
+					<grid width="300px" hflex="true" >
+						<columns>
+							<column/>
+							<column/>
+						</columns>
+						<rows>
+							<row>btw uit: <label id="vatOut"/></row>
+							<row>btw in: <label id="vatIn"/></row>
+							<row>btw saldo: <label id="vatBalance"/></row>
+							<row>bruto omzet: <label id="turnoverGross"/></row>
+							<row>netto omzet: <label id="turnoverNet"/></row>
+						</rows>
+					</grid>
+					<toolbarbutton href="https://mijn.belastingdienst.nl/AuthenticatieVoorziening/toonServiceBerichten.do" target="other" image="/images/belastingdienst_logo.jpg" />
+				</hbox>
 				<vbox>
 					<grid id="vatGrid" hflex="true" mold="paging" pageSize="15">
 						<columns sizable="true">
