@@ -45,5 +45,10 @@ public class KostensoortDao extends BaseDao {
 	public Kostensoort getKostensoort(String id) throws Exception {
 		return (Kostensoort) sqlMap.queryForObject("getKostensoort", id);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Kostensoort> getCostTypesForVatCostsWithPrivateMoney() throws Exception {
+		return sqlMap.queryForList("getCostTypesForVatCostsWithPrivateMoney", null);
+	}	
 
 }
