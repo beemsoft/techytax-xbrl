@@ -21,13 +21,14 @@ package org.techytax.domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class Cost implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
 	private BigDecimal amount;
-	private BigDecimal vat;
-	private String date;
+	private BigDecimal vat = new BigDecimal("0");
+	private Date date;
 	private long id = 0;
 	private boolean isIncoming;
 	private long costTypeId;
@@ -43,7 +44,7 @@ public class Cost implements Serializable {
 		return vat;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
@@ -79,7 +80,7 @@ public class Cost implements Serializable {
 		this.vat = vat;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

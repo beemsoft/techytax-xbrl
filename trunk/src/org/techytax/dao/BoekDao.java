@@ -36,19 +36,19 @@ import org.techytax.domain.KostConstanten;
 public class BoekDao extends BaseDao {
 
 	private void encrypt(Cost cost) {
-		if (cost.getAmount().doubleValue() != 0) {
+		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
 			cost.setAmount(decimalEncryptor.encrypt(cost.getAmount()));
 		}
-		if (cost.getVat().doubleValue() != 0) {
+		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
 			cost.setVat(decimalEncryptor.encrypt(cost.getVat()));
 		}
-		if (StringUtils.isNotEmpty(cost.getDescription().trim())) {
+		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
 			cost.setDescription(textEncryptor.encrypt(cost.getDescription()));
 		}
 	}
 
 	private void decrypt(Cost cost) {
-		if (cost.getAmount().doubleValue() != 0) {
+		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
 			cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
 		}
 		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
@@ -67,9 +67,12 @@ public class BoekDao extends BaseDao {
 
 	public void insertKost(Cost kost) throws Exception {
 		kost.setAmount(kost.getAmount().setScale(2));
-		kost.setVat(kost.getVat().setScale(2));
+		if (kost.getVat() != null) {
+			kost.setVat(kost.getVat().setScale(2));
+		}
 		encrypt(kost);
 		sqlMap.insert("insertKost", kost);
+		decrypt(kost);
 	}
 
 	public void insertPrivateExpense(Cost kost) throws Exception {

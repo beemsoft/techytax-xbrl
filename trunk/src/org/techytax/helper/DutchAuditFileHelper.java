@@ -62,7 +62,7 @@ public class DutchAuditFileHelper {
 		transaction.setAmnt(cost.getAmount());
 		transaction.setDesc(cost.getDescription().trim());
 		transaction.setNr(Long.toString(cost.getId()));
-		transaction.setTrDt(DateHelper.getDate(cost.getDate()));
+		transaction.setTrDt(DateHelper.getDate(DateHelper.getDate(cost.getDate())));
 		if (cost.getVat() != null && cost.getVat().floatValue() > 0) {
 			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
 			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
@@ -122,7 +122,7 @@ public class DutchAuditFileHelper {
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencyCodeType.EUR);
 			Cost firstCost = (Cost)costList.get(0);
-			Date firstDate = DateHelper.stringToDate(firstCost.getDate());
+			Date firstDate = firstCost.getDate();
 			int year = DateHelper.getYear(firstDate);
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));

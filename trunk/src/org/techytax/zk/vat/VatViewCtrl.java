@@ -60,7 +60,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Label turnoverGross;
 	@Wire
-	private Label turnoverNet;	
+	private Label turnoverNet;
 
 	@Wire
 	private Tab matchTab;
@@ -143,45 +143,52 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private static String format(BigDecimal amount) {
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
 		otherSymbols.setDecimalSeparator(',');
-		otherSymbols.setGroupingSeparator('.'); 
-        DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
 		return df.format(amount.doubleValue());
 	}
 
 	@Listen("onClick=#importBtn")
-	public void importTransactions(Event event) {
+	public void importTransactions(Event event) throws Exception {
 		User user = UserCredentialManager.getUser();
-		BoekDao boekDao = new BoekDao();
-		try {
-			ListModel<Cost> result = costGrid.getModel();
-			if (result != null) {
-				Cost kost = null;
+		ListModel<Cost> result = costGrid.getModel();
+		if (result != null) {
+			Cost kost = null;
 
-				for (int i = 0; i < result.getSize(); i++) {
-					kost = (Cost) result.getElementAt(i);
-					kost.setId(0);
-					kost.setUserId(user.getId());
-					// boekDao.insertKost(kost);
-				}
+			for (int i = 0; i < result.getSize(); i++) {
+				kost = (Cost) result.getElementAt(i);
+				kost.setId(0);
+				kost.setUserId(user.getId());
+				// boekDao.insertKost(kost);
 			}
-			Periode vatPeriod = DateHelper.getLatestVatPeriod();
-			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
-			for (Cost cost : vatCosts) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-			}
-			ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
-			vatGrid.setModel(costModel);
-			Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
-			vatOut.setValue(format(balans.getTotaleKosten()));
-			vatIn.setValue(format(balans.getTotaleBaten()));
-			vatBalance.setValue(format(balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
-			turnoverGross.setValue(format(balans.getBrutoOmzet()));
-			turnoverNet.setValue(format(balans.getNettoOmzet()));
-			controleTab.setSelected(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-
 		}
+		createVatOverview();
+	}
+	
+	@Listen("onClick=#controleTab")
+	public void displayVatOverview(Event event) throws Exception {
+		createVatOverview();
+	}	
+
+	private void createVatOverview() throws Exception {
+		BoekDao boekDao = new BoekDao();
+		User user = UserCredentialManager.getUser();
+		Periode vatPeriod = DateHelper.getLatestVatPeriod();
+		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
+		for (Cost cost : vatCosts) {
+			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+		}
+		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
+		vatGrid.setModel(costModel);
+		Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+		vatOut.setValue(format(balans.getTotaleKosten()));
+		vatIn.setValue(format(balans.getTotaleBaten()));
+		vatBalance.setValue(format(balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
+		turnoverGross.setValue(format(balans.getBrutoOmzet()));
+		turnoverNet.setValue(format(balans.getNettoOmzet()));
+		controleTab.setSelected(true);
+		costModel = new ListModelList<Cost>();
+		costGrid.setModel(costModel);
 	}
 
 	@Override

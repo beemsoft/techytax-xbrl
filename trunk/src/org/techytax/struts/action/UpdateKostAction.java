@@ -37,6 +37,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
 import org.techytax.struts.form.CostForm;
+import org.techytax.util.DateHelper;
 
 public class UpdateKostAction extends Action {
 
@@ -47,7 +48,7 @@ public class UpdateKostAction extends Action {
 		Cost cost = new Cost();
 		cost.setAmount(costForm.getAmount());
 		cost.setCostTypeId(costForm.getCostTypeId());
-		cost.setDate(costForm.getDate());
+		cost.setDate(DateHelper.stringToDate(costForm.getDate()));
 		cost.setDescription(costForm.getDescription());
 		cost.setVat(costForm.getVat());
 		cost.setId(costForm.getId());
@@ -61,7 +62,7 @@ public class UpdateKostAction extends Action {
 			Cost splitCost = new Cost();
 			splitCost.setAmount(costForm.getSplitAmount());
 			splitCost.setCostTypeId(costForm.getSplitCostTypeId());
-			splitCost.setDate(costForm.getDate());
+			splitCost.setDate(DateHelper.stringToDate(costForm.getDate()));
 			splitCost.setDescription(costForm.getSplitDescription());
 			splitCost.setVat(costForm.getSplitVat());
 			splitCost.setId(0);
