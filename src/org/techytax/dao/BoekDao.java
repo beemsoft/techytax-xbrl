@@ -331,5 +331,15 @@ public class BoekDao extends BaseDao {
 		sqlMap.delete("deleteCost", cost);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Cost> getVatCostsWithPrivateMoney(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Cost> costs = sqlMap.queryForList("getVatCostsWithPrivateMoney", map);
+		for (Cost cost : costs) {
+			decrypt(cost);
+		}
+		return costs;
+	}	
+	
 
 }
