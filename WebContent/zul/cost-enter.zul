@@ -11,12 +11,14 @@
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
 			<listhead>
 				<listheader label="Datum" align="center" width="100px" />
-				<listheader label="Bedrag" align="center" width="80px" />				
+				<listheader label="Bedrag" align="center" width="80px" />
+				<listheader label="Omschrijving" align="center" width="200px" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
 					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
+					<listcell label="@load(item.description)"/>					
 				</listitem>
 			</template>
 		</listbox>
@@ -63,7 +65,7 @@
 				<label value="@load(vm.deleteMessage)"/>
 			</hlayout>
 			<hbox pack="center" hflex="true">
-				<button label="Delete" onClick="@command('deleteOrder')"/>
+				<button label="Delete" onClick="@command('deleteCost')"/>
 				<button label="Cancel" onClick="@command('cancelDelete')"/>
 			</hbox>
 		</vbox>

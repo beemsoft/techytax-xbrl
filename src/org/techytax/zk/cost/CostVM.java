@@ -62,18 +62,27 @@ public class CostVM {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			selected.setUserId(user.getId());
-			boekDao.insertKost(selected);
+			Cost cost = boekDao.getKost(Long.toString(selected.getId()), user.getId());
+			if (cost == null) {
+				boekDao.insertKost(selected);
+			} else {
+				boekDao.updateKost(selected);
+			}
 		}
-//		getService().save(selected);
 	}
 	
 	
 	@NotifyChange({"selected","costs"})
 	@Command
-	public void deleteCost(){
-//		getService().delete(selected);//delete selected
-		getCosts().remove(selected);
-		selected = null; //clean the selected
+	public void deleteCost() throws Exception{
+		BoekDao boekDao = new BoekDao();
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			selected.setUserId(user.getId());
+			boekDao.deleteCost(selected);
+			getCosts().remove(selected);
+			selected = null;			
+		}
 	}
 
 	//validators for prompt

@@ -253,5 +253,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and datum &gt;= ? 
 		and datum &lt;= ?
 		and user_id=?
-	</select>		
+	</select>
+	<delete id="deleteCost" parameterClass="cost">
+		delete from kosten
+		where id = #id#
+		and user_id = #userId#
+	</delete>		
 </sqlMap>

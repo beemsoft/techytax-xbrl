@@ -178,6 +178,7 @@ public class BoekDao extends BaseDao {
 		kost.setVat(kost.getVat().setScale(2));		
 		encrypt(kost);
 		sqlMap.insert("updateKost", kost);
+		decrypt(kost);
 	}
 
 	public Cost getKost(String id, long userId) throws Exception {
@@ -324,6 +325,11 @@ public class BoekDao extends BaseDao {
 			costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getAmount()).add(cost.getVat());	
 		}
 		return costsWithPrivateMoney;
-	}	
+	}
+	
+	public void deleteCost(Cost cost) throws Exception {
+		sqlMap.delete("deleteCost", cost);
+	}
+	
 
 }

@@ -21,7 +21,6 @@ import org.zkoss.bind.annotation.NotifyChange;
  */
 public class CostVM3 extends CostVM2{
 
-	//message for confirming the deletion.
 	String deleteMessage;
 	
 	public String getDeleteMessage(){
@@ -31,7 +30,7 @@ public class CostVM3 extends CostVM2{
 	@Override
 	@NotifyChange({"selected","costs","deleteMessage"})
 	@Command
-	public void deleteCost(){
+	public void deleteCost() throws Exception{
 		super.deleteCost();
 		deleteMessage = null;
 	}
@@ -39,14 +38,12 @@ public class CostVM3 extends CostVM2{
 	@NotifyChange("deleteMessage")
 	@Command
 	public void confirmDelete(){
-		//set the message to show to user
-		deleteMessage = "Do you want to delete "+selected.getId()+" ?";
+		deleteMessage = "Do you want to delete "+selected.getDescription()+" ?";
 	}
 	
 	@NotifyChange("deleteMessage")
 	@Command
 	public void cancelDelete(){
-		//clear the message
 		deleteMessage = null;
 	}
 	
