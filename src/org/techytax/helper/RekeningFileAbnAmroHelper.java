@@ -41,6 +41,7 @@ import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.VatMatch;
 import org.techytax.domain.VatType;
+import org.techytax.util.DateHelper;
 
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
@@ -125,7 +126,7 @@ public class RekeningFileAbnAmroHelper {
 		Cost kost = new Cost();
 		try {
 			String datum = line[2];
-			kost.setDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8));
+			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			if (bedrag.compareTo(new BigDecimal("0")) == -1) {
 				kost.setIncoming(false);

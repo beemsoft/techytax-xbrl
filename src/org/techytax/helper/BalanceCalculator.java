@@ -401,7 +401,7 @@ public class BalanceCalculator {
 				if (obj != null) {
 					if (!obj.isIncoming()) {
 						if (!obj.getDescription().contains("spaarrekening") && !obj.getDescription().contains("inleg")) {
-							Date datum = DateHelper.stringToDate(obj.getDate());
+							Date datum = obj.getDate();
 							int month = DateHelper.getMonth(datum);
 							if (month != lastMonth) {
 								lastMonth = month;

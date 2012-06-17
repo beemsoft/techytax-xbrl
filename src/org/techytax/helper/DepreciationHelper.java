@@ -53,7 +53,7 @@ public class DepreciationHelper {
 		// afronden
 		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0, BigDecimal.ROUND_UP);
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(DateHelper.stringToDate(kost.getDate()));
+		cal.setTime(kost.getDate());
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		int bookYear = cal.get(Calendar.YEAR);
@@ -69,7 +69,7 @@ public class DepreciationHelper {
 				afschrijving.setCostTypeId(KostConstanten.AFSCHRIJVING);
 			}
 			afschrijving.setKostenSoortOmschrijving("costtype.depreciation");
-			afschrijving.setDate(DateHelper.getDate(cal.getTime()));
+			afschrijving.setDate(cal.getTime());
 			afschrijving.setAmount(jaarlijkseAfschrijving.setScale(2));
 			afschrijving.setDescription("Afschrijving: " + (i + 1) + ", item " + kost.getId() + ", boekwaarde begin: " + boekwaardeBegin + ", boekwaarde eind: " + boekwaarde);
 			afschrijving.setUserId(userId);

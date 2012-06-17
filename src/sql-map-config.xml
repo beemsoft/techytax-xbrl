@@ -28,6 +28,7 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 		maxRequests="128" />
 
 	<typeHandler javaType="java.math.BigInteger" callback="org.techytax.ibatis.typehandler.BigIntegerTypeHandler"/>
+	<typeHandler javaType="java.util.Date" callback="org.techytax.ibatis.typehandler.DateTypeHandler"/>	
     <typeHandler javaType="org.techytax.domain.AccountType" callback="org.techytax.ibatis.typehandler.AccountTypeHandler"/>
     <typeHandler javaType="org.techytax.domain.BalanceType" callback="org.techytax.ibatis.typehandler.BalanceTypeHandler"/> 
     <typeHandler javaType="org.techytax.domain.VatType" callback="org.techytax.ibatis.typehandler.VatTypeHandler"/>    
