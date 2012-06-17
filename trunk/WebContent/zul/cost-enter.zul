@@ -4,7 +4,7 @@
 	color:red;
 }
 </style>
-<window title="Handmatig transacties invoeren" border="normal" width="600px"
+<window title="Handmatig transacties invoeren" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
@@ -13,12 +13,14 @@
 				<listheader label="Datum" align="center" width="100px" />
 				<listheader label="Bedrag" align="center" width="80px" />
 				<listheader label="Omschrijving" width="400px" />
+				<listheader label="Type" width="400px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
 					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
-					<listcell label="@load(item.description)"/>					
+					<listcell label="@load(item.description)"/>
+					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
 				</listitem>
 			</template>
 		</listbox>
@@ -52,6 +54,20 @@
 					<row>Omschrijving 
 						<hlayout>
 							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" />
+						</hlayout>
+					</row>
+					<row>Type
+						<hlayout>
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" height="200px">
+								<listhead>
+									<listheader label="Omschrijving" width="400px" />
+								</listhead>
+								<template name="model" var="item">
+									<listitem >
+										<listcell label="@load(item.omschrijving)"/>					
+									</listitem>
+								</template>
+							</listbox>
 						</hlayout>
 					</row>					
 				</rows>

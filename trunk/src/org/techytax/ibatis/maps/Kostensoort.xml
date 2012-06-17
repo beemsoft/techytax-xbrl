@@ -44,4 +44,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		#btwVerrekenbaar#, balansMeetellen = #balansMeetellen#,
 		aftrekbaar = #aftrekbaar#, investering = #investering# WHERE id = #kostenSoortId#
 	</update>
+	<select id="getCostTypesForVatCostsWithPrivateMoney" resultClass="kostensoort">
+		select id as kostenSoortId, omschrijving  
+		from kostensoort
+		where id in (0,7,19,21,26,32) 
+	</select>	
 </sqlMap>
