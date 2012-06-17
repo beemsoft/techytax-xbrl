@@ -95,10 +95,8 @@ public class CostTypeViewModel {
 			key.setId(selectedPrivateMatch.getId());
 			key.setUserId(user.getId());
 			Kostmatch costMatch = kostmatchDao.getCostMatchPrivate(key);
-			Integer insertedId = null;
 			if (costMatch == null) {
-				insertedId = kostmatchDao.insertCostMatchPrivate(selectedPrivateMatch);
-				selectedPrivateMatch.setId(insertedId.longValue());
+				kostmatchDao.insertCostMatchPrivate(selectedPrivateMatch);
 			} else {
 				kostmatchDao.updateCostMatchPrivate(selectedPrivateMatch);
 			}
