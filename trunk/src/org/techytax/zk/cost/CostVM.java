@@ -11,28 +11,37 @@ Copyright (C) 2011 Potix Corporation. All Rights Reserved.
  */
 package org.techytax.zk.cost;
 
+import java.util.List;
+
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.ListModelList;
 
 public class CostVM {
 
 	ListModelList<Cost> costs;
 	
-	//the selected order
 	Cost selected;
 
-	public ListModelList<Cost> getCosts() {
+	public ListModelList<Cost> getCosts() throws Exception {
 		if (costs == null) {
-			//init the list
-			costs = new ListModelList<Cost>();
+			BoekDao boekDao = new BoekDao();
+			User user = UserCredentialManager.getUser();
+			if (user != null) {
+				Periode vatPeriod = DateHelper.getLatestVatPeriod();
+				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
+				costs = new ListModelList<Cost>(vatCosts);
+			}
 		}
 		return costs;
 	}
@@ -49,7 +58,7 @@ public class CostVM {
 	
 	@NotifyChange({"selected","costs"})
 	@Command
-	public void newCost(){
+	public void newCost() throws Exception{
 		Cost cost = new Cost();
 		getCosts().add(cost);
 		selected = cost;//select the new one

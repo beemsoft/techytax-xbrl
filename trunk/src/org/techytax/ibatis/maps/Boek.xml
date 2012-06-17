@@ -258,5 +258,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		delete from kosten
 		where id = #id#
 		and user_id = #userId#
-	</delete>		
+	</delete>
+	<select id="getVatCostsWithPrivateMoney" parameterMap="periodeMap" resultClass="cost">
+		select id, bedrag as amount, datum as date, btw as vat, omschrijving as description  
+		from kosten 
+		where kostensoort_id in (0,7,19,21,26,32) 
+		and datum &gt;= ? 
+		and datum &lt;= ?
+		and user_id=?
+	</select>			
 </sqlMap>

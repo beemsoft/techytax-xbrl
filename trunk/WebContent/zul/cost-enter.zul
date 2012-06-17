@@ -12,7 +12,7 @@
 			<listhead>
 				<listheader label="Datum" align="center" width="100px" />
 				<listheader label="Bedrag" align="center" width="80px" />
-				<listheader label="Omschrijving" align="center" width="200px" />
+				<listheader label="Omschrijving" width="400px" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
