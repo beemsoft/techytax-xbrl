@@ -53,7 +53,7 @@
 					</row>
 					<row>Omschrijving 
 						<hlayout>
-							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" />
+							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" />
 						</hlayout>
 					</row>
 					<row>Type
