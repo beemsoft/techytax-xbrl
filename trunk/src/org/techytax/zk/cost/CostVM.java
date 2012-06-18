@@ -71,9 +71,20 @@ public class CostVM {
 	public Cost getSelected() {
 		return selected;
 	}
+	
+	private Kostensoort select(long costTypeId) {
+		for (Kostensoort costType: costTypes) {
+			if (costType.getKostenSoortId() == costTypeId) {
+				return costType;
+			}
+		}
+		return null;
+	}
 
+	@NotifyChange({"selected", "selectedCostType"})
 	public void setSelected(Cost selected) {
 		this.selected = selected;
+		setSelectedCostType(select(selected.getCostTypeId()));
 	}
 	
 	public Kostensoort getSelectedCostType() {
@@ -101,6 +112,8 @@ public class CostVM {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			selected.setUserId(user.getId());
+			selected.setCostTypeId(selectedCostType.getKostenSoortId());
+			selected.setKostenSoortOmschrijving(selectedCostType.getOmschrijving());
 			Cost cost = boekDao.getKost(Long.toString(selected.getId()), user.getId());
 			if (cost == null) {
 				boekDao.insertKost(selected);
