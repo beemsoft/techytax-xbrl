@@ -20,7 +20,7 @@
 package org.techytax.domain;
 
 public class Kostmatch {
-	private VatType vatType;
+	private VatType vatType = VatType.NONE;
 
 	private long id = 0;
 
