@@ -65,7 +65,9 @@ public class EditBtwmatchAction extends Action {
 				log.debug("result=" + kostmatch);
 
 				BeanUtils.copyProperties(costMatchForm, kostmatch);
-				costMatchForm.setVatType(kostmatch.getVatType().name());
+				if (kostmatch.getVatType() != null) {
+					costMatchForm.setVatType(kostmatch.getVatType().name());
+				}
 
 				forward = "success";
 			} catch (Exception e) {
