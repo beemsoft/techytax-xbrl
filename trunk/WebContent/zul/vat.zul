@@ -23,6 +23,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 <window title="TechyTax" border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
 	Bereken je omzetbelasting in vijf stappen.
+<hbox>
+	<button id="logoffBtn" label="Uitloggen" />
+	<button id="costsBtn" label="Alle kosten beheren" />
+</hbox>
 <hbox hflex="true">
 	<tabbox width="1500px">
 		<tabs>

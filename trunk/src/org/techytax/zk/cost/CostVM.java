@@ -11,6 +11,7 @@ Copyright (C) 2011 Potix Corporation. All Rights Reserved.
  */
 package org.techytax.zk.cost;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
@@ -136,6 +137,26 @@ public class CostVM {
 			selected = null;			
 		}
 	}
+	
+	@NotifyChange("selected")
+	@Command
+	public void highVat() throws Exception{
+		BigDecimal amount = selected.getAmount();
+		BigDecimal bd = new BigDecimal(amount.doubleValue()/1.19d);
+		bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+		selected.setAmount(bd);
+		selected.setVat(amount.subtract(bd));
+	}
+	
+	@NotifyChange("selected")
+	@Command
+	public void lowVat() throws Exception{
+		BigDecimal amount = selected.getAmount();
+		BigDecimal bd = new BigDecimal(amount.doubleValue()/1.06d);
+		bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+		selected.setAmount(bd);
+		selected.setVat(amount.subtract(bd));
+	}	
 
 	//validators for prompt
 	public Validator getPriceValidator(){

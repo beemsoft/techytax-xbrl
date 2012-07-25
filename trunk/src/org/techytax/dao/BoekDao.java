@@ -66,7 +66,7 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void insertKost(Cost kost) throws Exception {
-		kost.setAmount(kost.getAmount().setScale(2));
+		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
 		if (kost.getVat() != null) {
 			kost.setVat(kost.getVat().setScale(2));
 		}
@@ -76,7 +76,7 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void insertPrivateExpense(Cost kost) throws Exception {
-		kost.setAmount(kost.getAmount().setScale(2));
+		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
 		kost.setVat(kost.getVat().setScale(2));		
 		sqlMap.insert("insertPrivateExpense", kost);
 	}
@@ -174,8 +174,8 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void updateKost(Cost kost) throws Exception {
-		kost.setAmount(kost.getAmount().setScale(2));
-		kost.setVat(kost.getVat().setScale(2));		
+		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
+		kost.setVat(BigDecimal.valueOf(kost.getVat().doubleValue()).setScale(2));		
 		encrypt(kost);
 		sqlMap.insert("updateKost", kost);
 		decrypt(kost);

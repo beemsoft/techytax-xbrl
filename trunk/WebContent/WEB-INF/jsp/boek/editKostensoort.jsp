@@ -70,13 +70,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 						Kostmatch obj = null;
 						obj = (Kostmatch) res.get(i);
 						if (obj != null) {
+							String vatType = "vat.none";
+							if (obj.getVatType() != null) {
+								vatType = obj.getVatType().getKey();
+							}
 		%>
 
 		<tr valign="top">
 			<td><a href="editKostmatch.do?id=<%=obj.getId()%>"><%=obj.getMatchText()%></a></td>
 			<logic:equal value="true" property="btwVerrekenbaar"
 				name="kostensoortForm">
-				<td><a href="editBtwmatch.do?id=<%=obj.getId()%>"><bean:message key="<%=obj.getVatType().getKey()%>"/></a></td>
+				<td><a href="editBtwmatch.do?id=<%=obj.getId()%>"><bean:message key="<%=vatType%>"/></a></td>
 			</logic:equal>
 		</tr>
 		<%
