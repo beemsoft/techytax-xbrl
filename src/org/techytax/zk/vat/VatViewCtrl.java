@@ -69,6 +69,17 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Tab controleTab;
 
 	private Media media = null;
+	
+	@Listen("onClick=#logoffBtn")
+	public void logoff(Event event) {
+		UserCredentialManager.setUser(null);
+		Executions.sendRedirect("login.zul"); 
+	}
+	
+	@Listen("onClick=#costsBtn")
+	public void allCosts(Event event) {
+		Executions.sendRedirect("costs.zul"); 
+	}	
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
@@ -152,6 +163,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void importTransactions(Event event) throws Exception {
 		User user = UserCredentialManager.getUser();
 		ListModel<Cost> result = costGrid.getModel();
+		BoekDao boekDao = new BoekDao();
 		if (result != null) {
 			Cost kost = null;
 
@@ -159,7 +171,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				kost = (Cost) result.getElementAt(i);
 				kost.setId(0);
 				kost.setUserId(user.getId());
-				// boekDao.insertKost(kost);
+				boekDao.insertKost(kost);
 			}
 		}
 		createVatOverview();

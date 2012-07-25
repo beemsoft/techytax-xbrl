@@ -123,7 +123,7 @@ var cal13 = new CalendarPopup();
 
 	<tr valign="top">
 		<td><a href="editKost.do?id=<%=obj.getId()%>"><%=obj.getId()%></a></td>
-		<td><%=obj.getDate()%></td>
+		<td><%=obj.getDate().toString()%></td>
 		<td align="right"><%=obj.getAmount()%></td>
 		<td><%=incoming%></td>
 		<td><%=obj.getDescription()%></td>
