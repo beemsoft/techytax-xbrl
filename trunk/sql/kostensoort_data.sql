@@ -76,7 +76,7 @@ INSERT INTO `kostensoort` VALUES
 (30,'costtype.income.tax.return',1,0,1,0,0),
 (31,'costtype.road.tax',0,0,1,1,0),
 (32,'costtype.expense.creditcard',0,1,0,1,0),
-(33,'costtype.interest',0,0,0,0,0),
+(33,'costtype.interest',1,0,1,0,0),
 (34,'costtype.vat.return.incoming.other.account',1,0,0,0,0),
 (35,'costtype.vat.correction.depreciation',0,0,0,1,0),
 (36,'costtype.vat.correction.private',0,1,0,0,0),
