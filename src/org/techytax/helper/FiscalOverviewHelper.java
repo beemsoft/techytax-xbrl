@@ -86,7 +86,7 @@ public class FiscalOverviewHelper {
 		overview.setRepurchase(repurchase);
 
 		// Interest
-		BigInteger interest = boekDao.getInterest(beginDatum, eindDatum, Long.toString(userId));
+		BigInteger interest = boekDao.getInterest(beginDatum, eindDatum, Long.toString(userId)).toBigInteger();
 		overview.setInterestFromBusinessSavings(interest);
 
 		// Business car costs

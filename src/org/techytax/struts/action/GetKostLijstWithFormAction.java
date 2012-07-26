@@ -20,6 +20,7 @@
 package org.techytax.struts.action;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,8 +106,9 @@ public class GetKostLijstWithFormAction extends Action {
 					List<Cost> result4 = boekDao.getCostListCurrentAccount(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);
 					BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
 					request.setAttribute("costBalance", costBalance);
+					BigDecimal interest = boekDao.getInterest(balansForm.getBeginDatum(), balansForm.getEindDatum(), userId);					
 					BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance).subtract(
-							liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()));
+							liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest));
 					request.setAttribute("doubleCheck", doubleCheck);
 				} else if (balansSoort.equals("kostenBalans")) {
 					Balans balans = BalanceCalculator.calculatCostBalance(result);

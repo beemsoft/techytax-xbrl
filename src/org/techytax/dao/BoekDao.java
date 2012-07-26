@@ -265,13 +265,13 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BigInteger getInterest(String beginDatum, String eindDatum, String userId) throws Exception {
+	public BigDecimal getInterest(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		List<Cost> costs = sqlMap.queryForList("getInterest", map);
-		BigInteger interest = new BigInteger("0");
+		BigDecimal interest = new BigDecimal("0");
 		for (Cost cost : costs) {
 			decrypt(cost);
-			interest = interest.add(cost.getAmount().toBigInteger());
+			interest = interest.add(cost.getAmount());
 		}
 		return interest;
 	}
