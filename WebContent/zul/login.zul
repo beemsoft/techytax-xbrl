@@ -11,6 +11,7 @@
 <button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" mold="os" /> Demo: guest/guest
 </vbox>
 <button label="Ga naar de originele TechyTax applicatie" href="/index.jsp" mold="os" />
+<button label="Registreren voor de TechyTax applicatie" href="../TechyTax2/index.jsp" mold="os" />
+<button label="Ga naar het TechyTax forum" href="http://www.techytax.org/forum/" mold="os" />
 </hbox> 
-<image src="/images/under_construction_800x600.jpg" />
 </window> 

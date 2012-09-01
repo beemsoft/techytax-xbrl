@@ -19,17 +19,31 @@
  */
 package org.techytax.domain;
 
+import java.util.Date;
+
+import org.techytax.util.DateHelper;
+
 public enum VatType {
-	NONE("vat.none"), LOW("vat.low"), HIGH("vat.high");
+	NONE("vat.none", 0), LOW("vat.low", 0.6d), HIGH("vat.high", 0.21d), HIGH_OLD("vat.high", 0.19d);
 
+	private static final String changeDateForHighVat = "2012-10-01";
 	private String key;
+	private double value;
 
-	private VatType(String key) {
+	private VatType(String key, double value) {
 		this.key = key;
+		this.value = value;
 	}
 
 	public String getKey() {
 		return key;
+	}
+	
+	public double getValue(Date payDate) throws Exception {
+		if (this == VatType.HIGH && payDate != null && DateHelper.stringToDate(changeDateForHighVat).compareTo(payDate) > 0) {
+			return VatType.HIGH_OLD.value;
+		}
+		return value;
 	}
 	
 	public static VatType getInstance(String type) {
