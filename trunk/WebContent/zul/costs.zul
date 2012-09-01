@@ -51,8 +51,8 @@
 							<doublebox id="pbox" value="@load(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
 							@validator(vm.priceValidator)" format="###,##0.00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
-							<button id="vatHighBtn" label="19% btw" onClick="@command('highVat')"/>
-							<button id="vatLowBtn" label="6% btw" onClick="@command('lowVat')"/>
+							<button id="vatHighBtn" label="btw hoog" onClick="@command('highVat')"/>
+							<button id="vatLowBtn" label="btw laag" onClick="@command('lowVat')"/>
 						</hlayout>
 					</row>
 					<row>btw 

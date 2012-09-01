@@ -7,6 +7,7 @@ Changes:
 </p>
 <ul>
 <li>Migration from Struts to ZK framework.</li>
+<li>High VAT is changing from 19% to 21%.</li>
 </ul>
 <p>
 Bugfixes:

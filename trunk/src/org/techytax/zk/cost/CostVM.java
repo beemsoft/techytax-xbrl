@@ -20,6 +20,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.VatType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.ValidationContext;
@@ -142,20 +143,24 @@ public class CostVM {
 	@Command
 	public void highVat() throws Exception{
 		BigDecimal amount = selected.getAmount();
-		BigDecimal bd = new BigDecimal(amount.doubleValue()/1.19d);
-		bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
-		selected.setAmount(bd);
-		selected.setVat(amount.subtract(bd));
+		if (amount != null) {
+			BigDecimal bd = new BigDecimal(amount.doubleValue()/(1 + VatType.HIGH.getValue(selected.getDate())));
+			bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+			selected.setAmount(bd);
+			selected.setVat(amount.subtract(bd));
+		}
 	}
 	
 	@NotifyChange("selected")
 	@Command
 	public void lowVat() throws Exception{
 		BigDecimal amount = selected.getAmount();
-		BigDecimal bd = new BigDecimal(amount.doubleValue()/1.06d);
-		bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
-		selected.setAmount(bd);
-		selected.setVat(amount.subtract(bd));
+		if (amount != null) {
+			BigDecimal bd = new BigDecimal(amount.doubleValue()/1.06d);
+			bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+			selected.setAmount(bd);
+			selected.setVat(amount.subtract(bd));			
+		}
 	}	
 
 	//validators for prompt

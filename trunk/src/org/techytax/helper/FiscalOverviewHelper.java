@@ -44,6 +44,7 @@ import org.techytax.domain.Passivum;
 import org.techytax.domain.Periode;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivatWithdrawal;
+import org.techytax.domain.VatType;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
@@ -75,7 +76,7 @@ public class FiscalOverviewHelper {
 		// Turnover net unpaid
 		// TODO: start with bookvalue from previous year
 		BigDecimal turnoverUnpaid = boekDao.getInvoiceBalance(beginDatum, DateHelper.getFinalInvoiceDate(eindDatum), Long.toString(userId));
-		BigDecimal turnoverUnpaidNet = new BigDecimal(turnoverUnpaid.doubleValue() / 1.19d);
+		BigDecimal turnoverUnpaidNet = new BigDecimal(turnoverUnpaid.doubleValue() / (1 + VatType.HIGH.getValue(null)));
 		turnoverUnpaidNet = turnoverUnpaidNet.setScale(2, BigDecimal.ROUND_HALF_UP);
 		overview.setNetTurnOverNotYetPaid(turnoverUnpaidNet.toBigInteger());
 
