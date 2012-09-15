@@ -1,5 +1,5 @@
 <!--
-Copyright 2011 Hans Beemsterboer
+Copyright 2012 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -46,12 +46,18 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		number = #number#, name = #name#, date_opened = #dateOpened#, date_closed = #dateClosed#, type = #type# 
 		WHERE id = #id# AND user_id = #userId#
 	</update>
-	<select id="getAccountBalance" parameterClass="key"
+	<select id="getAccountBalances" parameterClass="key"
 		resultClass="balance">
 		SELECT id, account_id as accountId, datum, balance 
 		FROM account_balance 
 		WHERE account_id = #id# AND user_id = #userId#
 	</select>
+	<select id="getAccountBalance" parameterClass="key"
+		resultClass="balance">
+		SELECT id, account_id as accountId, datum, balance 
+		FROM account_balance 
+		WHERE id = #id# AND user_id = #userId#
+	</select>	
 	<insert id="insertAccountBalance" parameterClass="balance">
 		insert into account_balance
 		values(#id#,#userId#,#accountId#,#datum#,#balance#)

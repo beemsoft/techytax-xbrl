@@ -19,9 +19,11 @@
  */
 package org.techytax.domain;
 
+import java.util.Date;
+
 public class Account {
-	private String dateClosed;
-	private String dateOpened;
+	private Date dateClosed;
+	private Date dateOpened;
 	private String description;
 	private long id = 0;
 	private String name;
@@ -29,11 +31,11 @@ public class Account {
 	private long userId;
 	private AccountType type;
 
-	public String getDateClosed() {
+	public Date getDateClosed() {
 		return dateClosed;
 	}
 
-	public String getDateOpened() {
+	public Date getDateOpened() {
 		return dateOpened;
 	}
 
@@ -57,11 +59,11 @@ public class Account {
 		return userId;
 	}
 
-	public void setDateClosed(String dateClosed) {
+	public void setDateClosed(Date dateClosed) {
 		this.dateClosed = dateClosed;
 	}
 
-	public void setDateOpened(String dateOpened) {
+	public void setDateOpened(Date dateOpened) {
 		this.dateOpened = dateOpened;
 	}
 

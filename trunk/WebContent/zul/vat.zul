@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <hbox>
 	<button id="logoffBtn" label="Uitloggen" />
 	<button id="costsBtn" label="Alle kosten beheren" />
+	<button id="accountsBtn" label="Alle rekeningen beheren" />	
 </hbox>
 <hbox hflex="true">
 	<tabbox width="1500px">

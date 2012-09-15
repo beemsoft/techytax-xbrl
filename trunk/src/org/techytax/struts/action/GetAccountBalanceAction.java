@@ -51,7 +51,7 @@ public class GetAccountBalanceAction extends Action {
 				User user = (User) request.getSession().getAttribute("user");
 				key.setId(Long.parseLong(id));
 				key.setUserId(user.getId());				
-				result = dao.getAccountBalance(key);
+				result = dao.getAccountBalances(key);
 				request.setAttribute("accountBalance", result);
 				request.setAttribute("accountId", id);
 				forward = "success";

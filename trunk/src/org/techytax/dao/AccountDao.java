@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2012 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -120,19 +120,28 @@ public class AccountDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<AccountBalance> getAccountBalance(KeyId key) throws Exception {
-		List<AccountBalance> balances = sqlMap.queryForList("getAccountBalance", key);
+	public List<AccountBalance> getAccountBalances(KeyId key) throws Exception {
+		List<AccountBalance> balances = sqlMap.queryForList("getAccountBalances", key);
 		for (AccountBalance balance : balances) {
 			decrypt(balance);
 		}
 		return balances;
 	}
+	
+	public AccountBalance getAccountBalance(KeyId key) throws Exception {
+		AccountBalance balance = (AccountBalance) sqlMap.queryForObject("getAccountBalance", key);
+		if (balance != null) {
+			decrypt(balance);
+		}
+		return balance;
+	}	
 
 	public void insertAccountBalance(AccountBalance accountBalance)
 			throws Exception {
-		accountBalance.setBalance(accountBalance.getBalance().setScale(2));
+		accountBalance.setBalance(BigDecimal.valueOf(accountBalance.getBalance().doubleValue()).setScale(2));
 		encrypt(accountBalance);
 		sqlMap.insert("insertAccountBalance", accountBalance);
+		decrypt(accountBalance);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -141,8 +150,10 @@ public class AccountDao extends BaseDao {
 	}	
 	
 	public void updateAccountBalance(AccountBalance accountBalance) throws Exception {
+		accountBalance.setBalance(BigDecimal.valueOf(accountBalance.getBalance().doubleValue()).setScale(2));
 		encrypt(accountBalance);
 		sqlMap.insert("updateAccountBalance", accountBalance);
+		decrypt(accountBalance);		
 	}	
 
 }

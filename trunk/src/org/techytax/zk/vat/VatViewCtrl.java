@@ -79,6 +79,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Listen("onClick=#costsBtn")
 	public void allCosts(Event event) {
 		Executions.sendRedirect("costs.zul"); 
+	}
+	
+	@Listen("onClick=#accountsBtn")
+	public void allAccounts(Event event) {
+		Executions.sendRedirect("accounts.zul"); 
 	}	
 
 	@Listen("onUpload=#uploadBtn")
