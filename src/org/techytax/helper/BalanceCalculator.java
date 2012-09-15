@@ -97,7 +97,7 @@ public class BalanceCalculator {
 			KeyId key = new KeyId();
 			key.setUserId(userId);
 			key.setId(businessAccount.getId());
-			List<AccountBalance> accountBalances = accountDao.getAccountBalance(key);
+			List<AccountBalance> accountBalances = accountDao.getAccountBalances(key);
 			Collections.sort(accountBalances);
 			BigDecimal beginAmount = null;
 			BigDecimal endAmount = null;

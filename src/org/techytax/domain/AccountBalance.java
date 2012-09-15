@@ -20,11 +20,12 @@
 package org.techytax.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class AccountBalance implements Comparable<AccountBalance>{
 	private long accountId;
 	private BigDecimal balance;
-	private String datum;
+	private Date datum;
 	private long id = 0;
 	private long userId;
 
@@ -36,7 +37,7 @@ public class AccountBalance implements Comparable<AccountBalance>{
 		return balance;
 	}
 
-	public String getDatum() {
+	public Date getDatum() {
 		return datum;
 	}
 
@@ -56,7 +57,7 @@ public class AccountBalance implements Comparable<AccountBalance>{
 		this.balance = balance;
 	}
 
-	public void setDatum(String datum) {
+	public void setDatum(Date datum) {
 		this.datum = datum;
 	}
 

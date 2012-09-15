@@ -190,9 +190,9 @@ public class DateHelper {
 		return periode;
 	}
 	
-	public static boolean hasOneDayDifference(String date1, String date2) throws Exception {
+	public static boolean hasOneDayDifference(Date date1, String date2) throws Exception {
 		Calendar cal = new GregorianCalendar();
-		cal.setTime(stringToDate(date1));
+		cal.setTime(date1);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		String date = getDate(cal.getTime());
 		if (date.equals(date2)) {

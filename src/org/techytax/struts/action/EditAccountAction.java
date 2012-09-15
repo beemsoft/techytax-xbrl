@@ -55,8 +55,8 @@ public class EditAccountAction extends Action {
 				account = AccountDao.getAccount(key);
 
 				accountForm.setId(account.getId());
-				accountForm.setDateClosed(account.getDateClosed());
-				accountForm.setDateOpened(account.getDateOpened());
+//				accountForm.setDateClosed(account.getDateClosed());
+//				accountForm.setDateOpened(account.getDateOpened());
 				accountForm.setDescription(account.getDescription());
 				accountForm.setName(account.getName());
 				accountForm.setNumber(account.getNumber());

@@ -40,8 +40,8 @@ public class UpdateAccountAction extends Action {
 
 		Account account = new Account();
 		account.setId(accountForm.getId());
-		account.setDateClosed(accountForm.getDateClosed());
-		account.setDateOpened(accountForm.getDateOpened());
+//		account.setDateClosed(accountForm.getDateClosed());
+//		account.setDateOpened(accountForm.getDateOpened());
 		account.setDescription(accountForm.getDescription());
 		account.setName(accountForm.getName());
 		account.setNumber(accountForm.getNumber());

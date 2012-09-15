@@ -35,7 +35,9 @@ public class DateTypeHandler implements TypeHandlerCallback {
 		if (getter.wasNull()) {
 			return null;
 		}
-
+		if (getter.getString() == null) {
+			return null;
+		}
 		try {
 			return DateHelper.stringToDate(getter.getString());
 		} catch (Exception e) {
