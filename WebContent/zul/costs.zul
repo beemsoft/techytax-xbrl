@@ -5,9 +5,30 @@
 }
 </style>
 <window title="Alle kosten beheren" border="normal" width="1100px"
-	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM4')" 
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.AllCostsVM')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
+		<groupbox hflex="true" mold="3d">
+			<grid hflex="true" >
+				<columns>
+					<column/>
+					<column/>
+					<column/>
+					<column/>														
+				</columns>
+				<rows>
+					<row>Datum begin
+						<hlayout> 
+							<datebox id="cdbeginbox" value="@bind(vm.beginDate)"/>
+						</hlayout>	
+						Datum eind
+						<hlayout> 
+							<datebox id="cdendbox" value="@bind(vm.endDate)"/>
+						</hlayout>	
+					</row>								
+				</rows>
+			</grid>
+		</groupbox>	
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
 			<listhead>
 				<listheader label="Datum" align="center" width="100px" />

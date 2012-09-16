@@ -1,5 +1,6 @@
 package org.techytax.zk.cost;
 
+import java.util.Date;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
@@ -10,25 +11,24 @@ import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.ListModelList;
 
-public class CostVM4 extends CostVM3 {
+public class AllCostsVM extends CostVM3 {
 	
-//	List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "alles", Long.toString(user.getId()));
-
+	private Periode periode = DateHelper.getLatestVatPeriod();
+	
+	@NotifyChange("periode")	
 	public ListModelList<Cost> getCosts() throws Exception {
-		if (costs == null) {
-			BoekDao boekDao = new BoekDao();
-			User user = UserCredentialManager.getUser();
-			if (user != null) {
-				Periode vatPeriod = DateHelper.getLatestVatPeriod();
-				List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "alles", Long.toString(user.getId()));
-				for (Cost cost : vatCosts) {
-					cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-				}				
-				costs = new ListModelList<Cost>(vatCosts);
-			}
+		BoekDao boekDao = new BoekDao();
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "alles", Long.toString(user.getId()));
+			for (Cost cost : vatCosts) {
+				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+			}				
+			costs = new ListModelList<Cost>(vatCosts);
 		}
 		return costs;
 	}
@@ -44,5 +44,23 @@ public class CostVM4 extends CostVM3 {
 			selectedCostType = costTypes.get(0); 			
 		}
 		return costTypes;
+	}
+
+	@NotifyChange("costs")	
+	public void setBeginDate(Date beginDate) {
+		periode.setBeginDatum(beginDate);
+	}
+	
+	public Date getBeginDate() {
+		return periode.getBeginDatum();
+	}
+	
+	@NotifyChange("costs")	
+	public void setEndDate(Date endDate) {
+		periode.setEindDatum(endDate);
+	}
+	
+	public Date getEndDate() {
+		return periode.getEindDatum();
 	}	
 }
