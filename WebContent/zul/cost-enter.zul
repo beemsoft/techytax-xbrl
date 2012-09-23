@@ -19,8 +19,8 @@
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
-					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
-					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')"/>
+					<listcell label="@load(item.amount) @converter('formatedNumber', format='###.##0,00')"/>
+					<listcell label="@load(item.vat) @converter('formatedNumber', format='###.##0,00')"/>
 					<listcell label="@load(item.description)"/>
 					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
 				</listitem>
@@ -49,14 +49,14 @@
 					<row>Bedrag 
 						<hlayout>
 							<doublebox id="pbox" value="@load(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
-							@validator(vm.priceValidator)" format="###,##0.00" />
+							@validator(vm.priceValidator)" format="###.##0,00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>
 					<row>btw 
 						<hlayout>
 							<doublebox id="vbox" value="@load(vm.selected.vat) @save(vm.selected.vat,before='saveCost') 
-							@validator(vm.priceValidator)" format="###,##0.00" />
+							@validator(vm.priceValidator)" format="###.##0,00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>					

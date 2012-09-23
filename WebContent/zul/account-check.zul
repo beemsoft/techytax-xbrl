@@ -39,8 +39,8 @@
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
-					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
-					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')"/>
+					<listcell label="@load(item.amount) @converter('formatedNumber', format='###.##0,00')"/>
+					<listcell label="@load(item.vat) @converter('formatedNumber', format='###.##0,00')"/>
 					<listcell label="@load(item.description)"/>
 					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
 				</listitem>
