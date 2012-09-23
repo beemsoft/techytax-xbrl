@@ -33,11 +33,11 @@ import org.zkoss.zul.ListModelList;
 
 public class CostVM {
 
-	ListModelList<Cost> costs;
+	protected ListModelList<Cost> costs;
 	
 	ListModelList<Kostensoort> costTypes;
 	
-	Cost selected;
+	protected Cost selected;
 	
 	Kostensoort selectedCostType;
 
