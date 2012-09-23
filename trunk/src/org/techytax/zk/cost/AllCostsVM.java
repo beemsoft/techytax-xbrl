@@ -33,6 +33,20 @@ public class AllCostsVM extends CostVM3 {
 		return costs;
 	}
 	
+	@NotifyChange("periode")	
+	public ListModelList<Cost> getBusinessCosts() throws Exception {
+		BoekDao boekDao = new BoekDao();
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
+			for (Cost cost : vatCosts) {
+				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+			}				
+			costs = new ListModelList<Cost>(vatCosts);
+		}
+		return costs;
+	}	
+	
 	public ListModelList<Kostensoort> getCostTypes() throws Exception {
 		if (costTypes == null) {
 			KostensoortDao kostensoortDao = new KostensoortDao();
