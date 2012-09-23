@@ -111,6 +111,7 @@ public class AccountDao extends BaseDao {
 	public void updateAccount(Account account) throws Exception {
 		encrypt(account);
 		sqlMap.insert("updateAccount", account);
+		decrypt(account);
 	}
 	
 	public Account getAccount(KeyId key) throws Exception {
