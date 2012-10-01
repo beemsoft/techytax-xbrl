@@ -32,11 +32,7 @@ public class AccountCheckVM extends CostVM3 {
 	
 	protected BigDecimal actualBalance;
 	protected List<Cost> costList;
-	protected Liquiditeit liquiditeit;
-	protected BigDecimal brutoOmzet;
-	protected BigDecimal taxBalance;
-	protected BigDecimal costBalance;
-	protected BigDecimal doubleCheck;	
+	private AccountCheckData accountCheckData = new AccountCheckData();
 	
 	public ListModelList<Cost> getCosts() throws Exception {
 		BoekDao boekDao = new BoekDao();
@@ -55,19 +51,29 @@ public class AccountCheckVM extends CostVM3 {
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
-		liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
+		Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
 		BoekDao boekDao = new BoekDao();
 		List<Cost> result2 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "btwBalans", Long.toString(user.getId()));
 		Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 		BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
-		brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
+		BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
 		List<Cost> result3 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax", Long.toString(user.getId()));
-		taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
+		BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
 		List<Cost> result4 = boekDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
-		costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
+		BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
 		BigDecimal interest = boekDao.getInterest(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));					
-		doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance).subtract(
+		BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance).subtract(
 				liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest));
+		
+		accountCheckData.setAccountBalance(liquiditeit.getRekeningBalans());
+		accountCheckData.setCostBalance(costBalance);
+		accountCheckData.setGrossIncome(brutoOmzet);
+		accountCheckData.setInterest(interest);
+		accountCheckData.setPaidInvoices(totalPaidInvoices);
+		accountCheckData.setPrivateWithdrawalBalance(liquiditeit.getPriveBalans());
+		accountCheckData.setSavingBalance(liquiditeit.getSpaarBalans());
+		accountCheckData.setTaxBalance(taxBalance);
+		accountCheckData.setDoubleCheck(doubleCheck);
 	
 	}
 	
@@ -76,7 +82,7 @@ public class AccountCheckVM extends CostVM3 {
 		this.selected = selected;
 	}	
 	
-	@NotifyChange({"costs", "accountCheck", "actualBalance", "liquiditeit", "brutoOmzet", "taxBalance", "costBalance", "doubleCheck"})	
+	@NotifyChange({"costs", "accountCheck", "accountCheckData", "actualBalance"})	
 	public void setBeginDate(Date beginDate) {
 		periode.setBeginDatum(beginDate);
 	}
@@ -85,7 +91,7 @@ public class AccountCheckVM extends CostVM3 {
 		return periode.getBeginDatum();
 	}
 	
-	@NotifyChange({"costs", "accountCheck", "actualBalance", "liquiditeit", "brutoOmzet", "taxBalance", "costBalance", "doubleCheck"})	
+	@NotifyChange({"costs", "accountCheck", "accountCheckData", "actualBalance"})	
 	public void setEndDate(Date endDate) {
 		periode.setEindDatum(endDate);
 	}
@@ -104,26 +110,6 @@ public class AccountCheckVM extends CostVM3 {
 
 	public List<Cost> getCostList() {
 		return costList;
-	}
-
-	public Liquiditeit getLiquiditeit() {
-		return liquiditeit;
-	}
-
-	public BigDecimal getBrutoOmzet() {
-		return brutoOmzet;
-	}
-
-	public BigDecimal getTaxBalance() {
-		return taxBalance;
-	}
-
-	public BigDecimal getCostBalance() {
-		return costBalance;
-	}
-
-	public BigDecimal getDoubleCheck() {
-		return doubleCheck;
 	}
 
 	public void setActualBalance(BigDecimal actualBalance) {
@@ -153,6 +139,14 @@ public class AccountCheckVM extends CostVM3 {
 
 	public void setBusinessAccountBalance(BigDecimal businessAccountBalance) {
 		this.businessAccountBalance = businessAccountBalance;
+	}
+
+	public AccountCheckData getAccountCheckData() {
+		return accountCheckData;
+	}
+
+	public void setAccountCheckData(AccountCheckData accountCheckData) {
+		this.accountCheckData = accountCheckData;
 	}
 
 }

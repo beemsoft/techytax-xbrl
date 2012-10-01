@@ -55,12 +55,12 @@
 				<rows>
 					<row>Rekening saldo van TechyTax
 						<hlayout>
-							<doublebox id="box1" value="@bind(vm.liquiditeit.rekeningBalans)"  />
+							<label value="@load(vm.accountCheckData.accountBalance) @converter('formatedNumber', format='###.##0,00')"   />
 						</hlayout>					
 					</row>				
 					<row>Rekening saldo van online bankieren
 						<hlayout>
-							<doublebox id="box8" value="@bind(vm.actualBalance)" />
+							<label value="@load(vm.actualBalance)  @converter('formatedNumber', format='###.##0,00')" />
 							<toolbar visible="@load(empty vm.actualBalance)">
 								<doublebox id="box9" value="@bind(vm.businessAccountBalance)" />
 								<button label="Save" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.businessAccountBalance)" />
@@ -70,34 +70,34 @@
 					</row>
 					<row>Double check van TechyTax
 						<hlayout>
-							<doublebox id="box2" value="@bind(vm.doubleCheck)"  />
+							<label value="@load(vm.accountCheckData.doubleCheck) @converter('formatedNumber', format='###.##0,00')"  />
 						</hlayout>					
 					</row>
-					<row>Bruto omzet
+					<row>Betaalde facturen
 						<hlayout>
-							<doublebox id="box3" value="@bind(vm.brutoOmzet)"  />
+							<label value="@load(vm.accountCheckData.paidInvoices) @converter('formatedNumber', format='###.##0,00')"  />
 						</hlayout>					
-					</row>
+					</row>					
 					<row>Belasting saldo
 						<hlayout>
-							<doublebox id="box4" value="@bind(vm.taxBalance)"  />
-						</hlayout>					
-					</row>
-					<row>Spaarsaldo
-						<hlayout>
-							<doublebox id="box5" value="@bind(vm.liquiditeit.spaarBalans)"  />
-						</hlayout>					
-					</row>
-					<row>Prive opname saldo
-						<hlayout>
-							<doublebox id="box6" value="@bind(vm.liquiditeit.priveBalans)"  />
+							-<label value="@load(vm.accountCheckData.taxBalance) @converter('formatedNumber', format='###.##0,00')"  />
 						</hlayout>					
 					</row>
 					<row>Kost saldo
 						<hlayout>
-							<doublebox id="box7" value="@bind(vm.costBalance)"  />
+							-<label value="@load(vm.accountCheckData.costBalance) @converter('formatedNumber', format='###.##0,00')"  />
 						</hlayout>					
-					</row>																					
+					</row>					
+					<row>Spaarsaldo
+						<hlayout>
+							-(<label value="@load(vm.accountCheckData.savingBalance) @converter('formatedNumber', format='###.##0,00')"  />
+											
+					 - Prive opname saldo
+						
+							<label value="@load(vm.accountCheckData.privateWithdrawalBalance) @converter('formatedNumber', format='###.##0,00')"  />
+							- Rente <label value="@load(vm.accountCheckData.interest) @converter('formatedNumber', format='###.##0,00')"  />
+						)</hlayout>					
+					</row>																								
 				</rows>
 			</grid>
 		</groupbox>		
