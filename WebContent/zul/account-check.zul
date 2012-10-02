@@ -60,12 +60,13 @@
 					</row>				
 					<row>Rekening saldo van online bankieren
 						<hlayout>
-							<label value="@load(vm.actualBalance)  @converter('formatedNumber', format='###.##0,00')" />
-							<toolbar visible="@load(empty vm.actualBalance)">
+							<label value="@load(vm.accountCheckData.actualBalance)  @converter('formatedNumber', format='###.##0,00')" />
+							<toolbar visible="@load(empty vm.accountCheckData.actualBalance)">
 								<doublebox id="box9" value="@bind(vm.businessAccountBalance)" />
 								<button label="Save" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.businessAccountBalance)" />
 								<label value="Vul saldo in"/>
 							</toolbar>
+							<label visible="@load(!vm.accountCheckData.correct)" value="Niet correct, probeer een kleinere selectieperiode."/> 
 						</hlayout>					
 					</row>
 					<row>Double check van TechyTax

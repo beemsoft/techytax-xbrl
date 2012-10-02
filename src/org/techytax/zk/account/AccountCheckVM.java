@@ -30,7 +30,6 @@ public class AccountCheckVM extends CostVM3 {
 	
 	protected Periode periode = DateHelper.getLatestVatPeriod();
 	
-	protected BigDecimal actualBalance;
 	protected List<Cost> costList;
 	private AccountCheckData accountCheckData = new AccountCheckData();
 	
@@ -50,7 +49,7 @@ public class AccountCheckVM extends CostVM3 {
 	
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
-		actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
+		BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
 		Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
 		BoekDao boekDao = new BoekDao();
 		List<Cost> result2 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "btwBalans", Long.toString(user.getId()));
@@ -74,6 +73,7 @@ public class AccountCheckVM extends CostVM3 {
 		accountCheckData.setSavingBalance(liquiditeit.getSpaarBalans());
 		accountCheckData.setTaxBalance(taxBalance);
 		accountCheckData.setDoubleCheck(doubleCheck);
+		accountCheckData.setActualBalance(actualBalance);
 	
 	}
 	
@@ -82,7 +82,7 @@ public class AccountCheckVM extends CostVM3 {
 		this.selected = selected;
 	}	
 	
-	@NotifyChange({"costs", "accountCheck", "accountCheckData", "actualBalance"})	
+	@NotifyChange({"costs", "accountCheck", "accountCheckData"})	
 	public void setBeginDate(Date beginDate) {
 		periode.setBeginDatum(beginDate);
 	}
@@ -91,7 +91,7 @@ public class AccountCheckVM extends CostVM3 {
 		return periode.getBeginDatum();
 	}
 	
-	@NotifyChange({"costs", "accountCheck", "accountCheckData", "actualBalance"})	
+	@NotifyChange({"costs", "accountCheck", "accountCheckData"})	
 	public void setEndDate(Date endDate) {
 		periode.setEindDatum(endDate);
 	}
@@ -104,17 +104,9 @@ public class AccountCheckVM extends CostVM3 {
 		return periode;
 	}
 
-	public BigDecimal getActualBalance() {
-		return actualBalance;
-	}
-
 	public List<Cost> getCostList() {
 		return costList;
 	}
-
-	public void setActualBalance(BigDecimal actualBalance) {
-		this.actualBalance = actualBalance;
-	}	
 
 	// action command
 
