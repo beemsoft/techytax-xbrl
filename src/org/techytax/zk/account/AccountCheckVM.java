@@ -110,7 +110,7 @@ public class AccountCheckVM extends CostVM3 {
 
 	// action command
 
-	@NotifyChange("actualBalance")	
+	@NotifyChange({"accountCheck", "accountCheckData"})	
 	@Command
 	public void saveAccountBalance() throws Exception {
 		if (user != null) {
