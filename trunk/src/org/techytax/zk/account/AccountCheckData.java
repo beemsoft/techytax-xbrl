@@ -13,6 +13,11 @@ public class AccountCheckData {
 	private BigDecimal privateWithdrawalBalance;
 	private BigDecimal interest;
 	private BigDecimal doubleCheck;
+	private BigDecimal actualBalance;	
+	
+	public boolean getCorrect() {
+		return doubleCheck.equals(actualBalance);
+	}
 
 	public BigDecimal getGrossIncome() {
 		return grossIncome;
@@ -84,5 +89,13 @@ public class AccountCheckData {
 
 	public void setAccountBalance(BigDecimal accountBalance) {
 		this.accountBalance = accountBalance;
+	}
+
+	public BigDecimal getActualBalance() {
+		return actualBalance;
+	}
+
+	public void setActualBalance(BigDecimal actualBalance) {
+		this.actualBalance = actualBalance;
 	}
 }
