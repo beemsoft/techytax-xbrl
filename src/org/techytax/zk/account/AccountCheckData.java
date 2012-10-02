@@ -16,7 +16,7 @@ public class AccountCheckData {
 	private BigDecimal actualBalance;	
 	
 	public boolean getCorrect() {
-		return doubleCheck.equals(actualBalance);
+		return actualBalance == null || doubleCheck.equals(actualBalance);
 	}
 
 	public BigDecimal getGrossIncome() {
