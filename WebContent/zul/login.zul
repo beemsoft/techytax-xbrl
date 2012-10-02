@@ -8,10 +8,36 @@
 <row> Wachtwoord:<textbox id="passwordTxb" type="password"/></row> 
 </rows> 
 </grid>
-<button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" mold="os" /> Demo: guest/guest
+<button id="confirmBtn" label="Inloggen in de nieuwe TechyTax applicatie" tooltip="new" mold="os" /> Demo: guest/guest
 </vbox>
-<button label="Ga naar de originele TechyTax applicatie" href="/index.jsp" mold="os" />
-<button label="Registreren voor de TechyTax applicatie" href="../TechyTax2/index.jsp" mold="os" />
-<button label="Ga naar het TechyTax forum" href="http://www.techytax.org/forum/" mold="os" />
+<button label="Ga naar de originele TechyTax applicatie" href="/index.jsp" tooltip="original" mold="os" />
+<button label="Registreren voor de TechyTax applicatie" href="../TechyTax2/index.jsp" tooltip="register" mold="os" />
+<button label="Ga naar het TechyTax forum" href="http://www.techytax.org/forum/" tooltip="forum" mold="os" />
 </hbox> 
+<popup id="new" width="300px">
+    <html><![CDATA[
+    	De nieuwe versie van TechyTax is al geschikt voor
+ 		de aangifte omzetbelasting. Aan het overzicht voor
+ 		de inkomstenbelasting wordt	nog gewerkt.
+    ]]></html>
+</popup>
+<popup id="original" width="300px">
+    <html><![CDATA[
+    	De originele TechyTax applicatie wordt op dit moment
+    	omgebouwd naar een nieuwe versie. Klik op 'Inloggen in
+    	de nieuwe TechyTax applicatie' voor uw omzetbelasting.
+    	De originele versie wordt <u>niet</u> meer ondersteund.
+    ]]></html>
+</popup>
+<popup id="register" width="300px">
+    <html><![CDATA[
+    	U kunt zich registreren voor de online versie van TechyTax.
+    ]]></html>
+</popup>
+<popup id="forum" width="300px">
+    <html><![CDATA[
+    	U kunt zich aanmelden op het TechyTax forum om vragen
+    	te stellen.
+    ]]></html>
+</popup>
 </window> 
