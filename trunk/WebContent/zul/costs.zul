@@ -70,7 +70,7 @@
 					<row>Bedrag 
 						<hlayout>
 							<doublebox id="pbox" value="@load(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
-							@validator(vm.priceValidator)" format="###.##0,00" />
+							@validator(vm.priceValidator)" format="###,##0.00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 							<button id="vatHighBtn" label="btw hoog" onClick="@command('highVat')"/>
 							<button id="vatLowBtn" label="btw laag" onClick="@command('lowVat')"/>
@@ -78,7 +78,7 @@
 					</row>
 					<row>btw 
 						<hlayout>
-							<doublebox id="vbox" value="@load(vm.selected.vat) @save(vm.selected.vat,before='saveCost')"  />
+							<doublebox id="vbox" value="@load(vm.selected.vat) @save(vm.selected.vat,before='saveCost')" format="###,##0.00" />
 						</hlayout>
 					</row>					
 					<row>Omschrijving 
