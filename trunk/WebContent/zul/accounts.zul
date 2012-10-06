@@ -33,14 +33,19 @@
 				<rows>
 					<row>Datum geopend
 						<hlayout> 
-							<datebox id="cdobox" value="@load(vm.selected.dateOpened) @save(vm.selected.dateOpened, before='saveAccount')"/>
+							<datebox value="@load(vm.selected.dateOpened) @save(vm.selected.dateOpened, before='saveAccount')"/>
 						</hlayout>	
 					</row>
 					<row>Datum gesloten
 						<hlayout> 
-							<datebox id="cdcbox" value="@load(vm.selected.dateClosed) @save(vm.selected.dateClosed, before='saveAccount')"/>
+							<datebox value="@load(vm.selected.dateClosed) @save(vm.selected.dateClosed, before='saveAccount')"/>
 						</hlayout>	
-					</row>									
+					</row>
+					<row>Omschrijving
+						<hlayout>
+							<textbox value="@load(vm.selected.description) @save(vm.selected.description,before='saveAccount')" width="300px" />
+						</hlayout>
+					</row>													
 					<row>Type
 						<hlayout>
 							<listbox model="@load(vm.accountTypes)" selectedItem="@bind(vm.selectedAccountType)" hflex="true" height="200px">
