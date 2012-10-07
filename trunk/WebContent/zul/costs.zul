@@ -22,6 +22,7 @@
     Comparator cTypeDsc = new CostComparator(false, 5);
 ]]></zscript>	
 	<vbox hflex="true">
+		<hbox>
 		<groupbox hflex="true" mold="3d">
 			<grid hflex="true" >
 				<columns>
@@ -42,7 +43,9 @@
 					</row>								
 				</rows>
 			</grid>
-		</groupbox>	
+		</groupbox>
+		<button label="Export XML Audit File" onClick="@command('audit')" />
+		</hbox>
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
 			<auxhead>
             	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
@@ -104,10 +107,9 @@
 						</hlayout>
 					</row>
 					<row>Type
-						<hlayout>
-							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" height="200px">
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="215px" >
 								<listhead>
-									<listheader label="Omschrijving" width="400px" />
+									<listheader label="Omschrijving" width="200px" />
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
@@ -115,7 +117,6 @@
 									</listitem>
 								</template>
 							</listbox>
-						</hlayout>
 					</row>					
 				</rows>
 			</grid>

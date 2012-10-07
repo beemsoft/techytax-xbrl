@@ -33,6 +33,8 @@ import org.zkoss.zul.ListModelList;
 
 public class CostVM {
 
+	protected User user = UserCredentialManager.getUser();
+	
 	protected ListModelList<Cost> costs;
 	
 	ListModelList<Kostensoort> costTypes;
@@ -44,7 +46,6 @@ public class CostVM {
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (costs == null) {
 			BoekDao boekDao = new BoekDao();
-			User user = UserCredentialManager.getUser();
 			if (user != null) {
 				Periode vatPeriod = DateHelper.getLatestVatPeriod();
 				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
@@ -111,7 +112,6 @@ public class CostVM {
 	@Command
 	public void saveCost() throws Exception{
 		BoekDao boekDao = new BoekDao();
-		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			selected.setUserId(user.getId());
 			selected.setCostTypeId(selectedCostType.getKostenSoortId());
@@ -130,7 +130,6 @@ public class CostVM {
 	@Command
 	public void deleteCost() throws Exception{
 		BoekDao boekDao = new BoekDao();
-		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			selected.setUserId(user.getId());
 			boekDao.deleteCost(selected);
