@@ -7,6 +7,20 @@
 <window title="Alle kosten beheren" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.AllCostsVM')" 
 	validationMessages="@id('vmsgs')">
+    <zscript><![CDATA[
+    import java.util.Comparator;
+    import org.techytax.zk.cost.CostComparator;
+    Comparator cDateAsc = new CostComparator(true, 1);
+    Comparator cDateDsc = new CostComparator(false, 1);
+    Comparator cAmountAsc = new CostComparator(true, 2);
+    Comparator cAmountDsc = new CostComparator(false, 2);
+    Comparator cVatAsc = new CostComparator(true, 3);
+    Comparator cVatDsc = new CostComparator(false, 3);
+    Comparator cDescrAsc = new CostComparator(true, 4);
+    Comparator cDescrDsc = new CostComparator(false, 4);
+    Comparator cTypeAsc = new CostComparator(true, 5);
+    Comparator cTypeDsc = new CostComparator(false, 5);
+]]></zscript>	
 	<vbox hflex="true">
 		<groupbox hflex="true" mold="3d">
 			<grid hflex="true" >
@@ -30,12 +44,15 @@
 			</grid>
 		</groupbox>	
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
+			<auxhead>
+            	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
+        	</auxhead>
 			<listhead>
-				<listheader label="Datum" align="center" width="100px" />
-				<listheader label="Bedrag" align="center" width="80px" />
-				<listheader label="btw" align="center" width="80px" />
-				<listheader label="Omschrijving" width="400px" />
-				<listheader label="Type" width="400px"/>
+				<listheader label="Datum" align="center" width="100px" sortAscending="${cDateAsc}" sortDescending="${cDateDsc}" />
+				<listheader label="Bedrag" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}"  />
+				<listheader label="btw" align="center" width="80px" sortAscending="${cVatAsc}" sortDescending="${cVatDsc}" />
+				<listheader label="Omschrijving" width="400px" sortAscending="${cDescrAsc}" sortDescending="${cDescrDsc}" />
+				<listheader label="Type" width="400px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
