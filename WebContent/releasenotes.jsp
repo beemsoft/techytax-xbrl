@@ -1,7 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <h4 class="section">Release Notes</h4>
 <div style="width:600">
-<h4>1.10 (upcoming)</h4>
+<h4>1.11 (upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Migration from Struts to ZK framework.</li>
+</ul>
+<h4>1.10 (2012-09-01)</h4>
 <p>
 Changes:
 </p>

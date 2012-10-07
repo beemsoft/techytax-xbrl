@@ -127,7 +127,7 @@ public class DutchAuditFileHelper {
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("1.9");
+			header.setSoftwareVersion("1.11");
 
 			auditfile.setHeader(header);
 			
