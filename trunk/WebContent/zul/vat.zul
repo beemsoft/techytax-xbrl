@@ -21,6 +21,7 @@ You should have received a copy of the GNU General Public License
 along with TechyTax; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 -->
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
 <window title="TechyTax" border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
 	Bereken je omzetbelasting in vijf stappen.
 <hbox>
@@ -73,7 +74,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 						<template name="model">
 							<row value="${each}">
 								<label value="${each.description}" />
-								<label value="${each.date}" />
+								<label value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
 								<label value="${each.amount}" />
 								<label value="${each.vat}" />
 								<label value="${each.kostenSoortOmschrijving}" />
@@ -185,7 +186,7 @@ Prive matches hebben voorrang boven algemene matches
 						<template name="model">
 							<row value="${each}">
 								<label value="${each.description}" />
-								<label value="${each.date}" />
+								<label value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
 								<label value="${each.amount}" />
 								<label value="${each.vat}" />
 								<label value="${each.kostenSoortOmschrijving}" />
