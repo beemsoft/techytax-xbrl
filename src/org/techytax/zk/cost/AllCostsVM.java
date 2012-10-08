@@ -24,7 +24,7 @@ public class AllCostsVM extends CostVM3 {
 	@Command
 	public void audit() {
 		try {
-			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "alles", Long.toString(user.getId()));
+			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit", Long.toString(user.getId()));
 			String message = DutchAuditFileHelper.createAuditFile(allCosts, user);
 			MailHelper.sendAuditReport(message, user.getEmail());
 		} catch (Exception e) {
