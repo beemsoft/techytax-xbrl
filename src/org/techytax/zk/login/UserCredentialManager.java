@@ -1,5 +1,7 @@
 package org.techytax.zk.login;
 
+import java.util.Locale;
+
 import org.techytax.domain.User;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.Sessions;
@@ -25,6 +27,9 @@ public class UserCredentialManager {
 		Session zkSession = Sessions.getCurrent();
 		synchronized (zkSession) {
 			zkSession.setAttribute(KEY_USER_MODEL, user);
+			zkSession.setAttribute("user", user);
+			zkSession.setAttribute("org.apache.struts.action.LOCALE", new Locale("nl"));
+			zkSession.setAttribute("px_preferred_locale", new Locale("nl"));
 		}
 	}
 }
