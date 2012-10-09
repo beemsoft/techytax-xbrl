@@ -1,5 +1,5 @@
 <?page title="TechyTax - Login"?>
-<window id="loginWin" border="normal" title="TechyTax 1.10" apply="org.techytax.zk.login.LoginViewCtrl">
+<window id="loginWin" border="normal" title="TechyTax 1.11" apply="org.techytax.zk.login.LoginViewCtrl">
 <hbox>
 <vbox>
 <grid width="300px">
