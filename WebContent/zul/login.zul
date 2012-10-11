@@ -1,6 +1,7 @@
 <?page title="TechyTax - Login"?>
-<window id="loginWin" border="normal" title="TechyTax 1.11" apply="org.techytax.zk.login.LoginViewCtrl">
-<hbox>
+<window self="@define(content)" id="loginWin" border="normal" title="Inloggen" apply="org.techytax.zk.login.LoginViewCtrl">
+<hbox><?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
 <vbox>
 <grid width="300px">
  <rows> 

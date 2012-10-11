@@ -1,5 +1,7 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
 <zk>
-<window title="Alle rekeningen beheren" border="normal"
+<window self="@define(content)" title="Alle rekeningen beheren" border="normal"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountVM')" 
 	validationMessages="@id('vmsgs')">
 	<hbox>

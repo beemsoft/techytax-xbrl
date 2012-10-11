@@ -1,10 +1,12 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
 <zk>
 <style>
 .z-label.red{
 	color:red;
 }
 </style>
-<window title="Alle kosten beheren" border="normal" width="1100px"
+<window self="@define(content)" title="Alle kosten beheren" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.AllCostsVM')" 
 	validationMessages="@id('vmsgs')">
     <zscript><![CDATA[
