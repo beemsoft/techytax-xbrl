@@ -1,10 +1,12 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
 <zk>
 <style>
 .z-label.red{
 	color:red;
 }
 </style>
-<window title="Zakelijke rekening controleren" border="normal" width="1100px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
+<window self="@define(content)" title="Zakelijke rekening controleren" border="normal" width="1100px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<groupbox hflex="true" mold="3d">

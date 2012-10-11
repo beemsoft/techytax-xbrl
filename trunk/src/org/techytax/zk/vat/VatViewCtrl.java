@@ -70,27 +70,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private Media media = null;
 	
-	@Listen("onClick=#logoffBtn")
-	public void logoff(Event event) {
-		UserCredentialManager.setUser(null);
-		Executions.sendRedirect("login.zul"); 
-	}
-	
-	@Listen("onClick=#costsBtn")
-	public void allCosts(Event event) {
-		Executions.sendRedirect("costs.zul"); 
-	}
-	
-	@Listen("onClick=#accountsBtn")
-	public void allAccounts(Event event) {
-		Executions.sendRedirect("accounts.zul"); 
-	}
-	
-	@Listen("onClick=#accountCheckBtn")
-	public void checkAccount(Event event) {
-		Executions.sendRedirect("account-check.zul"); 
-	}	
-
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		System.out.println(" Testing upload: " + event.getMedia().getName());
