@@ -9,6 +9,8 @@
 		.complex-layout-header2-label { position:relative; top: 30px; padding-left: 100px; font-size: 20px; color: White; } 		
 		.inner-border, .inner-border .z-north, .inner-border .z-west, .inner-border .z-south, .inner-border .z-east { background: #FFFFFF; } 
 		.dl-link {text-decoration: none; cursor: pointer; }
+		a, li { font-size: 12px; }
+	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.DemoModel')">
 		<borderlayout sclass="complex-layout" height="710px">
@@ -42,34 +44,30 @@
 						title="Waarom TechyTax ? ">
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul> <li>Productivity</li>
-								<li>Security</li> <li>Performance</li>
-								<li>Totally Control</li> <li>Auto
-								Testing</li> <li>Scalability</li>
-								<li>Flexibility</li> </ul> ]]>
+								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
+								<li>Veilig</li> <li>Geen boekhoudkundige termen</li>
+								</ul> ]]>
 							</html>
 						</panelchildren>
 					</panel>
 					<panel width="100%" border="normal"
-						title="Features">
+						title="Kenmerken">
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul> <li>Server+client
-								Fusion</li> <li>Ajax-as-a-Service</li>
-								<li>The Event Queue</li> <li>jQuery
-								Based</li> <li>SEO Friendly</li>
-								<li>Auto Testing</li> </ul> ]]>
+								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING en ABN-AMRO</li>
+								 <li>XAF ondersteuning</li>
+								 </ul> ]]>
 							</html>
 						</panelchildren>
 					</panel>
 				</vlayout>
 			</west>
-			<east width="130px" title="Quick Links" hflex="true" splittable="true">
+			<east width="130px" title="Links" hflex="true" splittable="true">
 				<vlayout>
 					<html>
-						<![CDATA[ <ul> <li>Tutorial</li> <li>Docs</li>
-						<li>ZK vs GWT</li> <li>ZK vs Ajax JSF</li>
-						<li>Forum</li> <li>FAQ</li> <li>Contact us</li>
+						<![CDATA[ <ul> <li><a href="/TechyTax/index.jsp">Oude TechyTax versie</a></li>
+						<li><a href="http://www.techytax.org/forum/">Forum</a></li>
+						<li><a href="https://www.ohloh.net/p/techytax">Ohloh analyse</a></li>
 						</ul> ]]>
 					</html>
 					<vlayout style="text-align:center;">
