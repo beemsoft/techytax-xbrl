@@ -14,7 +14,7 @@
 	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.DemoModel')">
-		<borderlayout sclass="complex-layout" height="710px">
+		<borderlayout sclass="complex-layout" height="740px">
 			<north size="90px" border="0">
 				<div>
 					<div style="float:right">
@@ -95,7 +95,7 @@
 			<center>
 				<hbox self="@insert(content)" />
 			</center>
-			<south size="40px" border="0"
+			<south size="30px" border="0"
 				style="background: none repeat scroll 0 0 ;" >
 				<toolbar mold="panel" align="center">
 					<toolbarbutton label="Registreren" href="../../TechyTax2/index.jsp"/>

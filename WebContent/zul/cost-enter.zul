@@ -6,17 +6,17 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Handmatig transacties invoeren" border="normal" width="1100px"
+<window self="@define(content)" title="Handmatig transacties invoeren" border="normal" width="985px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
-		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
+		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="100px">
 			<listhead>
-				<listheader label="Datum" align="center" width="100px" />
-				<listheader label="Bedrag" align="center" width="80px" />
-				<listheader label="btw" align="center" width="80px" />
-				<listheader label="Omschrijving" width="400px" />
-				<listheader label="Type" width="400px"/>
+				<listheader label="Datum" align="center" width="80px" />
+				<listheader label="Bedrag" align="center" width="70px" />
+				<listheader label="btw" align="center" width="70px" />
+				<listheader label="Omschrijving" width="380px" />
+				<listheader label="Type" width="350px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
@@ -51,25 +51,25 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<row>Bedrag 
 						<hlayout>
 							<doublebox id="pbox" value="@load(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
-							@validator(vm.priceValidator)" format="###.##0,00" />
+							@validator(vm.priceValidator)" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>
 					<row>btw 
 						<hlayout>
 							<doublebox id="vbox" value="@load(vm.selected.vat) @save(vm.selected.vat,before='saveCost') 
-							@validator(vm.priceValidator)" format="###.##0,00" />
+							@validator(vm.priceValidator)" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>					
 					<row>Omschrijving 
 						<hlayout>
-							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" />
+							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" hflex="true" />
 						</hlayout>
 					</row>
 					<row>Type
 						<hlayout>
-							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" height="200px">
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" >
 								<listhead>
 									<listheader label="Omschrijving" width="400px" />
 								</listhead>

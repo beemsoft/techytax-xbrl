@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	Bereken je omzetbelasting in vijf stappen.
 
 <hbox hflex="true">
-	<tabbox width="995px">
+	<tabbox width="995px" height="565px">
 		<tabs>
 			<tab label="1: Transacties downloaden"/>
 			<tab label="2: Transacties selecteren"/>
@@ -54,7 +54,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				De transacties worden niet meteen ingeladen in TechyTax.
 				
 			</tabpanel>
-			<tabpanel apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">This is panel 3
+			<tabpanel apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">
 				<vbox>
 					<grid id="costGrid" hflex="true" mold="paging" pageSize="6">
 						<columns sizable="true">
@@ -77,7 +77,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 Prive matches hebben voorrang boven algemene matches	
 					<hbox>
 						
-						<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="350px" >
+						<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="340px" >
 							<listhead>
 								<listheader label="Description" width="300px"/>
 							</listhead>
@@ -88,7 +88,7 @@ Prive matches hebben voorrang boven algemene matches
 							</template>
 						</listbox>
 						<vbox hflex="true">
-							<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="200px" width="350px" >
+							<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="200px" width="250px" >
 								<listhead>
 									<listheader label="Private matches" width="300px"/>
 								</listhead>
@@ -104,14 +104,14 @@ Prive matches hebben voorrang boven algemene matches
 								<button label="Delete" onClick="@command('deleteMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
 							</toolbar>
 							<radiogroup id="vat" selectedItem="@bind(vm.selectedVatType)" />
-							<groupbox visible="@load(not empty vm.selectedPrivateMatch)" mold="3d" width="350px">
-								<grid hflex="true" >
+							<groupbox visible="@load(not empty vm.selectedPrivateMatch)" mold="3d" width="100%">
+								<grid>
 									<columns>
 										<column/>
 										<column/>
 									</columns>
 									<rows>
-										<row>Match tekst <textbox value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')"/></row>
+										<row><label value="Match tekst"/><textbox value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')"/></row>
 									</rows>
 								</grid>
 								<grid visible="@load(vm.vatVisible)">
@@ -130,7 +130,7 @@ Prive matches hebben voorrang boven algemene matches
 								</grid>								
 							</groupbox>													
 						</vbox>
-						<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="350px" >
+						<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="250px" >
 							<listhead>
 								<listheader label="Algemene matches" width="300px"/>
 							</listhead>
@@ -141,8 +141,8 @@ Prive matches hebben voorrang boven algemene matches
 							</template>
 						</listbox>
 						<vbox>								
-							<button id="reloadBtn" image="/images/Button-Refresh-icon.png" tooltip="Transactie-bestand opnieuw inladen" />
-							<button id="importBtn" image="/images/Button-Add-icon.png" tooltip="Transacties inladen in TechyTax" />
+							<button id="reloadBtn" image="/images/Button-Refresh-icon.png" tooltip="reload" />
+							<button id="importBtn" image="/images/Button-Add-icon.png" tooltip="import" />
 						</vbox>							
 					</hbox>
 				</vbox>		
@@ -168,10 +168,10 @@ Prive matches hebben voorrang boven algemene matches
 					<toolbarbutton href="https://mijn.belastingdienst.nl/AuthenticatieVoorziening/toonServiceBerichten.do" target="other" image="/images/belastingdienst_logo.jpg" />
 				</hbox>
 				<vbox>
-					<grid id="vatGrid" hflex="true" mold="paging" pageSize="15">
+					<grid id="vatGrid" hflex="true" mold="paging" pageSize="7">
 						<columns sizable="true">
-							<column label="Description" width="700px"/>
-							<column label="Datum" width="100px"/>
+							<column label="Description" width="500px"/>
+							<column label="Datum" width="80px"/>
 							<column label="Bedrag" width="100px"/>
 							<column label="btw" width="100px"/>
 							<column label="type" width="200px"/>
@@ -190,6 +190,14 @@ Prive matches hebben voorrang boven algemene matches
 			</tabpanel>
 		</tabpanels>
 	</tabbox>
-</hbox>	
+</hbox>
+<popup id="reload" width="300px">
+    <html><![CDATA[
+    	Transactie-bestand opnieuw inladen]]></html>
+</popup>
+<popup id="import" width="300px">
+    <html><![CDATA[
+	Transacties inladen in TechyTax]]></html>
+</popup>	
 </window>
 </zk>
