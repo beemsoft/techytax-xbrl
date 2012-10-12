@@ -9,7 +9,8 @@
 		.complex-layout-header2-label { position:relative; top: 30px; padding-left: 100px; font-size: 20px; color: White; } 		
 		.inner-border, .inner-border .z-north, .inner-border .z-west, .inner-border .z-south, .inner-border .z-east { background: #FFFFFF; } 
 		.dl-link {text-decoration: none; cursor: pointer; }
-		a, li { font-size: 12px; }
+		a, li, p { font-size: 12px; }
+		p { padding: 5px; }
 	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.DemoModel')">
@@ -29,8 +30,7 @@
 			<west width="200px" border="0" hflex="true" splittable="true"
 				margins="0,5,0,0">
 				<vlayout spacing="0">
-					<panel width="100%" border="normal"
-						title="Navigatie">
+					<panel width="100%" border="normal" title="Navigatie" visible="@load(vm.loggedOn)" >
 						<panelchildren style="padding:5px;">
 							<vbox>
 								<toolbarbutton label="Omzetbelasting" href="vat.zul" />
@@ -40,22 +40,32 @@
 							</vbox>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal"
-						title="Waarom TechyTax ? ">
+					<panel width="100%" border="normal" title="Wat is TechyTax?" visible="@load(!vm.loggedOn)">
+						<panelchildren>
+							<html>
+								<![CDATA[<p>TechyTax is een online boekhoudpakket voor kleine bedrijven. Het berekent de btw en geeft fiscale overzichten. Hiervoor is geen boekhoudkundige kennis vereist. Het doel van dit project is om, m.b.v. de laatste technieken, de belastingaangifte zo simpel mogelijk te maken voor kleine bedrijven.</p> 
+								 ]]>
+							</html>
+						</panelchildren>
+					</panel>					
+					<panel width="100%" border="normal" title="Waarom TechyTax? " visible="@load(!vm.loggedOn)">
 						<panelchildren>
 							<html>
 								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
-								<li>Veilig</li> <li>Geen boekhoudkundige termen</li>
+								<li>Veilige opslag van gegevens</li>
+								 <li>Geen boekhoudkundige kennis vereist</li>
+								 <li>Broncode vrij beschikbaar</li>
 								</ul> ]]>
 							</html>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal"
-						title="Kenmerken">
+					<panel width="100%" border="normal" title="Speciale kenmerken" visible="@load(!vm.loggedOn)">
 						<panelchildren>
 							<html>
 								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING en ABN-AMRO</li>
 								 <li>XAF ondersteuning</li>
+								 <li>Vertaling van Belastingdienst-codes</li>
+								 <li>Administratief splitsen</li>
 								 </ul> ]]>
 							</html>
 						</panelchildren>
@@ -67,6 +77,7 @@
 					<html>
 						<![CDATA[ <ul> <li><a href="/TechyTax/index.jsp">Oude TechyTax versie</a></li>
 						<li><a href="http://www.techytax.org/forum/">Forum</a></li>
+						<li><a href="http://www.softwarepakket.nl/cmm/swp/raadpleeg_pakket.php?zm=EPS&id=5787&slt=29&eigs=29&vn=XML%20Auditfile%20Financieel%20%28XAF%29&bronw=1">Software pakketten</a></li>
 						<li><a href="https://www.ohloh.net/p/techytax">Ohloh analyse</a></li>
 						</ul> ]]>
 					</html>
