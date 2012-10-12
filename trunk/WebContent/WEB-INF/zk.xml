@@ -431,9 +431,10 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 	
 	<!-- Configure the default font size in ZUL CSS file (~./zul/css/zk.wcs)
 		Default: 12px.
+		-->
 	<library-property>
 		<name>org.zkoss.zul.theme.fontSizeM</name>
-		<value>12px</value>
+		<value>10px</value>
 	</library-property>
 	-->
 	<!-- Configure the font size for menus in ZUL CSS file (~./zul/css/zk.wcs)
