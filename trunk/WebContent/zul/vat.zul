@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	Bereken je omzetbelasting in vijf stappen.
 
 <hbox hflex="true">
-	<tabbox width="1500px">
+	<tabbox width="995px">
 		<tabs>
 			<tab label="1: Transacties downloaden"/>
 			<tab label="2: Transacties selecteren"/>

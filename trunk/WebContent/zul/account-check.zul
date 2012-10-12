@@ -6,7 +6,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Zakelijke rekening controleren" border="normal" width="1100px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
+<window self="@define(content)" title="Zakelijke rekening controleren" border="normal" width="1015px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<groupbox hflex="true" mold="3d">
