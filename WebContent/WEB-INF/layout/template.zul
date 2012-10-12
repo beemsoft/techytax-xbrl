@@ -23,7 +23,7 @@
 						</hbox>
 					</div>				
 					<label sclass="complex-layout-header-label"
-						value="TechyTax" /><label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
+						value="TechyTax" tooltip="notes, x=250,y=50" /><label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
 				</div>
 			</north>
 			<!-- Sidebar -->
@@ -106,4 +106,5 @@
 			</south>
 		</borderlayout>
 	</div>
+	<include src="release.zul"/>
 </zk>
