@@ -1,0 +1,30 @@
+<window  apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('org.techytax.zk.RssReader')"
+    width="100%" height="470px">
+    <style src="/widgets/application/rss_reader/Style.css" />
+    <borderlayout width="100%" >
+        <west width="220px" collapsible="true" title="Belastingdienst info voor ondernemers">
+            <div>
+                <image src="@load(vm.selectedFeed.feedImageLink)" />
+                <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" width="100%" height="350px"
+                    selectedItem="@bind(vm.selectedEntry)"  >
+                    <template name="model" var="feed">
+                        <listitem>
+                            <listcell label="@load(feed.title)" />
+                        </listitem>
+                    </template>
+                </listbox>
+            </div>
+        </west>
+        <center>
+            <groupbox hflex="1" vflex="1" closable="false" mold="3d">
+                <caption label="@load(vm.selectedEntry.title)">
+                    <div width="70px"><a sclass="link" href="@load(vm.selectedEntry.link)" target="_zkdemo">Volledige artikel</a></div>
+                </caption>
+                <div hflex="1" vflex="1" style="overflow:auto">
+                    <html class="desc" content="@load(vm.selectedEntry.descValue)"  />
+                </div>
+            </groupbox>
+        </center>
+    </borderlayout>
+</window>

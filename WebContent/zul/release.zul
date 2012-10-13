@@ -6,6 +6,7 @@ Changes:
 </p>
 <ul>
 <li>Migration from Struts to ZK framework.</li>
+<li>Added RSS feed for tax info.</li>
 </ul>
 <h4>1.10 (2012-09-01)</h4>
 <p>

@@ -54,7 +54,7 @@
 								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
 								<li>Veilige opslag van gegevens</li>
 								 <li>Geen boekhoudkundige kennis vereist</li>
-								 <li>Broncode vrij beschikbaar</li>
+								 <li>Open Source, broncode vrij beschikbaar</li>
 								</ul> ]]>
 							</html>
 						</panelchildren>
@@ -93,7 +93,10 @@
 			</east>
 			<!-- Content -->
 			<center>
+				<vlayout>
 				<hbox self="@insert(content)" />
+				<include src="rss_reader.zul" />
+				</vlayout>
 			</center>
 			<south size="30px" border="0"
 				style="background: none repeat scroll 0 0 ;" >
