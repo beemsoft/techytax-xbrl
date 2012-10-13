@@ -51,6 +51,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		SELECT id, account_id as accountId, datum, balance 
 		FROM account_balance 
 		WHERE account_id = #id# AND user_id = #userId#
+		ORDER BY datum desc
 	</select>
 	<select id="getAccountBalance" parameterClass="key"
 		resultClass="balance">
