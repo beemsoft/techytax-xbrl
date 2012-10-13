@@ -1,0 +1,12 @@
+.z-caption a.link {
+	font-weight: bold;
+	color: #008bb6;
+}
+
+.desc {
+	color: #636363;
+	font-family: arial, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 16px;
+}
