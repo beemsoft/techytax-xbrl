@@ -74,8 +74,8 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
-					<listcell label="@load(item.datum)"/>
-					<listcell label="@load(item.balance)"/>					
+					<listcell label="@load(item.datum) @converter('formatedDate', format='yyyy/MM/dd')"/>
+					<listcell label="@load(item.balance) @converter('formatedNumber', format='###.##0,00')"/>					
 				</listitem>
 			</template>
 		</listbox>
@@ -97,7 +97,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>
 					<row>Saldo
 						<hlayout>
-							<doublebox id="sbox" value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')"  />
+							<doublebox id="sbox" value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
 						</hlayout>					
 					</row>					
 				</rows>

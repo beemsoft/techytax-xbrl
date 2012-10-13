@@ -95,7 +95,6 @@
 			<center>
 				<vlayout>
 				<hbox self="@insert(content)" />
-				<include src="rss_reader.zul" />
 				</vlayout>
 			</center>
 			<south size="30px" border="0"

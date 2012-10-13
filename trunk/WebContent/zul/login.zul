@@ -3,13 +3,16 @@
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <vbox>
-<grid width="300px">
+<grid width="100%">
  <rows> 
- <row> Naam: <textbox id="nameTxb"/></row> 
-<row> Wachtwoord:<textbox id="passwordTxb" type="password"/></row> 
+ <row>
+<label value="Naam:"/> <textbox id="nameTxb"/></row> 
+<row> <label value="Wachtwoord:"/><textbox id="passwordTxb" type="password"/></row> 
 </rows> 
+
 </grid>
 <button id="confirmBtn" label="Inloggen" tooltip="new" mold="os" /> Demo: guest/guest
 </vbox>
+<include src="rss_reader.zul" />
 </window>
  
