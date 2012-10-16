@@ -3,7 +3,7 @@
 		.breeze .complex-layout, .breeze .complex-layout .z-south,
 		.breeze .complex-layout .z-west { background: #F7F7F7; }
 		.z-borderlayout { background: #FFFFFF } 
-		.complex-layout .z-north { background: #008BB6; } 
+		.complex-layout .z-north { background: #4b93fe; } 
 		img.complex-layout-header-img {padding: 0 10px; } 
 		.complex-layout-header-label { position:relative; top: 30px; padding-left: 40px; font-size: 24px; color: White; font-weight: bold; }
 		.complex-layout-header2-label { position:relative; top: 30px; padding-left: 100px; font-size: 20px; color: White; } 		
@@ -82,10 +82,6 @@
 						</ul> ]]>
 					</html>
 					<vlayout style="text-align:center;">
-						<a href="http://sourceforge.net/projects/techytax"
-							sclass="dl-link" target="_zkdemo">
-							<image src="/images/DownloadNow.jpg" />
-						</a>
 						<toolbarbutton label="Download"
 							href="http://sourceforge.net/projects/techytax" target="_other" />
 					</vlayout>
@@ -100,7 +96,6 @@
 			<south size="30px" border="0"
 				style="background: none repeat scroll 0 0 ;" >
 				<toolbar mold="panel" align="center">
-					<toolbarbutton label="Registreren" href="../../TechyTax2/index.jsp"/>
 					<toolbarbutton label="Algemene Voorwaarden" href="../../TechyTax2/av.html" />
 					<separator orient="vertical" bar="true" />
 					Powered by ZK ${desktop.webApp.version}
