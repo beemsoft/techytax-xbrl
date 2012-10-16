@@ -38,6 +38,11 @@ public class LoginViewCtrl extends SelectorComposer<Window> {
 	private void navigateApp() throws IOException {
 		Executions.sendRedirect("/zul/vat.zul");
 	}
+	
+	public boolean getSecurePage() {
+		System.out.println(Executions.getCurrent().getScheme());
+		return !Executions.getCurrent().getScheme().equals("https");
+	}
 
 	public void doAfterCompose(Window comp) throws Exception {
 		super.doAfterCompose(comp);
