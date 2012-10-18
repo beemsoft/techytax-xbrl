@@ -58,7 +58,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 				<vbox>
 					<grid id="costGrid" hflex="true" mold="paging" pageSize="6">
 						<columns sizable="true">
-							<column label="Description" width="700px"/>
+							<column label="Omschrijving" width="700px"/>
 							<column label="Datum" width="100px"/>
 							<column label="Bedrag" width="100px"/>
 							<column label="btw" width="100px"/>
