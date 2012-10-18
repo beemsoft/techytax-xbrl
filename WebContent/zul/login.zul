@@ -1,4 +1,5 @@
 <?page title="TechyTax - Login"?>
+<zk>
 <window self="@define(content)" id="loginWin" border="normal" title="Inloggen" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')" onOK="@command('login')" >
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
@@ -12,12 +13,25 @@ arg0="/WEB-INF/layout/template.zul"?>
 </grid>
 <hlayout><button id="confirmBtn" label="Inloggen" onClick="@command('login')" tooltip="new" mold="os" /> Demo: guest/guest
 <toolbar mold="panel" align="center">
-<toolbarbutton visible="@load(!vm.securePage)" label="Veilige connectie" href="https://www.techytax.org/TechyTax/zul/login.zul"  />
+<toolbarbutton id="secure" label="Kies veilige connectie" href="https://www.techytax.org/TechyTax/zul/login.zul" tooltip="secureInfo" />
 <toolbarbutton label="Registreren" href="../../TechyTax2/index.jsp"/>
 <toolbarbutton label="Wachtwoord vergeten" href="../../TechyTax2/user/user-forgot-password.action"/>
 </toolbar>
 </hlayout>
 </vbox>
 <include src="rss_reader.zul" />
+<popup id="secureInfo" width="300px">
+    <html><![CDATA[
+    	De verbinding is op dit moment niet beveiligd. Kies a.u.b. voor een beveiligde verbinding.
+    	Indien u een waarschuwing krijgt van de browser, kunt u deze website als veilig aangeven.]]></html>
+</popup>
 </window>
+<script defer="true">
+	if (window.location.protocol == 'https:') {
+		jq("$secure").hide();
+	} else {
+		jq("$secure").css("color", "red");
+	}	
+</script>
+</zk>
  
