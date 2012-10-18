@@ -67,8 +67,8 @@ public class BoekDao extends BaseDao {
 
 	public void insertKost(Cost kost) throws Exception {
 		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
-		if (kost.getVat() != null) {
-			kost.setVat(kost.getVat().setScale(2));
+		if (kost.getVat() != null) {		
+			kost.setVat(BigDecimal.valueOf(kost.getVat().doubleValue()).setScale(2));
 		}
 		encrypt(kost);
 		sqlMap.insert("insertKost", kost);

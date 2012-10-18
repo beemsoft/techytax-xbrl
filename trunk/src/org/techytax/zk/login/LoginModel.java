@@ -16,12 +16,6 @@ public class LoginModel  {
 	
 	private String password = "";
 
-	public boolean getSecurePage() {
-		System.out.println(Executions.getCurrent().getScheme());
-		// https wordt niet herkend door getScheme..
-		return Executions.getCurrent().getScheme().equals("https");
-	}
-	
 	@Command
 	public void login() throws NoSuchAlgorithmException, UnsupportedEncodingException, AuthenticationException {
 		SecurityService securityService = new SecurityServiceImpl();
