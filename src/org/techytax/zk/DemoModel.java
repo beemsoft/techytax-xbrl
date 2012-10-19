@@ -19,6 +19,15 @@ public class DemoModel {
 		}
 		return text;
 	}
+	
+	public String getUser() {
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			return user.getFullName();
+		} else {
+			return "";
+		}
+	}
 
 	@Command
 	public void logout() {
