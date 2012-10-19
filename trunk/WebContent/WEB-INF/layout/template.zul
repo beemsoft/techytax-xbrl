@@ -6,7 +6,8 @@
 		.complex-layout .z-north { background: #4b93fe; } 
 		img.complex-layout-header-img {padding: 0 10px; } 
 		.complex-layout-header-label { position:relative; top: 30px; padding-left: 40px; font-size: 24px; color: White; font-weight: bold; }
-		.complex-layout-header2-label { position:relative; top: 30px; padding-left: 100px; font-size: 20px; color: White; } 		
+		.complex-layout-header2-label { position:relative; top: 30px; padding-left: 100px; font-size: 20px; color: White; }
+		.user-label { font-size: 14px; color: White; }
 		.inner-border, .inner-border .z-north, .inner-border .z-west, .inner-border .z-south, .inner-border .z-east { background: #FFFFFF; } 
 		.dl-link {text-decoration: none; cursor: pointer; }
 		a, li, p { font-size: 12px; }
@@ -17,8 +18,9 @@
 		<borderlayout sclass="complex-layout" height="740px">
 			<north size="90px" border="0">
 				<div>
-					<div style="float:right">
+					<div style="float:right; padding: 10px">
 						<hbox visible="@load(vm.loggedOn)">
+							<label sclass="user-label" value="@load(vm.user)" />
 							<button label="Uitloggen" onClick="@command('logout')" mold="os" />
 						</hbox>
 					</div>				
