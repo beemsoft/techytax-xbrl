@@ -1,8 +1,10 @@
 <zk>
     <toolbarbutton label="Release notes" onClick="info.doPopup()"/><span>
     <window id="info" visible="false"  border="normal" position="center">
-    <hbox width="350px">
-    <html><![CDATA[	
+    <hbox width="380px">
+    <html><![CDATA[
+ <body>
+ <h2>Release Notes TechyTax</h2>
 	<h4>1.11 (upcoming)</h4>
 <p>
 Changes:
@@ -261,6 +263,7 @@ Database changes:
 <p>
 First release.
 </p>
+</body>
 ]]></html>
 </hbox>
     </window>
