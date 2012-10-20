@@ -99,10 +99,11 @@
 				<toolbar mold="panel" align="center">
 					<toolbarbutton label="Algemene Voorwaarden" href="../../TechyTax2/av.html" />
 					<separator orient="vertical" bar="true" />
-					Powered by ZK ${desktop.webApp.version}
+					<include src="release.zul"/>
+					<separator orient="vertical" bar="true" />
+					<toolbarbutton label="Powered by ZK ${desktop.webApp.version}" href="http://www.zkoss.org" />					
 				</toolbar>
 			</south>
 		</borderlayout>
 	</div>
-	<include src="release.zul"/>
 </zk>

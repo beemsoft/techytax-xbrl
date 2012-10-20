@@ -1,4 +1,7 @@
-<popup id="notes" width="300px">
+<zk>
+    <toolbarbutton label="Release notes" onClick="info.doPopup()"/><span>
+    <window id="info" visible="false"  border="normal" position="center">
+    <hbox width="350px">
     <html><![CDATA[	
 	<h4>1.11 (upcoming)</h4>
 <p>
@@ -259,4 +262,7 @@ Database changes:
 First release.
 </p>
 ]]></html>
-</popup>
+</hbox>
+    </window>
+    </span>
+</zk>
