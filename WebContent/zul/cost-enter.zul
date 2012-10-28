@@ -43,28 +43,29 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<rows>
 					<row>Datum
 						<hlayout> 
-							<datebox id="cdbox" value="@load(vm.selected.date) @save(vm.selected.date, before='saveCost')
+							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost')
 							@validator(vm.creationDateValidator)"/>
 							<label value="@load(vmsgs[cdbox])" sclass="red" />
 						</hlayout>	
 					</row>				
 					<row>Bedrag 
 						<hlayout>
-							<doublebox id="pbox" value="@load(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
+							<doublebox value="@bind(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
 							@validator(vm.priceValidator)" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
+							<button id="vatHighBtn" label="btw hoog" onClick="@command('highVat')"/>
+							<button id="vatLowBtn" label="btw laag" onClick="@command('lowVat')"/>							
 						</hlayout>
 					</row>
 					<row>btw 
 						<hlayout>
-							<doublebox id="vbox" value="@load(vm.selected.vat) @save(vm.selected.vat,before='saveCost') 
-							@validator(vm.priceValidator)" />
+							<doublebox value="@bind(vm.selected.vat) @save(vm.selected.vat,before='saveCost')" format="###,##0.00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>					
 					<row>Omschrijving 
 						<hlayout>
-							<textbox id="tbox" value="@load(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" hflex="true" />
+							<textbox value="@bind(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" hflex="true" />
 						</hlayout>
 					</row>
 					<row>Type
