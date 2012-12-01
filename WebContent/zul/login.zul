@@ -19,10 +19,13 @@ arg0="/WEB-INF/layout/template.zul"?>
 </toolbar>
 </hlayout>
 </vbox>
-<include src="rss_reader.zul" />
+<hlayout>
+<include src="rss_reader_belastingdienst.zul" />
+<include src="rss_reader_techytax.zul" />
+</hlayout>
 <popup id="secureInfo" width="300px">
     <html><![CDATA[
-    	De verbinding is op dit moment niet beveiligd. Kies a.u.b. voor een beveiligde verbinding.
+    	De verbinding is op dit moment niet beveiligd test. Kies a.u.b. voor een beveiligde verbinding.
     	Indien u een waarschuwing krijgt van de browser, kunt u deze website als veilig aangeven.]]></html>
 </popup>
 </window>
