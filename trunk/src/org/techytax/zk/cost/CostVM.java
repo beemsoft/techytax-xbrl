@@ -12,6 +12,7 @@ Copyright (C) 2011 Potix Corporation. All Rights Reserved.
 package org.techytax.zk.cost;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
@@ -104,6 +105,7 @@ public class CostVM {
 	@Command
 	public void newCost() throws Exception{
 		Cost cost = new Cost();
+		cost.setDate(new Date());
 		getCosts().add(cost);
 		selected = cost;//select the new one
 	}

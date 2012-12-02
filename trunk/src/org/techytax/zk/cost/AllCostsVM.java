@@ -34,7 +34,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange("periode")
 	public ListModelList<Cost> getCosts() throws Exception {
-		if (user != null) {
+		if (user != null && costs == null) {
 			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "alles", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
@@ -46,7 +46,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange("periode")
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
-		if (user != null) {
+		if (user != null && costs == null) {
 			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
