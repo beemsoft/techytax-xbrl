@@ -166,7 +166,7 @@ public class CostVM {
 		return new AbstractValidator(){
 			public void validate(ValidationContext ctx) {
 				Double price = (Double)ctx.getProperty().getValue();
-				if(price==null || price==0){
+				if(price==null || price<0){
 					addInvalidMessage(ctx, "must be equal to or larger than 0");
 				}
 			}
