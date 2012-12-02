@@ -162,26 +162,15 @@ public class CostVM {
 		}
 	}	
 
-	//validators for prompt
 	public Validator getPriceValidator(){
 		return new AbstractValidator(){
 			public void validate(ValidationContext ctx) {
 				Double price = (Double)ctx.getProperty().getValue();
-				if(price==null || price<=0){
-					addInvalidMessage(ctx, "must large than 0");
+				if(price==null || price==0){
+					addInvalidMessage(ctx, "must be equal to or larger than 0");
 				}
 			}
 		};
 	}
 	
-	public Validator getQuantityValidator(){
-		return new AbstractValidator(){
-			public void validate(ValidationContext ctx) {
-				Integer quantity = (Integer)ctx.getProperty().getValue();
-				if(quantity==null || quantity<=0){
-					addInvalidMessage(ctx, "must large than 0");
-				}
-			}
-		};
-	}
 }
