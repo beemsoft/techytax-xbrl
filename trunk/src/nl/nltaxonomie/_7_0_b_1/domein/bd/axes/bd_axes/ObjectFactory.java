@@ -47,7 +47,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "TimeDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt", substitutionHeadName = "dimensionItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "TimeDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt")
     public JAXBElement<StringItemType> createTimeDimension(StringItemType value) {
         return new JAXBElement<StringItemType>(_TimeDimension_QNAME, StringItemType.class, null, value);
     }
@@ -56,7 +56,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "CompanySerialNumberDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt", substitutionHeadName = "dimensionItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "CompanySerialNumberDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt")
     public JAXBElement<StringItemType> createCompanySerialNumberDimension(StringItemType value) {
         return new JAXBElement<StringItemType>(_CompanySerialNumberDimension_QNAME, StringItemType.class, null, value);
     }
@@ -65,7 +65,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "PartyDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt", substitutionHeadName = "dimensionItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/axes/bd-axes", name = "PartyDimension", substitutionHeadNamespace = "http://xbrl.org/2005/xbrldt")
     public JAXBElement<StringItemType> createPartyDimension(StringItemType value) {
         return new JAXBElement<StringItemType>(_PartyDimension_QNAME, StringItemType.class, null, value);
     }

@@ -11,7 +11,8 @@ Changes:
 </p>
 <ul>
 <li>Migration from Struts to ZK framework.</li>
-<li>Added RSS feed for tax info.</li>
+<li>Added RSS feed for Dutch tax info.</li>
+<li>Added RSS feed for TechyTax forum.</li>
 </ul>
 <h4>1.10 (2012-09-01)</h4>
 <p>

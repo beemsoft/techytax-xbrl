@@ -5,5 +5,9 @@
 // Generated on: 2012.11.01 at 09:06:01 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.nltaxonomie.nl/iso/iso4217")
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "iso4217", namespaceURI = "http://www.xbrl.org/2003/iso4217") 	    
+	}, namespace = "http://www.nltaxonomie.nl/iso/iso4217")
 package nl.nltaxonomie.iso.iso4217;
+import javax.xml.bind.annotation.XmlNs;
+

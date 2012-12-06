@@ -5,5 +5,9 @@
 // Generated on: 2012.11.01 at 09:06:01 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.xbrl.org/2003/instance", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "xbrli", namespaceURI = "http://www.xbrl.org/2003/instance")
+	}, namespace = "http://www.xbrl.org/2003/instance", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.xbrl._2003.instance;
+import javax.xml.bind.annotation.XmlNs;
+

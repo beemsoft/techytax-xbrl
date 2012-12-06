@@ -5,5 +5,9 @@
 // Generated on: 2012.11.01 at 09:06:01 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "bd-ob-tuple", namespaceURI = "http://www.nltaxonomie.nl/7.0.b.1/domein/bd/tuples/bd-ob-tuples") 	    
+	}, elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples;
+import javax.xml.bind.annotation.XmlNs;
+

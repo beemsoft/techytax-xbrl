@@ -5,5 +5,9 @@
 // Generated on: 2012.10.27 at 06:47:58 PM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://xbrl.org/2006/xbrldi")
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "xbrldi", namespaceURI = "http://xbrl.org/2006/xbrldi")
+	}, namespace = "http://xbrl.org/2006/xbrldi")
 package org.xbrl._2006.xbrldi;
+import javax.xml.bind.annotation.XmlNs;
+

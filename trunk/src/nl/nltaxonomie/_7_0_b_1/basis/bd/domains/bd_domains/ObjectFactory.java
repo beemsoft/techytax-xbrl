@@ -54,7 +54,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Partner", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Partner", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createPartner(StringItemType value) {
         return new JAXBElement<StringItemType>(_Partner_QNAME, StringItemType.class, null, value);
     }
@@ -63,7 +63,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Current", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Current", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createCurrent(StringItemType value) {
         return new JAXBElement<StringItemType>(_Current_QNAME, StringItemType.class, null, value);
     }
@@ -72,7 +72,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Company", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Company", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createCompany(StringItemType value) {
         return new JAXBElement<StringItemType>(_Company_QNAME, StringItemType.class, null, value);
     }
@@ -81,7 +81,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "TimeDomain", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "TimeDomain", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension")
     public JAXBElement<StringItemType> createTimeDomain(StringItemType value) {
         return new JAXBElement<StringItemType>(_TimeDomain_QNAME, StringItemType.class, null, value);
     }
@@ -90,7 +90,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "SubsidiaryCompany", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "SubsidiaryCompany", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createSubsidiaryCompany(StringItemType value) {
         return new JAXBElement<StringItemType>(_SubsidiaryCompany_QNAME, StringItemType.class, null, value);
     }
@@ -99,7 +99,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Declarant", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Declarant", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createDeclarant(StringItemType value) {
         return new JAXBElement<StringItemType>(_Declarant_QNAME, StringItemType.class, null, value);
     }
@@ -108,7 +108,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Previous", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "Previous", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createPrevious(StringItemType value) {
         return new JAXBElement<StringItemType>(_Previous_QNAME, StringItemType.class, null, value);
     }
@@ -117,7 +117,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "PartyDomain", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "PartyDomain", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension")
     public JAXBElement<StringItemType> createPartyDomain(StringItemType value) {
         return new JAXBElement<StringItemType>(_PartyDomain_QNAME, StringItemType.class, null, value);
     }
@@ -126,7 +126,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link StringItemType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "HoldingCompany", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "domainMemberItem")
+    @XmlElementDecl(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/domains/bd-domains", name = "HoldingCompany", substitutionHeadNamespace = "http://www.nltaxonomie.nl/2011/xbrl/xbrl-syntax-extension", substitutionHeadName = "")
     public JAXBElement<StringItemType> createHoldingCompany(StringItemType value) {
         return new JAXBElement<StringItemType>(_HoldingCompany_QNAME, StringItemType.class, null, value);
     }
