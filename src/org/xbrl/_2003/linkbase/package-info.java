@@ -5,5 +5,9 @@
 // Generated on: 2012.11.01 at 09:06:01 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.xbrl.org/2003/linkbase", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "link", namespaceURI = "http://www.xbrl.org/2003/linkbase")
+	}, namespace = "http://www.xbrl.org/2003/linkbase", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.xbrl._2003.linkbase;
+import javax.xml.bind.annotation.XmlNs;
+

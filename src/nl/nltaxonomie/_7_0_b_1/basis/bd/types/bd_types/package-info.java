@@ -5,5 +5,10 @@
 // Generated on: 2012.11.01 at 09:06:01 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/types/bd-types")
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+	    @XmlNs(prefix = "bd-alg", namespaceURI = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/items/bd-algemeen"),
+	    @XmlNs(prefix = "bd-ob", namespaceURI = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/items/bd-omzetbelasting") 	    
+	}, namespace = "http://www.nltaxonomie.nl/7.0.b.1/basis/bd/types/bd-types")
 package nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types;
+import javax.xml.bind.annotation.XmlNs;
+
