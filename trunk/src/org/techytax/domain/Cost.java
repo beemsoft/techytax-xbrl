@@ -107,4 +107,13 @@ public class Cost implements Serializable {
 	public void setUserId(long userId) {
 		this.userId = userId;
 	}
+	
+	public void roundValues() {
+		if (amount != null) {
+			amount = amount.setScale(2,BigDecimal.ROUND_HALF_UP);
+		}
+		if (vat != null) {		
+			vat = vat.setScale(2,BigDecimal.ROUND_HALF_UP);
+		}		
+	}
 }
