@@ -1,0 +1,109 @@
+<wsp:Policy xmlns:wsp= " http: / schemas.xmlsoap.org / ws /	policy" >
+	<wsp:ExactlyOne>
+		<wsp:All>
+			<wsp:SignedParts>
+				\n
+				<wsp:Body />
+				\n
+				<sp:Header Name=\ " To \ Namespace=\ " http: / www.w3.org /
+					addressing \ />
+				\n
+				<sp:Header Name=\ " From \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+				<sp:Header Name=\ " FaultTo \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+				<sp:Header Name=\ " ReplyTo \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+				<sp:Header Name=\ " MessageID \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+				<sp:Header Name=\ " RelatesTo \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+				<sp:Header Name=\ " Action \ Namespace=\ " http: /
+					www.w3.org / addressing \ />
+				\n
+			</sp:SignedParts>
+			<sp:SignedElements>
+				\n
+				<sp:XPath>/*[namespace-uri()='http://schemas.xmlsoap.org/soap/envelope/'
+					and
+					local-name()='Envelope']/*[namespace-uri()='http://schemas.xmlsoap.org/soap/envelope/'
+					and
+					local-name()='Header']/*[namespace-uri()='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+					and
+					local-name()='Security']/*[namespace-uri()='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+					and local-name()='Timestamp']</sp:XPath>
+				\n
+				<sp:XPath>/*[namespace-uri()='http://www.w3.org/2003/05/soap-envelope'
+					and
+					local-name()='Envelope']/*[namespace-uri()='http://www.w3.org/2003/05/soap-envelope'
+					and
+					local-name()='Header']/*[namespace-uri()='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+					and
+					local-name()='Security']/*[namespace-uri()='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd'
+					and local-name()='Timestamp']</sp:XPath>
+				\n
+			</sp:SignedElements>
+			<sp:AsymmetricBinding xmlns:sp=\ " http: /
+				docs.oasis-open.org / ws-sx / ws-securitypolicy />
+				<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+					ws / policy \>
+					<sp:InitiatorToken>
+						<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+							ws / policy \>
+							<sp:X509Token>
+								<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+									ws / policy \>
+									<sp:WssX509V3Token10 />
+								</wsp:Policy>
+							</sp:X509Token>
+						</wsp:Policy>
+					</sp:InitiatorToken>
+					<sp:RecipientToken>
+						<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+							ws / policy \>
+							<sp:X509Token>
+								<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+									ws / policy \>
+									<sp:WssX509V3Token10 />
+								</wsp:Policy>
+							</sp:X509Token>
+						</wsp:Policy>
+					</sp:RecipientToken>
+					<sp:AlgorithmSuite>
+						<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+							ws / policy \>
+							<sp:Basic128Rsa15 />
+							<sp:Basic256Rsa15 />
+							<sp:TripleDesRsa15 />
+						</wsp:Policy>
+					</sp:AlgorithmSuite>
+					<sp:IncludeTimestamp />
+					<sp:EncryptBeforeSigning />
+					<sp:OnlySignEntireHeadersAndBody />
+				</wsp:Policy>
+			</sp:AsymmetricBinding>
+			<wsam:Addressing xmlns:wsam=\ " http: / www.w3.org /
+				addressing / metadata \>
+				<wsp:Policy xmlns:wsp=\ " http: / schemas.xmlsoap.org /
+					ws / policy \>
+					<wsp:ExactlyOne>
+						<wsp:All>
+							<wsam:Anonymous>required</wsam:Anonymous>
+						</wsp:All>
+						<wsp:All>
+							<AnonymousResponses xmlns=\ "></AnonymousResponses>
+						</wsp:All>
+					</wsp:ExactlyOne>
+				</wsp:Policy>
+			</wsam:Addressing>
+			<wsoma:OptimizedMimeSerialization
+				wsp:Optional=\ " true \ xmlns:wsoma=\ " http: / schemas.xmlsoap.org /
+				ws / policy / optimizedmimeserialization \ />
+		</wsp:All>
+	</wsp:ExactlyOne>
+</wsp:Policy>
