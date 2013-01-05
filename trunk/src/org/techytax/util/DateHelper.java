@@ -123,6 +123,9 @@ public class DateHelper {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		int month = cal.get(Calendar.MONTH);
+		if (month == 0) {
+			cal.add(Calendar.YEAR, -1);
+		}
 		int quarter = getQuarter(month);
 		int lastMonth = quarter * 3;
 		int firstMonth = quarter * 3 - 3;
