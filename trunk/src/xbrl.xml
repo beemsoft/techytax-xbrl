@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xbrli:xbrl xml:lang="nl" xmlns:ns16="http://www.nltaxonomie.nl/7.0/domein/bd/tuples/bd-bedr-tuples" xmlns:ns17="http://www.nltaxonomie.nl/7.0/basis/cbs/items/cbs-bedr-items" xmlns:ns14="http://www.nltaxonomie.nl/7.0/domein/bd/tuples/bd-burg-tuples" xmlns:ns15="http://www.nltaxonomie.nl/7.0/basis/bd/items/bd-bedrijven" xmlns:ns18="http://www.nltaxonomie.nl/7.0/domein/cbs/tuples/cbs-bedr-tuples" xmlns:ns19="http://www.nltaxonomie.nl/7.0/basis/bd/items/bd-aanslag" xmlns:bd-alg="http://www.nltaxonomie.nl/7.0/basis/bd/items/bd-algemeen" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:ns21="http://www.nltaxonomie.nl/7.0/basis/kvk/items/kvk-data" xmlns:ns22="http://www.xbrl.org/2003/XLink" xmlns:bd-dim-dom="http://www.nltaxonomie.nl/7.0/basis/bd/domains/bd-domains" xmlns:ns12="http://www.nltaxonomie.nl/7.0/basis/sbr/items/nl-common-data" xmlns:ns13="http://www.nltaxonomie.nl/7.0/basis/bd/items/bd-burgers" xmlns:bd-ob-tuple="http://www.nltaxonomie.nl/7.0/domein/bd/tuples/bd-ob-tuples" xmlns:bd-dim-dim="http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes" xmlns:ns20="http://www.nltaxonomie.nl/7.0/domein/bd/tuples/bd-asl-tuples" xmlns:bd-alg-tuple="http://www.nltaxonomie.nl/7.0/domein/bd/tuples/bd-alg-tuples" xmlns:xbrldi="http://xbrl.org/2006/xbrldi" xmlns:bd-ob="http://www.nltaxonomie.nl/7.0/basis/bd/items/bd-omzetbelasting" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:iso4217="http://www.xbrl.org/2003/iso4217">
+    <link:schemaRef xlink:type="simple" xlink:href="http://www.nltaxonomie.nl/7.0/report/bd/entrypoints/rpt-bd-omzetbelasting-2013.xsd"/>
+    <xbrli:context id="Msg">
+        <xbrli:entity>
+            <xbrli:identifier scheme="www.belastingdienst.nl/omzetbelastingnummer">001000044B93</xbrli:identifier>
+        </xbrli:entity>
+        <xbrli:period>
+            <xbrli:startDate>2013-04-01</xbrli:startDate>
+            <xbrli:endDate>2013-06-30</xbrli:endDate>
+        </xbrli:period>
+        <xbrli:scenario>
+            <xbrldi:explicitMember dimension="bd-dim-dim:PartyDimension">bd-dim-dom:Declarant</xbrldi:explicitMember>
+            <xbrldi:explicitMember dimension="bd-dim-dim:TimeDimension">bd-dim-dom:Current</xbrldi:explicitMember>
+        </xbrli:scenario>
+    </xbrli:context>
+    <xbrli:unit id="u0">
+        <xbrli:measure>iso4217:EUR</xbrli:measure>
+    </xbrli:unit>
+    <bd-ob-tuple:TaxData>
+        <bd-ob-tuple:ValueAddedTaxDeclaration>
+            <bd-alg-tuple:CorrespondentDeclarant>
+                <bd-alg:NameContactSupplier contextRef="Msg">Beemsterboer</bd-alg:NameContactSupplier>
+                <bd-alg:TelephoneNumberContactSupplier contextRef="Msg">06-12345678</bd-alg:TelephoneNumberContactSupplier>
+            </bd-alg-tuple:CorrespondentDeclarant>
+            <bd-alg:DateTimeCreation contextRef="Msg">201307151254</bd-alg:DateTimeCreation>
+            <bd-ob:EstimateFromPreviousReturns decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:EstimateFromPreviousReturns>
+            <bd-ob:EstimateOnThisReturn decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:EstimateOnThisReturn>
+            <bd-ob:InstallationDistanceSalesWithinTheEC decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:InstallationDistanceSalesWithinTheEC>
+            <bd-alg:MessageReferenceSupplierVAT contextRef="Msg">OB-KTG00-BG</bd-alg:MessageReferenceSupplierVAT>
+            <bd-alg:SoftwareSupplierCode contextRef="Msg">TECH</bd-alg:SoftwareSupplierCode>
+            <bd-ob:TaxedTurnoverSuppliesServicesGeneralTariff decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:TaxedTurnoverSuppliesServicesGeneralTariff>
+            <bd-ob:ValueAddedTaxOwed decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxOwed>
+            <bd-ob:ValueAddedTaxOwedToBePaidBack decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxOwedToBePaidBack>
+            <bd-ob:ValueAddedTaxPrivateUse decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:ValueAddedTaxPrivateUse>
+            <bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff>
+            <bd-alg:VersionApplication contextRef="Msg">10</bd-alg:VersionApplication>
+        </bd-ob-tuple:ValueAddedTaxDeclaration>
+    </bd-ob-tuple:TaxData>
+</xbrli:xbrl>
