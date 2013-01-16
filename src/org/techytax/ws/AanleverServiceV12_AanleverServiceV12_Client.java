@@ -134,11 +134,16 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				System.out.println("aanleveren.result=" + _aanleveren__return);
 				System.out.println("Aangeleverd="
 						+ _aanleveren__return.getTijdstempelAangeleverd());
+				System.out.println("Statuscode="
+						+ _aanleveren__return.getStatuscode());
+				System.out.println("Kenmerk="
+						+ _aanleveren__return.getKenmerk());					
 
 			} catch (AanleverServiceFault e) {
 				System.out
 						.println("Expected exception: AanleverServiceFault has occurred.");
-				System.out.println(e.toString());
+				System.out.println("Foutcode: "+e.getFaultInfo().getFoutcode());
+				System.out.println("Foutbeschrijving: "+e.getFaultInfo().getFoutbeschrijving());
 			} catch (SOAPFaultException sfe) {
 				System.out.println("SOAP error: " + sfe.getMessage());
 			} catch (Exception e) {
