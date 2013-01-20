@@ -57,7 +57,8 @@ public interface KostConstanten {
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009
 //	public static final int MAXIMALE_FOR = 11811; // 2010
-	public static final int MAXIMALE_FOR = 11882; // 2011	
+//	public static final int MAXIMALE_FOR = 11882; // 2011
+	public static final int MAXIMALE_FOR = 9542; // 2012	
 	public static final float FOR_PERCENTAGE = 0.12f;
 	
 //	public static final float FOOD_TAXFREE_PERCENTAGE = 0.75f;
