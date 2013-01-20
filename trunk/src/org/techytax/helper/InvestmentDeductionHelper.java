@@ -47,17 +47,17 @@ public class InvestmentDeductionHelper {
 
 	private static BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {
 		BigInteger totalInvestmentRounded = totalInvestment.setScale(0, BigDecimal.ROUND_UP).toBigInteger();
-		if (totalInvestmentRounded.compareTo(new BigInteger("2200")) == -1 || totalInvestmentRounded.compareTo(new BigInteger("301800")) == 1) {
+		if (totalInvestmentRounded.compareTo(new BigInteger("2300")) == -1 || totalInvestmentRounded.compareTo(new BigInteger("306931")) == 1) {
 			return new BigInteger("0");
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("2201")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("54324")) == -1) {
+		if (totalInvestmentRounded.compareTo(new BigInteger("2301")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("55248")) == -1) {
 			return new BigDecimal(totalInvestmentRounded).multiply(new BigDecimal(".28")).setScale(0, BigDecimal.ROUND_UP).toBigInteger();
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("54325")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("100600")) == -1) {
-			return new BigInteger("15211");
+		if (totalInvestmentRounded.compareTo(new BigInteger("55249")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("102311")) == -1) {
+			return new BigInteger("15470");
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("100601")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("301800")) == -1) {
-			return new BigInteger("15211").subtract(new BigDecimal(totalInvestmentRounded.subtract(new BigInteger("100600"))).multiply(new BigDecimal(".0756")).setScale(0, BigDecimal.ROUND_UP)
+		if (totalInvestmentRounded.compareTo(new BigInteger("102312")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("306931")) == -1) {
+			return new BigInteger("15470").subtract(new BigDecimal(totalInvestmentRounded.subtract(new BigInteger("102311"))).multiply(new BigDecimal(".0756")).setScale(0, BigDecimal.ROUND_UP)
 					.toBigInteger());
 		}
 		return null;
