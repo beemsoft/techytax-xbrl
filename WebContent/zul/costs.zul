@@ -48,7 +48,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 		</groupbox>
 		<button label="Export XML Audit File" onClick="@command('audit')" />
 		</hbox>
-		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
+		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="350px">
 			<auxhead>
             	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
         	</auxhead>
@@ -76,9 +76,10 @@ arg0="/WEB-INF/layout/template.zul"?>
 			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
 		</toolbar>
 		<groupbox visible="@load(not empty vm.selected)" hflex="true" mold="3d">
+			<hbox>
 			<grid hflex="true" >
 				<columns>
-					<column width="120px"/>
+					<column width="70px"/>
 					<column/>
 				</columns>
 				<rows>
@@ -105,13 +106,20 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>					
 					<row>Omschrijving 
 						<hlayout>
-							<textbox id="tbox" value="@bind(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" />
+							<textbox id="tbx" value="@bind(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="300px" height="40px" rows="3"/>
 						</hlayout>
 					</row>
-					<row>Type
-							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" height="140px" width="215px" >
+				</rows>
+			</grid>			
+			<grid hflex="true" >
+				<columns>
+					<column/>
+				</columns>
+				<rows>
+					<row>
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" height="140px" width="370px" >
 								<listhead>
-									<listheader label="Omschrijving" width="200px" />
+									<listheader label="Type" width="350px" />
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
@@ -122,6 +130,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>					
 				</rows>
 			</grid>
+			</hbox>
 		</groupbox>
 	</vbox>
 	<window title="Confirm" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
