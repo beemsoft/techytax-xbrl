@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -130,26 +130,23 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					String descr = obj.getDescription();
 					Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
 					if (kostensoort.isBalansMeetellen()) {
 						if (kostensoort.isBijschrijving()) {
 							totalKost = totalKost.add(obj.getAmount());
 							totalKost = totalKost.add(obj.getVat());
-							if (descr.contains("prive inleg") || id == KostConstanten.FROM_PRIVATE_ACCOUNT) {
+							if (id == KostConstanten.FROM_PRIVATE_ACCOUNT || id == KostConstanten.INLEG) {
 								totalInleg = totalInleg.add(obj.getAmount());
 							}
-							if (descr.equals("Inleg vanaf spaarrekening") || descr.startsWith("VAN Toprekening")
-									|| descr.startsWith("VAN Profijtrekening") || id == KostConstanten.FROM_SAVINGS_ACCOUNT) {
+							if (id == KostConstanten.FROM_SAVINGS_ACCOUNT) {
 								totalSparen = totalSparen.subtract(obj.getAmount());
 							}
 						} else {
 							totalKost = totalKost.subtract(obj.getAmount());
 							totalKost = totalKost.subtract(obj.getVat());
-							if (descr.contains("naar spaarrekening") || descr.startsWith("NAAR Toprekening")
-									|| descr.startsWith("NAAR Profijtrekening") || descr.startsWith("NAAR Spaardeposito") || id == KostConstanten.TO_SAVINGS_ACCOUNT) {
+							if (id == KostConstanten.TO_SAVINGS_ACCOUNT) {
 								totalSparen = totalSparen.add(obj.getAmount());
-							} else if (descr.contains("prive opname") || descr.contains("OPL. CHIPKNIP") || id == KostConstanten.TO_PRIVATE_ACCOUNT) {
+							} else if (id == KostConstanten.TO_PRIVATE_ACCOUNT || id == KostConstanten.OPNAME) {
 								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
