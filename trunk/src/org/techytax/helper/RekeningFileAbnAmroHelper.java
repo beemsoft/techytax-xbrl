@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -44,7 +44,6 @@ import org.techytax.domain.VatType;
 import org.techytax.util.DateHelper;
 
 import com.Ostermiller.util.CSVParser;
-import com.Ostermiller.util.LabeledCSVParser;
 
 public class RekeningFileAbnAmroHelper {
 
@@ -193,7 +192,7 @@ public class RekeningFileAbnAmroHelper {
 				}
 				if (vatMatch != null) {
 					if (vatMatch.getVatType() == VatType.HIGH) {
-						CostSplitter.splitPercentagFromAmount(kost, 19);
+						CostSplitter.splitPercentagFromAmount(kost, (int)(100*VatType.HIGH.getValue(kost.getDate())));
 					}
 					if (vatMatch.getVatType() == VatType.LOW) {
 						CostSplitter.splitPercentagFromAmount(kost, 6);
