@@ -21,16 +21,19 @@ package org.techytax.dao;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Aftrekpost;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.Cost;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.KostConstanten;
 
 public class BoekDao extends BaseDao {
@@ -48,14 +51,22 @@ public class BoekDao extends BaseDao {
 	}
 
 	private void decrypt(Cost cost) {
-		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
-			cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
-		}
-		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
-			cost.setVat(decimalEncryptor.decrypt(cost.getVat()));
-		}
 		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
 			cost.setDescription(textEncryptor.decrypt(cost.getDescription()));
+		}		
+		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
+			try {
+				cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
+			} catch (EncryptionOperationNotPossibleException e) {
+				System.out.println("Could not decrypt: " + cost.getDescription());
+			}
+		}
+		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
+			try {
+				cost.setVat(decimalEncryptor.decrypt(cost.getVat()));
+			} catch (EncryptionOperationNotPossibleException e) {
+				System.out.println("Could not decrypt: " + cost.getDescription());
+			}				
 		}
 	}
 
@@ -171,13 +182,12 @@ public class BoekDao extends BaseDao {
 	}
 
 	public void updateKost(Cost kost) throws Exception {
-		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
-		kost.setVat(BigDecimal.valueOf(kost.getVat().doubleValue()).setScale(2));		
+		kost.roundValues();	
 		encrypt(kost);
 		sqlMap.insert("updateKost", kost);
 		decrypt(kost);
 	}
-
+	
 	public Cost getKost(String id, long userId) throws Exception {
 		KeyId key = new KeyId();
 		key.setId(Long.parseLong(id));
