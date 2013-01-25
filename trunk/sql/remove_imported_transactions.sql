@@ -1,0 +1,1 @@
+delete from kosten where datum >= '2012-10-01' and datum <= '2012-12-31' and user_id=? and kostensoort_id not in (19,25,36,39)
