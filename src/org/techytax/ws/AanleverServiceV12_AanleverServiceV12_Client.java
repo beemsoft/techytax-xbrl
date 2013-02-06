@@ -85,7 +85,6 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				WSHandlerConstants.USE_REQ_SIG_CERT);
 		outProps.put(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
 		outProps.put(WSHandlerConstants.SIGNATURE_USER, "1");
-		outProps.put(WSHandlerConstants.ENCRYPTION_USER, "1");
 		outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS,
 				ClientPasswordCallback.class.getName());
 		outProps.put(
@@ -115,6 +114,7 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 			org.techytax.ws.AanleverRequest aanleverRequest = null;
 			try {
 				aanleverRequest = new AanleverRequest();
+				aanleverRequest.setAutorisatieAdres("http://geenausp.nl");
 				aanleverRequest.setBerichtsoort("Omzetbelasting");
 				aanleverRequest.setAanleverkenmerk("test");
 				IdentiteitType identiteitBelanghebbende = new org.techytax.ws.IdentiteitType();
@@ -168,26 +168,21 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 
 	private static void setupTLS(AanleverServiceV12 port)
 			throws FileNotFoundException, IOException, GeneralSecurityException {
-		String contextPath = "";
-		try {
-			// contextPath = new
-			// AanleverServiceV12_AanleverServiceV12_Client().getClass().getResource("/certs").toURI().getPath();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 		HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(port)
 				.getConduit();
 
 		TLSClientParameters tlsCP = new TLSClientParameters();
 		String keyPassword = "changeit";
 		KeyStore keyStore = KeyStore.getInstance("PKCS12");
-		String keyStoreLoc = "/home/hans/java/xbrl/wus/cert/new.p12";
+		String keyStoreLoc = "/home/hans/java/xbrl/wus/cert2/new.p12";
 		keyStore.load(new FileInputStream(keyStoreLoc),
 				keyPassword.toCharArray());
 		KeyManager[] myKeyManagers = getKeyManagers(keyStore, keyPassword);
 		tlsCP.setKeyManagers(myKeyManagers);
 
 		KeyStore trustStore = KeyStore.getInstance("JKS");
+		keyPassword = "changeit";
 		String trustStoreLoc = "/home/hans/java/xbrl/wus/cert/jssecacerts";
 		trustStore.load(new FileInputStream(trustStoreLoc),
 				keyPassword.toCharArray());
@@ -198,7 +193,6 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 		// prodcution environment,
 		// this is just for illustrative purpose
 		tlsCP.setDisableCNCheck(true);
-		// tlsCP.setCertAlias("beemsterboersoftware");
 
 		httpConduit.setTlsClientParameters(tlsCP);
 
