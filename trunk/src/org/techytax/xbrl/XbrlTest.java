@@ -5,20 +5,19 @@ import java.math.BigDecimal;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
 import javax.xml.namespace.QName;
 
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.ACAPITALstring4FItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.Anstring25VItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.Anstring2FItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.Anstring35VItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.DateTimeItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.MessageReferenceSupplierVATItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.MonetaryNoDecimals10VItemType;
-import nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.MonetaryNoDecimals9VItemType;
-import nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_alg_tuples.CorrespondentDeclarant;
-import nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples.TaxData;
-import nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaration;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.ACAPITALstring4FItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.Anstring25VItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.Anstring2FItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.Anstring35VItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.DateTimeItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.MessageReferenceSupplierVATItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.MonetaryNoDecimals10VItemType;
+import nl.nltaxonomie._7_0.basis.bd.types.bd_types.MonetaryNoDecimals9VItemType;
+import nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.CorrespondentDeclarant;
+import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.TaxData;
+import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaration;
 
 import org.xbrl._2003.instance.Context;
 import org.xbrl._2003.instance.ContextEntityType;
@@ -26,7 +25,6 @@ import org.xbrl._2003.instance.ContextEntityType.Identifier;
 import org.xbrl._2003.instance.ContextPeriodType;
 import org.xbrl._2003.instance.ContextScenarioType;
 import org.xbrl._2003.instance.ObjectFactory;
-import org.xbrl._2003.instance.StringItemType;
 import org.xbrl._2003.instance.Unit;
 import org.xbrl._2003.instance.Xbrl;
 import org.xbrl._2003.xlink.SimpleType;
@@ -44,14 +42,17 @@ public class XbrlTest {
 			jc = JAXBContext
 					.newInstance(new Class[] {
 							org.xbrl._2003.instance.ObjectFactory.class,
-							nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples.ObjectFactory.class,
-							nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.ObjectFactory.class,
+							nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory.class,
+							nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory.class,
 							org.xbrl._2006.xbrldi.ObjectFactory.class,
 							org.xbrl._2003.xlink.ObjectFactory.class,
-							nl.nltaxonomie._7_0_b_1.basis.bd.domains.bd_domains.ObjectFactory.class,
-							nl.nltaxonomie.iso.iso4217.domain.ObjectFactory.class,
-							nl.nltaxonomie._7_0_b_1.domein.bd.axes.bd_axes.ObjectFactory.class,
-							nl.nltaxonomie._7_0_b_1.basis.bd.items.bd_algemeen.ObjectFactory.class});
+							nl.nltaxonomie._2011.xbrl.xbrl_syntax_extension.ObjectFactory.class,
+							org.xbrl._2003.linkbase.ObjectFactory.class,
+							org.xbrl._2005.xbrldt.ObjectFactory.class,
+							nl.nltaxonomie._7_0.domein.bd.axes.bd_axes.ObjectFactory.class,
+							nl.nltaxonomie._7_0.basis.bd.domains.bd_domains.ObjectFactory.class,
+							nl.nltaxonomie.iso.iso4217.ObjectFactory.class,
+							nl.nltaxonomie._7_0.basis.bd.items.bd_algemeen.ObjectFactory.class});
 			m = jc.createMarshaller();
 			StringWriter writer = new StringWriter();
 			m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
@@ -64,7 +65,7 @@ public class XbrlTest {
 			SimpleType simpleType = xlinkObjectFactory.createSimpleType();
 			simpleType.setType("simple");
 			simpleType
-					.setHref("http://www.nltaxonomie.nl/7.0.b.1/report/bd/entrypoints/rpt-bd-omzetbelasting-2013.xsd");
+					.setHref("http://www.nltaxonomie.nl/7.0/report/bd/entrypoints/rpt-bd-omzetbelasting-2013.xsd");
 			xbrl.getSchemaRef().add(simpleType);
 			xbrl.getOtherAttributes().put(new QName("xml:lang"), "nl");
 
@@ -88,36 +89,54 @@ public class XbrlTest {
 			ExplicitMember explicitMember = xbrldiObjectFactory
 					.createExplicitMember();
 
-			nl.nltaxonomie._7_0_b_1.basis.bd.domains.bd_domains.ObjectFactory bdDomainsObjectFactory = new nl.nltaxonomie._7_0_b_1.basis.bd.domains.bd_domains.ObjectFactory();
+			nl.nltaxonomie._7_0.basis.bd.domains.bd_domains.ObjectFactory bdDomainsObjectFactory = new nl.nltaxonomie._7_0.basis.bd.domains.bd_domains.ObjectFactory();
 
-			nl.nltaxonomie._7_0_b_1.domein.bd.axes.bd_axes.ObjectFactory axesObjectFactory = new nl.nltaxonomie._7_0_b_1.domein.bd.axes.bd_axes.ObjectFactory();
+			nl.nltaxonomie._7_0.domein.bd.axes.bd_axes.ObjectFactory axesObjectFactory = new nl.nltaxonomie._7_0.domein.bd.axes.bd_axes.ObjectFactory();
 
-			explicitMember.setDimension(axesObjectFactory.createPartyDimension(
-					null).getName());
-			explicitMember.setValue(bdDomainsObjectFactory
-					.createDeclarant(null).getName());
+//			explicitMember.setDimension(axesObjectFactory.createPartyDimension(
+//					null).getName());
+//			explicitMember.setValue(bdDomainsObjectFactory
+//					.createDeclarant(null).getName());
+//			scenario.getAny().add(explicitMember);
+//			explicitMember = xbrldiObjectFactory.createExplicitMember();
+//			explicitMember.setDimension(axesObjectFactory.createTimeDimension(
+//					null).getName());
+//			explicitMember.setValue(bdDomainsObjectFactory.createCurrent(null)
+//					.getName());
+//			scenario.getAny().add(explicitMember);
+//			context.setPeriod(period);
+//			context.setScenario(scenario);
+			QName qName = new QName("http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes", "PartyDimension", "bd-dim-dim");
+			explicitMember.setDimension(qName);
+			qName = new QName("bd-dim-dom:Declarant");
+			explicitMember.setValue(qName);
 			scenario.getAny().add(explicitMember);
 			explicitMember = xbrldiObjectFactory.createExplicitMember();
-			explicitMember.setDimension(axesObjectFactory.createTimeDimension(
-					null).getName());
-			explicitMember.setValue(bdDomainsObjectFactory.createCurrent(null)
-					.getName());
+			qName = new QName("bd-dim-dim:TimeDimension");
+			explicitMember.setDimension(qName);
+			qName = new QName("bd-dim-dom:Current");
+			explicitMember.setValue(qName);
 			scenario.getAny().add(explicitMember);
 			context.setPeriod(period);
 			context.setScenario(scenario);
+			
 			xbrl.getItemOrTupleOrContext().add(context);
 
 			Unit unit = xbrlObjectFactory.createUnit();
 			unit.setId("u0");
-
-			nl.nltaxonomie.iso.iso4217.domain.ObjectFactory isoObjectFactory = new nl.nltaxonomie.iso.iso4217.domain.ObjectFactory();
-			unit.getMeasure().add(isoObjectFactory.createEUR(null).getName());
+			qName = new QName("iso4217:EUR");
+//			qName = new QName("http://www.xbrl.org/2003/iso4217", "EUR", "iso4217");
+			unit.getMeasure().add(qName);
+//			xbrl.getItemOrTupleOrContext().add(unit);			
+//
+//			nl.nltaxonomie.iso.iso4217.domain.ObjectFactory isoObjectFactory = new nl.nltaxonomie.iso.iso4217.domain.ObjectFactory();
+//			unit.getMeasure().add(isoObjectFactory.createEUR(null).getName());
 			xbrl.getItemOrTupleOrContext().add(unit);
-			nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples.ObjectFactory vatObjectFactory = new nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_ob_tuples.ObjectFactory();
+			nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory vatObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory();
 			TaxData taxData = vatObjectFactory.createTaxData();
 			ValueAddedTaxDeclaration vatDeclaration = vatObjectFactory
 					.createValueAddedTaxDeclaration();
-			nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.ObjectFactory bdTypeObjectFactory = new nl.nltaxonomie._7_0_b_1.basis.bd.types.bd_types.ObjectFactory();
+			nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory bdTypeObjectFactory = new nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory();
 			DateTimeItemType dateTime = bdTypeObjectFactory
 					.createDateTimeItemType();
 			dateTime.setValue("201307151254");
@@ -175,7 +194,7 @@ public class XbrlTest {
 			valueAddedTaxPrivateUse.setValue(new BigDecimal("0"));
 			vatDeclaration.setValueAddedTaxPrivateUse(valueAddedTaxPrivateUse);
 
-			nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0_b_1.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
+			nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
 			CorrespondentDeclarant declarant = bdAlgObjectFactory
 					.createCorrespondentDeclarant();
 			Anstring35VItemType name = bdTypeObjectFactory
@@ -193,7 +212,7 @@ public class XbrlTest {
 			ACAPITALstring4FItemType code = bdTypeObjectFactory
 					.createACAPITALstring4FItemType();
 			
-			nl.nltaxonomie._7_0_b_1.basis.bd.items.bd_algemeen.ObjectFactory bdAlgemeenObjectFactory = new nl.nltaxonomie._7_0_b_1.basis.bd.items.bd_algemeen.ObjectFactory();
+			nl.nltaxonomie._7_0.basis.bd.items.bd_algemeen.ObjectFactory bdAlgemeenObjectFactory = new nl.nltaxonomie._7_0.basis.bd.items.bd_algemeen.ObjectFactory();
 			MessageReferenceSupplierVATItemType supplier = new MessageReferenceSupplierVATItemType();
 			supplier.setValue("OB-KTG00-BG");
 			supplier.setContextRef(context);
