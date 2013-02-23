@@ -189,11 +189,6 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 		TrustManager[] myTrustStoreKeyManagers = getTrustManagers(trustStore);
 		tlsCP.setTrustManagers(myTrustStoreKeyManagers);
 
-		// The following is not recommended and would not be done in a
-		// prodcution environment,
-		// this is just for illustrative purpose
-		tlsCP.setDisableCNCheck(true);
-
 		httpConduit.setTlsClientParameters(tlsCP);
 
 	}

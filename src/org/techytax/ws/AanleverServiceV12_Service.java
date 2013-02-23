@@ -14,7 +14,7 @@ import javax.xml.ws.Service;
  * 
  */
 @WebServiceClient(name = "AanleverService_V1_2", 
-                  wsdlLocation = "aanlever.wsdl",
+                  wsdlLocation = "aanlever_test.wsdl",
                   targetNamespace = "http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/") 
 public class AanleverServiceV12_Service extends Service {
 
@@ -23,11 +23,11 @@ public class AanleverServiceV12_Service extends Service {
     public final static QName SERVICE = new QName("http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/", "AanleverService_V1_2");
     public final static QName AanleverServiceV12 = new QName("http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/", "AanleverService_V1_2");
     static {
-        URL url = AanleverServiceV12_Service.class.getResource("aanlever.wsdl");
+        URL url = AanleverServiceV12_Service.class.getResource("aanlever_test.wsdl");
         if (url == null) {
             java.util.logging.Logger.getLogger(AanleverServiceV12_Service.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "aanlever.wsdl");
+                     "Can not initialize the default wsdl from {0}", "aanlever_test.wsdl");
         }       
         WSDL_LOCATION = url;
     }
