@@ -1,11 +1,6 @@
 
 package org.techytax.wus.status.test;
 
-/**
- * Please modify this class to meet your needs
- * This class is not complete
- */
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -182,7 +177,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         try {
         	
         	_getNieuweStatussenProces_getNieuweStatussenProcesRequest = objectFactory.createGetNieuweStatussenProcesRequest();
-        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("f7d10ff1-ad60-4a8a-b578-2255f747fb9a");
+        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("5aa2a64a-4f35-4397-9ec2-67f531326a5b");
         	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setAutorisatieAdres("http://geenausp.nl");
         	
             org.techytax.ws.GetNieuweStatussenProcesResponse _getNieuweStatussenProces__return = port.getNieuweStatussenProces(_getNieuweStatussenProces_getNieuweStatussenProcesRequest);
