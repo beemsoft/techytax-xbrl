@@ -7,34 +7,23 @@ package org.techytax.ws;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.techytax.security.SecureConnectionHelper;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
 /**
@@ -70,7 +59,7 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				SERVICE_NAME);
 		AanleverServiceV12 port = ss.getAanleverServiceV12();
 
-		setupTLS(port);
+		SecureConnectionHelper.setupTLS(port);
 
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
@@ -164,50 +153,6 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 		reader.close();
 		return results;
 
-	}
-
-	private static void setupTLS(AanleverServiceV12 port)
-			throws FileNotFoundException, IOException, GeneralSecurityException {
-
-		HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(port)
-				.getConduit();
-
-		TLSClientParameters tlsCP = new TLSClientParameters();
-		String keyPassword = "changeit";
-		KeyStore keyStore = KeyStore.getInstance("PKCS12");
-		String keyStoreLoc = "/home/hans/java/xbrl/wus/cert2/new.p12";
-		keyStore.load(new FileInputStream(keyStoreLoc),
-				keyPassword.toCharArray());
-		KeyManager[] myKeyManagers = getKeyManagers(keyStore, keyPassword);
-		tlsCP.setKeyManagers(myKeyManagers);
-
-		KeyStore trustStore = KeyStore.getInstance("JKS");
-		keyPassword = "changeit";
-		String trustStoreLoc = "/home/hans/java/xbrl/wus/cert/jssecacerts";
-		trustStore.load(new FileInputStream(trustStoreLoc),
-				keyPassword.toCharArray());
-		TrustManager[] myTrustStoreKeyManagers = getTrustManagers(trustStore);
-		tlsCP.setTrustManagers(myTrustStoreKeyManagers);
-
-		httpConduit.setTlsClientParameters(tlsCP);
-
-	}
-
-	private static TrustManager[] getTrustManagers(KeyStore trustStore)
-			throws NoSuchAlgorithmException, KeyStoreException {
-		String alg = KeyManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory fac = TrustManagerFactory.getInstance(alg);
-		fac.init(trustStore);
-		return fac.getTrustManagers();
-	}
-
-	private static KeyManager[] getKeyManagers(KeyStore keyStore,
-			String keyPassword) throws GeneralSecurityException, IOException {
-		String alg = KeyManagerFactory.getDefaultAlgorithm();
-		char[] keyPass = keyPassword != null ? keyPassword.toCharArray() : null;
-		KeyManagerFactory fac = KeyManagerFactory.getInstance(alg);
-		fac.init(keyStore, keyPass);
-		return fac.getKeyManagers();
 	}
 
 }
