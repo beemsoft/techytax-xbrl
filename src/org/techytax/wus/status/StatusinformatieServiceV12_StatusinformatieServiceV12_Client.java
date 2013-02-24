@@ -2,32 +2,20 @@
 package org.techytax.wus.status;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.xml.namespace.QName;
 
-import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
-import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.techytax.security.SecureConnectionHelper;
 import org.techytax.ws.ClientPasswordCallback;
 import org.techytax.ws.ObjectFactory;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
@@ -63,7 +51,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, SERVICE_NAME);
         StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();  
         
-        setupTLS(port);
+        SecureConnectionHelper.setupTLS(port);
         
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
@@ -177,7 +165,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         try {
         	
         	_getNieuweStatussenProces_getNieuweStatussenProcesRequest = objectFactory.createGetNieuweStatussenProcesRequest();
-        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("5aa2a64a-4f35-4397-9ec2-67f531326a5b");
+        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("ede0ef2b-a1f9-4d95-8dbd-7397956d4a45");
         	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setAutorisatieAdres("http://geenausp.nl");
         	
             org.techytax.ws.GetNieuweStatussenProcesResponse _getNieuweStatussenProces__return = port.getNieuweStatussenProces(_getNieuweStatussenProces_getNieuweStatussenProcesRequest);
@@ -192,53 +180,4 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         System.exit(0);
     }
     
-	private static void setupTLS(StatusinformatieServiceV12 port)
-			throws FileNotFoundException, IOException, GeneralSecurityException {
-
-		HTTPConduit httpConduit = (HTTPConduit) ClientProxy.getClient(port)
-				.getConduit();
-
-		TLSClientParameters tlsCP = new TLSClientParameters();
-		String keyPassword = "changeit";
-		KeyStore keyStore = KeyStore.getInstance("PKCS12");
-		String keyStoreLoc = "/home/hans/java/xbrl/wus/cert2/new.p12";
-		keyStore.load(new FileInputStream(keyStoreLoc),
-				keyPassword.toCharArray());
-		KeyManager[] myKeyManagers = getKeyManagers(keyStore, keyPassword);
-		tlsCP.setKeyManagers(myKeyManagers);
-
-		KeyStore trustStore = KeyStore.getInstance("JKS");
-		String trustStoreLoc = "/home/hans/java/xbrl/wus/cert/jssecacerts";
-		trustStore.load(new FileInputStream(trustStoreLoc),
-				keyPassword.toCharArray());
-		TrustManager[] myTrustStoreKeyManagers = getTrustManagers(trustStore);
-		tlsCP.setTrustManagers(myTrustStoreKeyManagers);
-
-		// The following is not recommended and would not be done in a
-		// prodcution environment,
-		// this is just for illustrative purpose
-		tlsCP.setDisableCNCheck(true);
-		// tlsCP.setCertAlias("beemsterboersoftware");
-
-		httpConduit.setTlsClientParameters(tlsCP);
-
-	}
-
-	private static TrustManager[] getTrustManagers(KeyStore trustStore)
-			throws NoSuchAlgorithmException, KeyStoreException {
-		String alg = KeyManagerFactory.getDefaultAlgorithm();
-		TrustManagerFactory fac = TrustManagerFactory.getInstance(alg);
-		fac.init(trustStore);
-		return fac.getTrustManagers();
-	}
-
-	private static KeyManager[] getKeyManagers(KeyStore keyStore,
-			String keyPassword) throws GeneralSecurityException, IOException {
-		String alg = KeyManagerFactory.getDefaultAlgorithm();
-		char[] keyPass = keyPassword != null ? keyPassword.toCharArray() : null;
-		KeyManagerFactory fac = KeyManagerFactory.getInstance(alg);
-		fac.init(keyStore, keyPass);
-		return fac.getKeyManagers();
-	}    
-
 }
