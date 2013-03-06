@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -39,6 +39,24 @@ public class User implements Serializable {
 	private String password;
 	private String role;
 	private String username;
+	private String phoneNumber;
+	private String fiscalNumber;
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getFiscalNumber() {
+		return fiscalNumber;
+	}
+
+	public void setFiscalNumber(String fiscalNumber) {
+		this.fiscalNumber = fiscalNumber;
+	}
 
 	public String getCompanyName() {
 		return companyName;

@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -73,6 +74,20 @@ public class DateHelper {
 		calendar.setYear(getYear(date));
 		return calendar;
 	}
+	
+	public static XMLGregorianCalendar getDateForXml(Date date) {
+		XMLGregorianCalendar calendar = null;
+		try {
+			calendar = DatatypeFactory.newInstance()
+			.newXMLGregorianCalendar();
+		} catch (DatatypeConfigurationException e) {
+			e.printStackTrace();
+		}
+		calendar.setDay(getDay(date));
+		calendar.setMonth(getMonth(date)+1);
+		calendar.setYear(getYear(date));
+		return calendar;
+	}	
 	
 	public static int getDay(Date date) {
 		Calendar cal = new GregorianCalendar();

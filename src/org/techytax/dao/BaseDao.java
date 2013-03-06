@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,7 +21,6 @@ package org.techytax.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.jasypt.util.numeric.BasicDecimalNumberEncryptor;
 import org.jasypt.util.numeric.BasicIntegerNumberEncryptor;
@@ -42,17 +41,17 @@ public class BaseDao {
 	public BaseDao() {
 		sqlMap = IbatisUtil.getSqlMapInstance();
 		try {
-			Properties props = PropsFactory.loadProperties();
-			String password = props.getProperty("security.password");
+			String password = PropsFactory.getProperty("security.password");
 			textEncryptor.setPassword(password);
 			decimalEncryptor.setPassword(password);
-			intEncryptor.setPassword(password);				
+			intEncryptor.setPassword(password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected Map<String, String> createMap(String beginDatum, String eindDatum, String userId) {
+	protected Map<String, String> createMap(String beginDatum,
+			String eindDatum, String userId) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("beginDatum", beginDatum);
 		map.put("eindDatum", eindDatum);

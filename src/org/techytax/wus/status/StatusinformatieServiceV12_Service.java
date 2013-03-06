@@ -28,10 +28,10 @@ public class StatusinformatieServiceV12_Service extends Service {
     static {
         URL url = null;
         try {
-            url = AanleverServiceV12_Service.class.getResource("status_test.wsdl");
+            url = AanleverServiceV12_Service.class.getResource("status_prod.wsdl");
         } catch (Exception e) {
             java.util.logging.Logger.getLogger(StatusinformatieServiceV12_Service.class.getName())
-                .log(java.util.logging.Level.INFO, 
+                .log(java.util.logging.Level.SEVERE, 
                      "Can not initialize the default wsdl from {0}", "status_test.wsdl");
         }
         WSDL_LOCATION = url;

@@ -125,6 +125,8 @@ public class AccountCheckVM extends CostVM3 {
 		}
 	}
 
+	// TODO: check for onbepaald
+	
 	public BigDecimal getBusinessAccountBalance() {
 		return businessAccountBalance;
 	}

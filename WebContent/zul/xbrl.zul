@@ -1,0 +1,28 @@
+<?page title="XBRL" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+	<window self="@define(content)" title="XBRL" border="normal"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.techytax.zk.xbrl.XbrlVM')">
+		<button label="Check berichtsoort"
+			onClick="@command('berichtsoort')" />
+		<listbox model="@load(vm.berichtsoorten)" hflex="true"
+			height="350px">
+			<auxhead>
+				<auxheader colspan="5" class="topic">
+					Berichtsoorten
+				</auxheader>
+			</auxhead>
+			<listhead>
+				<listheader label="Berichtsoort" align="center" width="100px" />
+			</listhead>
+			<template name="model" var="item">
+				<listitem>
+					<listcell
+						label="@load(item)" />
+				</listitem>
+			</template>
+		</listbox>
+	</window>
+</zk>

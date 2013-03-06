@@ -17,6 +17,7 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.ws.ClientPasswordCallback;
+import org.techytax.ws.IdentiteitType;
 import org.techytax.ws.ObjectFactory;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
@@ -93,25 +94,26 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 		
 		org.techytax.ws.ObjectFactory objectFactory = new ObjectFactory();
         
-//        {
-//        System.out.println("Invoking getBerichtsoorten...");
-//        org.techytax.ws.GetBerichtsoortenRequest _getBerichtsoorten_getBerichtsoortenRequest = null;
-//        try {
-//        	_getBerichtsoorten_getBerichtsoortenRequest = objectFactory.createGetBerichtsoortenRequest();
-//        	IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-////        	identiteitType.setNummer("30216247");
-////        	identiteitType.setType("KvK");
-//    	identiteitType.setNummer("174006275B01");
-//    	identiteitType.setType("Fi");
-//        	_getBerichtsoorten_getBerichtsoortenRequest.setIdentiteitBelanghebbende(identiteitType);
-//            org.techytax.ws.GetBerichtsoortenResponse _getBerichtsoorten__return = port.getBerichtsoorten(_getBerichtsoorten_getBerichtsoortenRequest);
-//            System.out.println("getBerichtsoorten.result=" + _getBerichtsoorten__return);
-//
-//        } catch (StatusinformatieServiceFault e) { 
-//            System.out.println("Expected exception: StatusinformatieServiceFault has occurred.");
-//            System.out.println(e.toString());
-//        }
-//            }
+        {
+        System.out.println("Invoking getBerichtsoorten...");
+        org.techytax.ws.GetBerichtsoortenRequest _getBerichtsoorten_getBerichtsoortenRequest = null;
+        try {
+        	_getBerichtsoorten_getBerichtsoortenRequest = objectFactory.createGetBerichtsoortenRequest();
+        	IdentiteitType identiteitType = objectFactory.createIdentiteitType();
+//        	identiteitType.setNummer("30216247");
+//        	identiteitType.setType("KvK");
+    	identiteitType.setNummer("174006275B01");
+    	identiteitType.setType("Fi");
+        	_getBerichtsoorten_getBerichtsoortenRequest.setIdentiteitBelanghebbende(identiteitType);
+        	_getBerichtsoorten_getBerichtsoortenRequest.setAutorisatieAdres("http://geenausp.nl");
+            org.techytax.ws.GetBerichtsoortenResponse _getBerichtsoorten__return = port.getBerichtsoorten(_getBerichtsoorten_getBerichtsoortenRequest);
+            System.out.println("getBerichtsoorten.result=" + _getBerichtsoorten__return);
+
+        } catch (StatusinformatieServiceFault e) { 
+            System.out.println("Expected exception: StatusinformatieServiceFault has occurred.");
+            System.out.println(e.toString());
+        }
+            }
 //        {
 //        System.out.println("Invoking getStatussenProces...");
 //        org.techytax.ws.GetStatussenProcesRequest _getStatussenProces_getStatussenProcesRequest = null;
@@ -159,23 +161,23 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 //            System.out.println(e.toString());
 //        }
 //            }
-        {
-        System.out.println("Invoking getNieuweStatussenProces...");
-        org.techytax.ws.GetNieuweStatussenProcesRequest _getNieuweStatussenProces_getNieuweStatussenProcesRequest = null;
-        try {
-        	
-        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest = objectFactory.createGetNieuweStatussenProcesRequest();
-        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("ede0ef2b-a1f9-4d95-8dbd-7397956d4a45");
-        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setAutorisatieAdres("http://geenausp.nl");
-        	
-            org.techytax.ws.GetNieuweStatussenProcesResponse _getNieuweStatussenProces__return = port.getNieuweStatussenProces(_getNieuweStatussenProces_getNieuweStatussenProcesRequest);
-            System.out.println("getNieuweStatussenProces.result=" + _getNieuweStatussenProces__return);
-
-        } catch (StatusinformatieServiceFault e) { 
-            System.out.println("Expected exception: StatusinformatieServiceFault has occurred.");
-            System.out.println(e.toString());
-        }
-            }
+//        {
+//        System.out.println("Invoking getNieuweStatussenProces...");
+//        org.techytax.ws.GetNieuweStatussenProcesRequest _getNieuweStatussenProces_getNieuweStatussenProcesRequest = null;
+//        try {
+//        	
+//        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest = objectFactory.createGetNieuweStatussenProcesRequest();
+//        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setKenmerk("63043889-ba29-417b-be1e-e20e03248b58");
+//        	_getNieuweStatussenProces_getNieuweStatussenProcesRequest.setAutorisatieAdres("http://geenausp.nl");
+//        	
+//            org.techytax.ws.GetNieuweStatussenProcesResponse _getNieuweStatussenProces__return = port.getNieuweStatussenProces(_getNieuweStatussenProces_getNieuweStatussenProcesRequest);
+//            System.out.println("getNieuweStatussenProces.result=" + _getNieuweStatussenProces__return);
+//
+//        } catch (StatusinformatieServiceFault e) { 
+//            System.out.println("Expected exception: StatusinformatieServiceFault has occurred.");
+//            System.out.println(e.toString());
+//        }
+//            }
 
         System.exit(0);
     }
