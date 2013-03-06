@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,11 +24,12 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropsFactory {
-	
+
 	private static Properties props;
 
-	public static Properties loadProperties() throws Exception {
-		if (props != null) return props;
+	public static Properties loadProperties() throws IOException {
+		if (props != null)
+			return props;
 		props = new Properties();
 		try {
 			props.load(new FileInputStream("techytax.properties"));
@@ -37,6 +38,11 @@ public class PropsFactory {
 			throw e;
 		}
 		return props;
+	}
+	
+	public static String getProperty(String key) throws IOException {
+		loadProperties();
+		return props.getProperty(key);
 	}
 
 }

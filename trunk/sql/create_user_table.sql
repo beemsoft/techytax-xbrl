@@ -12,4 +12,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` VALUES (0,'guest','guest','guest','Guest',null);
 
+ALTER TABLE `techytax`.`user` ADD COLUMN `phoneNumber` VARCHAR(20) AFTER `fullName`;
+ALTER TABLE `techytax`.`user` ADD COLUMN `fiscalNumber` VARCHAR(20) AFTER `phoneNumber`;
+
 
