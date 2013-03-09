@@ -199,6 +199,7 @@ public class BoekDao extends BaseDao {
 		return cost;
 	}
 
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<Cost> getVatCorrectionDepreciation(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);

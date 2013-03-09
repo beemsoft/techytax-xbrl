@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,6 +19,7 @@
  */
 package org.techytax.domain;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -29,19 +30,26 @@ public class FiscalOverview {
 
 	private List<Activum> activa;
 	private int afschrijvingAuto;
+	
+	@Deprecated
 	private int afschrijvingAutoCorrectie;
+	
 	private int afschrijvingOverig;
+	
+	@Deprecated
 	private int afschrijvingOverigCorrectie;
+	
 	private int afschrijvingTotaal;
 	private int bijtellingAuto;
 	private int bookTotalBegin;
 	private int bookTotalEnd;
 	private int jaar;
 	private int kostenAuto;
-	private int kostenAutoAftrekbaar;	
+	private int kostenAutoAftrekbaar;
 	private int kostenOverig;
 	private int kostenOverigTransport;
 	private int nettoOmzet;
+	private BigDecimal turnOverUnpaid;
 	private PrivatWithdrawal onttrekking;
 	private int oudedagsReserveMaximaal;
 	private List<Passivum> passiva;
@@ -53,31 +61,31 @@ public class FiscalOverview {
 	private BigInteger netTurnOverNotYetPaid;
 	private BigInteger privateDeposit;
 	private BigInteger enterpriseCapital;
-	
+
 	public int getNetTurnOverTotal() {
 		return nettoOmzet + netTurnOverNotYetPaid.intValue();
 	}
-	
+
 	public int getCarAndTransportCosts() {
 		return kostenAutoAftrekbaar - kostenOverigTransport;
 	}
-	
+
 	public int getOtherCostsTotal() {
 		return getCarAndTransportCosts() - kostenOverig;
-	}	
-	
+	}
+
 	public List<Activum> getActiva() {
 		return activa;
 	}
-	
+
 	public BalanceReport getActivaReport() {
 		return FiscalReportHelper.getActivaReport(activa);
 	}
-	
+
 	public BalanceReport getPassivaReport() {
 		return FiscalReportHelper.getPassivaReport(passiva);
-	}	
-	
+	}
+
 	public int getAfschrijvingAuto() {
 		return afschrijvingAuto;
 	}
@@ -92,6 +100,7 @@ public class FiscalOverview {
 	}
 
 	@Deprecated
+	// Will be removed in 2017
 	public int getAfschrijvingOverigCorrectie() {
 		return afschrijvingOverigCorrectie;
 	}
@@ -123,10 +132,10 @@ public class FiscalOverview {
 	public int getKostenAutoAftrekbaar() {
 		return kostenAutoAftrekbaar;
 	}
-	
+
 	public int getKostenOverig() {
 		return kostenOverig;
-	}	
+	}
 
 	public int getKostenOverigTransport() {
 		return kostenOverigTransport;
@@ -139,10 +148,10 @@ public class FiscalOverview {
 	public PrivatWithdrawal getOnttrekking() {
 		return onttrekking;
 	}
-	
+
 	public int getOudedagsReserveMaximaal() {
 		return oudedagsReserveMaximaal;
-	}	
+	}
 
 	public List<Passivum> getPassiva() {
 		return passiva;
@@ -164,6 +173,7 @@ public class FiscalOverview {
 		this.afschrijvingAuto = afschrijvingAuto;
 	}
 
+	@Deprecated
 	public void setAfschrijvingAutoCorrectie(int afschrijvingAutoCorrectie) {
 		this.afschrijvingAutoCorrectie = afschrijvingAutoCorrectie;
 	}
@@ -172,6 +182,7 @@ public class FiscalOverview {
 		this.afschrijvingOverig = afschrijvingOverig;
 	}
 
+	@Deprecated
 	public void setAfschrijvingOverigCorrectie(int afschrijvingOverigCorrectie) {
 		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
 	}
@@ -187,10 +198,10 @@ public class FiscalOverview {
 	public void setBookTotalBegin(int bookTotalBegin) {
 		this.bookTotalBegin = bookTotalBegin;
 	}
-	
+
 	public void setBookTotalEnd(int bookTotalEnd) {
 		this.bookTotalEnd = bookTotalEnd;
-	}	
+	}
 
 	public void setJaar(int jaar) {
 		this.jaar = jaar;
@@ -203,10 +214,10 @@ public class FiscalOverview {
 	public void setKostenAutoAftrekbaar(int kostenAutoAftrekbaar) {
 		this.kostenAutoAftrekbaar = kostenAutoAftrekbaar;
 	}
-	
+
 	public void setKostenOverig(int kostenOverig) {
 		this.kostenOverig = kostenOverig;
-	}	
+	}
 
 	public void setKostenOverigTransport(int kostenOverigTransport) {
 		this.kostenOverigTransport = kostenOverigTransport;
@@ -282,6 +293,18 @@ public class FiscalOverview {
 
 	public void setEnterpriseCapital(BigInteger enterpriseCapital) {
 		this.enterpriseCapital = enterpriseCapital;
+	}
+
+	public int getProfit() {
+		return profit;
+	}
+
+	public BigDecimal getTurnOverUnpaid() {
+		return turnOverUnpaid;
+	}
+
+	public void setTurnOverUnpaid(BigDecimal turnOverUnpaid) {
+		this.turnOverUnpaid = turnOverUnpaid;
 	}
 
 }

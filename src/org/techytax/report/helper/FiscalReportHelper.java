@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -145,9 +145,7 @@ public class FiscalReportHelper {
 
 	public static void main(String[] args) {
 		FiscalDao fiscalDao = new FiscalDao();
-		KeyYear key = new KeyYear();
-		key.setYear(2011);
-		key.setUserId(14);
+		KeyYear key = new KeyYear(14, 2011);
 		try {
 //			List<Activum> activa = fiscalDao.getActivaLijst(key);
 //			BalanceReport report = getActivaReport(activa);
