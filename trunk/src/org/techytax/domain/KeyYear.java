@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,6 +23,11 @@ package org.techytax.domain;
 public class KeyYear {
 	private long userId;
 	private int year;
+	
+	public KeyYear(long userId, int year) {
+		this.userId = userId;
+		this.year = year;
+	}
 	
 	public long getUserId() {
 		return userId;
