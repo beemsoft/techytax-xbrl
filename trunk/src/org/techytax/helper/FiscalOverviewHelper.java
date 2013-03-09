@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -198,6 +198,10 @@ public class FiscalOverviewHelper {
 
 			BookValue previousBookValue = boekwaardeDao.getPreviousBookValue(activumValue);
 			BookValue currentBookValue = activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
+			
+			if (activumValue == null) {
+				throw new RuntimeException("Add machinery activa");
+			}
 
 			Activum activum = new Activum();
 			activum.setUserId(userId);
@@ -413,7 +417,8 @@ public class FiscalOverviewHelper {
 		overview.setPrivateDeposit(privateDeposit.toBigInteger());
 
 		// Private withdrawals
-		int totalWithdrawal = profit - (enterpriseCapital.intValue() - bookTotalBegin) + privateDeposit.intValue();
+		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaLijst, bookYear - 1);
+		int totalWithdrawal = profit - (enterpriseCapital.intValue() - enterpriseCapitalPreviousYear.intValue()) + privateDeposit.intValue();
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		int withdrawalCash = totalWithdrawal - privatWithdrawal.getWithdrawalPrivateUsageBusinessCar();
 		privatWithdrawal.setWithdrawalCash(withdrawalCash);
