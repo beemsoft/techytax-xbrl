@@ -66,6 +66,7 @@ import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
 public class DigipoortServiceImpl implements DigipoortService {
 
+	private static final String OMZETBELASTING = "Omzetbelasting";
 	private static final String FISCAL_TYPE = "Fi";
 	private static final String AUTORISATIE_ADRES = "http://geenausp.nl";
 	private static final QName AANLEVER_SERVICE_NAME = new QName("http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/", "AanleverService_V1_2");
@@ -187,7 +188,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		AanleverRequest aanleverRequest;
 		aanleverRequest = new AanleverRequest();
 		aanleverRequest.setAutorisatieAdres(AUTORISATIE_ADRES);
-		aanleverRequest.setBerichtsoort("Omzetbelasting");
+		aanleverRequest.setBerichtsoort(OMZETBELASTING);
 		aanleverRequest.setAanleverkenmerk("test");
 		addIdentiteit(vatDeclarationData, aanleverRequest);
 		aanleverRequest.setRolBelanghebbende("Bedrijf");
@@ -212,7 +213,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		try {
 			GetNieuweStatussenRequest request = objectFactory.createGetNieuweStatussenRequest();
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);
-			request.setBerichtsoort("Omzetbelasting");
+			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
 			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
@@ -251,7 +252,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
 			GetProcessenRequest request = objectFactory.createGetProcessenRequest();
-			request.setBerichtsoort("Omzetbelasting");
+			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
 			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);

@@ -86,6 +86,9 @@ public class DateHelper {
 		calendar.setDay(getDay(date));
 		calendar.setMonth(getMonth(date)+1);
 		calendar.setYear(getYear(date));
+		calendar.setHour(0);
+		calendar.setMinute(0);
+		calendar.setSecond(0);
 		return calendar;
 	}	
 	
@@ -155,6 +158,27 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;		
 	}
+	
+	public static Periode getLatestVatPeriodTillToday() {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		int month = cal.get(Calendar.MONTH);
+		if (month == 0) {
+			cal.add(Calendar.YEAR, -1);
+		}
+		int quarter = getQuarter(month);
+		int firstMonth = quarter * 3 - 3;
+		cal.set(Calendar.MONTH, firstMonth);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDatum = cal.getTime();
+		cal.setTime(new Date());
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		Date eindDatum = cal.getTime();
+		Periode periode = new Periode();
+		periode.setBeginDatum(beginDatum);
+		periode.setEindDatum(eindDatum);
+		return periode;		
+	}	
 	
 	private static int getQuarter(int month) {
 		int quarter = 1;
@@ -232,6 +256,8 @@ public class DateHelper {
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod().getBeginDatum());
 		System.out.println(getLatestVatPeriod().getEindDatum());		
+		
+		System.out.println(getDateForXml(new Date()));
 	}
 
 }
