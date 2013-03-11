@@ -38,6 +38,7 @@
 								<toolbarbutton label="Kosten" href="costs.zul" />
 								<toolbarbutton label="Rekeningen" href="accounts.zul" />
 								<toolbarbutton label="Controle-stap" href="account-check.zul" />
+								<toolbarbutton label="Digipoort" href="xbrl.zul" />
 							</vbox>
 						</panelchildren>
 					</panel>
