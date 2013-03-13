@@ -44,6 +44,7 @@ import org.techytax.xml.dutch.vat.AangifteOmzetbelasting.Berekening;
 import org.techytax.xml.dutch.vat.AangifteOmzetbelasting.Communicatiegegevens;
 import org.techytax.xml.dutch.vat.AangifteOmzetbelasting.IdentificerendeGegevens;
 
+@Deprecated
 public class SendVatReportAction extends Action {
 
 	public ActionForward execute(ActionMapping mapping, ActionForm form,

@@ -24,6 +24,34 @@ public class LoginModel  {
 		Executions.sendRedirect("/zul/vat.zul"); 
 	}
 
+	public boolean getLoggedOn() {
+		return UserCredentialManager.getUser() != null;
+	}
+
+	public String getLoggedOnText() {
+		String text = "Inloggen a.u.b.";
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			text = user.getCompanyName();
+		}
+		return text;
+	}
+	
+	public String getUser() {
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			return user.getFullName();
+		} else {
+			return "";
+		}
+	}
+
+	@Command
+	public void logout() {
+		UserCredentialManager.setUser(null);
+		Executions.sendRedirect("login.zul");
+	}
+	
 	public String getUsername() {
 		return username;
 	}

@@ -240,6 +240,15 @@ public class XbrlTest {
 					"2940"));
 			vatDeclaration
 					.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
+			
+			
+			MonetaryNoDecimals10VItemType valueAddedTaxOnInput = bdTypeObjectFactory.createMonetaryNoDecimals10VItemType();
+			valueAddedTaxOnInput.setDecimals("INF");
+			valueAddedTaxOnInput.setContextRef(context);
+			valueAddedTaxOnInput.setUnitRef(unit);
+			valueAddedTaxOnInput.setValue(new BigDecimal(
+					"50"));			
+			vatDeclaration.setValueAddedTaxOnInput(valueAddedTaxOnInput);
 
 			Anstring2FItemType version = bdTypeObjectFactory
 					.createAnstring2FItemType();

@@ -13,7 +13,7 @@
 		p { padding: 5px; }
 	
 	</style>
-	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.DemoModel')">
+	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
 		<borderlayout sclass="complex-layout" height="740px">
 			<north size="45px" border="0">
 				<div>

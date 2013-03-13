@@ -1,7 +1,7 @@
 <?page title="TechyTax"?>
 <zk xmlns:html="http://www.w3.org/1999/xhtml">
 <!--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -165,7 +165,7 @@ Prive matches hebben voorrang boven algemene matches
 							<row>netto omzet: <label id="turnoverNet"/></row>
 						</rows>
 					</grid>
-					<toolbarbutton href="https://mijn.belastingdienst.nl/AuthenticatieVoorziening/toonServiceBerichten.do" target="other" image="/images/belastingdienst_logo.jpg" />
+					<toolbarbutton id="digipoortBtn" image="/images/Digipoort_w176.JPG" />
 				</hbox>
 				<vbox>
 					<grid id="vatGrid" hflex="true" mold="paging" pageSize="7">

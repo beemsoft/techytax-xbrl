@@ -21,6 +21,7 @@ package org.techytax.digipoort;
 
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -38,7 +39,10 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.CorrespondentDeclarant
 import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.TaxData;
 import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaration;
 
+import org.techytax.domain.Balans;
+import org.techytax.domain.Periode;
 import org.techytax.domain.VatDeclarationData;
+import org.techytax.util.DateHelper;
 import org.xbrl._2003.instance.Context;
 import org.xbrl._2003.instance.ContextEntityType;
 import org.xbrl._2003.instance.ContextEntityType.Identifier;
@@ -52,28 +56,21 @@ import org.xbrl._2006.xbrldi.ExplicitMember;
 
 public class XbrlHelper {
 
-	public static String createXbrlInstance(
-			VatDeclarationData vatDeclarationData) {
+	public static String createXbrlInstance(VatDeclarationData vatDeclarationData) {
 		ObjectFactory xbrlObjectFactory = null;
 		JAXBContext jc = null;
 		Marshaller m = null;
 		try {
 			xbrlObjectFactory = new ObjectFactory();
 			org.xbrl._2006.xbrldi.ObjectFactory xbrldiObjectFactory = new org.xbrl._2006.xbrldi.ObjectFactory();
-			jc = JAXBContext
-					.newInstance(new Class[] {
-							org.xbrl._2003.instance.ObjectFactory.class,
-							nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory.class,
-							nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory.class,
-							org.xbrl._2006.xbrldi.ObjectFactory.class,
-							org.xbrl._2003.xlink.ObjectFactory.class,
-							nl.nltaxonomie._2011.xbrl.xbrl_syntax_extension.ObjectFactory.class,
-							org.xbrl._2003.linkbase.ObjectFactory.class,
-							org.xbrl._2005.xbrldt.ObjectFactory.class,
-							nl.nltaxonomie._7_0.domein.bd.axes.bd_axes.ObjectFactory.class,
-							nl.nltaxonomie._7_0.basis.bd.domains.bd_domains.ObjectFactory.class,
-							nl.nltaxonomie.iso.iso4217.ObjectFactory.class,
-							nl.nltaxonomie._7_0.basis.bd.items.bd_algemeen.ObjectFactory.class });
+			jc = JAXBContext.newInstance(new Class[] { org.xbrl._2003.instance.ObjectFactory.class,
+					nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory.class,
+					nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory.class, org.xbrl._2006.xbrldi.ObjectFactory.class,
+					org.xbrl._2003.xlink.ObjectFactory.class, nl.nltaxonomie._2011.xbrl.xbrl_syntax_extension.ObjectFactory.class,
+					org.xbrl._2003.linkbase.ObjectFactory.class, org.xbrl._2005.xbrldt.ObjectFactory.class,
+					nl.nltaxonomie._7_0.domein.bd.axes.bd_axes.ObjectFactory.class,
+					nl.nltaxonomie._7_0.basis.bd.domains.bd_domains.ObjectFactory.class, nl.nltaxonomie.iso.iso4217.ObjectFactory.class,
+					nl.nltaxonomie._7_0.basis.bd.items.bd_algemeen.ObjectFactory.class });
 			m = jc.createMarshaller();
 			StringWriter writer = new StringWriter();
 			m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
@@ -83,34 +80,26 @@ public class XbrlHelper {
 			org.xbrl._2003.xlink.ObjectFactory xlinkObjectFactory = new org.xbrl._2003.xlink.ObjectFactory();
 			SimpleType simpleType = xlinkObjectFactory.createSimpleType();
 			simpleType.setType("simple");
-			simpleType
-					.setHref("http://www.nltaxonomie.nl/7.0/report/bd/entrypoints/rpt-bd-omzetbelasting-2013.xsd");
+			simpleType.setHref("http://www.nltaxonomie.nl/7.0/report/bd/entrypoints/rpt-bd-omzetbelasting-2013.xsd");
 			xbrl.getSchemaRef().add(simpleType);
 			xbrl.getOtherAttributes().put(new QName("xml:lang"), "nl");
 
 			Context context = xbrlObjectFactory.createContext();
 			context.setId("Msg");
 
-			ContextEntityType contextEntityType = xbrlObjectFactory
-					.createContextEntityType();
-			Identifier identifier = xbrlObjectFactory
-					.createContextEntityTypeIdentifier();
+			ContextEntityType contextEntityType = xbrlObjectFactory.createContextEntityType();
+			Identifier identifier = xbrlObjectFactory.createContextEntityTypeIdentifier();
 			identifier.setScheme("www.belastingdienst.nl/omzetbelastingnummer");
-			identifier.setValue("001000044B93");
-			ContextPeriodType period = xbrlObjectFactory
-					.createContextPeriodType();
-			period.setStartDate("2013-04-01");
-			period.setEndDate("2013-06-30");
+			identifier.setValue(vatDeclarationData.getFiscalNumber());
+			ContextPeriodType period = xbrlObjectFactory.createContextPeriodType();
+			period.setStartDate(DateHelper.getDate(vatDeclarationData.getStartDate()));
+			period.setEndDate(DateHelper.getDate(vatDeclarationData.getEndDate()));
 			contextEntityType.setIdentifier(identifier);
 			context.setEntity(contextEntityType);
-			ContextScenarioType scenario = xbrlObjectFactory
-					.createContextScenarioType();
-			ExplicitMember explicitMember = xbrldiObjectFactory
-					.createExplicitMember();
+			ContextScenarioType scenario = xbrlObjectFactory.createContextScenarioType();
+			ExplicitMember explicitMember = xbrldiObjectFactory.createExplicitMember();
 
-			QName qName = new QName(
-					"http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes",
-					"PartyDimension", "bd-dim-dim");
+			QName qName = new QName("http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes", "PartyDimension", "bd-dim-dim");
 			explicitMember.setDimension(qName);
 			qName = new QName("bd-dim-dom:Declarant");
 			explicitMember.setValue(qName);
@@ -133,115 +122,72 @@ public class XbrlHelper {
 			xbrl.getItemOrTupleOrContext().add(unit);
 			nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory vatObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ObjectFactory();
 			TaxData taxData = vatObjectFactory.createTaxData();
-			ValueAddedTaxDeclaration vatDeclaration = vatObjectFactory
-					.createValueAddedTaxDeclaration();
+			ValueAddedTaxDeclaration vatDeclaration = vatObjectFactory.createValueAddedTaxDeclaration();
 			nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory bdTypeObjectFactory = new nl.nltaxonomie._7_0.basis.bd.types.bd_types.ObjectFactory();
-			DateTimeItemType dateTime = bdTypeObjectFactory
-					.createDateTimeItemType();
-			dateTime.setValue("201307151254");
+			DateTimeItemType dateTime = bdTypeObjectFactory.createDateTimeItemType();
+			dateTime.setValue(DateHelper.getTimeStamp(new Date()));
 			dateTime.setContextRef(context);
 			vatDeclaration.setDateTimeCreation(dateTime);
 
-			MonetaryNoDecimals9VItemType estimateFromPreviousReturns = bdTypeObjectFactory
-					.createMonetaryNoDecimals9VItemType();
-			estimateFromPreviousReturns.setDecimals("INF");
-			estimateFromPreviousReturns.setContextRef(context);
-			estimateFromPreviousReturns.setUnitRef(unit);
-			estimateFromPreviousReturns.setValue(new BigDecimal("0"));
-			vatDeclaration
-					.setEstimateFromPreviousReturns(estimateFromPreviousReturns);
-
-			MonetaryNoDecimals9VItemType estimateOnThisReturn = bdTypeObjectFactory
-					.createMonetaryNoDecimals9VItemType();
-			estimateOnThisReturn.setDecimals("INF");
-			estimateOnThisReturn.setContextRef(context);
-			estimateOnThisReturn.setUnitRef(unit);
-			estimateOnThisReturn.setValue(new BigDecimal("0"));
-			vatDeclaration.setEstimateOnThisReturn(estimateOnThisReturn);
-
-			MonetaryNoDecimals10VItemType installationDistanceSalesWithinTheEC = bdTypeObjectFactory
-					.createMonetaryNoDecimals10VItemType();
-			installationDistanceSalesWithinTheEC.setDecimals("INF");
-			installationDistanceSalesWithinTheEC.setContextRef(context);
-			installationDistanceSalesWithinTheEC.setUnitRef(unit);
-			installationDistanceSalesWithinTheEC.setValue(new BigDecimal("0"));
-			vatDeclaration
-					.setInstallationDistanceSalesWithinTheEC(installationDistanceSalesWithinTheEC);
-
-			MonetaryNoDecimals10VItemType valueAddedTaxOwed = bdTypeObjectFactory
-					.createMonetaryNoDecimals10VItemType();
+			MonetaryNoDecimals10VItemType valueAddedTaxOwed = bdTypeObjectFactory.createMonetaryNoDecimals10VItemType();
 			valueAddedTaxOwed.setDecimals("INF");
 			valueAddedTaxOwed.setContextRef(context);
 			valueAddedTaxOwed.setUnitRef(unit);
-			valueAddedTaxOwed.setValue(new BigDecimal("2940"));
+			valueAddedTaxOwed.setValue(vatDeclarationData.getValueAddedTaxOwed());
 			vatDeclaration.setValueAddedTaxOwed(valueAddedTaxOwed);
+			
+			MonetaryNoDecimals10VItemType valueAddedTaxOnInput = bdTypeObjectFactory.createMonetaryNoDecimals10VItemType();
+			valueAddedTaxOnInput.setDecimals("INF");
+			valueAddedTaxOnInput.setContextRef(context);
+			valueAddedTaxOnInput.setUnitRef(unit);
+			valueAddedTaxOnInput.setValue(vatDeclarationData.getValueAddedTaxOnInput());
+			vatDeclaration.setValueAddedTaxOnInput(valueAddedTaxOnInput);			
 
-			MonetaryNoDecimals9VItemType valueAddedTaxOwedToBePaidBack = bdTypeObjectFactory
-					.createMonetaryNoDecimals9VItemType();
+			MonetaryNoDecimals9VItemType valueAddedTaxOwedToBePaidBack = bdTypeObjectFactory.createMonetaryNoDecimals9VItemType();
 			valueAddedTaxOwedToBePaidBack.setDecimals("INF");
 			valueAddedTaxOwedToBePaidBack.setContextRef(context);
 			valueAddedTaxOwedToBePaidBack.setUnitRef(unit);
-			valueAddedTaxOwedToBePaidBack.setValue(new BigDecimal("2940"));
-			vatDeclaration
-					.setValueAddedTaxOwedToBePaidBack(valueAddedTaxOwedToBePaidBack);
+			valueAddedTaxOwedToBePaidBack.setValue(vatDeclarationData.getValueAddedTaxOwedToBePaidBack());
+			vatDeclaration.setValueAddedTaxOwedToBePaidBack(valueAddedTaxOwedToBePaidBack);
 
-			MonetaryNoDecimals9VItemType valueAddedTaxPrivateUse = bdTypeObjectFactory
-					.createMonetaryNoDecimals9VItemType();
+			MonetaryNoDecimals9VItemType valueAddedTaxPrivateUse = bdTypeObjectFactory.createMonetaryNoDecimals9VItemType();
 			valueAddedTaxPrivateUse.setDecimals("INF");
 			valueAddedTaxPrivateUse.setContextRef(context);
 			valueAddedTaxPrivateUse.setUnitRef(unit);
-			valueAddedTaxPrivateUse.setValue(new BigDecimal("0"));
+			valueAddedTaxPrivateUse.setValue(vatDeclarationData.getValueAddedTaxPrivateUse());
 			vatDeclaration.setValueAddedTaxPrivateUse(valueAddedTaxPrivateUse);
 
 			nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
-			CorrespondentDeclarant declarant = bdAlgObjectFactory
-					.createCorrespondentDeclarant();
-			Anstring35VItemType name = bdTypeObjectFactory
-					.createAnstring35VItemType();
-			name.setValue("Beemsterboer");
+			CorrespondentDeclarant declarant = bdAlgObjectFactory.createCorrespondentDeclarant();
+			Anstring35VItemType name = bdTypeObjectFactory.createAnstring35VItemType();
+			name.setValue(vatDeclarationData.getName());
 			name.setContextRef(context);
 			declarant.setNameContactSupplier(name);
-			Anstring25VItemType phoneNumber = bdTypeObjectFactory
-					.createAnstring25VItemType();
-			phoneNumber.setValue("06-12345678");
+			Anstring25VItemType phoneNumber = bdTypeObjectFactory.createAnstring25VItemType();
+			phoneNumber.setValue(vatDeclarationData.getPhoneNumber());
 			phoneNumber.setContextRef(context);
 			declarant.setTelephoneNumberContactSupplier(phoneNumber);
 			vatDeclaration.setCorrespondentDeclarant(declarant);
 
-			ACAPITALstring4FItemType code = bdTypeObjectFactory
-					.createACAPITALstring4FItemType();
+			ACAPITALstring4FItemType code = bdTypeObjectFactory.createACAPITALstring4FItemType();
 
 			MessageReferenceSupplierVATItemType supplier = new MessageReferenceSupplierVATItemType();
-			supplier.setValue("OB-KTG00-BG");
+			supplier.setValue("OB-TXTAX-11");
 			supplier.setContextRef(context);
 			vatDeclaration.setMessageReferenceSupplierVAT(supplier);
-			code.setValue("TECH");
+			code.setValue("TXTX");
 			code.setContextRef(context);
 			vatDeclaration.setSoftwareSupplierCode(code);
 
-			MonetaryNoDecimals10VItemType taxedTurnoverSuppliesServicesGeneralTariff = bdTypeObjectFactory
-					.createMonetaryNoDecimals10VItemType();
-			taxedTurnoverSuppliesServicesGeneralTariff.setDecimals("INF");
-			taxedTurnoverSuppliesServicesGeneralTariff.setContextRef(context);
-			taxedTurnoverSuppliesServicesGeneralTariff.setUnitRef(unit);
-			taxedTurnoverSuppliesServicesGeneralTariff.setValue(new BigDecimal(
-					"0"));
-			vatDeclaration
-					.setTaxedTurnoverSuppliesServicesGeneralTariff(taxedTurnoverSuppliesServicesGeneralTariff);
-
-			MonetaryNoDecimals9VItemType valueAddedTaxSuppliesServicesGeneralTariff = bdTypeObjectFactory
-					.createMonetaryNoDecimals9VItemType();
+			MonetaryNoDecimals9VItemType valueAddedTaxSuppliesServicesGeneralTariff = bdTypeObjectFactory.createMonetaryNoDecimals9VItemType();
 			valueAddedTaxSuppliesServicesGeneralTariff.setDecimals("INF");
 			valueAddedTaxSuppliesServicesGeneralTariff.setContextRef(context);
 			valueAddedTaxSuppliesServicesGeneralTariff.setUnitRef(unit);
-			valueAddedTaxSuppliesServicesGeneralTariff.setValue(new BigDecimal(
-					"2940"));
-			vatDeclaration
-					.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
+			valueAddedTaxSuppliesServicesGeneralTariff.setValue(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff());
+			vatDeclaration.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
 
-			Anstring2FItemType version = bdTypeObjectFactory
-					.createAnstring2FItemType();
-			version.setValue("10");
+			Anstring2FItemType version = bdTypeObjectFactory.createAnstring2FItemType();
+			version.setValue("11");
 			version.setContextRef(context);
 			vatDeclaration.setVersionApplication(version);
 
@@ -256,5 +202,29 @@ public class XbrlHelper {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balans balans) {
+		vatDeclarationData.setValueAddedTaxOwed(balans.getTotaleKosten().add(balans.getCorrection()));
+		vatDeclarationData.setValueAddedTaxOnInput(balans.getTotaleBaten());
+		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(balans.getTotaleKosten().subtract(balans.getTotaleBaten()).add(balans.getCorrection()));
+		vatDeclarationData.setValueAddedTaxPrivateUse(balans.getCorrection());
+		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(balans.getTotaleKosten());
+	}	
+	
+	public static void main(String[] args) {
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		Periode period = DateHelper.getLatestVatPeriod();
+		vatDeclarationData.setStartDate(period.getBeginDatum());
+		vatDeclarationData.setEndDate(period.getEindDatum());
+		vatDeclarationData.setFiscalNumber("001000044B93");
+		vatDeclarationData.setName("Test");
+		vatDeclarationData.setPhoneNumber("12345678");
+		Balans balans = new Balans();
+		balans.setTotaleKosten(BigDecimal.valueOf(95));
+		balans.setCorrection(BigDecimal.valueOf(5));
+		balans.setTotaleBaten(BigDecimal.valueOf(40));
+		addBalanceData(vatDeclarationData, balans);
+		createXbrlInstance(vatDeclarationData);
 	}
 }
