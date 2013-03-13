@@ -337,6 +337,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "berekening"
 })
 @XmlRootElement(name = "AangifteOmzetbelasting")
+@Deprecated
 public class AangifteOmzetbelasting {
 
     @XmlElement(name = "IdentificerendeGegevens", required = true)

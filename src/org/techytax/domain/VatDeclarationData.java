@@ -29,11 +29,23 @@ public class VatDeclarationData {
 	private String fiscalNumber;
 	private Date startDate;
 	private Date endDate;
+	
+	// Verschuldigde_omzetbelasting_2
 	private BigDecimal valueAddedTaxOwed;
+	
+	// Totaal_te_betalen_/_terug_te_vragen_2
 	private BigDecimal valueAddedTaxOwedToBePaidBack;
+	
+	// Omzetbelasting_over_privegebruik_1
 	private BigDecimal valueAddedTaxPrivateUse;
+	
 	private BigDecimal taxedTurnoverSuppliesServicesGeneralTariff;
+	
+	// Omzetbelasting_leveringen/diensten_algemeen_tarief_2
 	private BigDecimal valueAddedTaxSuppliesServicesGeneralTariff;
+	
+	// Voorbelasting_1
+	private BigDecimal valueAddedTaxOnInput;
 
 	public String getName() {
 		return name;
@@ -116,6 +128,14 @@ public class VatDeclarationData {
 	public void setValueAddedTaxSuppliesServicesGeneralTariff(
 			BigDecimal valueAddedTaxSuppliesServicesGeneralTariff) {
 		this.valueAddedTaxSuppliesServicesGeneralTariff = valueAddedTaxSuppliesServicesGeneralTariff;
+	}
+
+	public BigDecimal getValueAddedTaxOnInput() {
+		return valueAddedTaxOnInput;
+	}
+
+	public void setValueAddedTaxOnInput(BigDecimal valueAddedTaxOnInput) {
+		this.valueAddedTaxOnInput = valueAddedTaxOnInput;
 	}
 
 }

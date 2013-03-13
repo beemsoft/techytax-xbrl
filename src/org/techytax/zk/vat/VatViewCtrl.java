@@ -1,8 +1,10 @@
 package org.techytax.zk.vat;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -11,17 +13,22 @@ import java.util.Locale;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
+import org.techytax.digipoort.DigipoortService;
+import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.VatDeclarationData;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.security.AuthenticationException;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
+import org.xbrl._2003.instance.Xbrl;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -69,6 +76,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Tab controleTab;
 
 	private Media media = null;
+	
+	private Balans balans = null;
 	
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
@@ -181,7 +190,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
-		Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		vatOut.setValue(format(balans.getTotaleKosten()));
 		vatIn.setValue(format(balans.getTotaleBaten()));
 		vatBalance.setValue(format(balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
@@ -190,6 +199,18 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		controleTab.setSelected(true);
 		costModel = new ListModelList<Cost>();
 		costGrid.setModel(costModel);
+	}
+	
+	@Listen("onClick=#digipoortBtn")
+	public void aanleveren() throws FileNotFoundException, IOException, GeneralSecurityException {
+		User user = UserCredentialManager.getUser();
+		DigipoortService digipoortService = new DigipoortServiceImpl();
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+		vatDeclarationData.setName(user.getFullName());
+		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
+		XbrlHelper.addBalanceData(vatDeclarationData, balans);
+		digipoortService.aanleveren(vatDeclarationData);
 	}
 
 	@Override

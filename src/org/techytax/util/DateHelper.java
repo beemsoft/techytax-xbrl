@@ -35,6 +35,7 @@ public class DateHelper {
 
 	private static String datePattern = "yyyy-MM-dd";
 	private static String timePattern = "yyyy-MM-dd HH:mm:ss";
+	private static String timePattern2 = "yyyyMMddHHmm";	
 
 	public static Date stringToDate(String date_str) throws Exception {
 		SimpleDateFormat df_zos = new SimpleDateFormat(datePattern);
@@ -56,6 +57,12 @@ public class DateHelper {
 		String timeString = format.format(date);
 		return timeString;
 	}
+	
+	public static String getTimeStamp(Date date) {
+		SimpleDateFormat format = new SimpleDateFormat(timePattern2);
+		String timeString = format.format(date);
+		return timeString;
+	}	
 	
 	public static String getFinalInvoiceDate(String date_str) throws Exception {
 		Date date = stringToDate(date_str);
