@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -15,8 +16,9 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
-import org.techytax.ws.ClientPasswordCallback;
 import org.techytax.ws.IdentiteitType;
 import org.techytax.ws.ObjectFactory;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
@@ -31,6 +33,9 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 
     private static final QName SERVICE_NAME = new QName("http://logius.nl/digipoort/wus/2.0/statusinformatieservice/1.2/", "StatusinformatieService_V1_2");
 
+	private static Properties keyProperties = new Properties();
+	private static Properties trustProperties = new Properties();    
+    
     private StatusinformatieServiceV12_StatusinformatieServiceV12_Client() {
     }
 
@@ -52,7 +57,11 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, SERVICE_NAME);
         StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();  
         
-//        SecureConnectionHelper.setupTLS(port);
+		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
+		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));	
+		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
+		String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
+		ClientPasswordCallback.setKeyStorePassword(keyStorePassword);
         
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
@@ -67,7 +76,6 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 				WSHandlerConstants.USE_REQ_SIG_CERT);
 		outProps.put(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
 		outProps.put(WSHandlerConstants.SIGNATURE_USER, "1");
-		outProps.put(WSHandlerConstants.ENCRYPTION_USER, "1");
 		outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS,
 				ClientPasswordCallback.class.getName());
 		outProps.put(

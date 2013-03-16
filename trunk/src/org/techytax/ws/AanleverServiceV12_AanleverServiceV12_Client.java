@@ -25,6 +25,7 @@ import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
@@ -67,6 +68,8 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
 		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));	
 		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
+		String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
+		ClientPasswordCallback.setKeyStorePassword(keyStorePassword);
 
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();

@@ -39,6 +39,7 @@ import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.props.PropsFactory;
+import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverRequest;
@@ -47,7 +48,6 @@ import org.techytax.ws.AanleverServiceFault;
 import org.techytax.ws.AanleverServiceV12;
 import org.techytax.ws.AanleverServiceV12_Service;
 import org.techytax.ws.BerichtInhoudType;
-import org.techytax.ws.ClientPasswordCallback;
 import org.techytax.ws.GetBerichtsoortenRequest;
 import org.techytax.ws.GetBerichtsoortenResponse;
 import org.techytax.ws.GetNieuweStatussenProcesRequest;
@@ -81,7 +81,9 @@ public class DigipoortServiceImpl implements DigipoortService {
 	public DigipoortServiceImpl() {
 		try {
 			keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
-			trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));			
+			trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));
+			String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
+			ClientPasswordCallback.setKeyStorePassword(keyStorePassword);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -180,7 +182,6 @@ public class DigipoortServiceImpl implements DigipoortService {
 		outProps.put(WSHandlerConstants.USER, WSHandlerConstants.USE_REQ_SIG_CERT);
 		outProps.put(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
 		outProps.put(WSHandlerConstants.SIGNATURE_USER, keyStoreAlias);
-		outProps.put(WSHandlerConstants.ENCRYPTION_USER, keyStoreAlias);		
 		outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, ClientPasswordCallback.class.getName());
 		outProps.put(
 				WSHandlerConstants.SIGNATURE_PARTS,
