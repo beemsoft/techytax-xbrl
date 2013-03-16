@@ -26,6 +26,7 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -72,8 +73,19 @@ public class DigipoortServiceImpl implements DigipoortService {
 	private static final QName AANLEVER_SERVICE_NAME = new QName("http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/", "AanleverService_V1_2");
 	private static final QName STATUS_SERVICE_NAME = new QName("http://logius.nl/digipoort/wus/2.0/statusinformatieservice/1.2/",
 			"StatusinformatieService_V1_2");
+	private Properties keyProperties = new Properties();
+	private Properties trustProperties = new Properties();
 
 	private ObjectFactory objectFactory = new ObjectFactory();
+	
+	public DigipoortServiceImpl() {
+		try {
+			keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
+			trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException {
@@ -98,12 +110,12 @@ public class DigipoortServiceImpl implements DigipoortService {
 		}
 		return null;
 	}
-
+	
 	private AanleverServiceV12 setupWebServicePort() throws FileNotFoundException, IOException, GeneralSecurityException {
 		URL wsdlURL = getWsdlUrlForAanleveren();
 		AanleverServiceV12_Service ss = new AanleverServiceV12_Service(wsdlURL, AANLEVER_SERVICE_NAME);
 		AanleverServiceV12 port = ss.getAanleverServiceV12();
-		SecureConnectionHelper.setupTLS(port);
+		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
 		addLogging(cxfEndpoint);
@@ -115,7 +127,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		URL wsdlURL = getWsdlUrlForStatus();
 		StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, STATUS_SERVICE_NAME);
 		StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();
-		SecureConnectionHelper.setupTLS(port);
+		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
 		addLogging(cxfEndpoint);
@@ -164,10 +176,11 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	private void addSignatureProperties(org.apache.cxf.endpoint.Endpoint cxfEndpoint) {
 		Map<String, Object> outProps = new HashMap<String, Object>();
+		String keyStoreAlias = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.alias");
 		outProps.put(WSHandlerConstants.USER, WSHandlerConstants.USE_REQ_SIG_CERT);
 		outProps.put(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
-		outProps.put(WSHandlerConstants.SIGNATURE_USER, "1");
-		outProps.put(WSHandlerConstants.ENCRYPTION_USER, "1");		
+		outProps.put(WSHandlerConstants.SIGNATURE_USER, keyStoreAlias);
+		outProps.put(WSHandlerConstants.ENCRYPTION_USER, keyStoreAlias);		
 		outProps.put(WSHandlerConstants.PW_CALLBACK_CLASS, ClientPasswordCallback.class.getName());
 		outProps.put(
 				WSHandlerConstants.SIGNATURE_PARTS,

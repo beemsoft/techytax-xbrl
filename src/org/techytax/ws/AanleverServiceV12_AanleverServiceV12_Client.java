@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
@@ -23,6 +24,7 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
@@ -36,6 +38,9 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 	private static final QName SERVICE_NAME = new QName(
 			"http://logius.nl/digipoort/wus/2.0/aanleverservice/1.2/",
 			"AanleverService_V1_2");
+	
+	private static Properties keyProperties = new Properties();
+	private static Properties trustProperties = new Properties();
 
 	private AanleverServiceV12_AanleverServiceV12_Client() {
 	}
@@ -59,7 +64,9 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				SERVICE_NAME);
 		AanleverServiceV12 port = ss.getAanleverServiceV12();
 
-		SecureConnectionHelper.setupTLS(port);
+		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
+		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));	
+		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
 
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
@@ -107,7 +114,7 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				aanleverRequest.setBerichtsoort("Omzetbelasting");
 				aanleverRequest.setAanleverkenmerk("test");
 				IdentiteitType identiteitBelanghebbende = new org.techytax.ws.IdentiteitType();
-				identiteitBelanghebbende.setNummer("001000044B93");
+				identiteitBelanghebbende.setNummer("174006275B01");
 				identiteitBelanghebbende.setType("Fi");
 				aanleverRequest
 						.setIdentiteitBelanghebbende(identiteitBelanghebbende);
