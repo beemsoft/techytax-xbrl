@@ -310,10 +310,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<message-resources parameter="properties.messages_nl" />
 	<message-resources parameter="properties.messages_en" />
 	<message-resources parameter="properties.messages_en_US" />	
-	<message-resources parameter="properties.messages_el">
-	    <set-property property="escape" value="true"/>
-      	<set-property property="mode" value="JSTL"/>
-    </message-resources>
+	<message-resources parameter="properties.messages_el"/>
 	<message-resources parameter="properties.messages_es" />
 	<message-resources parameter="properties.messages_fr" />	
 	<message-resources parameter="properties.messages" />
