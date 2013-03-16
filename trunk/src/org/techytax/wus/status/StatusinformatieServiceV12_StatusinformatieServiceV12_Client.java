@@ -52,7 +52,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, SERVICE_NAME);
         StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();  
         
-        SecureConnectionHelper.setupTLS(port);
+//        SecureConnectionHelper.setupTLS(port);
         
 		org.apache.cxf.endpoint.Client client = ClientProxy.getClient(port);
 		org.apache.cxf.endpoint.Endpoint cxfEndpoint = client.getEndpoint();
