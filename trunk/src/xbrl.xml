@@ -29,11 +29,11 @@
             <bd-ob:InstallationDistanceSalesWithinTheEC decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:InstallationDistanceSalesWithinTheEC>
             <bd-alg:MessageReferenceSupplierVAT contextRef="Msg">OB-KTG00-BG</bd-alg:MessageReferenceSupplierVAT>
             <bd-alg:SoftwareSupplierCode contextRef="Msg">TECH</bd-alg:SoftwareSupplierCode>
-            <bd-ob:TaxedTurnoverSuppliesServicesGeneralTariff decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:TaxedTurnoverSuppliesServicesGeneralTariff>
-            <bd-ob:ValueAddedTaxOwed decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxOwed>
-            <bd-ob:ValueAddedTaxOwedToBePaidBack decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxOwedToBePaidBack>
+            <bd-ob:ValueAddedTaxOnInput decimals="INF" unitRef="u0" contextRef="Msg">40</bd-ob:ValueAddedTaxOnInput>            
+            <bd-ob:ValueAddedTaxOwed decimals="INF" unitRef="u0" contextRef="Msg">100</bd-ob:ValueAddedTaxOwed>
+            <bd-ob:ValueAddedTaxOwedToBePaidBack decimals="INF" unitRef="u0" contextRef="Msg">60</bd-ob:ValueAddedTaxOwedToBePaidBack>
             <bd-ob:ValueAddedTaxPrivateUse decimals="INF" unitRef="u0" contextRef="Msg">0</bd-ob:ValueAddedTaxPrivateUse>
-            <bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff decimals="INF" unitRef="u0" contextRef="Msg">2940</bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff>
+            <bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff decimals="INF" unitRef="u0" contextRef="Msg">100</bd-ob:ValueAddedTaxSuppliesServicesGeneralTariff>
             <bd-alg:VersionApplication contextRef="Msg">10</bd-alg:VersionApplication>
         </bd-ob-tuple:ValueAddedTaxDeclaration>
     </bd-ob-tuple:TaxData>
