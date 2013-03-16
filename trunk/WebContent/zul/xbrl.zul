@@ -82,7 +82,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 									<listcell
 										label="@load(item.statusomschrijving)" />
 									<listcell
-										label="@load(item.statusFoutcode)" />
+										label="@load(item.statusFoutcode.foutcode)" />
 									<listcell
 										label="@load(item.statusdetails)" />
 								</listitem>
@@ -128,7 +128,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 								<listcell
 									label="@load(item.statusomschrijving)" />
 								<listcell
-									label="@load(item.statusFoutcode)" />
+									label="@load(item.statusFoutcode.foutcode)" />
 								<listcell
 									label="@load(item.statusdetails)" />
 							</listitem>

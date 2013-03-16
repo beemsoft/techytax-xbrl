@@ -1,203 +1,284 @@
 <?page title="TechyTax"?>
 <zk xmlns:html="http://www.w3.org/1999/xhtml">
-<!--
-Copyright 2013 Hans Beemsterboer
+	<!--
+		Copyright 2013 Hans Beemsterboer
+		
+		This file is part of the TechyTax program.
+		
+		TechyTax is free software; you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation; either version 3 of the License, or
+		(at your option) any later version.
+		
+		TechyTax is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public License
+		along with TechyTax; if not, write to the Free Software
+		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	-->
+	<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+	<window self="@define(content)" title="Omzetbelasting"
+		border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
+		Bereken je omzetbelasting in vijf stappen.
 
-This file is part of the TechyTax program.
-
-TechyTax is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-
-TechyTax is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with TechyTax; if not, write to the Free Software
-Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
--->
-<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
-<window self="@define(content)" title="Omzetbelasting" border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
-	Bereken je omzetbelasting in vijf stappen.
-
-<hbox hflex="true">
-	<tabbox width="995px" height="565px">
-		<tabs>
-			<tab label="1: Transacties downloaden"/>
-			<tab label="2: Transacties selecteren"/>
-			<tab id="matchTab" label="3: Transacties matchen"/>
-			<tab id="manualTab" label="4: Handmatig transacties toevoegen"/>
-			<tab id="controleTab" label="5: btw overzicht"/>
-		</tabs>
-		<tabpanels>
-			<tabpanel>Download je transacties van je online bankieren pagina.
-				<vbox>
-					<toolbarbutton href="https://mijn.ing.nl/" target="other" image="/images/logo_ing.gif" />
-					<toolbarbutton href="https://www.abnamro.nl/nl/logon/" target="other" image="/images/logo_abn_amro.gif" />
-				</vbox>
-				<hbox width="500px">
-				Op dit moment ondersteunt TechyTax alleen transactie bestanden van de ING en ABN-AMRO. Zorg bij het downloaden van
-				het bestand dat de juiste periode wordt geselecteerd. Nadat je het bestand hebt gedownload, kun je verdergaan
-				naar het volgende tabblad.
-				Let op: Sla het .TAB bestand van ABN-AMRO op als .TXT bestand.
-				Tip: Maak een backup van de gedownloade bestanden.
-				</hbox>
-			</tabpanel>
-			<tabpanel>Hier kun je het gedownloade bestand met transacties selecteren.
-				<vbox>
-					<button id="uploadBtn" upload="true" image="/images/fileopen-256.png"/>
-				</vbox>
-				Hierna kun je de transacties bekijken en eventueel matchen in het volgende tabblad.
-				De transacties worden niet meteen ingeladen in TechyTax.
-				
-			</tabpanel>
-			<tabpanel apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">
-				<vbox>
-					<grid id="costGrid" hflex="true" mold="paging" pageSize="6">
-						<columns sizable="true">
-							<column label="Omschrijving" width="700px"/>
-							<column label="Datum" width="100px"/>
-							<column label="Bedrag" width="100px"/>
-							<column label="btw" width="100px"/>
-							<column label="type" width="200px"/>
-						</columns>
-						<template name="model">
-							<row value="${each}">
-								<label value="${each.description}" />
-								<label value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
-								<label value="${each.amount}" />
-								<label value="${each.vat}" />
-								<label value="${each.kostenSoortOmschrijving}" />
-							</row>
-						</template>
-					</grid>
-Prive matches hebben voorrang boven algemene matches	
-					<hbox>
-						
-						<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="340px" >
-							<listhead>
-								<listheader label="Description" width="300px"/>
-							</listhead>
-							<template name="model" var="costType">
-								<listitem>
-									<listcell label="@load(costType.omschrijving)" />
-								</listitem>
-							</template>
-						</listbox>
-						<vbox hflex="true">
-							<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="200px" width="250px" >
-								<listhead>
-									<listheader label="Private matches" width="300px"/>
-								</listhead>
-								<template name="model" var="privateMatch">
-									<listitem>
-										<listcell label="@load(privateMatch.matchText)" />
-									</listitem>
-								</template>
-							</listbox>
-							<toolbar>
-								<button label="New" onClick="@command('newMatch')" />
-								<button label="Save" onClick="@command('saveMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
-								<button label="Delete" onClick="@command('deleteMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
-							</toolbar>
-							<radiogroup id="vat" selectedItem="@bind(vm.selectedVatType)" />
-							<groupbox visible="@load(not empty vm.selectedPrivateMatch)" mold="3d" width="100%">
-								<grid>
-									<columns>
-										<column/>
-										<column/>
-									</columns>
-									<rows>
-										<row><label value="Match tekst"/><textbox value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')"/></row>
-									</rows>
-								</grid>
-								<grid visible="@load(vm.vatVisible)">
-									<columns>
-										<column/>
-										<column/>
-										<column/>
-									</columns>
-									<rows>
-										<row>
-							        		<radio id="vatNone" label="Geen" value="NONE" radiogroup="vat" />
-							                <radio id="vatLow" label="Laag" value="LOW" radiogroup="vat" />
-							                <radio id="vatHigh" label="Hoog" value="HIGH" radiogroup="vat" />
-    									</row>										
-									</rows>
-								</grid>								
-							</groupbox>													
+		<hbox hflex="true">
+			<tabbox width="995px" height="565px">
+				<tabs>
+					<tab label="1: Transacties downloaden" />
+					<tab label="2: Transacties selecteren" />
+					<tab id="matchTab" label="3: Transacties matchen" />
+					<tab id="manualTab"
+						label="4: Handmatig transacties toevoegen" />
+					<tab id="controleTab" label="5: btw overzicht" />
+				</tabs>
+				<tabpanels>
+					<tabpanel>
+						Download je transacties van je online bankieren
+						pagina.
+						<vbox>
+							<toolbarbutton href="https://mijn.ing.nl/"
+								target="other" image="/images/logo_ing.gif" />
+							<toolbarbutton
+								href="https://www.abnamro.nl/nl/logon/" target="other"
+								image="/images/logo_abn_amro.gif" />
 						</vbox>
-						<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="250px" >
-							<listhead>
-								<listheader label="Algemene matches" width="300px"/>
-							</listhead>
-							<template name="model" var="privateMatch">
-								<listitem>
-									<listcell label="@load(privateMatch.matchText)" />
-								</listitem>
-							</template>
-						</listbox>
-						<vbox>								
-							<button id="reloadBtn" image="/images/Button-Refresh-icon.png" tooltip="reload" />
-							<button id="importBtn" image="/images/Button-Add-icon.png" tooltip="import" />
-						</vbox>							
-					</hbox>
-				</vbox>		
-			</tabpanel>
-			<tabpanel>
-				<include src="cost-enter.zul"/>
-			</tabpanel>
-			<tabpanel>btw overzicht
-				<hbox>
-					<grid width="300px" hflex="true" >
-						<columns>
-							<column/>
-							<column/>
-						</columns>
-						<rows>
-							<row>btw uit: <label id="vatOut"/></row>
-							<row>btw in: <label id="vatIn"/></row>
-							<row>btw saldo: <label id="vatBalance"/></row>
-							<row>bruto omzet: <label id="turnoverGross"/></row>
-							<row>netto omzet: <label id="turnoverNet"/></row>
-						</rows>
-					</grid>
-					<toolbarbutton id="digipoortBtn" image="/images/Digipoort_w176.JPG" />
-				</hbox>
-				<vbox>
-					<grid id="vatGrid" hflex="true" mold="paging" pageSize="7">
-						<columns sizable="true">
-							<column label="Description" width="500px"/>
-							<column label="Datum" width="80px"/>
-							<column label="Bedrag" width="100px"/>
-							<column label="btw" width="100px"/>
-							<column label="type" width="200px"/>
-						</columns>
-						<template name="model">
-							<row value="${each}">
-								<label value="${each.description}" />
-								<label value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
-								<label value="${each.amount}" />
-								<label value="${each.vat}" />
-								<label value="${each.kostenSoortOmschrijving}" />
-							</row>
-						</template>
-					</grid>
-				</vbox>			
-			</tabpanel>
-		</tabpanels>
-	</tabbox>
-</hbox>
-<popup id="reload" width="300px">
-    <html><![CDATA[
-    	Transactie-bestand opnieuw inladen]]></html>
-</popup>
-<popup id="import" width="300px">
-    <html><![CDATA[
-	Transacties inladen in TechyTax]]></html>
-</popup>	
-</window>
+						<hbox width="500px">
+							Op dit moment ondersteunt TechyTax alleen
+							transactie bestanden van de ING en ABN-AMRO.
+							Zorg bij het downloaden van het bestand dat
+							de juiste periode wordt geselecteerd. Nadat
+							je het bestand hebt gedownload, kun je
+							verdergaan naar het volgende tabblad. Let
+							op: Sla het .TAB bestand van ABN-AMRO op als
+							.TXT bestand. Tip: Maak een backup van de
+							gedownloade bestanden.
+						</hbox>
+					</tabpanel>
+					<tabpanel>
+						Hier kun je het gedownloade bestand met
+						transacties selecteren.
+						<vbox>
+							<button id="uploadBtn" upload="true"
+								image="/images/fileopen-256.png" />
+						</vbox>
+						Hierna kun je de transacties bekijken en
+						eventueel matchen in het volgende tabblad. De
+						transacties worden niet meteen ingeladen in
+						TechyTax.
+
+					</tabpanel>
+					<tabpanel apply="org.zkoss.bind.BindComposer"
+						viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">
+						<vbox>
+							<grid id="costGrid" hflex="true"
+								mold="paging" pageSize="6">
+								<columns sizable="true">
+									<column label="Omschrijving"
+										width="700px" />
+									<column label="Datum" width="100px" />
+									<column label="Bedrag"
+										width="100px" />
+									<column label="btw" width="100px" />
+									<column label="type" width="200px" />
+								</columns>
+								<template name="model">
+									<row value="${each}">
+										<label
+											value="${each.description}" />
+										<label
+											value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
+										<label value="${each.amount}" />
+										<label value="${each.vat}" />
+										<label
+											value="${each.kostenSoortOmschrijving}" />
+									</row>
+								</template>
+							</grid>
+							Prive matches hebben voorrang boven algemene
+							matches
+							<hbox>
+
+								<listbox id="costTypeList"
+									model="@load(vm.costTypeList)"
+									selectedItem="@bind(vm.selectedCostType)" height="200px"
+									width="340px">
+									<listhead>
+										<listheader label="Description"
+											width="300px" />
+									</listhead>
+									<template name="model"
+										var="costType">
+										<listitem>
+											<listcell
+												label="@load(costType.omschrijving)" />
+										</listitem>
+									</template>
+								</listbox>
+								<vbox hflex="true">
+									<listbox id="privateMatchesList"
+										model="@load(vm.privateMatchesList)"
+										selectedItem="@bind(vm.selectedPrivateMatch)" height="200px"
+										width="250px">
+										<listhead>
+											<listheader
+												label="Private matches" width="300px" />
+										</listhead>
+										<template name="model"
+											var="privateMatch">
+											<listitem>
+												<listcell
+													label="@load(privateMatch.matchText)" />
+											</listitem>
+										</template>
+									</listbox>
+									<toolbar>
+										<button label="New"
+											onClick="@command('newMatch')" />
+										<button label="Save"
+											onClick="@command('saveMatch')"
+											disabled="@load(empty vm.selectedPrivateMatch)" />
+										<button label="Delete"
+											onClick="@command('deleteMatch')"
+											disabled="@load(empty vm.selectedPrivateMatch)" />
+									</toolbar>
+									<radiogroup id="vat"
+										selectedItem="@bind(vm.selectedVatType)" />
+									<groupbox
+										visible="@load(not empty vm.selectedPrivateMatch)" mold="3d"
+										width="100%">
+										<grid>
+											<columns>
+												<column />
+												<column />
+											</columns>
+											<rows>
+												<row>
+													<label
+														value="Match tekst" />
+													<textbox
+														value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')" />
+												</row>
+											</rows>
+										</grid>
+										<grid
+											visible="@load(vm.vatVisible)">
+											<columns>
+												<column />
+												<column />
+												<column />
+											</columns>
+											<rows>
+												<row>
+													<radio id="vatNone"
+														label="Geen" value="NONE" radiogroup="vat" />
+													<radio id="vatLow"
+														label="Laag" value="LOW" radiogroup="vat" />
+													<radio id="vatHigh"
+														label="Hoog" value="HIGH" radiogroup="vat" />
+												</row>
+											</rows>
+										</grid>
+									</groupbox>
+								</vbox>
+								<listbox id="publicMatchesList"
+									model="@load(vm.publicMatchesList)" height="200px"
+									width="250px">
+									<listhead>
+										<listheader
+											label="Algemene matches" width="300px" />
+									</listhead>
+									<template name="model"
+										var="privateMatch">
+										<listitem>
+											<listcell
+												label="@load(privateMatch.matchText)" />
+										</listitem>
+									</template>
+								</listbox>
+								<vbox>
+									<button id="reloadBtn"
+										image="/images/Button-Refresh-icon.png" tooltip="reload" />
+									<button id="importBtn"
+										image="/images/Button-Add-icon.png" tooltip="import" />
+								</vbox>
+							</hbox>
+						</vbox>
+					</tabpanel>
+					<tabpanel>
+						<include src="cost-enter.zul" />
+					</tabpanel>
+					<tabpanel>
+						btw overzicht
+						<hbox>
+							<grid width="300px" hflex="true">
+								<columns>
+									<column />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										btw uit:
+										<label id="vatOut" />
+									</row>
+									<row>
+										btw in:
+										<label id="vatIn" />
+									</row>
+									<row>
+										btw saldo:
+										<label id="vatBalance" />
+									</row>
+									<row>
+										bruto omzet:
+										<label id="turnoverGross" />
+									</row>
+									<row>
+										netto omzet:
+										<label id="turnoverNet" />
+									</row>
+								</rows>
+							</grid>
+							<toolbarbutton id="digipoortBtn"
+								image="/images/Digipoort_w176.JPG" />
+						</hbox>
+						<vbox>
+							<grid id="vatGrid" hflex="true"
+								mold="paging" pageSize="7">
+								<columns sizable="true">
+									<column label="Description"
+										width="500px" />
+									<column label="Datum" width="80px" />
+									<column label="Bedrag"
+										width="100px" />
+									<column label="btw" width="100px" />
+									<column label="type" width="200px" />
+								</columns>
+								<template name="model">
+									<row value="${each}">
+										<label
+											value="${each.description}" />
+										<label
+											value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
+										<label value="${each.amount}" />
+										<label value="${each.vat}" />
+										<label
+											value="${each.kostenSoortOmschrijving}" />
+									</row>
+								</template>
+							</grid>
+						</vbox>
+					</tabpanel>
+				</tabpanels>
+			</tabbox>
+		</hbox>
+		<popup id="reload" width="300px">
+			<html><![CDATA[ Transactie-bestand opnieuw inladen]]></html>
+		</popup>
+		<popup id="import" width="300px">
+			<html><![CDATA[ Transacties inladen in TechyTax]]></html>
+		</popup>
+	</window>
 </zk>
