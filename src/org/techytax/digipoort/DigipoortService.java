@@ -25,11 +25,13 @@ import java.security.GeneralSecurityException;
 
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.ws.AanleverResponse;
+import org.techytax.ws.AanleverServiceFault;
 import org.techytax.ws.GetBerichtsoortenResponse;
 import org.techytax.ws.GetNieuweStatussenProcesResponse;
 import org.techytax.ws.GetNieuweStatussenResponse;
 import org.techytax.ws.GetProcessenResponse;
 import org.techytax.ws.GetStatussenProcesResponse;
+import org.techytax.wus.status.StatusinformatieServiceFault;
 
 /**
  * Voor het (geautomatiseerd, bijv. via regelmatige „polling‟) ophalen van
@@ -68,8 +70,9 @@ public interface DigipoortService {
 	 * @throws GeneralSecurityException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws AanleverServiceFault 
 	 */
-	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException;
+	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault;
 
 	/**
 	 * Geeft alle statussen voor de belanghebbende die nog niet eerder bij dit
@@ -112,9 +115,10 @@ public interface DigipoortService {
 	 * @throws GeneralSecurityException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws StatusinformatieServiceFault 
 	 */
 	public GetProcessenResponse getProcessen(
-			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException;
+			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
 
 	/**
 	 * Geeft alle statussen die bij een bepaald verwerkingsproces horen. Er kan

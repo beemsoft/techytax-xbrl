@@ -56,6 +56,12 @@ import org.xbrl._2006.xbrldi.ExplicitMember;
 
 public class XbrlHelper {
 
+	private static final String TEST_FISCAL_NUMBER = "001000045B93";
+
+	public static String getTestFiscalNumber() {
+		return TEST_FISCAL_NUMBER;
+	}
+	
 	public static String createXbrlInstance(VatDeclarationData vatDeclarationData) {
 		ObjectFactory xbrlObjectFactory = null;
 		JAXBContext jc = null;
@@ -213,11 +219,15 @@ public class XbrlHelper {
 	}	
 	
 	public static void main(String[] args) {
+		createTestXbrlInstance();
+	}
+
+	public static String createTestXbrlInstance() {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		Periode period = DateHelper.getLatestVatPeriod();
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
-		vatDeclarationData.setFiscalNumber("001000044B93");
+		vatDeclarationData.setFiscalNumber(TEST_FISCAL_NUMBER);
 		vatDeclarationData.setName("Test");
 		vatDeclarationData.setPhoneNumber("12345678");
 		Balans balans = new Balans();
@@ -225,6 +235,6 @@ public class XbrlHelper {
 		balans.setCorrection(BigDecimal.valueOf(5));
 		balans.setTotaleBaten(BigDecimal.valueOf(40));
 		addBalanceData(vatDeclarationData, balans);
-		createXbrlInstance(vatDeclarationData);
+		return createXbrlInstance(vatDeclarationData);
 	}
 }

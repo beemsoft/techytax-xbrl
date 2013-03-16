@@ -27,8 +27,9 @@ import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.security.AuthenticationException;
 import org.techytax.util.DateHelper;
+import org.techytax.ws.AanleverResponse;
+import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
-import org.xbrl._2003.instance.Xbrl;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -45,6 +46,8 @@ import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
 
@@ -76,9 +79,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Tab controleTab;
 
 	private Media media = null;
-	
+
 	private Balans balans = null;
-	
+
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		System.out.println(" Testing upload: " + event.getMedia().getName());
@@ -174,17 +177,18 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 		createVatOverview();
 	}
-	
+
 	@Listen("onClick=#controleTab")
 	public void displayVatOverview(Event event) throws Exception {
 		createVatOverview();
-	}	
+	}
 
 	private void createVatOverview() throws Exception {
 		BoekDao boekDao = new BoekDao();
 		User user = UserCredentialManager.getUser();
 		Periode vatPeriod = DateHelper.getLatestVatPeriod();
-		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
+		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()),
+				"btwBalans", Long.toString(user.getId()));
 		for (Cost cost : vatCosts) {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
@@ -200,9 +204,30 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		costModel = new ListModelList<Cost>();
 		costGrid.setModel(costModel);
 	}
-	
+
 	@Listen("onClick=#digipoortBtn")
 	public void aanleveren() throws FileNotFoundException, IOException, GeneralSecurityException {
+		Messagebox.show("Weet u zeker dat u wilt aanleveren?", "Vraag", new Messagebox.Button[] { Messagebox.Button.OK, Messagebox.Button.CANCEL },
+				Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+					public void onEvent(ClickEvent e) throws FileNotFoundException, IOException, GeneralSecurityException {
+						switch (e.getButton()) {
+						case OK:
+							try {
+								AanleverResponse aanleverResponse = doAanleveren();
+								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, 0,
+										Messagebox.INFORMATION);
+							} catch (AanleverServiceFault asf) {
+								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
+							}
+						case CANCEL: // Cancel is clicked
+						default: // if the Close button is clicked,
+									// e.getButton() returns null
+						}
+					}
+				});
+	}
+
+	private AanleverResponse doAanleveren() throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
 		User user = UserCredentialManager.getUser();
 		DigipoortService digipoortService = new DigipoortServiceImpl();
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
@@ -210,7 +235,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatDeclarationData.setName(user.getFullName());
 		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		digipoortService.aanleveren(vatDeclarationData);
+		return digipoortService.aanleveren(vatDeclarationData);
 	}
 
 	@Override

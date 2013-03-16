@@ -1,13 +1,18 @@
 package org.techytax.zk.xbrl;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
+import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.ArrayOfBerichtsoortResultaat;
 import org.techytax.ws.ArrayOfProcesResultaat;
@@ -19,9 +24,11 @@ import org.techytax.ws.GetProcessenResponse;
 import org.techytax.ws.GetStatussenProcesResponse;
 import org.techytax.ws.ProcesResultaat;
 import org.techytax.ws.StatusResultaat;
+import org.techytax.wus.status.StatusinformatieServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zul.Messagebox;
 
 public class XbrlVM {
 
@@ -33,6 +40,16 @@ public class XbrlVM {
 	private List<StatusResultaat> nieuweStatussen;
 	private List<StatusResultaat> nieuweStatussenProces;
 	private List<StatusResultaat> statussenProces;
+	private boolean isTestEnvironment = false;
+	
+	public XbrlVM() throws IOException {
+		String digipoort = PropsFactory.getProperty("digipoort");
+		if (digipoort.equals("prod")) {
+			isTestEnvironment = false;
+		} else {
+			isTestEnvironment = true;
+		}		
+	}
 
 	public void setStatussenProces(List<StatusResultaat> statussenProces) {
 		this.statussenProces = statussenProces;
@@ -64,7 +81,7 @@ public class XbrlVM {
 	public void berichtsoort() {
 		try {
 			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+			setFiscalNumber(vatDeclarationData);
 			GetBerichtsoortenResponse response = digipoortService.getBerichtsoorten(vatDeclarationData);
 			ArrayOfBerichtsoortResultaat resultaat = response.getGetBerichtsoortenReturn();
 			berichtsoorten = resultaat.getBerichtsoort();
@@ -73,17 +90,26 @@ public class XbrlVM {
 		}
 	}
 
+	private void setFiscalNumber(VatDeclarationData vatDeclarationData) {
+		if (!isTestEnvironment) {
+			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+		} else {
+			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+		}
+	}
+
 	@Command
 	@NotifyChange("processen")
-	public void processen() {
+	public void processen() throws FileNotFoundException, IOException, GeneralSecurityException {
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		setFiscalNumber(vatDeclarationData);
+		GetProcessenResponse response;
 		try {
-			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-			GetProcessenResponse response = digipoortService.getProcessen(vatDeclarationData);
+			response = digipoortService.getProcessen(vatDeclarationData);
 			ArrayOfProcesResultaat resultaat = response.getGetProcessenReturn();
 			processen = resultaat.getProcesResultaat();
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (StatusinformatieServiceFault e) {
+			Messagebox.show(e.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 		}
 	}
 
@@ -92,9 +118,8 @@ public class XbrlVM {
 	public void nieuweStatussen() {
 		try {
 			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-			vatDeclarationData.setStartDate(periode.getBeginDatum());
-			vatDeclarationData.setEndDate(periode.getEindDatum());
+			setFiscalNumber(vatDeclarationData);
+			setDates(vatDeclarationData);
 			GetNieuweStatussenResponse response = digipoortService.getNieuweStatussen(vatDeclarationData);
 			ArrayOfStatusResultaat resultaat = response.getGetNieuweStatussenReturn();
 			nieuweStatussen = resultaat.getStatusResultaat();
@@ -103,13 +128,17 @@ public class XbrlVM {
 		}
 	}
 
+	private void setDates(VatDeclarationData vatDeclarationData) {
+		vatDeclarationData.setStartDate(periode.getBeginDatum());
+		vatDeclarationData.setEndDate(periode.getEindDatum());
+	}
+
 	@Command
 	public void nieuweStatussenProces() {
 		try {
 			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-			vatDeclarationData.setStartDate(periode.getBeginDatum());
-			vatDeclarationData.setEndDate(periode.getEindDatum());
+			setFiscalNumber(vatDeclarationData);
+			setDates(vatDeclarationData);
 			GetNieuweStatussenProcesResponse response = digipoortService.getNieuweStatussenProces(vatDeclarationData, selectedProces.getKenmerk());
 			ArrayOfStatusResultaat resultaat = response.getGetNieuweStatussenProcesReturn();
 			nieuweStatussenProces = resultaat.getStatusResultaat();
@@ -122,9 +151,8 @@ public class XbrlVM {
 		if (selectedProces != null) {
 			try {
 				VatDeclarationData vatDeclarationData = new VatDeclarationData();
-				vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-				vatDeclarationData.setStartDate(periode.getBeginDatum());
-				vatDeclarationData.setEndDate(periode.getEindDatum());
+				setFiscalNumber(vatDeclarationData);
+				setDates(vatDeclarationData);
 				GetStatussenProcesResponse response = digipoortService.getStatussenProces(vatDeclarationData, selectedProces.getKenmerk());
 				ArrayOfStatusResultaat resultaat = response.getGetStatussenProcesReturn();
 				statussenProces = resultaat.getStatusResultaat();

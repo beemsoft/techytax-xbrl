@@ -21,7 +21,6 @@ package org.techytax.digipoort;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
@@ -37,6 +36,7 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.techytax.domain.Periode;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.props.PropsFactory;
 import org.techytax.security.ClientPasswordCallback;
@@ -90,27 +90,29 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException {
+	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
 		AanleverServiceV12 port = setupWebServicePort();
 		System.out.println("Invoking aanleveren...");
 		AanleverRequest aanleverRequest = null;
+		AanleverResponse aanleverResponse = null;
 		try {
 			aanleverRequest = createAanleverRequest(vatDeclarationData);
-			AanleverResponse _aanleveren__return = port.aanleveren(aanleverRequest);
-			System.out.println("aanleveren.result=" + _aanleveren__return);
-			System.out.println("Aangeleverd=" + _aanleveren__return.getTijdstempelAangeleverd());
-			System.out.println("Statuscode=" + _aanleveren__return.getStatuscode());
-			System.out.println("Kenmerk=" + _aanleveren__return.getKenmerk());
+			aanleverResponse = port.aanleveren(aanleverRequest);
+			System.out.println("aanleveren.result=" + aanleverResponse);
+			System.out.println("Aangeleverd=" + aanleverResponse.getTijdstempelAangeleverd());
+			System.out.println("Statuscode=" + aanleverResponse.getStatuscode());
+			System.out.println("Kenmerk=" + aanleverResponse.getKenmerk());
 		} catch (AanleverServiceFault e) {
 			System.out.println("Expected exception: AanleverServiceFault has occurred.");
 			System.out.println("Foutcode: " + e.getFaultInfo().getFoutcode());
 			System.out.println("Foutbeschrijving: " + e.getFaultInfo().getFoutbeschrijving());
+			throw e;
 		} catch (SOAPFaultException sfe) {
 			System.out.println("SOAP error: " + sfe.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return aanleverResponse;
 	}
 	
 	private AanleverServiceV12 setupWebServicePort() throws FileNotFoundException, IOException, GeneralSecurityException {
@@ -198,18 +200,25 @@ public class DigipoortServiceImpl implements DigipoortService {
 		cxfEndpoint.getOutInterceptors().add(new DynamicWsaSignaturePartsInterceptor());
 	}
 
-	private AanleverRequest createAanleverRequest(VatDeclarationData vatDeclarationData) throws UnsupportedEncodingException {
-		AanleverRequest aanleverRequest;
-		aanleverRequest = new AanleverRequest();
+	private AanleverRequest createAanleverRequest(VatDeclarationData vatDeclarationData) throws IOException {
+		AanleverRequest aanleverRequest = new AanleverRequest();
 		aanleverRequest.setAutorisatieAdres(AUTORISATIE_ADRES);
 		aanleverRequest.setBerichtsoort(OMZETBELASTING);
-		aanleverRequest.setAanleverkenmerk("test");
-		addIdentiteit(vatDeclarationData, aanleverRequest);
+		Periode period = DateHelper.getLatestVatPeriod();
+		vatDeclarationData.setStartDate(period.getBeginDatum());
+		vatDeclarationData.setEndDate(period.getEindDatum());
 		aanleverRequest.setRolBelanghebbende("Bedrijf");
 		BerichtInhoudType berichtInhoud = new BerichtInhoudType();
 		berichtInhoud.setMimeType("application/xml");
 		berichtInhoud.setBestandsnaam("Omzetbelasting.xbrl");
-		berichtInhoud.setInhoud(XbrlHelper.createXbrlInstance(vatDeclarationData).replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));
+		String digipoort = PropsFactory.getProperty("digipoort");
+		if (digipoort.equals("prod")) {
+			berichtInhoud.setInhoud(XbrlHelper.createXbrlInstance(vatDeclarationData).replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));
+		} else {
+			berichtInhoud.setInhoud(XbrlHelper.createTestXbrlInstance().replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));
+			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+		}
+		addIdentiteit(vatDeclarationData, aanleverRequest);
 		aanleverRequest.setBerichtInhoud(berichtInhoud);
 		return aanleverRequest;
 	}
@@ -262,7 +271,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	@Override
 	public GetProcessenResponse getProcessen(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException,
-			GeneralSecurityException {
+			GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
 			GetProcessenRequest request = objectFactory.createGetProcessenRequest();
@@ -276,8 +285,8 @@ public class DigipoortServiceImpl implements DigipoortService {
 		} catch (StatusinformatieServiceFault e) {
 			System.out.println("Expected exception: StatusinformatieServiceFault has occurred.");
 			System.out.println(e.toString());
+			throw e;
 		}
-		return null;
 	}
 
 	@Override
