@@ -5,11 +5,12 @@
     <html><![CDATA[
  <body>
  <h2>Release Notes TechyTax</h2>
-	<h4>1.11 (upcoming)</h4>
+	<h4>1.11 (2013-03-16)</h4>
 <p>
 Changes:
 </p>
 <ul>
+<li>Added XBRL functionality for sending VAT declaration to Dutch Tax Web Service 'Digipoort'</li>
 <li>Migration from Struts to ZK framework.</li>
 <li>Added RSS feed for Dutch tax info.</li>
 <li>Added RSS feed for TechyTax forum.</li>
