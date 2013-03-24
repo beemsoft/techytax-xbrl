@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -17,33 +17,24 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.domain;
+package org.techytax.helper;
 
-import java.math.BigDecimal;
+import org.techytax.dao.BookValueDao;
+import org.techytax.domain.BalanceType;
+import org.techytax.domain.BookValue;
+import org.techytax.domain.KeyYear;
 
-public class Aftrekpost implements Comparable<Aftrekpost> {
-	private BigDecimal aftrekbaarBedrag;
+public class BookValueHelper {
 
-	private long kostenSoortId;
+	private static BookValueDao boekwaardeDao = new BookValueDao();
 	
-	public BigDecimal getAftrekbaarBedrag() {
-		return aftrekbaarBedrag;
-	}
-
-	public long getKostenSoortId() {
-		return kostenSoortId;
-	}
-
-	public void setAftrekbaarBedrag(BigDecimal aftrekbaarBedrag) {
-		this.aftrekbaarBedrag = aftrekbaarBedrag;
-	}
-
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
-	}
-
-	public int compareTo(Aftrekpost o) {
-		return (int) (this.kostenSoortId - o.kostenSoortId);
-	}
-
+	public static BookValue getCurrentBookValue(BalanceType balanceType, KeyYear keyYear) throws Exception {
+		BookValue bookValue = new BookValue();
+		bookValue.setJaar(keyYear.getYear());
+		bookValue.setBalanceType(balanceType);
+		bookValue.setUserId(keyYear.getUserId());
+		bookValue = boekwaardeDao.getBookValueThisYear(bookValue);
+		return bookValue;
+	}	
+	
 }

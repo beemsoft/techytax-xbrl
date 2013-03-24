@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <sqlMap namespace="Fiscaal">
 	<typeAlias alias="activum" type="org.techytax.domain.Activum" />
 	<typeAlias alias="passiva" type="org.techytax.domain.Passivum" />	
-	<typeAlias alias="aftrekpost" type="org.techytax.domain.Aftrekpost" />
+	<typeAlias alias="deductableCostGroup" type="org.techytax.domain.DeductableCostGroup" />
 	<typeAlias alias="cost" type="org.techytax.domain.Cost" />	
 	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
 	<parameterMap id="periodeMap" class="java.util.Map">
@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<parameter property="userId" javaType="string" />
 	</parameterMap>
 	<select id="getDeductableCostList" parameterMap="periodeMap"
-		resultClass="aftrekpost">
+		resultClass="deductableCostGroup">
 		select k.bedrag as aftrekbaarBedrag, ks.id as kostenSoortId 
 		from
 		kosten as k, kostensoort as ks 
@@ -48,7 +48,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	<select id="getActivaLijst" parameterClass="keyYear"
 		resultClass="activum">
-		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde, kosten.id as costId 
 		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
 		where
 		balans.balanssoort_id = balanssoort.id and 
@@ -64,10 +64,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		
 		union
 		
-		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde 
+		select balanssoort.omschrijving, kosten.bedrag, kosten.btw, boekwaarde.boekjaar, boekwaarde.saldo, restwaarde.restwaarde, kosten.id as costId
 		from balans, activa, kosten, balanssoort, boekwaarde, restwaarde 
-		where balans.balanssoort_id =
-		balanssoort.id and 
+		where balans.balanssoort_id = balanssoort.id and 
 		kosten.id = activa.kost_id and
 		activa.balans_id = balans.id and 
 		boekwaarde.balans_id = balans.id and 
@@ -80,12 +79,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		
 		union 
 		 
-		select balanssoort.omschrijving, NULL, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL 
+		select balanssoort.omschrijving, NULL, NULL, boekwaarde.boekjaar,	boekwaarde.saldo, NULL, NULL
 		from balans, balanssoort, boekwaarde 
 		where
 		boekwaarde.balans_id = balans.id and 
 		(boekjaar=#year# or boekjaar=#year#-1) and 
-		balanssoort.id in (3,6,9) and
+		balanssoort.id in (3,6,7,9) and
 		balans.balanssoort_id = balanssoort.id and 
 		boekwaarde.user_id = #userId#
 		
@@ -129,5 +128,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and datum > #endDate# 
 		and balans_id=#balanceType# 
 		and kosten.user_id=#userId#;
-	</select>				
+	</select>
 </sqlMap>

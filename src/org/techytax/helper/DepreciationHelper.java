@@ -31,7 +31,7 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KostConstanten;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.RemainingValue;
 import org.techytax.util.DateHelper;
 
@@ -64,9 +64,9 @@ public class DepreciationHelper {
 			Cost afschrijving = new Cost();
 			afschrijving.setVat(new BigDecimal(0));
 			if (isCar) {
-				afschrijving.setCostTypeId(KostConstanten.AFSCHRIJVING_AUTO);
+				afschrijving.setCostTypeId(CostConstants.AFSCHRIJVING_AUTO);
 			} else {
-				afschrijving.setCostTypeId(KostConstanten.AFSCHRIJVING);
+				afschrijving.setCostTypeId(CostConstants.DEPRECIATION_MACHINE);
 			}
 			afschrijving.setKostenSoortOmschrijving("costtype.depreciation");
 			afschrijving.setDate(cal.getTime());

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,7 +19,7 @@
  */
 package org.techytax.domain;
 
-public interface KostConstanten {
+public interface CostConstants {
 
 	public static final int UNDETERMINED = 0;
 	public static final int INKOMST_DEZE_REKENING = 1;
@@ -32,7 +32,7 @@ public interface KostConstanten {
 	public static final int REISKOST = 9;
 	public static final int TO_SAVINGS_ACCOUNT = 10;	
 	public static final int OMZET_BELASTING = 12;
-	public static final int ZAKELIJK_ETENTJE = 13;
+	public static final int BUSINESS_FOOD = 13;
 	public static final int AUTO_VAN_DE_ZAAK = 14;
 	public static final int FROM_SAVINGS_ACCOUNT = 15;
 	public static final int TO_PRIVATE_ACCOUNT = 17;
@@ -41,7 +41,7 @@ public interface KostConstanten {
 	public static final int BUSINESS_FOOD_OTHER_ACCOUNT = 20;	
 	public static final int AFSCHRIJVING_AUTO = 23;
 	public static final int FISCALE_BIJTELLING_AUTO = 24;
-	public static final int AFSCHRIJVING = 25;
+	public static final int DEPRECIATION_MACHINE = 25;
 	public static final int ADVERTENTIE = 27;
 	public static final int ADVERTENTIE_ZONDER_BTW = 28;
 	public static final int INKOMSTEN_BELASTING = 29;
@@ -53,6 +53,9 @@ public interface KostConstanten {
 	public static final int INVOICE_SENT = 39;
 	public static final int REPURCHASES = 40;
 	public static final int SETTLEMENT = 41;
+	public static final int SETTLEMENT_INTEREST = 42;
+	public static final int DEPRECIATION_SETTLEMENT = 43;
+	public static final int SETTLEMENT_OTHER_ACCOUNT = 44;	
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009

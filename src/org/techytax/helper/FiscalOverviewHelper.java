@@ -31,15 +31,14 @@ import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
-import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Balans;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
+import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyYear;
-import org.techytax.domain.KostConstanten;
-import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Passivum;
 import org.techytax.domain.Periode;
 import org.techytax.domain.PrepaidTax;
@@ -68,13 +67,12 @@ public class FiscalOverviewHelper {
 		int currentBookYear = DateHelper.getYear(new Date()) - 1;
 
 		Balans btwBalans = BalanceCalculator.calculateBtwBalance(costList, false);
-
-		List<Aftrekpost> deductableCosts = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
+		List<DeductableCostGroup> deductableCosts = boekDao.getDeductableCosts(beginDatum, eindDatum, Long.toString(userId));
 		overview.setJaar(bookYear);
 
 		handleProfitAndLoss(beginDatum, eindDatum, userId, bookYear, overview, privatWithdrawal, btwBalans, deductableCosts);
 
-		List<Activum> activaLijst = handleActiva(beginDatum, eindDatum, userId, locale, props, overview, bookYear, currentBookYear, deductableCosts);
+		List<Activum> activaLijst = ActivaHelper.handleActiva(beginDatum, eindDatum, userId, locale, props, overview, bookYear, currentBookYear, deductableCosts);
 
 		List<Passivum> passivaLijst = handlePassiva(userId, locale, overview, bookYear, currentBookYear, activaLijst);
 
@@ -90,7 +88,7 @@ public class FiscalOverviewHelper {
 	}
 
 	private static void handleProfitAndLoss(String beginDatum, String eindDatum, long userId, int bookYear, FiscalOverview overview,
-			PrivatWithdrawal privatWithdrawal, Balans btwBalans, List<Aftrekpost> deductableCosts) throws Exception {
+			PrivatWithdrawal privatWithdrawal, Balans btwBalans, List<DeductableCostGroup> deductableCosts) throws Exception {
 		handleTurnOver(beginDatum, eindDatum, userId, overview, btwBalans);
 
 		handleRepurchase(overview);
@@ -116,9 +114,9 @@ public class FiscalOverviewHelper {
 	}
 
 	private static void handleFiscalPension(FiscalOverview overview) {
-		int maximaleFor = (int) (overview.getWinst() * KostConstanten.FOR_PERCENTAGE);
-		if (maximaleFor > KostConstanten.MAXIMALE_FOR) {
-			maximaleFor = KostConstanten.MAXIMALE_FOR;
+		int maximaleFor = (int) (overview.getWinst() * CostConstants.FOR_PERCENTAGE);
+		if (maximaleFor > CostConstants.MAXIMALE_FOR) {
+			maximaleFor = CostConstants.MAXIMALE_FOR;
 		}
 		if (maximaleFor < 0) {
 			maximaleFor = 0;
@@ -235,8 +233,7 @@ public class FiscalOverviewHelper {
 		return passivaLijst;
 	}
 
-	private static BigDecimal handlePrivateDeposits(String beginDatum, String eindDatum, long userId, FiscalOverview overview)
-			throws Exception {
+	private static BigDecimal handlePrivateDeposits(String beginDatum, String eindDatum, long userId, FiscalOverview overview) throws Exception {
 		BigDecimal privateDeposit = boekDao.getCostsWithPrivateMoney(beginDatum, eindDatum, Long.toString(userId));
 		overview.setPrivateDeposit(privateDeposit.toBigInteger());
 		return privateDeposit;
@@ -263,217 +260,30 @@ public class FiscalOverviewHelper {
 		overview.setInterestFromBusinessSavings(interest);
 	}
 
-	private static void handleDepreciations(FiscalOverview overview, List<Aftrekpost> deductableCosts) {
-		BigDecimal depreciationOther = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
-		if (depreciationOther != null) {
-			overview.setAfschrijvingOverig(BalanceCalculator.getOverigeAfschrijvingen(deductableCosts).intValue());
+	private static void handleDepreciations(FiscalOverview overview, List<DeductableCostGroup> deductableCosts) {
+		BigDecimal depreciationMachines = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
+		if (depreciationMachines != null) {
+			overview.setAfschrijvingOverig(depreciationMachines.intValue());
+		}
+		BigDecimal depreciationSettlement = BalanceCalculator.getDepreciationSettlement(deductableCosts);
+		if (depreciationSettlement != null) {
+			overview.setSettlementDepreciation(depreciationSettlement.intValue());
 		}
 		overview.setAfschrijvingTotaal(overview.getAfschrijvingAuto() - overview.getAfschrijvingAutoCorrectie() + overview.getAfschrijvingOverig()
-				- overview.getAfschrijvingOverigCorrectie());
+				- overview.getAfschrijvingOverigCorrectie() + overview.getSettlementDepreciation());
 	}
 
-	private static void handleCosts(FiscalOverview overview, List<Aftrekpost> deductableCosts) {
+	private static void handleCosts(FiscalOverview overview, List<DeductableCostGroup> deductableCosts) {
 		overview.setKostenOverigTransport(BalanceCalculator.getReiskosten(deductableCosts).intValue());
-		overview.setKostenOverig(BalanceCalculator.getEtenskosten(deductableCosts).add(BalanceCalculator.getAlgemeneKosten(deductableCosts))
-				.intValue());
+		overview.setKostenOverig(BalanceCalculator.getFoodCosts(deductableCosts)
+				.add(BalanceCalculator.getAlgemeneKosten(deductableCosts)).intValue());
+		overview.setSettlementCosts(BalanceCalculator.getSettlementCosts(deductableCosts).intValue());
 	}
 
-	private static List<Activum> handleActiva(String beginDatum, String eindDatum, long userId, Locale locale, Properties props,
-			FiscalOverview overview, int bookYear, int currentBookYear, List<Aftrekpost> deductableCosts) throws Exception {
-		Liquiditeit liquiditeit;
-		// Create/update activa
-		BookValue boekwaarde = null;
-		if (bookYear == currentBookYear) {
-
-			// Current assets
-			KeyYear keyYear = new KeyYear(userId, bookYear);
-			boekwaarde = getCurrentBookValue(BalanceType.CURRENT_ASSETS, keyYear);
-			if (boekwaarde == null) {
-				String startDate = props.getProperty("start.date");
-				List<Cost> rekeningLijst = boekDao.getKostLijst(startDate, eindDatum, "rekeningBalans", Long.toString(userId));
-				liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
-
-				BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
-				saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
-				boekwaarde = new BookValue();
-				boekwaarde.setJaar(bookYear);
-				boekwaarde.setBalanceType(BalanceType.CURRENT_ASSETS);
-				boekwaarde.setSaldo(saldo);
-				boekwaarde.setUserId(userId);
-				boekwaardeDao.insertBookValue(boekwaarde);
-			} else {
-				BookValue vorigeBoekwaarde = boekwaardeDao.getPreviousBookValue(boekwaarde);
-				BigInteger saldo = new BigInteger("0");
-				if (vorigeBoekwaarde != null) {
-					saldo = vorigeBoekwaarde.getSaldo();
-				}
-				List<Cost> rekeningLijst = boekDao.getKostLijst(beginDatum, eindDatum, "rekeningBalans", Long.toString(userId));
-				liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
-				saldo = saldo.add(liquiditeit.getRekeningBalans().toBigInteger());
-				saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
-				boekwaarde.setSaldo(saldo);
-				boekwaardeDao.updateBookValue(boekwaarde);
-			}
-
-			// Machinery
-			BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
-			totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
-
-			BookValue activumValue = new BookValue();
-			activumValue.setJaar(bookYear);
-			activumValue.setBalanceType(BalanceType.MACHINERY);
-			activumValue.setUserId(userId);
-
-			BookValue previousBookValue = boekwaardeDao.getPreviousBookValue(activumValue);
-			BookValue currentBookValue = activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
-
-			if (activumValue == null) {
-				throw new RuntimeException("Add machinery activa");
-			}
-
-			Activum activum = new Activum();
-			activum.setUserId(userId);
-			activum.setBalanceType(BalanceType.MACHINERY);
-			activum.setEndDate(beginDatum);
-			BigInteger totalCost = boekDao.getTotalCostForActivumThisYear(activum);
-
-			if (previousBookValue != null) {
-				if (currentBookValue == null) {
-					previousBookValue.setId(0);
-					previousBookValue.setSaldo(previousBookValue.getSaldo().add(totalCost).subtract(totaalAfschrijvingenOverig.toBigInteger()));
-					boekwaardeDao.insertBookValue(activumValue);
-				} else {
-					activumValue.setSaldo(previousBookValue.getSaldo().add(totalCost).subtract(totaalAfschrijvingenOverig.toBigInteger()));
-					boekwaardeDao.updateBookValue(activumValue);
-				}
-
-			} else {
-				if (totalCost.compareTo(new BigInteger("0")) == 1) {
-					if (currentBookValue == null) {
-						activumValue = new BookValue();
-						activumValue.setBalanceType(BalanceType.MACHINERY);
-						activumValue.setJaar(bookYear);
-						activumValue.setUserId(userId);
-						activumValue.setSaldo(totalCost);
-						boekwaardeDao.insertBookValue(activumValue);
-					} else {
-						currentBookValue.setSaldo(totalCost);
-						boekwaardeDao.updateBookValue(currentBookValue);
-					}
-				}
-			}
-
-			// Car
-			BigInteger carDepreciation = BigInteger.valueOf(overview.getAfschrijvingAuto());
-			activumValue = new BookValue();
-			activumValue.setJaar(bookYear);
-			activumValue.setBalanceType(BalanceType.CAR);
-			activumValue.setUserId(userId);
-			activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
-			if (activumValue != null) {
-				BigInteger carBookValue = activumValue.getSaldo();
-				activumValue.setJaar(bookYear);
-				activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
-				if (activumValue == null) {
-					activumValue = new BookValue();
-					activumValue.setBalanceType(BalanceType.CAR);
-					activumValue.setUserId(userId);
-					activumValue.setJaar(bookYear);
-					activumValue.setSaldo(carBookValue.subtract(carDepreciation));
-					boekwaardeDao.insertBookValue(activumValue);
-				} else {
-					activumValue.setBalanceType(BalanceType.CAR);
-					activumValue.setUserId(userId);
-					activumValue.setJaar(bookYear);
-					activumValue.setSaldo(carBookValue.subtract(carDepreciation));
-					boekwaardeDao.updateBookValue(activumValue);
-				}
-			} else {
-			}
-
-			// Stock
-			if (overview.getRepurchase() != null && overview.getRepurchase().intValue() > 0) {
-				activumValue = new BookValue();
-				activumValue.setJaar(bookYear);
-				activumValue.setUserId(userId);
-				activumValue.setBalanceType(BalanceType.STOCK);
-				activumValue = boekwaardeDao.getBookValueThisYear(activumValue);
-				if (activumValue == null) {
-					activumValue = new BookValue();
-					activumValue.setJaar(bookYear);
-					activumValue.setUserId(userId);
-					activumValue.setBalanceType(BalanceType.STOCK);
-					activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
-					if (activumValue == null) {
-						activumValue = new BookValue();
-						activumValue.setBalanceType(BalanceType.STOCK);
-						activumValue.setJaar(bookYear);
-						activumValue.setUserId(userId);
-						activumValue.setSaldo(overview.getRepurchase());
-						boekwaardeDao.insertBookValue(activumValue);
-					} else {
-						activumValue.setJaar(bookYear);
-						activumValue.setSaldo(activumValue.getSaldo().add(overview.getRepurchase()));
-						boekwaardeDao.insertBookValue(activumValue);
-					}
-				}
-			}
-
-			if (overview.getTurnOverUnpaid() != null && overview.getTurnOverUnpaid().compareTo(new BigDecimal("0")) != 0) {
-				// Invoices yet to be paid
-				activumValue = new BookValue();
-				activumValue.setJaar(bookYear);
-				activumValue.setBalanceType(BalanceType.INVOICES_TO_BE_PAID);
-				activumValue.setUserId(userId);
-				activumValue.setSaldo(overview.getTurnOverUnpaid().toBigInteger());
-
-				currentBookValue = boekwaardeDao.getBookValueThisYear(activumValue);
-
-				if (currentBookValue == null) {
-					boekwaardeDao.insertBookValue(activumValue);
-				} else {
-					activumValue.setId(currentBookValue.getId());
-					boekwaardeDao.updateBookValue(activumValue);
-				}
-			}
-
-		}
-
-		KeyYear keyYear = new KeyYear(userId, bookYear);
-		List<Activum> activaLijst = fiscaalDao.getActivaLijst(keyYear);
-		for (Activum activum : activaLijst) {
-			activum.setOmschrijving(Translator.translateKey(activum.getOmschrijving(), locale));
-		}
-
-		if (!checkActivaOpgegeven(activaLijst, bookYear)) {
-			throw new Exception("errors.fiscal.activa");
-		}
-		overview.setActiva(activaLijst);
-		return activaLijst;
-	}
-	
-	private static BookValue getPreviousBookValue(BalanceType balanceType, KeyYear keyYear) throws Exception {
-		BookValue bookValue = new BookValue();
-		bookValue.setJaar(keyYear.getYear());
-		bookValue.setBalanceType(balanceType);
-		bookValue.setUserId(keyYear.getUserId());
-		bookValue = boekwaardeDao.getPreviousBookValue(bookValue);
-		return bookValue;
-	}
-	
-	private static BookValue getCurrentBookValue(BalanceType balanceType, KeyYear keyYear) throws Exception {
-		BookValue bookValue = new BookValue();
-		bookValue.setJaar(keyYear.getYear());
-		bookValue.setBalanceType(balanceType);
-		bookValue.setUserId(keyYear.getUserId());
-		bookValue = boekwaardeDao.getBookValueThisYear(bookValue);
-		return bookValue;
-	}	
-
-	private static void handleCar(String beginDatum, String eindDatum, long userId, int bookYear, FiscalOverview overview, PrivatWithdrawal privatWithdrawal,
-			List<Aftrekpost> deductableCosts) throws Exception {
+	private static void handleCar(String beginDatum, String eindDatum, long userId, int bookYear, FiscalOverview overview,
+			PrivatWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts) throws Exception {
 		BigDecimal afschrijvingAuto = BalanceCalculator.getAfschrijvingAuto(deductableCosts);
-		BookValue carActivum = getCurrentBookValue(BalanceType.CAR, new KeyYear(userId, bookYear));
+		BookValue carActivum = BookValueHelper.getCurrentBookValue(BalanceType.CAR, new KeyYear(userId, bookYear));
 		if (carActivum != null) {
 			handleBusinessCar(beginDatum, eindDatum, userId, overview, privatWithdrawal, deductableCosts, afschrijvingAuto);
 		} else {
@@ -482,7 +292,7 @@ public class FiscalOverviewHelper {
 	}
 
 	private static void handleBusinessCar(String beginDatum, String eindDatum, long userId, FiscalOverview overview,
-			PrivatWithdrawal privatWithdrawal, List<Aftrekpost> deductableCosts, BigDecimal afschrijvingAuto) throws Exception {
+			PrivatWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts, BigDecimal afschrijvingAuto) throws Exception {
 		if (afschrijvingAuto != null) {
 			overview.setAfschrijvingAuto(afschrijvingAuto.intValue());
 		}
@@ -503,8 +313,7 @@ public class FiscalOverviewHelper {
 	}
 
 	@Deprecated
-	private static void handleDepreciationCorrections(String beginDatum, String eindDatum, long userId, FiscalOverview overview)
-			throws Exception {
+	private static void handleDepreciationCorrections(String beginDatum, String eindDatum, long userId, FiscalOverview overview) throws Exception {
 		List<Cost> corrections = boekDao.getVatCorrectionDepreciation(beginDatum, eindDatum, Long.toString(userId));
 		Iterator<Cost> iterator = corrections.iterator();
 		int depreciationCorrection = 0;
@@ -519,7 +328,7 @@ public class FiscalOverviewHelper {
 		overview.setAfschrijvingOverigCorrectie(depreciationCorrection);
 	}
 
-	private static void handlePrivateCar(FiscalOverview overview, List<Aftrekpost> deductableCosts) {
+	private static void handlePrivateCar(FiscalOverview overview, List<DeductableCostGroup> deductableCosts) {
 		overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
 		int kostenAutoAftrekbaar = 0;
 		kostenAutoAftrekbaar = -overview.getKostenAuto();
@@ -550,17 +359,6 @@ public class FiscalOverviewHelper {
 		return totaal;
 	}
 
-	private static boolean checkActivaOpgegeven(List<Activum> activaLijst, int fiscaalJaar) {
-		Iterator<Activum> iterator = activaLijst.iterator();
-		while (iterator.hasNext()) {
-			Activum activa = iterator.next();
-			if (activa.getBoekjaar() == fiscaalJaar) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static void calculateProfit(FiscalOverview overview) {
 		int nettoOmzet = overview.getNettoOmzet();
 		nettoOmzet += overview.getInterestFromBusinessSavings().intValue();
@@ -569,10 +367,21 @@ public class FiscalOverviewHelper {
 		nettoOmzet += overview.getKostenAutoAftrekbaar();
 		nettoOmzet -= overview.getKostenOverigTransport();
 		nettoOmzet -= overview.getKostenOverig();
-		nettoOmzet -= overview.getAfschrijvingOverig();
-		nettoOmzet += overview.getAfschrijvingOverigCorrectie();
-		nettoOmzet -= overview.getAfschrijvingAuto();
-		nettoOmzet += overview.getAfschrijvingAutoCorrectie();
+		nettoOmzet -= overview.getSettlementCosts();
+		nettoOmzet -= overview.getAfschrijvingTotaal();
 		overview.setProfit(nettoOmzet);
+	}
+
+	public static void main(String[] args) throws Exception {
+		BoekDao boekDao = new BoekDao();
+		Periode period = DateHelper.getPeriodPreviousYear();
+		List<DeductableCostGroup> costs = boekDao.getDeductableCosts(DateHelper.getDate(period.getBeginDatum()),
+				DateHelper.getDate(period.getEindDatum()), "1");
+		BigDecimal totalCosts = new BigDecimal(0);
+		for (DeductableCostGroup cost : costs) {
+			totalCosts = totalCosts.add(cost.getAftrekbaarBedrag());
+		}
+		System.out.println(costs);
+		System.out.println("Total: " + totalCosts);
 	}
 }

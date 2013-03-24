@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,8 +21,6 @@ package org.techytax.dao;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,10 +29,10 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.techytax.domain.Activum;
-import org.techytax.domain.Aftrekpost;
 import org.techytax.domain.Cost;
+import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.KostConstanten;
+import org.techytax.domain.CostConstants;
 
 public class BoekDao extends BaseDao {
 
@@ -50,7 +48,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	private void decrypt(Cost cost) {
+	public void decrypt(Cost cost) {
 		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
 			cost.setDescription(textEncryptor.decrypt(cost.getDescription()));
 		}		
@@ -58,6 +56,7 @@ public class BoekDao extends BaseDao {
 			try {
 				cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
 			} catch (EncryptionOperationNotPossibleException e) {
+				e.printStackTrace();
 				System.out.println("Could not decrypt: " + cost.getDescription());
 			}
 		}
@@ -70,7 +69,7 @@ public class BoekDao extends BaseDao {
 		}
 	}
 
-	private void decrypt(Aftrekpost deductableCost) {
+	private void decrypt(DeductableCostGroup deductableCost) {
 		if (deductableCost.getAftrekbaarBedrag() != null && deductableCost.getAftrekbaarBedrag().doubleValue() != 0) {		
 			deductableCost.setAftrekbaarBedrag(decimalEncryptor.decrypt(deductableCost.getAftrekbaarBedrag()));
 		}
@@ -151,15 +150,15 @@ public class BoekDao extends BaseDao {
 	}	
 
 	@SuppressWarnings("unchecked")
-	public List<Aftrekpost> getDeductableCosts(String beginDatum, String eindDatum, String userId) throws Exception {
+	public List<DeductableCostGroup> getDeductableCosts(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Aftrekpost> deductableCostList = sqlMap.queryForList("getDeductableCostList", map);
+		List<DeductableCostGroup> deductableCostList = sqlMap.queryForList("getDeductableCostList", map);
 		Collections.sort(deductableCostList);
 		long latestCostType = 0;
-		Aftrekpost groupedCost = null;
+		DeductableCostGroup groupedCost = null;
 		BigDecimal totalDeductableCost = new BigDecimal("0");
-		List<Aftrekpost> groupedDeducatableCostList = new ArrayList<Aftrekpost>();
-		for (Aftrekpost deductableCost : deductableCostList) {
+		List<DeductableCostGroup> groupedDeducatableCostList = new ArrayList<DeductableCostGroup>();
+		for (DeductableCostGroup deductableCost : deductableCostList) {
 			decrypt(deductableCost);
 			if (deductableCost.getKostenSoortId() != latestCostType) {
 				if (groupedCost != null) {
@@ -168,7 +167,7 @@ public class BoekDao extends BaseDao {
 					groupedDeducatableCostList.add(groupedCost);
 				}
 				latestCostType = deductableCost.getKostenSoortId();
-				groupedCost = new Aftrekpost();
+				groupedCost = new DeductableCostGroup();
 				totalDeductableCost = new BigDecimal("0");
 			}
 			totalDeductableCost = totalDeductableCost.add(deductableCost.getAftrekbaarBedrag());
@@ -237,7 +236,7 @@ public class BoekDao extends BaseDao {
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
 			decrypt(cost);
-			if (cost.getAmount().compareTo(new BigDecimal(KostConstanten.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
+			if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
 				filteredCosts.add(cost);
 			}
 		}
@@ -302,9 +301,9 @@ public class BoekDao extends BaseDao {
 		BigDecimal invoiceBalance = new BigDecimal("0");
 		for (Cost cost : costs) {
 			decrypt(cost);
-			if (cost.getCostTypeId() == KostConstanten.INVOICE_SENT) {
+			if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
 				invoiceBalance = invoiceBalance.add(cost.getAmount()).add(cost.getVat());	
-			} else if (cost.getCostTypeId() == KostConstanten.INVOICE_PAID) {
+			} else if (cost.getCostTypeId() == CostConstants.INVOICE_PAID) {
 				invoiceBalance = invoiceBalance.subtract(cost.getAmount()).subtract(cost.getVat());
 			}			
 		}

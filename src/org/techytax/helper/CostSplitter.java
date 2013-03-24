@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,19 +28,17 @@ public class CostSplitter {
 	public static void splitPercentagFromAmount(Cost cost, int percentage) {
 		BigDecimal originalAmount = cost.getAmount();
 		BigDecimal splitAmount = cost.getAmount();
-		int decimalPlace = 2;
 		splitAmount = new BigDecimal(originalAmount.doubleValue() / ((100 + percentage) / 100d));
-		splitAmount = splitAmount.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		splitAmount = AmountHelper.round(splitAmount);
 		cost.setAmount(splitAmount);
 		cost.setVat(originalAmount.subtract(splitAmount));
 	}
 	
 	public static void applyPercentage(Cost cost, int percentage) {
-		int decimalPlace = 2;
 		BigDecimal splitAmount = new BigDecimal(cost.getAmount().doubleValue() * (percentage / 100d));
-		splitAmount = splitAmount.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+		splitAmount = AmountHelper.round(splitAmount);
 		BigDecimal splitVat = new BigDecimal(cost.getVat().doubleValue() * (percentage / 100d));
-		splitVat = splitVat.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);		
+		splitVat = AmountHelper.round(splitVat);		
 		cost.setAmount(splitAmount);
 		cost.setVat(splitVat);
 	}	

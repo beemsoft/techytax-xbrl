@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KostConstanten;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.util.DateHelper;
@@ -43,7 +43,7 @@ public class DutchTaxCodeHelper {
 			String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
 
 			if (taxType.equals("B")) {
-				cost.setCostTypeId(KostConstanten.OMZET_BELASTING);
+				cost.setCostTypeId(CostConstants.OMZET_BELASTING);
 				yearIndicator = convertedTaxCode.substring(17, 18);
 				fullDescription = "Omzetbelasting";
 			} else if (taxType.equals("W")) {
@@ -52,7 +52,7 @@ public class DutchTaxCodeHelper {
 				fullDescription = "Zorgverzekeringswet";
 			} else if (taxType.equals("M")) {
 				fullDescription = "Motorrijtuigenbelasting";
-				cost.setCostTypeId(KostConstanten.WEGEN_BELASTING);
+				cost.setCostTypeId(CostConstants.WEGEN_BELASTING);
 			} else if (taxType.equals("O")) {
 				fullDescription = "Omzetbelasting teruggaaf";
 			} else if (taxType.equals("H")) {
