@@ -92,5 +92,17 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and b.balanssoort_id = bs.id 
 		and bw.balans_id = b.id 
 		order by balans_id asc, boekjaar asc;
-	</select>		
+	</select>
+	<select id="getRemainingValueForMachines" parameterClass="key" resultClass="remainingValue">
+		select restwaarde.id, activa.id as activaId, restwaarde.restwaarde
+		from activa, restwaarde , kosten, balans
+		where 
+		kosten.id = activa.kost_id and
+		restwaarde.activa_id = activa.id and
+		balans.id = activa.balans_id and
+		balans.balanssoort_id = 1 and
+		activa.einddatum is null
+		and activa.user_id = #userId#
+	    and restwaarde.user_id = #userId#
+	</select>
 </sqlMap>

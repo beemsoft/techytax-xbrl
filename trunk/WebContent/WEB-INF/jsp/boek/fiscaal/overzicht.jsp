@@ -1,5 +1,5 @@
 <%--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -100,6 +100,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">-<%=overview.getAfschrijvingOverig()%></td>
 		<td></td>		
 	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.depreciation.settlement"/>:</td>
+		<td></td>
+		<td></td>		
+		<td align="right">-<%=overview.getSettlementDepreciation()%></td>
+		<td></td>		
+	</tr>	
 <% if (overview.getAfschrijvingOverigCorrectie() > 0) {
 %>	
 	<tr>
@@ -176,6 +183,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td align="right">-<%=overview.getKostenOverig()%></td>
 		<td></td>		
 	</tr>
+	<tr>
+		<td><bean:message key="overview.fiscal.cost.settlement"/>:</td>
+		<td></td>
+		<td></td>		
+		<td align="right">-<%=overview.getSettlementCosts()%></td>
+		<td></td>		
+	</tr>	
 	<tr>
 		<td><bean:message key="overview.fiscal.cost.other.total"/>:</td>
 		<td></td>

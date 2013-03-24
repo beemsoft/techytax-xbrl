@@ -36,7 +36,7 @@ import org.techytax.dao.SettlementDao;
 import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KostConstanten;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.VatMatch;
@@ -80,7 +80,7 @@ public class RekeningFileHelper {
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				cost = processLine(regel, regelNummer, userId);
-				if (cost.getCostTypeId() != KostConstanten.SETTLEMENT) {
+				if (cost.getCostTypeId() != CostConstants.SETTLEMENT) {
 					kostLijst.add(cost);
 				} else {
 					// Administrative split
@@ -88,7 +88,7 @@ public class RekeningFileHelper {
 					Cost splitCost = new Cost();
 					splitCost.setAmount(cost.getAmount());
 					splitCost.setVat(cost.getVat());
-					splitCost.setCostTypeId(KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF);
+					splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
 					splitCost.setDate(cost.getDate());
 					splitCost.setDescription(cost.getDescription());
 					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
@@ -134,7 +134,7 @@ public class RekeningFileHelper {
 			String omschrijving = line[1] + " " + line[8];
 
 			if (omschrijving.trim().equals("")) {
-				kost.setCostTypeId(KostConstanten.UNDETERMINED);
+				kost.setCostTypeId(CostConstants.UNDETERMINED);
 				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
 				kost.setVat(new BigDecimal("0"));
 			} else {
@@ -174,7 +174,7 @@ public class RekeningFileHelper {
 	}
 
 	private static Cost matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = KostConstanten.UNDETERMINED;
+		long kostensoortId = CostConstants.UNDETERMINED;
 		kost.setVat(new BigDecimal("0"));
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {

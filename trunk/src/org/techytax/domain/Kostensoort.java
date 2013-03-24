@@ -63,7 +63,7 @@ public class Kostensoort {
 	}
 	
 	public boolean isForSettlement() {
-		return kostenSoortId == KostConstanten.SETTLEMENT;
+		return kostenSoortId == CostConstants.SETTLEMENT;
 	}
 
 	public void setBijschrijving(boolean bijschrijving) {

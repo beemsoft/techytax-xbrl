@@ -40,6 +40,12 @@ public class BookValueDao extends BaseDao {
 			boekwaarde.setSaldo(intEncryptor.decrypt(boekwaarde.getSaldo()));
 		}
 	}
+	
+	private void decrypt(RemainingValue remainingValue) {
+		if (remainingValue != null) {
+			remainingValue.setRestwaarde(intEncryptor.decrypt(remainingValue.getRestwaarde()));
+		}
+	}	
 
 	public void insertBookValue(BookValue boekwaarde) throws Exception {
 		encrypt(boekwaarde);
@@ -97,7 +103,6 @@ public class BookValueDao extends BaseDao {
 		return bookValues;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public BookValue getBookValue(KeyId key) throws Exception {
 		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValue", key);
 		decrypt(bookValue);
@@ -112,5 +117,14 @@ public class BookValueDao extends BaseDao {
 		}
 		return bookValues;
 	}	
-
+	
+	@SuppressWarnings("unchecked")
+	public List<RemainingValue> getRemainingValueForMachines(KeyId key) throws Exception {
+		List<RemainingValue> remainingValues = sqlMap.queryForList("getRemainingValueForMachines", key);
+		for (RemainingValue remainingValue: remainingValues) {
+			decrypt(remainingValue);
+		}
+		return remainingValues;
+	}
+	
 }

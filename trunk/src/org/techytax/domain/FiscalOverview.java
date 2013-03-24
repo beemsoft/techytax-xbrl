@@ -30,49 +30,39 @@ public class FiscalOverview {
 
 	private List<Activum> activa;
 	private int afschrijvingAuto;
-	
+
 	@Deprecated
 	private int afschrijvingAutoCorrectie;
-	
+
 	private int afschrijvingOverig;
-	
+
 	@Deprecated
 	private int afschrijvingOverigCorrectie;
-	
+
 	private int afschrijvingTotaal;
 	private int bijtellingAuto;
 	private int bookTotalBegin;
 	private int bookTotalEnd;
+	private BigInteger enterpriseCapital;
+	private BigInteger interestFromBusinessSavings;
+	private BigInteger investmentDeduction;
 	private int jaar;
 	private int kostenAuto;
 	private int kostenAutoAftrekbaar;
 	private int kostenOverig;
 	private int kostenOverigTransport;
 	private int nettoOmzet;
-	private BigDecimal turnOverUnpaid;
+	private BigInteger netTurnOverNotYetPaid;
 	private PrivatWithdrawal onttrekking;
 	private int oudedagsReserveMaximaal;
 	private List<Passivum> passiva;
 	private PrepaidTax prepaidTax;
-	private int profit;
-	private BigInteger investmentDeduction;
-	private BigInteger repurchase;
-	private BigInteger interestFromBusinessSavings;
-	private BigInteger netTurnOverNotYetPaid;
 	private BigInteger privateDeposit;
-	private BigInteger enterpriseCapital;
-
-	public int getNetTurnOverTotal() {
-		return nettoOmzet + netTurnOverNotYetPaid.intValue();
-	}
-
-	public int getCarAndTransportCosts() {
-		return kostenAutoAftrekbaar - kostenOverigTransport;
-	}
-
-	public int getOtherCostsTotal() {
-		return getCarAndTransportCosts() - kostenOverig;
-	}
+	private int profit;
+	private BigInteger repurchase;
+	private int settlementCosts;
+	private int settlementDepreciation;
+	private BigDecimal turnOverUnpaid;
 
 	public List<Activum> getActiva() {
 		return activa;
@@ -80,10 +70,6 @@ public class FiscalOverview {
 
 	public BalanceReport getActivaReport() {
 		return FiscalReportHelper.getActivaReport(activa);
-	}
-
-	public BalanceReport getPassivaReport() {
-		return FiscalReportHelper.getPassivaReport(passiva);
 	}
 
 	public int getAfschrijvingAuto() {
@@ -121,6 +107,22 @@ public class FiscalOverview {
 		return bookTotalEnd;
 	}
 
+	public int getCarAndTransportCosts() {
+		return kostenAutoAftrekbaar - kostenOverigTransport;
+	}
+
+	public BigInteger getEnterpriseCapital() {
+		return enterpriseCapital;
+	}
+
+	public BigInteger getInterestFromBusinessSavings() {
+		return interestFromBusinessSavings;
+	}
+
+	public BigInteger getInvestmentDeduction() {
+		return investmentDeduction;
+	}
+
 	public int getJaar() {
 		return jaar;
 	}
@@ -145,8 +147,20 @@ public class FiscalOverview {
 		return nettoOmzet;
 	}
 
+	public BigInteger getNetTurnOverNotYetPaid() {
+		return netTurnOverNotYetPaid;
+	}
+
+	public int getNetTurnOverTotal() {
+		return nettoOmzet + netTurnOverNotYetPaid.intValue();
+	}
+
 	public PrivatWithdrawal getOnttrekking() {
 		return onttrekking;
+	}
+
+	public int getOtherCostsTotal() {
+		return getCarAndTransportCosts() - kostenOverig - settlementCosts;
 	}
 
 	public int getOudedagsReserveMaximaal() {
@@ -157,8 +171,36 @@ public class FiscalOverview {
 		return passiva;
 	}
 
+	public BalanceReport getPassivaReport() {
+		return FiscalReportHelper.getPassivaReport(passiva);
+	}
+
 	public PrepaidTax getPrepaidTax() {
 		return prepaidTax;
+	}
+
+	public BigInteger getPrivateDeposit() {
+		return privateDeposit;
+	}
+
+	public int getProfit() {
+		return profit;
+	}
+
+	public BigInteger getRepurchase() {
+		return repurchase;
+	}
+
+	public int getSettlementCosts() {
+		return settlementCosts;
+	}
+
+	public int getSettlementDepreciation() {
+		return settlementDepreciation;
+	}
+
+	public BigDecimal getTurnOverUnpaid() {
+		return turnOverUnpaid;
 	}
 
 	public int getWinst() {
@@ -203,6 +245,18 @@ public class FiscalOverview {
 		this.bookTotalEnd = bookTotalEnd;
 	}
 
+	public void setEnterpriseCapital(BigInteger enterpriseCapital) {
+		this.enterpriseCapital = enterpriseCapital;
+	}
+
+	public void setInterestFromBusinessSavings(BigInteger interestFromBusinessSavings) {
+		this.interestFromBusinessSavings = interestFromBusinessSavings;
+	}
+
+	public void setInvestmentDeduction(BigInteger investmentDeduction) {
+		this.investmentDeduction = investmentDeduction;
+	}
+
 	public void setJaar(int jaar) {
 		this.jaar = jaar;
 	}
@@ -227,6 +281,10 @@ public class FiscalOverview {
 		this.nettoOmzet = nettoOmzet;
 	}
 
+	public void setNetTurnOverNotYetPaid(BigInteger netTurnOverNotYetPaid) {
+		this.netTurnOverNotYetPaid = netTurnOverNotYetPaid;
+	}
+
 	public void setOnttrekking(PrivatWithdrawal onttrekking) {
 		this.onttrekking = onttrekking;
 	}
@@ -243,64 +301,24 @@ public class FiscalOverview {
 		this.prepaidTax = prepaidTax;
 	}
 
+	public void setPrivateDeposit(BigInteger privateDeposit) {
+		this.privateDeposit = privateDeposit;
+	}
+
 	public void setProfit(int winst) {
 		this.profit = winst;
-	}
-
-	public BigInteger getInvestmentDeduction() {
-		return investmentDeduction;
-	}
-
-	public void setInvestmentDeduction(BigInteger investmentDeduction) {
-		this.investmentDeduction = investmentDeduction;
-	}
-
-	public BigInteger getRepurchase() {
-		return repurchase;
 	}
 
 	public void setRepurchase(BigInteger repurchase) {
 		this.repurchase = repurchase;
 	}
 
-	public BigInteger getInterestFromBusinessSavings() {
-		return interestFromBusinessSavings;
+	public void setSettlementCosts(int settlementCosts) {
+		this.settlementCosts = settlementCosts;
 	}
 
-	public void setInterestFromBusinessSavings(BigInteger interestFromBusinessSavings) {
-		this.interestFromBusinessSavings = interestFromBusinessSavings;
-	}
-
-	public BigInteger getNetTurnOverNotYetPaid() {
-		return netTurnOverNotYetPaid;
-	}
-
-	public void setNetTurnOverNotYetPaid(BigInteger netTurnOverNotYetPaid) {
-		this.netTurnOverNotYetPaid = netTurnOverNotYetPaid;
-	}
-
-	public BigInteger getPrivateDeposit() {
-		return privateDeposit;
-	}
-
-	public void setPrivateDeposit(BigInteger privateDeposit) {
-		this.privateDeposit = privateDeposit;
-	}
-
-	public BigInteger getEnterpriseCapital() {
-		return enterpriseCapital;
-	}
-
-	public void setEnterpriseCapital(BigInteger enterpriseCapital) {
-		this.enterpriseCapital = enterpriseCapital;
-	}
-
-	public int getProfit() {
-		return profit;
-	}
-
-	public BigDecimal getTurnOverUnpaid() {
-		return turnOverUnpaid;
+	public void setSettlementDepreciation(int settlementDepreciation) {
+		this.settlementDepreciation = settlementDepreciation;
 	}
 
 	public void setTurnOverUnpaid(BigDecimal turnOverUnpaid) {

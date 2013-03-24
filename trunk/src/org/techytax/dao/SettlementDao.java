@@ -19,8 +19,6 @@
  */
 package org.techytax.dao;
 
-import java.text.DecimalFormat;
-
 import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Settlement;
 
@@ -48,7 +46,6 @@ public class SettlementDao extends BaseDao {
 		sqlMap.insert("updateSettlement", settlement);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Settlement getSettlement(long userId) throws Exception {
 		Settlement settlement = (Settlement) sqlMap.queryForObject("getSettlement", userId);
 		decrypt(settlement);

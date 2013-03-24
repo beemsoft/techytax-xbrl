@@ -36,7 +36,7 @@ import org.techytax.dao.SettlementDao;
 import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KostConstanten;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.VatMatch;
@@ -82,7 +82,7 @@ public class RekeningFileAbnAmroHelper {
 					System.out.print(regel[i]+" ");
 				}
 				cost = processLine(regel, regelNummer, userId);
-				if (cost.getCostTypeId() != KostConstanten.SETTLEMENT) {
+				if (cost.getCostTypeId() != CostConstants.SETTLEMENT) {
 					kostLijst.add(cost);
 				} else {
 					// Administrative split
@@ -90,7 +90,7 @@ public class RekeningFileAbnAmroHelper {
 					Cost splitCost = new Cost();
 					splitCost.setAmount(cost.getAmount());
 					splitCost.setVat(cost.getVat());
-					splitCost.setCostTypeId(KostConstanten.UITGAVE_DEZE_REKENING_FOUTIEF);
+					splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
 					splitCost.setDate(cost.getDate());
 					splitCost.setDescription(cost.getDescription());
 					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
@@ -137,7 +137,7 @@ public class RekeningFileAbnAmroHelper {
 			String omschrijving = line[7];
 
 			if (omschrijving.trim().equals("")) {
-				kost.setCostTypeId(KostConstanten.UNDETERMINED);
+				kost.setCostTypeId(CostConstants.UNDETERMINED);
 				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
 				kost.setVat(new BigDecimal("0"));
 			} else {
@@ -177,7 +177,7 @@ public class RekeningFileAbnAmroHelper {
 	}
 
 	private static Cost matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = KostConstanten.UNDETERMINED;
+		long kostensoortId = CostConstants.UNDETERMINED;
 		kost.setVat(new BigDecimal("0"));
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {

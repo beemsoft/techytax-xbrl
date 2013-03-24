@@ -36,7 +36,7 @@ public class Activum {
 	private long userId;
 	private BalanceType balanceType;
 	private String endDate;
-	private long costId;
+	private Long costId;
 
 	public BigDecimal getAanschafKosten() {
 		return aanschafKosten;
@@ -118,11 +118,11 @@ public class Activum {
 		this.endDate = endDate;
 	}
 
-	public long getCostId() {
+	public Long getCostId() {
 		return costId;
 	}
 
-	public void setCostId(long costId) {
+	public void setCostId(Long costId) {
 		this.costId = costId;
 	}
 
