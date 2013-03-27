@@ -17,6 +17,11 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 		<name>org.zkoss.zk.ui.WebApp.name</name>
 		<value>TechyTax</value>
 	</preference>
+	
+	<library-property>
+    	<name>org.zkoss.bind.DebuggerFactory.enable</name>
+    	<value>true</value>
+	</library-property>
 
 	<!-- Turn on if you want to debug JavaScript.
 		Once turned on, the uncompressed JavaScript files will be loaded.
@@ -219,18 +224,18 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 	<!-- [ZK EE]
 		Turn on if you want to recycle the desktop if an user navigates
 		back to the same URL
+	-->
 	<listener>
 		<listener-class>org.zkoss.zkmax.ui.util.DesktopRecycle</listener-class>
 	</listener>
-	--> 
 
 	<!-- [ZK EE]
 		Turn on if you want to make your Web application crawlable (indexed)
 		by search engines.
+	-->		
 	<system-config>
 		<crawlable>true</crawlable>
 	</system-config>
-	-->
 
 	<!-- Optional -->
 	<!-- Map extensions to the xml language.
@@ -276,9 +281,9 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
 
 		<!-- Comment it out if you prefer to show a message instead of redirecting
 			Note: an empty URL can cause the browser to reload the same URL
-		-->
 		<timeout-uri>/timeout.zul</timeout-uri>
-
+		-->
+		
 		<!-- Uncomment it if you prefer to have a custom message.
 			Notice that, to make it work, timeout-uri shall be removed.
 			See http://books.zkoss.org/wiki/ZK_Configuration_Reference/zk.xml/The_session-config_Element

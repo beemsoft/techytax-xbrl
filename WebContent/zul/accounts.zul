@@ -75,7 +75,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.datum) @converter('formatedDate', format='yyyy/MM/dd')"/>
-					<listcell label="@load(item.balance) @converter('formatedNumber', format='###.##0,00')"/>					
+					<listcell label="@load(item.balance)"/>					
 				</listitem>
 			</template>
 		</listbox>
