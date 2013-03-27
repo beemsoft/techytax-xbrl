@@ -41,8 +41,8 @@ arg0="/WEB-INF/layout/template.zul"?>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
-					<listcell label="@load(item.amount) @converter('formatedNumber', format='###.##0,00')"/>
-					<listcell label="@load(item.vat) @converter('formatedNumber', format='###.##0,00')"/>
+					<listcell label="@load(item.amount)"/>
+					<listcell label="@load(item.vat)"/>
 					<listcell label="@load(item.description)"/>
 					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
 				</listitem>
@@ -57,12 +57,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<rows>
 					<row>Rekening saldo van TechyTax
 						<hlayout>
-							<label value="@load(vm.accountCheckData.accountBalance) @converter('formatedNumber', format='###.##0,00')"   />
+							<label value="@load(vm.accountCheckData.accountBalance)"   />
 						</hlayout>					
 					</row>				
 					<row>Rekening saldo van online bankieren
 						<hlayout>
-							<label value="@load(vm.accountCheckData.actualBalance)  @converter('formatedNumber', format='###.##0,00')" />
+							<label value="@load(vm.accountCheckData.actualBalance)" />
 							<toolbar visible="@load(empty vm.accountCheckData.actualBalance)">
 								<doublebox id="box9" value="@bind(vm.businessAccountBalance)" />
 								<button label="Save" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.businessAccountBalance)" />
@@ -73,32 +73,32 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>
 					<row>Double check van TechyTax
 						<hlayout>
-							<label value="@load(vm.accountCheckData.doubleCheck) @converter('formatedNumber', format='###.##0,00')"  />
+							<label value="@load(vm.accountCheckData.doubleCheck)"  />
 						</hlayout>					
 					</row>
 					<row>Betaalde facturen
 						<hlayout>
-							<label value="@load(vm.accountCheckData.paidInvoices) @converter('formatedNumber', format='###.##0,00')"  />
+							<label value="@load(vm.accountCheckData.paidInvoices)"  />
 						</hlayout>					
 					</row>					
 					<row>Belasting saldo
 						<hlayout>
-							-<label value="@load(vm.accountCheckData.taxBalance) @converter('formatedNumber', format='###.##0,00')"  />
+							-<label value="@load(vm.accountCheckData.taxBalance)"  />
 						</hlayout>					
 					</row>
 					<row>Kost saldo
 						<hlayout>
-							-<label value="@load(vm.accountCheckData.costBalance) @converter('formatedNumber', format='###.##0,00')"  />
+							-<label value="@load(vm.accountCheckData.costBalance)"  />
 						</hlayout>					
 					</row>					
 					<row>Spaarsaldo
 						<hlayout>
-							-(<label value="@load(vm.accountCheckData.savingBalance) @converter('formatedNumber', format='###.##0,00')"  />
+							-(<label value="@load(vm.accountCheckData.savingBalance)"  />
 											
 					 - Prive opname saldo
 						
-							<label value="@load(vm.accountCheckData.privateWithdrawalBalance) @converter('formatedNumber', format='###.##0,00')"  />
-							- Rente <label value="@load(vm.accountCheckData.interest) @converter('formatedNumber', format='###.##0,00')"  />
+							<label value="@load(vm.accountCheckData.privateWithdrawalBalance)"  />
+							- Rente <label value="@load(vm.accountCheckData.interest)"  />
 						)</hlayout>					
 					</row>																								
 				</rows>
