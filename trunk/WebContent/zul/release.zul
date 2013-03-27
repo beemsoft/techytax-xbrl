@@ -1,11 +1,23 @@
 <zk>
     <toolbarbutton label="Release notes" onClick="info.doPopup()"/><span>
-    <window id="info" visible="false"  border="normal" position="center">
-    <hbox width="380px">
+    <window id="info" visible="false"  border="normal" position="center" width="380px" height="500px" contentStyle="background:#FFFF66; overflow:auto" >
+    <hbox>
     <html><![CDATA[
  <body>
- <h2>Release Notes TechyTax</h2>
-	<h4>1.11 (2013-03-16)</h4>
+<h2>Release Notes TechyTax</h2>
+<h4>1.12 (upcoming) - The "Inkomsten Belasting 2012" release</h4>
+<p>This release can be used for the Dutch income tax declaration for 2012.</p>
+<p>
+<b>Pleae note</b>: From this version onwards, only the Dutch language is supported.
+</p>
+<p>
+Changes:
+</p>
+<ul>
+<li>Added settlement ("bedrijfsruimte") functionality.</li>
+<li>Added ZK page for activa.</li>
+</ul>
+<h4>1.11 (2013-03-16)</h4>
 <p>
 Changes:
 </p>
