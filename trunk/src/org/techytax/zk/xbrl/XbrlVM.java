@@ -7,8 +7,10 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.digipoort.DigipoortServiceStub;
 import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
@@ -27,9 +29,18 @@ import org.techytax.ws.ProcesResultaat;
 import org.techytax.ws.StatusResultaat;
 import org.techytax.wus.status.StatusinformatieServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Popup;
 
 public class XbrlVM implements Serializable {
 
@@ -37,7 +48,7 @@ public class XbrlVM implements Serializable {
 	
 	protected User user = UserCredentialManager.getUser();
 	private Periode periode = DateHelper.getLatestVatPeriodTillToday();
-	private DigipoortService digipoortService = new DigipoortServiceImpl();
+	private DigipoortService digipoortService;
 	private List<String> berichtsoorten;
 	private List<ProcesResultaat> processen;
 	private List<StatusResultaat> nieuweStatussen;
@@ -45,15 +56,39 @@ public class XbrlVM implements Serializable {
 	private List<StatusResultaat> statussenProces;
 	private boolean isTestEnvironment = false;
 	
+	private StatusResultaat selected;
+	
 	public XbrlVM() throws IOException {
 		String digipoort = PropsFactory.getProperty("digipoort");
 		if (digipoort.equals("prod")) {
 			isTestEnvironment = false;
 		} else {
 			isTestEnvironment = true;
-		}		
+		}
+		if (digipoort.equals("stub")) {
+			digipoortService = new DigipoortServiceStub();
+		} else {
+			digipoortService = new DigipoortServiceImpl();
+		}
+	}
+	
+	@Wire
+	Popup msgPopup;
+	@Wire
+	Label msg;
+
+	@AfterCompose
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) {
+		Selectors.wireComponents(view, this, false);
 	}
 
+	@Command
+	public void popupMessage(@BindingParam("target") Component targetComponent, @BindingParam("content") String content) {
+		msg.setPre(true);
+		msg.setValue(content);
+		msgPopup.open(targetComponent);
+	}   
+	
 	public void setStatussenProces(List<StatusResultaat> statussenProces) {
 		this.statussenProces = statussenProces;
 	}
@@ -89,12 +124,16 @@ public class XbrlVM implements Serializable {
 			ArrayOfBerichtsoortResultaat resultaat = response.getGetBerichtsoortenReturn();
 			berichtsoorten = resultaat.getBerichtsoort();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 		}
 	}
 
 	private void setFiscalNumber(VatDeclarationData vatDeclarationData) {
 		if (!isTestEnvironment) {
+			String fiscalNumber = user.getFiscalNumber();
+			if (StringUtils.isEmpty(fiscalNumber)) {
+				throw new RuntimeException("U heeft nog geen fiscaal nummer opgegeven");
+			}
 			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
 		} else {
 			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
@@ -112,6 +151,7 @@ public class XbrlVM implements Serializable {
 			ArrayOfProcesResultaat resultaat = response.getGetProcessenReturn();
 			processen = resultaat.getProcesResultaat();
 		} catch (StatusinformatieServiceFault e) {
+			e.printStackTrace();
 			Messagebox.show(e.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 		}
 	}
@@ -127,7 +167,7 @@ public class XbrlVM implements Serializable {
 			ArrayOfStatusResultaat resultaat = response.getGetNieuweStatussenReturn();
 			nieuweStatussen = resultaat.getStatusResultaat();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 		}
 	}
 
@@ -147,6 +187,7 @@ public class XbrlVM implements Serializable {
 			nieuweStatussenProces = resultaat.getStatusResultaat();
 		} catch (Exception e) {
 			e.printStackTrace();
+			Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 		}
 	}
 
@@ -161,6 +202,7 @@ public class XbrlVM implements Serializable {
 				statussenProces = resultaat.getStatusResultaat();
 			} catch (Exception e) {
 				e.printStackTrace();
+				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 			}
 		}
 		return statussenProces;
@@ -208,5 +250,14 @@ public class XbrlVM implements Serializable {
 
 	public void setProcessen(List<ProcesResultaat> processen) {
 		this.processen = processen;
+	}
+
+	public StatusResultaat getSelected() {
+		return selected;
+	}
+
+	@NotifyChange("selected")
+	public void setSelected(StatusResultaat selected) {
+		this.selected = selected;
 	}
 }
