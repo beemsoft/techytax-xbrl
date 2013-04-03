@@ -2,6 +2,7 @@ package org.techytax.zk.xbrl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,10 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.Messagebox;
 
-public class XbrlVM {
+public class XbrlVM implements Serializable {
 
+	private static final long serialVersionUID = -4600263940170016764L;
+	
 	protected User user = UserCredentialManager.getUser();
 	private Periode periode = DateHelper.getLatestVatPeriodTillToday();
 	private DigipoortService digipoortService = new DigipoortServiceImpl();

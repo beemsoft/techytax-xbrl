@@ -346,7 +346,18 @@ public class BoekDao extends BaseDao {
 			decrypt(cost);
 		}
 		return costs;
-	}	
+	}
 	
+	@SuppressWarnings("unchecked")
+	public BigDecimal getCostsCurrentAccountIgnore(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		BigDecimal costsIgnoreBalance = new BigDecimal("0");
+		List<Cost> costs = sqlMap.queryForList("getCostsCurrentAccountIgnore", map);
+		for (Cost cost : costs) {
+			decrypt(cost);
+			costsIgnoreBalance = costsIgnoreBalance.add(cost.getAmount()).add(cost.getVat());
+		}
+		return costsIgnoreBalance;
+	}	
 
 }

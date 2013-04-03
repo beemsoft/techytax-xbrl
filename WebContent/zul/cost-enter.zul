@@ -6,7 +6,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Handmatig transacties invoeren" border="normal" width="985px"
+<window self="@define(content)" title="Handmatig transacties invoeren" border="normal" width="100%"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
