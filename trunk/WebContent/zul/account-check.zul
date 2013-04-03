@@ -100,7 +100,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 							<label value="@load(vm.accountCheckData.privateWithdrawalBalance)"  />
 							- Rente <label value="@load(vm.accountCheckData.interest)"  />
 						)</hlayout>					
-					</row>																								
+					</row>
+					<row>Ignore
+						<hlayout>
+							-<label value="@load(vm.accountCheckData.costIgnoreBalance)"  />
+						</hlayout>					
+					</row>
 				</rows>
 			</grid>
 		</groupbox>		

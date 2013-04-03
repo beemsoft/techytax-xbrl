@@ -211,9 +211,16 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					totalKost = totalKost.add(obj.getAmount());
-					if (isIncludingVat) {
-						totalKost = totalKost.add(obj.getVat());
+					if (obj.isIncoming()) {
+						totalKost = totalKost.subtract(obj.getAmount());
+						if (isIncludingVat) {
+							totalKost = totalKost.subtract(obj.getVat());
+						}						
+					} else {
+						totalKost = totalKost.add(obj.getAmount());
+						if (isIncludingVat) {
+							totalKost = totalKost.add(obj.getVat());
+						}
 					}
 				}
 			}
@@ -405,6 +412,8 @@ public class BalanceCalculator {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
 			if (aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT || aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_INTEREST || aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_OTHER_ACCOUNT) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
+			} else if (aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_DISCOUNT) {
+				kosten = kosten.subtract(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
 		return kosten;

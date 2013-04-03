@@ -202,7 +202,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		turnoverNet.setValue(format(balans.getNettoOmzet()));
 		controleTab.setSelected(true);
 		costModel = new ListModelList<Cost>();
-		costGrid.setModel(costModel);
+		if (costGrid != null) {
+			costGrid.setModel(costModel);
+		}
 	}
 
 	@Listen("onClick=#digipoortBtn")

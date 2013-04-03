@@ -55,7 +55,9 @@ public interface CostConstants {
 	public static final int SETTLEMENT = 41;
 	public static final int SETTLEMENT_INTEREST = 42;
 	public static final int DEPRECIATION_SETTLEMENT = 43;
-	public static final int SETTLEMENT_OTHER_ACCOUNT = 44;	
+	public static final int SETTLEMENT_OTHER_ACCOUNT = 44;
+	public static final int SETTLEMENT_DISCOUNT = 45;
+	public static final int INCOME_CURRENT_ACCOUNT_IGNORE = 46;
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,6 +22,7 @@ package org.techytax.dao;
 import java.util.List;
 
 import org.techytax.domain.Activum;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.KeyYear;
 import org.techytax.domain.Passivum;
 
@@ -74,6 +75,14 @@ public class FiscalDao extends BaseDao {
 	
 	public Activum getActivumByCostId(Activum activum) throws Exception {
 		activum = (Activum) sqlMap.queryForObject("getActivumByCostId", activum);
+		if (activum != null) {
+			decrypt(activum);
+		}
+		return activum;
+	}
+	
+	public Activum getActivum(KeyId key) throws Exception {
+		Activum activum = (Activum) sqlMap.queryForObject("getActivum", key);
 		if (activum != null) {
 			decrypt(activum);
 		}

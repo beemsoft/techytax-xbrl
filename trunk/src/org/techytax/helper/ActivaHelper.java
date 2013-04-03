@@ -86,7 +86,7 @@ public class ActivaHelper {
 		return false;
 	}	
 	
-	private static List<Activum> getAndTranslate(Locale locale, KeyYear keyYear) throws Exception {
+	public static List<Activum> getAndTranslate(Locale locale, KeyYear keyYear) throws Exception {
 		List<Activum> activaLijst = fiscaalDao.getActivaLijst(keyYear);
 		for (Activum activum : activaLijst) {
 			activum.setOmschrijving(Translator.translateKey(activum.getOmschrijving(), locale));

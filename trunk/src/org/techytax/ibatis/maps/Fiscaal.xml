@@ -1,5 +1,5 @@
 <!--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<typeAlias alias="deductableCostGroup" type="org.techytax.domain.DeductableCostGroup" />
 	<typeAlias alias="cost" type="org.techytax.domain.Cost" />	
 	<typeAlias alias="keyYear" type="org.techytax.domain.KeyYear" />
+	<typeAlias alias="keyId" type="org.techytax.domain.KeyId" />	
 	<parameterMap id="periodeMap" class="java.util.Map">
 		<parameter property="beginDatum" javaType="string" />
 		<parameter property="eindDatum" javaType="string" />
@@ -120,6 +121,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		WHERE activa.user_id=#userId#
 		AND activa.id = restwaarde.activa_id
 		AND activa.kost_id=#costId# 
+	</select>
+	<select id="getActivum" parameterClass="keyId" resultClass="activum">
+		SELECT activa.id, activa.user_id as userId, activa.balans_id as balanceType, activa.kost_id as costId, restwaarde.restwaarde, activa.einddatum as endDate
+		FROM activa, restwaarde
+		WHERE activa.user_id=#userId#
+		AND activa.id = restwaarde.activa_id
+		AND activa.id =#id# 
 	</select>
 	<select id="getCostListForActivum" parameterClass="activum" resultClass="cost">
 		select kosten.id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId 

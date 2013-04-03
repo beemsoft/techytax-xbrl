@@ -85,7 +85,10 @@ INSERT INTO `kostensoort` VALUES
 (40,'costtype.repurchase',0,1,1,1,0),
 (41,'costtype.office',0,1,1,1,0),
 (42,'costtype.office.interest',0,0,1,1,0),
-(43,'costtype.office.depreciation',0,0,0,1,0);
+(43,'costtype.office.depreciation',0,0,0,1,0),
+(44,'costtype.office.other.account',0,0,0,1,0),
+(45,'costtype.office.discount',1,1,1,1,0),
+(46,'costtype.income.current.account.ignore',1,0,1,0,0);
 
 /*!40000 ALTER TABLE `kostensoort` ENABLE KEYS */;
 UNLOCK TABLES;

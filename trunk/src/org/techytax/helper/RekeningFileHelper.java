@@ -80,7 +80,7 @@ public class RekeningFileHelper {
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				cost = processLine(regel, regelNummer, userId);
-				if (cost.getCostTypeId() != CostConstants.SETTLEMENT) {
+				if (cost.getCostTypeId() != CostConstants.SETTLEMENT && cost.getCostTypeId() != CostConstants.SETTLEMENT_DISCOUNT) {
 					kostLijst.add(cost);
 				} else {
 					// Administrative split
@@ -88,7 +88,11 @@ public class RekeningFileHelper {
 					Cost splitCost = new Cost();
 					splitCost.setAmount(cost.getAmount());
 					splitCost.setVat(cost.getVat());
-					splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+					if (cost.getCostTypeId() == CostConstants.SETTLEMENT) {
+						splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+					} else {
+						splitCost.setCostTypeId(CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE);
+					}
 					splitCost.setDate(cost.getDate());
 					splitCost.setDescription(cost.getDescription());
 					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
