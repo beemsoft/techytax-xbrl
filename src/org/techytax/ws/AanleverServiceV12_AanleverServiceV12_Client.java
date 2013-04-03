@@ -164,5 +164,17 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 		return results;
 
 	}
+	
+	public static String getXbrlValidationError() throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(
+				"/home/hans/workspace/TechyTax/src/error.txt"));
+		String line, results = "";
+		while ((line = reader.readLine()) != null) {
+			results += line;
+		}
+		reader.close();
+		return results;
+
+	}	
 
 }

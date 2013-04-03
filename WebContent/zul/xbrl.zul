@@ -54,7 +54,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 								</listitem>
 							</template>
 						</listbox>
-						<listbox model="@load(vm.statussenProces)"
+						<listbox model="@load(vm.statussenProces)" selectedItem="@bind(vm.selected)"
 							hflex="true" height="500px">
 							<auxhead>
 								<auxheader colspan="5" class="topic">
@@ -74,14 +74,14 @@ arg0="/WEB-INF/layout/template.zul"?>
 									align="center" width="350px" />
 							</listhead>
 							<template name="model" var="item">
-								<listitem>
+								<listitem >
 									<listcell
 										label="@load(item.statuscode)" />
 									<listcell
 										label="@load(item.tijdstempelStatus)" />
 									<listcell
 										label="@load(item.statusomschrijving)" />
-									<listcell
+									<listcell tooltiptext="Klik hier voor meer info" onClick="@command('popupMessage', target=self, content=item.statusFoutcode.foutbeschrijving)"
 										label="@load(item.statusFoutcode.foutcode)" />
 									<listcell
 										label="@load(item.statusdetails)" />
@@ -137,5 +137,8 @@ arg0="/WEB-INF/layout/template.zul"?>
 				</tabpanel>
 			</tabpanels>
 		</tabbox>
+		<popup id="msgPopup"  style="background:#FFFF66;">
+    		<label id="msg"></label>
+		</popup>
 	</window>
 </zk>
