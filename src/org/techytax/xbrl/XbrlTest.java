@@ -2,6 +2,7 @@ package org.techytax.xbrl;
 
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -148,7 +149,7 @@ public class XbrlTest {
 			estimateFromPreviousReturns.setDecimals("INF");
 			estimateFromPreviousReturns.setContextRef(context);
 			estimateFromPreviousReturns.setUnitRef(unit);
-			estimateFromPreviousReturns.setValue(new BigDecimal("0"));
+			estimateFromPreviousReturns.setValue(new BigInteger("0"));
 			vatDeclaration
 					.setEstimateFromPreviousReturns(estimateFromPreviousReturns);
 
@@ -157,7 +158,7 @@ public class XbrlTest {
 			estimateOnThisReturn.setDecimals("INF");
 			estimateOnThisReturn.setContextRef(context);
 			estimateOnThisReturn.setUnitRef(unit);
-			estimateOnThisReturn.setValue(new BigDecimal("0"));
+			estimateOnThisReturn.setValue(new BigInteger("0"));
 			vatDeclaration.setEstimateOnThisReturn(estimateOnThisReturn);
 
 			MonetaryNoDecimals10VItemType installationDistanceSalesWithinTheEC = bdTypeObjectFactory
@@ -165,7 +166,7 @@ public class XbrlTest {
 			installationDistanceSalesWithinTheEC.setDecimals("INF");
 			installationDistanceSalesWithinTheEC.setContextRef(context);
 			installationDistanceSalesWithinTheEC.setUnitRef(unit);
-			installationDistanceSalesWithinTheEC.setValue(new BigDecimal("0"));
+			installationDistanceSalesWithinTheEC.setValue(new BigInteger("0"));
 			vatDeclaration
 					.setInstallationDistanceSalesWithinTheEC(installationDistanceSalesWithinTheEC);
 
@@ -174,7 +175,7 @@ public class XbrlTest {
 			valueAddedTaxOwed.setDecimals("INF");
 			valueAddedTaxOwed.setContextRef(context);
 			valueAddedTaxOwed.setUnitRef(unit);
-			valueAddedTaxOwed.setValue(new BigDecimal("2940"));
+			valueAddedTaxOwed.setValue(new BigInteger("2940"));
 			vatDeclaration.setValueAddedTaxOwed(valueAddedTaxOwed);
 
 			MonetaryNoDecimals9VItemType valueAddedTaxOwedToBePaidBack = bdTypeObjectFactory
@@ -182,7 +183,7 @@ public class XbrlTest {
 			valueAddedTaxOwedToBePaidBack.setDecimals("INF");
 			valueAddedTaxOwedToBePaidBack.setContextRef(context);
 			valueAddedTaxOwedToBePaidBack.setUnitRef(unit);
-			valueAddedTaxOwedToBePaidBack.setValue(new BigDecimal("2940"));
+			valueAddedTaxOwedToBePaidBack.setValue(new BigInteger("2940"));
 			vatDeclaration
 					.setValueAddedTaxOwedToBePaidBack(valueAddedTaxOwedToBePaidBack);
 
@@ -191,7 +192,7 @@ public class XbrlTest {
 			valueAddedTaxPrivateUse.setDecimals("INF");
 			valueAddedTaxPrivateUse.setContextRef(context);
 			valueAddedTaxPrivateUse.setUnitRef(unit);
-			valueAddedTaxPrivateUse.setValue(new BigDecimal("0"));
+			valueAddedTaxPrivateUse.setValue(new BigInteger("0"));
 			vatDeclaration.setValueAddedTaxPrivateUse(valueAddedTaxPrivateUse);
 
 			nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
@@ -226,7 +227,7 @@ public class XbrlTest {
 			taxedTurnoverSuppliesServicesGeneralTariff.setDecimals("INF");
 			taxedTurnoverSuppliesServicesGeneralTariff.setContextRef(context);
 			taxedTurnoverSuppliesServicesGeneralTariff.setUnitRef(unit);
-			taxedTurnoverSuppliesServicesGeneralTariff.setValue(new BigDecimal(
+			taxedTurnoverSuppliesServicesGeneralTariff.setValue(new BigInteger(
 					"0"));
 			vatDeclaration
 					.setTaxedTurnoverSuppliesServicesGeneralTariff(taxedTurnoverSuppliesServicesGeneralTariff);
@@ -236,7 +237,7 @@ public class XbrlTest {
 			valueAddedTaxSuppliesServicesGeneralTariff.setDecimals("INF");
 			valueAddedTaxSuppliesServicesGeneralTariff.setContextRef(context);
 			valueAddedTaxSuppliesServicesGeneralTariff.setUnitRef(unit);
-			valueAddedTaxSuppliesServicesGeneralTariff.setValue(new BigDecimal(
+			valueAddedTaxSuppliesServicesGeneralTariff.setValue(new BigInteger(
 					"2940"));
 			vatDeclaration
 					.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
@@ -246,7 +247,7 @@ public class XbrlTest {
 			valueAddedTaxOnInput.setDecimals("INF");
 			valueAddedTaxOnInput.setContextRef(context);
 			valueAddedTaxOnInput.setUnitRef(unit);
-			valueAddedTaxOnInput.setValue(new BigDecimal(
+			valueAddedTaxOnInput.setValue(new BigInteger(
 					"50"));			
 			vatDeclaration.setValueAddedTaxOnInput(valueAddedTaxOnInput);
 

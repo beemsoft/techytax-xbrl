@@ -21,6 +21,7 @@ package org.techytax.digipoort;
 
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
@@ -42,6 +43,7 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaratio
 import org.techytax.domain.Balans;
 import org.techytax.domain.Periode;
 import org.techytax.domain.VatDeclarationData;
+import org.techytax.helper.AmountHelper;
 import org.techytax.util.DateHelper;
 import org.xbrl._2003.instance.Context;
 import org.xbrl._2003.instance.ContextEntityType;
@@ -211,11 +213,14 @@ public class XbrlHelper {
 	}
 	
 	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balans balans) {
-		vatDeclarationData.setValueAddedTaxOwed(balans.getTotaleKosten().add(balans.getCorrection()));
-		vatDeclarationData.setValueAddedTaxOnInput(balans.getTotaleBaten());
-		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(balans.getTotaleKosten().subtract(balans.getTotaleBaten()).add(balans.getCorrection()));
-		vatDeclarationData.setValueAddedTaxPrivateUse(balans.getCorrection());
-		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(balans.getTotaleKosten());
+		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
+		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
+		BigInteger totaleBaten = AmountHelper.roundToInteger(balans.getTotaleBaten());
+		vatDeclarationData.setValueAddedTaxOwed(totaleKosten.add(correction));
+		vatDeclarationData.setValueAddedTaxOnInput(totaleBaten);
+		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(totaleKosten.subtract(totaleBaten).add(correction));
+		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
+		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleKosten);
 	}	
 	
 	public static void main(String[] args) {

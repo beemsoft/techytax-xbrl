@@ -20,6 +20,7 @@
 package org.techytax.helper;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 
 import org.techytax.domain.Cost;
@@ -43,5 +44,18 @@ public class AmountHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	public static BigInteger roundToInteger(BigDecimal amount) {
+		if (amount != null) {
+			return amount.setScale(0,RoundingMode.HALF_UP).toBigInteger();
+		} else {
+			return null;
+		}
+	}	
+	
+	public static void main(String[] args) {
+		System.out.println(roundToInteger(new BigDecimal("1.55")));
+		System.out.println(roundToInteger(new BigDecimal("1.45")));		
 	}
 }

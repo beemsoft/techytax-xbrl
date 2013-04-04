@@ -3,7 +3,7 @@ package org.techytax.zk.vat;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -152,11 +152,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 	}
 
-	private static String format(BigDecimal amount) {
+	private static String format(BigInteger amount) {
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
 		otherSymbols.setDecimalSeparator(',');
 		otherSymbols.setGroupingSeparator('.');
-		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0", otherSymbols);
 		return df.format(amount.doubleValue());
 	}
 
@@ -195,11 +195,13 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
-		vatOut.setValue(format(balans.getTotaleKosten()));
-		vatIn.setValue(format(balans.getTotaleBaten()));
-		vatBalance.setValue(format(balans.getTotaleBaten().subtract(balans.getTotaleKosten()).add(balans.getCorrection())));
-		turnoverGross.setValue(format(balans.getBrutoOmzet()));
-		turnoverNet.setValue(format(balans.getNettoOmzet()));
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		XbrlHelper.addBalanceData(vatDeclarationData, balans);
+		vatOut.setValue(format(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
+		vatIn.setValue(format(vatDeclarationData.getValueAddedTaxOnInput()));
+		vatBalance.setValue(format(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
+		turnoverGross.setValue(format(balans.getBrutoOmzet().toBigInteger()));
+		turnoverNet.setValue(format(balans.getNettoOmzet().toBigInteger()));
 		controleTab.setSelected(true);
 		costModel = new ListModelList<Cost>();
 		if (costGrid != null) {

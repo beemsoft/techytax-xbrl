@@ -84,9 +84,11 @@ public class XbrlVM implements Serializable {
 
 	@Command
 	public void popupMessage(@BindingParam("target") Component targetComponent, @BindingParam("content") String content) {
-		msg.setPre(true);
-		msg.setValue(content);
-		msgPopup.open(targetComponent);
+		if (StringUtils.isNotEmpty(content)) {
+			msg.setPre(true);
+			msg.setValue(content);
+			msgPopup.open(targetComponent);
+		}
 	}   
 	
 	public void setStatussenProces(List<StatusResultaat> statussenProces) {
