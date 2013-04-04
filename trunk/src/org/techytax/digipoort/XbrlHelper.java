@@ -218,7 +218,7 @@ public class XbrlHelper {
 		BigInteger totaleBaten = AmountHelper.roundToInteger(balans.getTotaleBaten());
 		vatDeclarationData.setValueAddedTaxOwed(totaleKosten.add(correction));
 		vatDeclarationData.setValueAddedTaxOnInput(totaleBaten);
-		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(totaleKosten.subtract(totaleBaten).add(correction));
+		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(totaleBaten.subtract(totaleKosten).subtract(correction));
 		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
 		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleKosten);
 	}	
