@@ -9,6 +9,7 @@
 package org.xbrl._2003.instance;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,7 +50,7 @@ import javax.xml.namespace.QName;
 public class MonetaryItemType {
 
     @XmlValue
-    protected BigDecimal value;
+    protected BigInteger value;
     @XmlAttribute(name = "precision")
     protected String precision;
     @XmlAttribute(name = "decimals")
@@ -83,7 +84,7 @@ public class MonetaryItemType {
      *     {@link BigDecimal }
      *     
      */
-    public BigDecimal getValue() {
+    public BigInteger getValue() {
         return value;
     }
 
@@ -95,7 +96,7 @@ public class MonetaryItemType {
      *     {@link BigDecimal }
      *     
      */
-    public void setValue(BigDecimal value) {
+    public void setValue(BigInteger value) {
         this.value = value;
     }
 

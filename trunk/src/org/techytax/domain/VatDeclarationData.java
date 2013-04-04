@@ -19,7 +19,7 @@
  */
 package org.techytax.domain;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 public class VatDeclarationData {
@@ -29,23 +29,23 @@ public class VatDeclarationData {
 	private String fiscalNumber;
 	private Date startDate;
 	private Date endDate;
-	
+
 	// Verschuldigde_omzetbelasting_2
-	private BigDecimal valueAddedTaxOwed;
-	
+	private BigInteger valueAddedTaxOwed;
+
 	// Totaal_te_betalen_/_terug_te_vragen_2
-	private BigDecimal valueAddedTaxOwedToBePaidBack;
-	
+	private BigInteger valueAddedTaxOwedToBePaidBack;
+
 	// Omzetbelasting_over_privegebruik_1
-	private BigDecimal valueAddedTaxPrivateUse;
-	
-	private BigDecimal taxedTurnoverSuppliesServicesGeneralTariff;
-	
+	private BigInteger valueAddedTaxPrivateUse;
+
+	private BigInteger taxedTurnoverSuppliesServicesGeneralTariff;
+
 	// Omzetbelasting_leveringen/diensten_algemeen_tarief_2
-	private BigDecimal valueAddedTaxSuppliesServicesGeneralTariff;
-	
+	private BigInteger valueAddedTaxSuppliesServicesGeneralTariff;
+
 	// Voorbelasting_1
-	private BigDecimal valueAddedTaxOnInput;
+	private BigInteger valueAddedTaxOnInput;
 
 	public String getName() {
 		return name;
@@ -87,54 +87,51 @@ public class VatDeclarationData {
 		this.endDate = endDate;
 	}
 
-	public BigDecimal getValueAddedTaxOwed() {
+	public BigInteger getValueAddedTaxOwed() {
 		return valueAddedTaxOwed;
 	}
 
-	public void setValueAddedTaxOwed(BigDecimal valueAddedTaxOwed) {
+	public void setValueAddedTaxOwed(BigInteger valueAddedTaxOwed) {
 		this.valueAddedTaxOwed = valueAddedTaxOwed;
 	}
 
-	public BigDecimal getValueAddedTaxOwedToBePaidBack() {
+	public BigInteger getValueAddedTaxOwedToBePaidBack() {
 		return valueAddedTaxOwedToBePaidBack;
 	}
 
-	public void setValueAddedTaxOwedToBePaidBack(
-			BigDecimal valueAddedTaxOwedToBePaidBack) {
+	public void setValueAddedTaxOwedToBePaidBack(BigInteger valueAddedTaxOwedToBePaidBack) {
 		this.valueAddedTaxOwedToBePaidBack = valueAddedTaxOwedToBePaidBack;
 	}
 
-	public BigDecimal getValueAddedTaxPrivateUse() {
+	public BigInteger getValueAddedTaxPrivateUse() {
 		return valueAddedTaxPrivateUse;
 	}
 
-	public void setValueAddedTaxPrivateUse(BigDecimal valueAddedTaxPrivateUse) {
+	public void setValueAddedTaxPrivateUse(BigInteger valueAddedTaxPrivateUse) {
 		this.valueAddedTaxPrivateUse = valueAddedTaxPrivateUse;
 	}
 
-	public BigDecimal getTaxedTurnoverSuppliesServicesGeneralTariff() {
+	public BigInteger getTaxedTurnoverSuppliesServicesGeneralTariff() {
 		return taxedTurnoverSuppliesServicesGeneralTariff;
 	}
 
-	public void setTaxedTurnoverSuppliesServicesGeneralTariff(
-			BigDecimal taxedTurnoverSuppliesServicesGeneralTariff) {
+	public void setTaxedTurnoverSuppliesServicesGeneralTariff(BigInteger taxedTurnoverSuppliesServicesGeneralTariff) {
 		this.taxedTurnoverSuppliesServicesGeneralTariff = taxedTurnoverSuppliesServicesGeneralTariff;
 	}
 
-	public BigDecimal getValueAddedTaxSuppliesServicesGeneralTariff() {
+	public BigInteger getValueAddedTaxSuppliesServicesGeneralTariff() {
 		return valueAddedTaxSuppliesServicesGeneralTariff;
 	}
 
-	public void setValueAddedTaxSuppliesServicesGeneralTariff(
-			BigDecimal valueAddedTaxSuppliesServicesGeneralTariff) {
+	public void setValueAddedTaxSuppliesServicesGeneralTariff(BigInteger valueAddedTaxSuppliesServicesGeneralTariff) {
 		this.valueAddedTaxSuppliesServicesGeneralTariff = valueAddedTaxSuppliesServicesGeneralTariff;
 	}
 
-	public BigDecimal getValueAddedTaxOnInput() {
+	public BigInteger getValueAddedTaxOnInput() {
 		return valueAddedTaxOnInput;
 	}
 
-	public void setValueAddedTaxOnInput(BigDecimal valueAddedTaxOnInput) {
+	public void setValueAddedTaxOnInput(BigInteger valueAddedTaxOnInput) {
 		this.valueAddedTaxOnInput = valueAddedTaxOnInput;
 	}
 
