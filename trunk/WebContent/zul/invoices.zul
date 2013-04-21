@@ -1,0 +1,77 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+<window self="@define(content)" title="Facturen controleren" border="normal"
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.fiscal.InvoiceVM')" 
+	validationMessages="@id('vmsgs')">
+	<hbox>
+	<vbox hflex="true" width="1090px" height="490px">
+		<groupbox hflex="true" mold="3d">
+			<grid hflex="true" >
+				<columns>
+					<column/>
+					<column/>
+					<column/>
+					<column/>														
+				</columns>
+				<rows>
+					<row>Saldo datum
+						<hlayout> 
+							<datebox id="cdbeginbox" value="@bind(vm.balanceDate)"/>
+						</hlayout>	
+					</row>								
+				</rows>
+			</grid>
+		</groupbox>
+		<listbox model="@load(vm.invoices)" selectedItem="@bind(vm.selected)" hflex="true" height="350px">
+			<listhead>
+				<listheader label="Datum verstuurd"/>
+				<listheader label="Datum betaald"/>				
+				<listheader label="Factuurnummer"/>
+				<listheader label="Bedrag"/>				
+				<listheader label="btw"/>
+			</listhead>
+			<template name="model" var="item">
+				<listitem >
+					<listcell label="@load(item.dateSent) @converter('formatedDate', format='yyyy/MM/dd')"/>
+					<listcell label="@load(item.dateReceived) @converter('formatedDate', format='yyyy/MM/dd')"/>
+					<listcell label="@load(item.invoiceNumber)"/>
+					<listcell label="@load(item.netAmount)"/>					
+					<listcell label="@load(item.vatAmount)"/>
+				</listitem>
+			</template>
+		</listbox>
+		<groupbox hflex="true" mold="3d">
+			<grid hflex="true" >
+				<columns>
+					<column width="120px"/>
+					<column/>
+				</columns>
+				<rows>
+					<row>Onbetaalde facturen van vorig jaar
+						<hlayout>
+							<textbox value="@load(vm.unpaidInvoicesFromPreviousYear)" width="300px" />
+						</hlayout>
+					</row>
+					<row>Betaalde facturen van vorig jaar
+						<hlayout>
+							<textbox value="@load(vm.paidInvoicesWithoutMatch)" width="300px" />
+						</hlayout>
+					</row>
+					<row>Onbetaalde facturen van dit jaar
+						<hlayout>
+							<textbox value="@load(vm.unpaidInvoicesFromThisYear)" width="300px" />
+						</hlayout>
+					</row>										
+					<row>Income
+						<hlayout>
+							<textbox value="@load(vm.totalIncome)" width="300px" />
+						</hlayout>
+					</row>													
+				</rows>
+			</grid>
+		</groupbox>		
+	</vbox>
+	</hbox>
+</window>
+</zk>

@@ -260,6 +260,19 @@ public class DateHelper {
 		return false;
 	}
 	
+	public static Periode getPeriodTillDate(Date balanceDate) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(balanceDate);
+		Date eindDatum = cal.getTime();
+		cal.set(Calendar.MONTH, 0);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date beginDatum = cal.getTime();
+		Periode periode = new Periode();
+		periode.setBeginDatum(beginDatum);
+		periode.setEindDatum(eindDatum);
+		return periode;		
+	}	
+	
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod().getBeginDatum());
 		System.out.println(getLatestVatPeriod().getEindDatum());		
