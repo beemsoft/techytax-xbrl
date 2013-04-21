@@ -311,6 +311,16 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<Cost> getInvoices(String beginDatum, String eindDatum, String userId) throws Exception {
+		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+		List<Cost> costs = sqlMap.queryForList("getInvoices", map);
+		for (Cost cost : costs) {
+			decrypt(cost);
+		}
+		return costs;
+	}	
+	
+	@SuppressWarnings("unchecked")
 	public BigDecimal getVatDebt(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		List<Cost> costs = sqlMap.queryForList("getVatDebt", map);

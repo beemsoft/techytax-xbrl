@@ -52,7 +52,6 @@ public class FiscalOverview {
 	private int kostenOverig;
 	private int kostenOverigTransport;
 	private int nettoOmzet;
-	private BigInteger netTurnOverNotYetPaid;
 	private PrivatWithdrawal onttrekking;
 	private int oudedagsReserveMaximaal;
 	private List<Passivum> passiva;
@@ -145,14 +144,6 @@ public class FiscalOverview {
 
 	public int getNettoOmzet() {
 		return nettoOmzet;
-	}
-
-	public BigInteger getNetTurnOverNotYetPaid() {
-		return netTurnOverNotYetPaid;
-	}
-
-	public int getNetTurnOverTotal() {
-		return nettoOmzet + netTurnOverNotYetPaid.intValue();
 	}
 
 	public PrivatWithdrawal getOnttrekking() {
@@ -279,10 +270,6 @@ public class FiscalOverview {
 
 	public void setNettoOmzet(int nettoOmzet) {
 		this.nettoOmzet = nettoOmzet;
-	}
-
-	public void setNetTurnOverNotYetPaid(BigInteger netTurnOverNotYetPaid) {
-		this.netTurnOverNotYetPaid = netTurnOverNotYetPaid;
 	}
 
 	public void setOnttrekking(PrivatWithdrawal onttrekking) {

@@ -61,7 +61,7 @@ public class ActivaHelper {
 
 			handleStock(userId, overview, bookYear);
 
-			handleInvoicedToBePaid(userId, overview, bookYear);
+			handleInvoicesToBePaid(userId, overview, bookYear);
 
 		}
 
@@ -94,7 +94,7 @@ public class ActivaHelper {
 		return activaLijst;
 	}
 
-	private static void handleInvoicedToBePaid(long userId, FiscalOverview overview, int bookYear) throws Exception {
+	private static void handleInvoicesToBePaid(long userId, FiscalOverview overview, int bookYear) throws Exception {
 		BookValue activumValue;
 		BookValue currentBookValue;
 		if (overview.getTurnOverUnpaid() != null && overview.getTurnOverUnpaid().compareTo(new BigDecimal("0")) != 0) {
@@ -111,7 +111,7 @@ public class ActivaHelper {
 				bookValueDao.insertBookValue(activumValue);
 			} else {
 				activumValue.setId(currentBookValue.getId());
-				bookValueDao.updateBookValue(activumValue);
+//				bookValueDao.updateBookValue(activumValue);
 			}
 		}
 	}

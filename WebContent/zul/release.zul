@@ -17,6 +17,7 @@ Changes:
 <li>Added settlement ("bedrijfsruimte") functionality.</li>
 <li>Upgraded to ZK 6.5.2.</li>
 <li>Added ZK page for activa.</li>
+<li>Added ZK page for invoices.</li>
 <li>Added cost types for settlement and incoming costs that can be ignored.</li>
 <li>Added stub for DigipoortService.</li>
 <li>Added popup for XBRL validation error.</li>

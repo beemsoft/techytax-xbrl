@@ -229,13 +229,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	<select id="getInvoices" parameterMap="periodeMap"
 		resultClass="cost">
-		SELECT id, bedrag as amount, datum as date, btw as vat, omschrijving as description, kostensoort_id as costTypeId 
-		FROM kosten
-		where kostensoort_id in (38,39) 
+		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
+		FROM kosten k, kostensoort ks 
+		WHERE k.kostensoort_id = ks.id
+		and kostensoort_id in (38,39) 
 		and datum &gt;= ? 
 		and datum &lt;= ? 
 		and user_id=? 
-		order by datum
+		order by kostensoort_id, datum
 	</select>
 	<select id="getVatDebt" parameterMap="periodeMap"
 		resultClass="cost">
