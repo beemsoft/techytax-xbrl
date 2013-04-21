@@ -125,8 +125,6 @@ public class FiscalOverviewHelper {
 
 	private static void handleTurnOver(String beginDatum, String eindDatum, long userId, FiscalOverview overview, Balans btwBalans) throws Exception {
 		overview.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
-		BigDecimal turnoverUnpaid = boekDao.getInvoiceBalance(beginDatum, DateHelper.getFinalInvoiceDate(eindDatum), Long.toString(userId));
-		overview.setTurnOverUnpaid(turnoverUnpaid);
 	}
 
 	private static void handleRepurchase(FiscalOverview overview) {
