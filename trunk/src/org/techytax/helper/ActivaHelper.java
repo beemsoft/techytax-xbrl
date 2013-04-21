@@ -94,6 +94,7 @@ public class ActivaHelper {
 		return activaLijst;
 	}
 
+	// TODO: use new invoices screen.
 	private static void handleInvoicesToBePaid(long userId, FiscalOverview overview, int bookYear) throws Exception {
 		BookValue activumValue;
 		BookValue currentBookValue;

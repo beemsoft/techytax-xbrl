@@ -64,14 +64,6 @@ public class DateHelper {
 		return timeString;
 	}	
 	
-	public static String getFinalInvoiceDate(String date_str) throws Exception {
-		Date date = stringToDate(date_str);
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.DATE, 15);
-		return getDate(cal.getTime());
-	}
-	
 	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
 		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
 		.newXMLGregorianCalendar();
