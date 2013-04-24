@@ -122,7 +122,6 @@ public class InvoiceVM {
 		StringTokenizer tokenizer = new StringTokenizer(invoiceDescription);
 		tokenizer.nextElement();
 		String invoiceNumber = tokenizer.nextToken();
-		System.out.println(invoiceNumber);
 		return invoiceNumber;
 	}
 
