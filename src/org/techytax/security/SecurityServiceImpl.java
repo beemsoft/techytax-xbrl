@@ -23,6 +23,8 @@ import java.util.Date;
 
 import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 
 public class SecurityServiceImpl implements SecurityService {
 
@@ -53,6 +55,7 @@ public class SecurityServiceImpl implements SecurityService {
 		try {
 			user.setLatestOnlineTime(currentDate);
 			userDao.updateUserTimeStamp(user);
+			AuditLogger.log(AuditType.LOGON, user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,3 +1,22 @@
+/**
+ * Copyright 2013 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.techytax.zk;
 
 import java.util.ArrayList;
@@ -12,6 +31,8 @@ import org.techytax.domain.Kostmatch;
 import org.techytax.domain.User;
 import org.techytax.domain.VatMatch;
 import org.techytax.domain.VatType;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -87,6 +108,7 @@ public class CostTypeViewModel {
 	public void saveMatch() throws Exception{
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
+			AuditLogger.log(AuditType.MATCH_TRANSACTION, user);			
 			selectedPrivateMatch.setUserId(user.getId());
 			selectedPrivateMatch.setKostenSoortId(selected.getKostenSoortId());
 			

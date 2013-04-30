@@ -22,6 +22,8 @@ import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.ValidationContext;
@@ -104,6 +106,7 @@ public class CostVM {
 	@NotifyChange({"selected","costs"})
 	@Command
 	public void newCost() throws Exception{
+		AuditLogger.log(AuditType.ENTER_COST, user);
 		Cost cost = new Cost();
 		cost.setDate(new Date());
 		getCosts().add(cost);
@@ -120,8 +123,10 @@ public class CostVM {
 			selected.setKostenSoortOmschrijving(selectedCostType.getOmschrijving());
 			Cost cost = boekDao.getKost(Long.toString(selected.getId()), user.getId());
 			if (cost == null) {
+				AuditLogger.log(AuditType.ENTER_COST, user);
 				boekDao.insertKost(selected);
 			} else {
+				AuditLogger.log(AuditType.UPDATE_COST, user);
 				boekDao.updateKost(selected);
 			}
 		}
@@ -133,6 +138,7 @@ public class CostVM {
 	public void deleteCost() throws Exception{
 		BoekDao boekDao = new BoekDao();
 		if (user != null) {
+			AuditLogger.log(AuditType.DELETE_COST, user);
 			selected.setUserId(user.getId());
 			boekDao.deleteCost(selected);
 			getCosts().remove(selected);

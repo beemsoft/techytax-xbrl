@@ -28,6 +28,8 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.helper.DutchAuditFileHelper;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.mail.MailHelper;
 import org.techytax.util.DateHelper;
 import org.zkoss.bind.annotation.Command;
@@ -42,6 +44,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@Command
 	public void audit() {
+		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);		
 		try {
 			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit", Long.toString(user.getId()));
 			String message = DutchAuditFileHelper.createAuditFile(allCosts, user);

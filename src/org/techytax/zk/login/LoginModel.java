@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import org.techytax.domain.User;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.security.AuthenticationException;
 import org.techytax.security.SecurityService;
 import org.techytax.security.SecurityServiceImpl;
@@ -48,6 +50,8 @@ public class LoginModel  {
 
 	@Command
 	public void logout() {
+		User user = UserCredentialManager.getUser();		
+		AuditLogger.log(AuditType.LOGOFF, user);
 		UserCredentialManager.setUser(null);
 		Executions.sendRedirect("login.zul");
 	}

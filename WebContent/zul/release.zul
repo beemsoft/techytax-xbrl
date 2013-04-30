@@ -5,8 +5,7 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>1.12 (upcoming) - The "Inkomsten Belasting 2012" release</h4>
-<p>This release can be used for the Dutch income tax declaration for 2012.</p>
+<h4>1.12 (upcoming)</h4>
 <p>
 <b>Pleae note</b>: From this version onwards, only the Dutch language is supported.
 </p>
@@ -21,6 +20,9 @@ Changes:
 <li>Added cost types for settlement and incoming costs that can be ignored.</li>
 <li>Added stub for DigipoortService.</li>
 <li>Added popup for XBRL validation error.</li>
+<li>Added audit logging.</li>
+<li>Introduced Hibernate JPA functionality.</li>
+<li>Introduced JRebel.</li>
 </ul>
 <h4>1.11 (2013-03-16)</h4>
 <p>
