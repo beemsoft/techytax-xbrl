@@ -34,6 +34,8 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -53,6 +55,7 @@ public class InvoiceVM {
 
 	public ListModelList<InvoiceCheck> getInvoices() throws Exception {
 		if (user != null) {
+			AuditLogger.log(AuditType.INVOICE_OVERVIEW, user);
 			Periode period = DateHelper.getPeriodTillDate(balanceDate);
 			List<Cost> invoices2 = boekDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
 					Long.toString(user.getId()));

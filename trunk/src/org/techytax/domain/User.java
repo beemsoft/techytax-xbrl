@@ -22,18 +22,29 @@ package org.techytax.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user") 
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
 
 	private boolean blocked;
+	
+	@Column(name = "company_address")
 	private String companyAddress;
+	
 	private String companyName;
 	private String email;
 	private Date freezeEndDate;
 	private Date freezeStartDate;
 	private String fullName;
-	private long id;
+	@Id
+	private Long id;
 	private Date latestOnlineTime;
 	private boolean paid;
 	private String password;
@@ -78,7 +89,7 @@ public class User implements Serializable {
 		return fullName;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -162,7 +173,7 @@ public class User implements Serializable {
 		this.fullName = fullName;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

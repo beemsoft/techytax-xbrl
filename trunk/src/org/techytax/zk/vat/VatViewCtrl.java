@@ -1,3 +1,22 @@
+/**
+ * Copyright 2013 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.techytax.zk.vat;
 
 import java.io.BufferedReader;
@@ -25,6 +44,8 @@ import org.techytax.domain.VatDeclarationData;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
 import org.techytax.security.AuthenticationException;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverResponse;
@@ -86,7 +107,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		System.out.println(" Testing upload: " + event.getMedia().getName());
 		User user = UserCredentialManager.getUser();
-
+		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
 		try {
 
 			KostensoortDao dao = new KostensoortDao();
@@ -163,6 +184,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Listen("onClick=#importBtn")
 	public void importTransactions(Event event) throws Exception {
 		User user = UserCredentialManager.getUser();
+		AuditLogger.log(AuditType.IMPORT_TRANSACTIONS, user);		
 		ListModel<Cost> result = costGrid.getModel();
 		BoekDao boekDao = new BoekDao();
 		if (result != null) {
@@ -186,6 +208,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private void createVatOverview() throws Exception {
 		BoekDao boekDao = new BoekDao();
 		User user = UserCredentialManager.getUser();
+		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod();
 		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()),
 				"btwBalans", Long.toString(user.getId()));
@@ -217,15 +240,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 						switch (e.getButton()) {
 						case OK:
 							try {
+								User user = UserCredentialManager.getUser();
+								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, 0,
 										Messagebox.INFORMATION);
 							} catch (AanleverServiceFault asf) {
 								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 							}
-						case CANCEL: // Cancel is clicked
-						default: // if the Close button is clicked,
-									// e.getButton() returns null
+						case CANCEL:
+						default:
 						}
 					}
 				});
