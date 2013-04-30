@@ -1,3 +1,22 @@
+/**
+ * Copyright 2013 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.techytax.jpa.entities;
 
 import java.util.HashMap;
@@ -10,62 +29,30 @@ import javax.persistence.Persistence;
 
 public class EntityManagerHelper {
 
-	private static EntityManagerFactory emf= null;
-	private static ThreadLocal<EntityManager> threadLocal = null;
+	private static EntityManagerFactory emf = null;
+	private static ThreadLocal<EntityManager> threadLocal = new ThreadLocal<EntityManager>();
 
-//	static {
-//		
-//		Properties properties = new Properties() ;
-//		try {
-//			properties.load(EntityManagerHelper.class.getResourceAsStream("/hibernate.properties"));
-//
-//		
-//		@SuppressWarnings("unchecked")
-//		Map<String, String> propMap = new HashMap<String, String>((Map)properties);
-////		propMap.put("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
-////		propMap.put("hibernate.connection.url", "jdbc:hsqldb:mem:testdb");
-////		propMap.put("hibernate.connection.username", "sa");
-////		propMap.put("hibernate.connection.password", "");
-////		propMap.put("hibernate.connection.pool_size", "10");
-////		propMap.put("hibernate.connection.autocommit", "true");
-////		propMap.put("hibernate.cache.provider_class", "org.hibernate.cache.HashtableCacheProvider");
-////		propMap.put("hibernate.hbm2ddl.auto", "create-drop");
-////		propMap.put("hibernate.show_sql", "true");
-////		propMap.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-//		emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
-//		threadLocal = new ThreadLocal<EntityManager>();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static EntityManagerFactory getEntityManagerFactory() {
 		if (emf == null) {
 			Properties properties = new Properties();
 			try {
 				properties.load(EntityManagerHelper.class.getResourceAsStream("/hibernate.properties"));
-
-				@SuppressWarnings("unchecked")
 				Map<String, String> propMap = new HashMap<String, String>((Map) properties);
 				emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
-				threadLocal = new ThreadLocal<EntityManager>();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}
 		}
 		return emf;
 	}
-	
+
 	public static void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
 		emf = entityManagerFactory;
-		threadLocal = new ThreadLocal<EntityManager>();
 	}
 
 	public static EntityManager getEntityManager() {
 		EntityManager em = threadLocal.get();
-
 		if (em == null) {
 			em = getEntityManagerFactory().createEntityManager();
 			threadLocal.set(em);
