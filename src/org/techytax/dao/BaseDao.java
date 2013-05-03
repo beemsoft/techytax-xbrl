@@ -47,6 +47,7 @@ public class BaseDao {
 			intEncryptor.setPassword(password);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("TechyTax properties not found!");
 		}
 	}
 
