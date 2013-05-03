@@ -28,9 +28,8 @@ import org.techytax.jpa.entities.LogRecord;
 
 public class AuditLogger {
 
-	private static GenericDao<LogRecord> logDao = new GenericDao<LogRecord>(EntityManagerHelper.getEntityManager());
-
 	public static void log(AuditType auditType, User user) {
+		GenericDao<LogRecord> logDao = new GenericDao<LogRecord>(EntityManagerHelper.getEntityManager());
 		LogRecord logRecord = new LogRecord();
 		logRecord.setUser(user);
 		logRecord.setAuditType(auditType);

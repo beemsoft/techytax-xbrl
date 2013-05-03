@@ -24,6 +24,12 @@ Changes:
 <li>Introduced Hibernate JPA functionality.</li>
 <li>Introduced JRebel.</li>
 </ul>
+<p>
+Bugfixes:
+</p>
+<ul>
+<li>Fixed XBRL for VAT declaration.</li>
+</ul>
 <h4>1.11 (2013-03-16)</h4>
 <p>
 Changes:
