@@ -216,15 +216,21 @@ public class XbrlHelper {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
 		BigInteger totaleBaten = AmountHelper.roundToInteger(balans.getTotaleBaten());
-		vatDeclarationData.setValueAddedTaxOwed(totaleKosten.add(correction));
-		vatDeclarationData.setValueAddedTaxOnInput(totaleBaten);
-		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(totaleBaten.subtract(totaleKosten).subtract(correction));
+		BigInteger owed = totaleBaten.subtract(totaleKosten).subtract(correction);
+		vatDeclarationData.setValueAddedTaxOwed(owed);
+		vatDeclarationData.setValueAddedTaxOnInput(totaleKosten.add(correction));
+		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(owed);
 		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
-		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleKosten);
+		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleBaten);
 	}	
 	
 	public static void main(String[] args) {
-		createTestXbrlInstance();
+//		createTestXbrlInstance();
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		vatDeclarationData.setValueAddedTaxOnInput(new BigInteger("600"));
+		vatDeclarationData.setStartDate(new Date());
+		vatDeclarationData.setEndDate(new Date());
+		createXbrlInstance(vatDeclarationData);
 	}
 
 	public static String createTestXbrlInstance() {
