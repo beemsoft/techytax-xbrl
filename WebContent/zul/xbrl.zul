@@ -2,9 +2,30 @@
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
-	<window self="@define(content)" title="XBRL" border="normal"
+	<window self="@define(content)" title="Digipoort overzicht" border="normal"
 		apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.techytax.zk.xbrl.XbrlVM')">
+		<hbox>
+			<vbox width="500px">
+				<hbox>
+					<label value="U bent verbonden met de " />
+					<label visible="@load(vm.testEnvironment)" value="TEST"/>
+					<label visible="@load(not vm.testEnvironment)" value="PRODUCTIE"/>
+					<label value=" omgeving." />
+				</hbox>				
+				<label value="Hier kunt u controleren of ingestuurde aangiftes goed zijn aangekomen bij de Belastingdienst." />
+		 	</vbox>
+		 	<vbox tooltiptext="De tijden mogen niet te veel verschillen, omdat anders het signeren fout gaat.">
+		 		<hbox>
+		 			<label value="Systeemtijd:"/>
+		 			<label value="@load(vm.systemDate)" />
+		 		</hbox>
+		 		<hbox>
+		 			<label value="Echte tijd:"/>		 		
+		 			<label value="@load(vm.realTimDate)" />
+		 		</hbox>
+		 	</vbox>
+		 </hbox>	
 		<tabbox width="1500px" height="565px">
 			<tabs>
 				<tab label="Berichtsoorten" />
