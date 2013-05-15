@@ -5,6 +5,13 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
+<h4>1.13 (upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Improved XBRL page.</li>
+</ul>
 <h4>1.12 (2013-05-03)</h4>
 <p>
 <b>Pleae note</b>: From this version onwards, only the Dutch language is supported.

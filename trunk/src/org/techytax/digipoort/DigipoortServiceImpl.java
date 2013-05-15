@@ -291,7 +291,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	@Override
 	public GetStatussenProcesResponse getStatussenProces(VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException,
-			IOException, GeneralSecurityException {
+			IOException, GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
 			GetStatussenProcesRequest request = objectFactory.createGetStatussenProcesRequest();
@@ -302,13 +302,13 @@ public class DigipoortServiceImpl implements DigipoortService {
 			return port.getStatussenProces(request);
 		} catch (StatusinformatieServiceFault e) {
 			e.printStackTrace();
+			throw e;
 		}
-		return null;
 	}
 
 	@Override
 	public GetBerichtsoortenResponse getBerichtsoorten(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException,
-			GeneralSecurityException {
+			GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
 			GetBerichtsoortenRequest request = objectFactory.createGetBerichtsoortenRequest();
@@ -320,8 +320,8 @@ public class DigipoortServiceImpl implements DigipoortService {
 			return port.getBerichtsoorten(request);
 		} catch (StatusinformatieServiceFault e) {
 			e.printStackTrace();
+			throw e;
 		}
-		return null;
 	}
 
 }

@@ -21,14 +21,17 @@ package org.techytax.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.net.time.TimeTCPClient;
 import org.techytax.domain.Periode;
 
 public class DateHelper {
@@ -263,13 +266,35 @@ public class DateHelper {
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
 		return periode;		
+	}
+	
+	public static Date getNTPDate() {
+		List<String> hosts = Arrays.asList("ntp.xs4all.nl");
+
+		for (String host : hosts) {
+			TimeTCPClient client = new TimeTCPClient();
+			client.setDefaultTimeout(5000);
+			try {
+				client.connect(host);
+				Date ntpDate = client.getDate();
+				client.disconnect();
+				if (ntpDate != null) {
+					return ntpDate;
+				}
+			} catch (java.net.SocketException exp) {
+				exp.printStackTrace();
+			} catch (java.io.IOException exp) {
+				exp.printStackTrace();
+			}
+		}
+		return null;
 	}	
 	
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod().getBeginDatum());
 		System.out.println(getLatestVatPeriod().getEindDatum());		
-		
 		System.out.println(getDateForXml(new Date()));
+		System.out.println(getNTPDate());		
 	}
 
 }

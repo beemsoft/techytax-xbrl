@@ -130,9 +130,10 @@ public interface DigipoortService {
 	 * @throws GeneralSecurityException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws StatusinformatieServiceFault 
 	 */
 	public GetStatussenProcesResponse getStatussenProces(
-			VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException, IOException, GeneralSecurityException;
+			VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
 
 	/**
 	 * Geeft alle berichtsoorten waarvoor namens een bepaalde belanghebbende
@@ -143,7 +144,8 @@ public interface DigipoortService {
 	 * @throws GeneralSecurityException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
+	 * @throws StatusinformatieServiceFault 
 	 */
 	public GetBerichtsoortenResponse getBerichtsoorten(
-			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException;
+			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
 }

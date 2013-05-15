@@ -118,15 +118,16 @@ public class XbrlVM implements Serializable {
 
 	@Command
 	@NotifyChange("berichtsoorten")
-	public void berichtsoort() {
+	public void berichtsoort() throws FileNotFoundException, IOException, GeneralSecurityException {
 		try {
 			VatDeclarationData vatDeclarationData = new VatDeclarationData();
 			setFiscalNumber(vatDeclarationData);
 			GetBerichtsoortenResponse response = digipoortService.getBerichtsoorten(vatDeclarationData);
 			ArrayOfBerichtsoortResultaat resultaat = response.getGetBerichtsoortenReturn();
 			berichtsoorten = resultaat.getBerichtsoort();
-		} catch (Exception e) {
-			Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
+		} catch (StatusinformatieServiceFault e) {
+			e.printStackTrace();
+			Messagebox.show(e.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 		}
 	}
 
@@ -193,7 +194,7 @@ public class XbrlVM implements Serializable {
 		}
 	}
 
-	public List<StatusResultaat> getStatussenProces() {
+	public List<StatusResultaat> getStatussenProces() throws FileNotFoundException, IOException, GeneralSecurityException {
 		if (selectedProces != null) {
 			try {
 				VatDeclarationData vatDeclarationData = new VatDeclarationData();
@@ -202,9 +203,9 @@ public class XbrlVM implements Serializable {
 				GetStatussenProcesResponse response = digipoortService.getStatussenProces(vatDeclarationData, selectedProces.getKenmerk());
 				ArrayOfStatusResultaat resultaat = response.getGetStatussenProcesReturn();
 				statussenProces = resultaat.getStatusResultaat();
-			} catch (Exception e) {
+			} catch (StatusinformatieServiceFault e) {
 				e.printStackTrace();
-				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
+				Messagebox.show(e.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 			}
 		}
 		return statussenProces;
@@ -262,4 +263,17 @@ public class XbrlVM implements Serializable {
 	public void setSelected(StatusResultaat selected) {
 		this.selected = selected;
 	}
+
+	public boolean isTestEnvironment() {
+		return isTestEnvironment;
+	}
+	
+	public Date getSystemDate() {
+		return new Date();
+	}
+	
+	public Date getRealTimDate() {
+		return DateHelper.getNTPDate();
+	}
+
 }
