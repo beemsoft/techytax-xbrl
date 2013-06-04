@@ -25,7 +25,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 ]]></zscript>	
 	<vbox hflex="true">
 		<hbox>
-		<groupbox hflex="true" mold="3d">
+		<groupbox hflex="true" mold="3d" width="500px">
 			<grid hflex="true" >
 				<columns>
 					<column/>
@@ -111,7 +111,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>
 				</rows>
 			</grid>			
-			<grid hflex="true" >
+			<grid hflex="true" width="800px">
 				<columns>
 					<column/>
 				</columns>
