@@ -86,7 +86,7 @@
 						</ul> ]]>
 					</html>
 					<vlayout style="text-align:center;">
-						<toolbarbutton href="http://sourceforge.net/projects/techytax" image="images/sf-footer-logo.png" target="_other" />
+						<toolbarbutton href="http://sourceforge.net/projects/techytax" image="/images/sf-footer-logo.png" target="_other" />
 					</vlayout>
 				</vlayout>
 			</east>
