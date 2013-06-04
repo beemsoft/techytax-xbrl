@@ -242,6 +242,7 @@
 							</grid>
 							<toolbarbutton id="digipoortBtn"
 								image="/images/Digipoort_w176.JPG" />
+							<include src="vat-report.zul"/>																
 						</hbox>
 						<vbox>
 							<grid id="vatGrid" hflex="true"

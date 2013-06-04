@@ -12,6 +12,13 @@ Changes:
 <ul>
 <li>Improved XBRL page.</li>
 <li>Added C3P0 Connection pooling for Hibernate.</li>
+<li>Added PDF report for VAT declaration.</li>
+</ul>
+<p>
+Bugfixes:
+</p>
+<ul>
+<li>Fixed layout issue in Cost page for Chrome browser.</li>
 </ul>
 <h4>1.12 (2013-05-03)</h4>
 <p>
