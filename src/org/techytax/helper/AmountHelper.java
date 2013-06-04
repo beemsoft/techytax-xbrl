@@ -22,6 +22,8 @@ package org.techytax.helper;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.techytax.domain.Cost;
 import org.techytax.domain.VatType;
@@ -52,6 +54,25 @@ public class AmountHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	public static String formatDecimal(BigDecimal b) {
+
+		Locale loc = new Locale("nl", "NL", "EURO");
+		NumberFormat n = NumberFormat.getCurrencyInstance(loc);
+		double doublePayment = b.doubleValue();
+		String s = n.format(doublePayment);
+		return s;
+	}	
+	
+	public static String formatDecimal(BigInteger b) {
+
+		Locale loc = new Locale("nl", "NL", "EURO");
+		NumberFormat n = NumberFormat.getCurrencyInstance(loc);
+		double doublePayment = b.doubleValue();
+		n.setMaximumFractionDigits(0);
+		String s = n.format(doublePayment);
+		return s;
 	}	
 	
 	public static void main(String[] args) {
