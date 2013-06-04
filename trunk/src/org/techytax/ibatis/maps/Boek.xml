@@ -167,7 +167,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND	datum &gt;= ? 
 		AND datum &lt;= ? 
 		AND user_id = ?
-		ORDER BY ks.id asc
+		ORDER BY ks.id, datum asc
 	</select>	
 	<insert id="insertKost" parameterClass="cost">
 		insert into kosten
