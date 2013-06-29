@@ -17,7 +17,7 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.helper;
+package org.techytax.importing.helper;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -41,6 +41,8 @@ import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.VatMatch;
 import org.techytax.domain.VatType;
+import org.techytax.helper.CostSplitter;
+import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
 import com.Ostermiller.util.CSVParser;

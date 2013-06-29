@@ -37,7 +37,7 @@ import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
-import org.techytax.helper.RekeningFileHelper;
+import org.techytax.importing.helper.RekeningFileHelper;
 import org.techytax.struts.form.UploadForm;
 
 public class UploadFileAction extends Action {
