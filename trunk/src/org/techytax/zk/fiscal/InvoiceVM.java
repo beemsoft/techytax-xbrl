@@ -49,7 +49,7 @@ public class InvoiceVM {
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
 	private BigDecimal totalIncome = new BigDecimal(0);
-	private BigInteger unpaidInvoicesFromPreviousYear;
+	private BigInteger unpaidInvoicesFromPreviousYear = new BigInteger("0");
 	private BigDecimal paidInvoicesWithoutMatch = new BigDecimal(0);
 	private BigDecimal unpaidInvoicesFromThisYear = new BigDecimal(0);
 
@@ -115,8 +115,10 @@ public class InvoiceVM {
 			bookValue.setUserId(user.getId());
 			bookValue.setBalanceType(BalanceType.INVOICES_TO_BE_PAID);
 			bookValue.setJaar(currentYear);
-			BookValue bookValuePrevoiusYear = bookValueDao.getPreviousBookValue(bookValue);
-			unpaidInvoicesFromPreviousYear = bookValuePrevoiusYear.getSaldo();
+			BookValue bookValuePreviousYear = bookValueDao.getPreviousBookValue(bookValue);
+			if (bookValuePreviousYear != null) {
+				unpaidInvoicesFromPreviousYear = bookValuePreviousYear.getSaldo();
+			} 
 		}
 		return invoices;
 	}
