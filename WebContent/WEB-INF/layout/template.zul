@@ -66,8 +66,8 @@
 					<panel width="100%" border="normal" title="Speciale kenmerken" visible="@load(!vm.loggedOn)">
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING en ABN-AMRO</li>
-								 <li>XAF ondersteuning</li>
+								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
+								 <li>SBR ondersteuning</li>
 								 <li>Vertaling van Belastingdienst-codes</li>
 								 <li>Administratief splitsen</li>
 								 </ul> ]]>

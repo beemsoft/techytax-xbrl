@@ -36,7 +36,6 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.techytax.domain.Periode;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.props.PropsFactory;
 import org.techytax.security.ClientPasswordCallback;
@@ -90,13 +89,13 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
+	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
 		AanleverServiceV12 port = setupWebServicePort();
 		System.out.println("Invoking aanleveren...");
 		AanleverRequest aanleverRequest = null;
 		AanleverResponse aanleverResponse = null;
 		try {
-			aanleverRequest = createAanleverRequest(vatDeclarationData);
+			aanleverRequest = createAanleverRequest(xbrlInstance, fiscalNumber);
 			aanleverResponse = port.aanleveren(aanleverRequest);
 			System.out.println("aanleveren.result=" + aanleverResponse);
 			System.out.println("Aangeleverd=" + aanleverResponse.getTijdstempelAangeleverd());
@@ -200,32 +199,23 @@ public class DigipoortServiceImpl implements DigipoortService {
 		cxfEndpoint.getOutInterceptors().add(new DynamicWsaSignaturePartsInterceptor());
 	}
 
-	private AanleverRequest createAanleverRequest(VatDeclarationData vatDeclarationData) throws IOException {
+	private AanleverRequest createAanleverRequest(String xbrlInstance, String fiscalNumber) throws IOException {
 		AanleverRequest aanleverRequest = new AanleverRequest();
 		aanleverRequest.setAutorisatieAdres(AUTORISATIE_ADRES);
 		aanleverRequest.setBerichtsoort(OMZETBELASTING);
-		Periode period = DateHelper.getLatestVatPeriod();
-		vatDeclarationData.setStartDate(period.getBeginDatum());
-		vatDeclarationData.setEndDate(period.getEindDatum());
 		aanleverRequest.setRolBelanghebbende("Bedrijf");
 		BerichtInhoudType berichtInhoud = new BerichtInhoudType();
 		berichtInhoud.setMimeType("application/xml");
 		berichtInhoud.setBestandsnaam("Omzetbelasting.xbrl");
-		String digipoort = PropsFactory.getProperty("digipoort");
-		if (digipoort.equals("prod")) {
-			berichtInhoud.setInhoud(XbrlHelper.createXbrlInstance(vatDeclarationData).replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));
-		} else {
-			berichtInhoud.setInhoud(XbrlHelper.createTestXbrlInstance().replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));
-			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
-		}
-		addIdentiteit(vatDeclarationData, aanleverRequest);
+		berichtInhoud.setInhoud(xbrlInstance.replaceAll(">\\s+<", "><").trim().getBytes("UTF-8"));		
+		addIdentiteit(fiscalNumber, aanleverRequest);
 		aanleverRequest.setBerichtInhoud(berichtInhoud);
 		return aanleverRequest;
 	}
 
-	private void addIdentiteit(VatDeclarationData vatDeclarationData, AanleverRequest aanleverRequest) {
+	private void addIdentiteit(String fiscalNumber, AanleverRequest aanleverRequest) {
 		IdentiteitType identiteitBelanghebbende = new IdentiteitType();
-		identiteitBelanghebbende.setNummer(vatDeclarationData.getFiscalNumber());
+		identiteitBelanghebbende.setNummer(fiscalNumber);
 		identiteitBelanghebbende.setType(FISCAL_TYPE);
 		aanleverRequest.setIdentiteitBelanghebbende(identiteitBelanghebbende);
 	}

@@ -46,6 +46,7 @@ import org.techytax.helper.RekeningFileAbnAmroHelper;
 import org.techytax.helper.RekeningFileHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
+import org.techytax.props.PropsFactory;
 import org.techytax.security.AuthenticationException;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverResponse;
@@ -68,6 +69,7 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Popup;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
@@ -76,12 +78,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private static final long serialVersionUID = -6147927083401382065L;
 
+	User user = UserCredentialManager.getUser();
 	@Wire
 	private Grid costGrid;
-
 	@Wire
 	private Grid vatGrid;
-
 	@Wire
 	private Label vatOut;
 	@Wire
@@ -92,21 +93,20 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Label turnoverGross;
 	@Wire
 	private Label turnoverNet;
-
 	@Wire
 	private Tab matchTab;
-
 	@Wire
 	private Tab controleTab;
-
+	@Wire
+	private Popup msgPopup;
+	@Wire
+	private Label msg;
 	private Media media = null;
-
 	private Balans balans = null;
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		System.out.println(" Testing upload: " + event.getMedia().getName());
-		User user = UserCredentialManager.getUser();
 		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
 		try {
 
@@ -141,8 +141,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onClick=#reloadBtn")
 	public void reload(Event event) {
-		User user = UserCredentialManager.getUser();
-
 		try {
 
 			KostensoortDao dao = new KostensoortDao();
@@ -183,8 +181,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onClick=#importBtn")
 	public void importTransactions(Event event) throws Exception {
-		User user = UserCredentialManager.getUser();
-		AuditLogger.log(AuditType.IMPORT_TRANSACTIONS, user);		
+		AuditLogger.log(AuditType.IMPORT_TRANSACTIONS, user);
 		ListModel<Cost> result = costGrid.getModel();
 		BoekDao boekDao = new BoekDao();
 		if (result != null) {
@@ -207,7 +204,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private void createVatOverview() throws Exception {
 		BoekDao boekDao = new BoekDao();
-		User user = UserCredentialManager.getUser();
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod();
 		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()),
@@ -240,7 +236,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 						switch (e.getButton()) {
 						case OK:
 							try {
-								User user = UserCredentialManager.getUser();
 								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, 0,
@@ -256,20 +251,53 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private AanleverResponse doAanleveren() throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
-		User user = UserCredentialManager.getUser();
+		VatDeclarationData vatDeclarationData = createVatDeclarationData();
+		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
+		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
+		if (!digipoortEnvironment.equals("prod")) {
+			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+		}
 		DigipoortService digipoortService = new DigipoortServiceImpl();
+		return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getFiscalNumber());
+	}
+
+	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) {
+		String xbrlInstance = null;
+		if (digipoort.equals("prod")) {
+			xbrlInstance = XbrlHelper.createXbrlInstance(vatDeclarationData);
+		} else {
+			xbrlInstance = XbrlHelper.createTestXbrlInstance();
+		}
+		return xbrlInstance;
+	}
+
+	private VatDeclarationData createVatDeclarationData() {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
 		vatDeclarationData.setName(user.getFullName());
 		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		return digipoortService.aanleveren(vatDeclarationData);
+		Periode period = DateHelper.getLatestVatPeriod();
+		vatDeclarationData.setStartDate(period.getBeginDatum());
+		vatDeclarationData.setEndDate(period.getEindDatum());
+		return vatDeclarationData;
+	}
+
+	@Listen("onClick=#sbrBtn")
+	public void showSbrMessage() throws FileNotFoundException, IOException, GeneralSecurityException {
+		VatDeclarationData vatDeclarationData = createVatDeclarationData();
+		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
+		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
+		if (!digipoortEnvironment.equals("prod")) {
+			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+		}
+		msg.setValue(xbrlInstance);
+		msgPopup.open(this.getPage().getFirstRoot());
 	}
 
 	@Override
 	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
 		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
-		User user = UserCredentialManager.getUser();
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		}
