@@ -195,7 +195,7 @@ public class XbrlHelper {
 			vatDeclaration.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
 
 			Anstring2FItemType version = bdTypeObjectFactory.createAnstring2FItemType();
-			version.setValue("11");
+			version.setValue("13");
 			version.setContextRef(context);
 			vatDeclaration.setVersionApplication(version);
 
