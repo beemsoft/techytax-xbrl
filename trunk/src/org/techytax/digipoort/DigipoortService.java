@@ -72,7 +72,7 @@ public interface DigipoortService {
 	 * @throws FileNotFoundException 
 	 * @throws AanleverServiceFault 
 	 */
-	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault;
+	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault;
 
 	/**
 	 * Geeft alle statussen voor de belanghebbende die nog niet eerder bij dit

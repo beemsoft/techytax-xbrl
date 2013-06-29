@@ -36,17 +36,19 @@
 				</tabs>
 				<tabpanels>
 					<tabpanel>
-						Download je transacties van je online bankieren
-						pagina.
+						Download je transacties van online bankieren of ov-chipkaart.
 						<vbox>
 							<toolbarbutton href="https://mijn.ing.nl/"
 								target="other" image="/images/logo_ing.gif" />
 							<toolbarbutton
 								href="https://www.abnamro.nl/nl/logon/" target="other"
 								image="/images/logo_abn_amro.gif" />
+							<toolbarbutton
+								href="https://www.ov-chipkaart.nl/mijnovchipkaart/reizenentransacties/mijnreizenentransacties/" target="other"
+								image="/images/ov.png" />								
 						</vbox>
 						<hbox width="500px">
-							Op dit moment ondersteunt TechyTax alleen
+							Op dit moment ondersteunt TechyTax voor online bankieren alleen
 							transactie bestanden van de ING en ABN-AMRO.
 							Zorg bij het downloaden van het bestand dat
 							de juiste periode wordt geselecteerd. Nadat
@@ -241,8 +243,9 @@
 								</rows>
 							</grid>
 							<toolbarbutton id="digipoortBtn"
-								image="/images/Digipoort_w176.JPG" />
-							<include src="vat-report.zul"/>																
+								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax."/>
+							<include src="vat-report.zul"/>
+							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL."/>															
 						</hbox>
 						<vbox>
 							<grid id="vatGrid" hflex="true"
@@ -280,5 +283,8 @@
 		<popup id="import" width="300px">
 			<html><![CDATA[ Transacties inladen in TechyTax]]></html>
 		</popup>
+		<popup id="msgPopup"  style="background:#FFFF66;">
+    		<label id="msg"></label>
+		</popup>		
 	</window>
 </zk>

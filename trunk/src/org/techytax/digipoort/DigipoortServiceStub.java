@@ -8,7 +8,6 @@ import org.techytax.domain.VatDeclarationData;
 import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
 import org.techytax.ws.AanleverServiceV12_AanleverServiceV12_Client;
-import org.techytax.ws.AanleverServiceV12_Service;
 import org.techytax.ws.ArrayOfProcesResultaat;
 import org.techytax.ws.ArrayOfStatusResultaat;
 import org.techytax.ws.FoutType;
@@ -24,7 +23,7 @@ import org.techytax.wus.status.StatusinformatieServiceFault;
 public class DigipoortServiceStub implements DigipoortService {
 
 	@Override
-	public AanleverResponse aanleveren(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException,
+	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws FileNotFoundException, IOException, GeneralSecurityException,
 			AanleverServiceFault {
 		// TODO Auto-generated method stub
 		return null;
