@@ -38,16 +38,26 @@ public class DateHelper {
 
 	private static String datePattern = "yyyy-MM-dd";
 	private static String timePattern = "yyyy-MM-dd HH:mm:ss";
-	private static String timePattern2 = "yyyyMMddHHmm";	
+	private static String timePattern2 = "yyyyMMddHHmm";
+	private static String datePatternForTravelChipCard = "dd-MM-yyyy";
 
 	public static Date stringToDate(String date_str) throws Exception {
-		SimpleDateFormat df_zos = new SimpleDateFormat(datePattern);
+		SimpleDateFormat format = new SimpleDateFormat(datePattern);
 		try {
-			return df_zos.parse(date_str);
+			return format.parse(date_str);
 		} catch (ParseException e) {
 			throw new Exception("errors.date.invalid");
 		}
 	}
+	
+	public static Date stringToDateForTravelChipCard(String date_str) throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat(datePatternForTravelChipCard);
+		try {
+			return format.parse(date_str);
+		} catch (ParseException e) {
+			throw new Exception("errors.date.invalid");
+		}
+	}	
 
 	public static String getDate(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(datePattern);

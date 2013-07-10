@@ -185,7 +185,7 @@ public class BalanceCalculator {
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
 					} else if (id == CostConstants.UITGAVE_DEZE_REKENING || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF
-							|| id == CostConstants.REISKOST || id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING
+							|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING
 							|| id == CostConstants.UITGAVE_CREDIT_CARD || id == CostConstants.UITGAVE_ANDERE_REKENING || id == CostConstants.ADVERTENTIE) {
 						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
@@ -259,7 +259,7 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					if (id == CostConstants.REISKOST || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF) {
+					if (id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF) {
 						totalKostOV = totalKostOV.add(obj.getAmount());
 					} else if (id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING) {
 						totalKostAuto = totalKostAuto.add(obj.getAmount());
@@ -372,7 +372,7 @@ public class BalanceCalculator {
 		BigDecimal reiskosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.REISKOST) {
+			if (aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT) {
 				reiskosten = reiskosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}

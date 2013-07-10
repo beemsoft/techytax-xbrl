@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -32,12 +32,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Kostensoort;
 import org.techytax.domain.User;
-import org.techytax.importing.helper.RekeningFileHelper;
+import org.techytax.importing.helper.IngTransactionReader;
 import org.techytax.struts.form.UploadForm;
 
 public class UploadFileAction extends Action {
@@ -53,7 +51,8 @@ public class UploadFileAction extends Action {
 		try {
 
 			String fileName = myFile.getFileName();
-			AccountType accountType = RekeningFileHelper.getAccountType(fileName, user.getId());
+			IngTransactionReader rekeningFileHelper = new IngTransactionReader();
+			AccountType accountType = rekeningFileHelper.getAccountType(fileName, user.getId());
 			if (accountType != null) {
 				switch (accountType) {
 				case PRIVATE:
@@ -62,11 +61,8 @@ public class UploadFileAction extends Action {
 				}
 			}
 
-			KostensoortDao dao = new KostensoortDao();
-			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
 			InputStream is = myFile.getInputStream();
-
-			List<Cost> result = RekeningFileHelper.readFileForIngBank(new BufferedReader(new InputStreamReader(is)), kostensoortLijst, Long.toString(user.getId()));
+			List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(is)), Long.toString(user.getId()));
 			request.getSession().setAttribute("kostLijst", result);
 		} catch (Exception e) {
 			e.printStackTrace();

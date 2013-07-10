@@ -64,7 +64,7 @@
 						transacties selecteren.
 						<vbox>
 							<button id="uploadBtn" upload="true"
-								image="/images/fileopen-256.png" />
+								image="/images/fileopen-96.png" />
 						</vbox>
 						Hierna kun je de transacties bekijken en
 						eventueel matchen in het volgende tabblad. De
