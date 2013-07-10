@@ -25,6 +25,7 @@ import java.util.List;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.VatMatchDao;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
@@ -153,7 +154,7 @@ public class CostTypeViewModel {
 	}
 	
 	public boolean getVatVisible() {
-		return selected.isBtwVerrekenbaar();
+		return selected.isBtwVerrekenbaar() && selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
 	}
 
 	public Kostensoort getSelectedCostType() {
@@ -171,7 +172,7 @@ public class CostTypeViewModel {
 	public Kostmatch getSelectedPrivateMatch() {
 		return selectedPrivateMatch;
 	}
-
+	
 	@NotifyChange({"selectedPrivateMatch","selectedVatType"})
 	public void setSelectedPrivateMatch(Kostmatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;

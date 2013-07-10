@@ -25,22 +25,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
-import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.SettlementDao;
-import org.techytax.dao.VatMatchDao;
-import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
-import org.techytax.domain.Kostmatch;
-import org.techytax.domain.VatMatch;
-import org.techytax.domain.VatType;
 import org.techytax.helper.CostSplitter;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
@@ -48,32 +40,19 @@ import org.techytax.util.DateHelper;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 
-public class RekeningFileHelper {
+public class IngTransactionReader extends BaseTransactionReader {
 
 	private static LabeledCSVParser parser = null;
 
-	private static Vector<String[]> regels = null;
-
-	private static List<Kostensoort> kostensoortList = null;
-
-	private RekeningFileHelper() {
-	}
-
-	public static AccountType getAccountType(String fileName, long userId) throws Exception {
-		int index = fileName.indexOf("_");
-		String accountNumber = fileName.substring(0, index);
-		AccountDao accountDao = new AccountDao();
-		return accountDao.getAccountType(accountNumber, userId);
-	}
-
-	public static List<Cost> readFileForIngBank(BufferedReader in, List<Kostensoort> kostensoortList2, String userId) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
+		KostensoortDao dao = new KostensoortDao();
+		List<Kostensoort> kostensoortList2 = dao.getCostTypesForAccount();
 		SettlementDao settlementDao = new SettlementDao();
 
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
-//			parser.changeDelimiter('\t');
 			System.out.println(parser.getLabels()[0]);
 			verwerkRecords();
 
@@ -125,7 +104,7 @@ public class RekeningFileHelper {
 		}
 	}
 
-	private static Cost processLine(String[] line, int lineNumber, String userId) {
+	private Cost processLine(String[] line, int lineNumber, String userId) {
 		Cost kost = new Cost();
 		try {
 			String datum = line[0];
@@ -158,77 +137,10 @@ public class RekeningFileHelper {
 		return null;
 	}
 
-	private static Kostmatch findCostMatch(String omschrijving, String userId) throws Exception {
-		KostmatchDao kostmatchDao = new KostmatchDao();
-		List<Kostmatch> kostmatchList = kostmatchDao.getCostMatchPrivateList(userId);
-		Iterator<Kostmatch> iterator = kostmatchList.iterator();
-		while (iterator.hasNext()) {
-			Kostmatch kostmatch = iterator.next();
-			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-				return kostmatch;
-			}
-		}
-		kostmatchList = kostmatchDao.getKostmatchLijst();
-		iterator = kostmatchList.iterator();
-		while (iterator.hasNext()) {
-			Kostmatch kostmatch = iterator.next();
-			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-				return kostmatch;
-			}
-		}
-		return null;
-	}
-
-	private static Cost matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = CostConstants.UNDETERMINED;
-		kost.setVat(new BigDecimal("0"));
-		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
-		if (costMatch != null) {
-			kostensoortId = costMatch.getKostenSoortId();
-			KostensoortDao kostensoortDao = new KostensoortDao();
-			Kostensoort costType = kostensoortDao.getKostensoort(Long.toString(kostensoortId));
-			if (costType.isBtwVerrekenbaar()) {
-				VatMatchDao vatMatchDao = new VatMatchDao();
-				VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));
-				if (vatMatch == null) {
-					vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(costMatch.getId()));
-				}
-				if (vatMatch != null) {
-					if (vatMatch.getVatType() == VatType.HIGH) {
-						CostSplitter.splitPercentagFromAmount(kost, (int)(100*VatType.HIGH.getValue(kost.getDate())));
-					}
-					if (vatMatch.getVatType() == VatType.LOW) {
-						CostSplitter.splitPercentagFromAmount(kost, 6);
-					}
-				}
-			}
-		}
-		kost.setCostTypeId(kostensoortId);
-		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
-		return kost;
-	}
-
-	private static String getKostOmschrijving(long kostensoortId) {
-		Iterator<Kostensoort> iter = kostensoortList.iterator();
-		while (iter.hasNext()) {
-			Kostensoort kostensoort = iter.next();
-			if (kostensoort.getKostenSoortId() == kostensoortId) {
-				return kostensoort.getOmschrijving();
-			}
-		}
-		return "costtype.none";
-	}
-
-	private static Vector<String[]> getRegels() {
-		return regels;
-	}
-	
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.bat");
-		KostensoortDao dao = new KostensoortDao();
-		List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
-
-		List<Cost> result = RekeningFileHelper.readFileForIngBank(new BufferedReader(new InputStreamReader(fis)), kostensoortLijst, "1");
+		IngTransactionReader rekeningFileHelper = new IngTransactionReader();
+		List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(fis)),  "1");
 	}
 
 }

@@ -22,28 +22,23 @@ package org.techytax.zk.vat;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
-import java.util.Locale;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.KostensoortDao;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
+import org.techytax.helper.AmountHelper;
 import org.techytax.helper.BalanceCalculator;
-import org.techytax.importing.helper.RekeningFileAbnAmroHelper;
-import org.techytax.importing.helper.RekeningFileHelper;
+import org.techytax.importing.helper.TransactionReader;
+import org.techytax.importing.helper.TransactionReaderFactory;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
@@ -69,8 +64,8 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Popup;
 import org.zkoss.zul.Messagebox.ClickEvent;
+import org.zkoss.zul.Popup;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
 
@@ -102,34 +97,20 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Label msg;
 	private Media media = null;
+	private BufferedReader reader = null;
 	private Balans balans = null;
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
-		System.out.println(" Testing upload: " + event.getMedia().getName());
 		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
 		try {
-
-			KostensoortDao dao = new KostensoortDao();
-			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
-
 			media = event.getMedia();
-			BufferedReader reader = new BufferedReader(media.getReaderData());
-			String firstLine = reader.readLine();
-			reader = new BufferedReader(media.getReaderData());
-			List<Cost> result = null;
-			if (firstLine.startsWith("\"Datum\"")) {
-				result = RekeningFileHelper.readFileForIngBank(reader, kostensoortLijst, Long.toString(user.getId()));
-			} else {
-				result = RekeningFileAbnAmroHelper.readFileForAbnAmroBank(reader, kostensoortLijst, Long.toString(user.getId()));
-			}
+			List<Cost> result = readTransactions();
 
 			for (Cost cost : result) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
-			for (Kostensoort costType : kostensoortLijst) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-			}
+
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
@@ -137,31 +118,31 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			e.printStackTrace();
 
 		}
+	}
+
+	private List<Cost> readTransactions() throws IOException, Exception {
+		String firstLine = getFirstLine();
+		reader = new BufferedReader(media.getReaderData());
+		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
+		List<Cost> result = importTransactions.readFile(reader, Long.toString(user.getId()));
+		return result;
+	}
+
+	private String getFirstLine() throws IOException {
+		reader = new BufferedReader(media.getReaderData());
+		String firstLine = reader.readLine();
+		return firstLine;
 	}
 
 	@Listen("onClick=#reloadBtn")
 	public void reload(Event event) {
 		try {
-
-			KostensoortDao dao = new KostensoortDao();
-			List<Kostensoort> kostensoortLijst = dao.getCostTypesForAccount();
-
-			BufferedReader reader = new BufferedReader(media.getReaderData());
-			String firstLine = reader.readLine();
-			reader = new BufferedReader(media.getReaderData());
-			List<Cost> result = null;
-			if (firstLine.startsWith("\"Datum\"")) {
-				result = RekeningFileHelper.readFileForIngBank(reader, kostensoortLijst, Long.toString(user.getId()));
-			} else {
-				result = RekeningFileAbnAmroHelper.readFileForAbnAmroBank(reader, kostensoortLijst, Long.toString(user.getId()));
-			}
+			List<Cost> result = readTransactions();
 
 			for (Cost cost : result) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
-			for (Kostensoort costType : kostensoortLijst) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-			}
+
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
@@ -169,14 +150,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			e.printStackTrace();
 
 		}
-	}
-
-	private static String format(BigInteger amount) {
-		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
-		otherSymbols.setDecimalSeparator(',');
-		otherSymbols.setGroupingSeparator('.');
-		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0", otherSymbols);
-		return df.format(amount.doubleValue());
 	}
 
 	@Listen("onClick=#importBtn")
@@ -216,11 +189,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		vatOut.setValue(format(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
-		vatIn.setValue(format(vatDeclarationData.getValueAddedTaxOnInput()));
-		vatBalance.setValue(format(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
-		turnoverGross.setValue(format(balans.getBrutoOmzet().toBigInteger()));
-		turnoverNet.setValue(format(balans.getNettoOmzet().toBigInteger()));
+		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
+		vatIn.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
+		vatBalance.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
+		turnoverGross.setValue(AmountHelper.formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
+		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans.getNettoOmzet().toBigInteger()));
 		controleTab.setSelected(true);
 		costModel = new ListModelList<Cost>();
 		if (costGrid != null) {

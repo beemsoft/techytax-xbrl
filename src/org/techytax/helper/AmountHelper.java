@@ -22,6 +22,8 @@ package org.techytax.helper;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -73,6 +75,14 @@ public class AmountHelper {
 		n.setMaximumFractionDigits(0);
 		String s = n.format(doublePayment);
 		return s;
+	}
+	
+	public static String formatWithEuroSymbol(BigInteger amount) {
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0", otherSymbols);
+		return df.format(amount.doubleValue());
 	}	
 	
 	public static void main(String[] args) {

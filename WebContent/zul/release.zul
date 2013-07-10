@@ -13,6 +13,8 @@ Changes:
 <li>Improved XBRL page.</li>
 <li>Added C3P0 Connection pooling for Hibernate.</li>
 <li>Added PDF report for VAT declaration.</li>
+<li>Added SBR/XBRL export for VAT declaration.</li>
+<li>Added import function for public transport chipcard ("OV-chipkaart").</li>
 </ul>
 <p>
 Bugfixes:
