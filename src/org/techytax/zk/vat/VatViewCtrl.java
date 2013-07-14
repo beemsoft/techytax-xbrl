@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
@@ -54,6 +55,8 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.ForwardEvent;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.select.SelectorComposer;
@@ -66,7 +69,9 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Popup;
+import org.zkoss.zul.Row;
 import org.zkoss.zul.Tab;
+import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 public class VatViewCtrl extends SelectorComposer<Window> {
@@ -93,9 +98,13 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Tab controleTab;
 	@Wire
-	private Popup msgPopup;
+	private Popup sbrPopup;
 	@Wire
 	private Label msg;
+	@Wire
+	private Popup costPopup;
+	@Wire
+	private Toolbarbutton digipoortBtn;
 	private Media media = null;
 	private BufferedReader reader = null;
 	private Balans balans = null;
@@ -211,6 +220,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 							try {
 								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
+								digipoortBtn.setDisabled(true);
 								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, 0,
 										Messagebox.INFORMATION);
 							} catch (AanleverServiceFault asf) {
@@ -265,7 +275,38 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
 		}
 		msg.setValue(xbrlInstance);
-		msgPopup.open(this.getPage().getFirstRoot());
+		sbrPopup.open(this.getPage().getFirstRoot());
+	}
+	
+	@Listen("onItemClicked")
+	public void onItemClicked(Event ev) throws Exception {
+		Event origin;
+		// get event target
+		if (ev instanceof ForwardEvent) {
+			origin = Events.getRealOrigin((ForwardEvent)ev);
+		} else {
+			origin = ev;
+		}
+		Component target = origin.getTarget();
+		StringBuilder sb = new StringBuilder("You clicked item: ");
+		sb.append(target).append('\n').append("the value object: \n")
+			.append(((Row)target).getValue());
+//		tb2.setValue(sb.toString());
+		System.out.println(sb.toString());
+	}
+	
+	/**
+	 * If the vat declaration has not yet been sent and the user has a fiscal number,
+	 * then the button can be enabled.
+	 */
+	public boolean disableDigipoort() {
+		Date declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
+		if (declarationTime != null && user.getFiscalNumber() != null) {
+			return true;
+		} else if (declarationTime == null && user.getFiscalNumber() == null) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -275,6 +316,12 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			Executions.sendRedirect("login.zul");
 		}
 		return componentInfo;
+	}
+	
+	@Override
+	public void doAfterCompose(Window comp) throws Exception {
+		super.doAfterCompose(comp);
+		digipoortBtn.setDisabled(disableDigipoort());
 	}
 
 }

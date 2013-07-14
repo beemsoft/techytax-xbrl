@@ -242,16 +242,16 @@
 									</row>
 								</rows>
 							</grid>
-							<toolbarbutton id="digipoortBtn"
+							<toolbarbutton id="digipoortBtn" disabled="true" 
 								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax."/>
 							<include src="vat-report.zul"/>
 							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL."/>															
 						</hbox>
 						<vbox>
 							<grid id="vatGrid" hflex="true"
-								mold="paging" pageSize="7">
+								mold="paging" pageSize="7" >
 								<columns sizable="true">
-									<column label="Description"
+									<column label="Omschrijving"
 										width="500px" />
 									<column label="Datum" width="80px" />
 									<column label="Bedrag"
@@ -260,7 +260,7 @@
 									<column label="type" width="200px" />
 								</columns>
 								<template name="model">
-									<row value="${each}">
+									<row value="${each}" forward="onClick=onItemClicked">
 										<label
 											value="${each.description}" />
 										<label
@@ -283,8 +283,11 @@
 		<popup id="import" width="300px">
 			<html><![CDATA[ Transacties inladen in TechyTax]]></html>
 		</popup>
-		<popup id="msgPopup"  style="background:#FFFF66;">
+		<popup id="sbrPopup"  style="background:#FFFF66;">
     		<label id="msg"></label>
-		</popup>		
+		</popup>
+		<popup id="costPopup" >
+    		<label value="Test"></label>
+		</popup>			
 	</window>
 </zk>

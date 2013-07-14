@@ -15,6 +15,7 @@ Changes:
 <li>Added PDF report for VAT declaration.</li>
 <li>Added SBR/XBRL export for VAT declaration.</li>
 <li>Added import function for public transport chipcard ("OV-chipkaart").</li>
+<li>Added checks for sending vat declararion.</li>
 </ul>
 <p>
 Bugfixes:

@@ -21,10 +21,15 @@ package org.techytax.log;
 
 import java.util.Date;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
+import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.jpa.entities.EntityManagerHelper;
 import org.techytax.jpa.entities.LogRecord;
+import org.techytax.util.DateHelper;
 
 public class AuditLogger {
 
@@ -35,5 +40,30 @@ public class AuditLogger {
 		logRecord.setAuditType(auditType);
 		logRecord.setTimeStamp(new Date());
 		logDao.persistEntity(logRecord);
+	}
+
+	public static Date getVatDeclarationTimeForLatestVatPeriod(User user) {
+		Periode latestVatPeriod = DateHelper.getLatestVatPeriod();
+		Periode latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
+		Query query = EntityManagerHelper
+				.getEntityManager()
+				.createQuery(
+						"SELECT lr FROM LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId");
+		query.setParameter("beginTime", latestVatPeriod.getEindDatum());
+		query.setParameter("endTime", latestVatPeriodTillToday.getEindDatum());
+		query.setParameter("userId", user.getId());
+		LogRecord result = null;
+		try {
+			result = (LogRecord) query.getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
+		return result.getTimeStamp();
+	}
+
+	public static void main(String[] args) {
+		User user = new User();
+		user.setId(1L);
+		System.out.println(getVatDeclarationTimeForLatestVatPeriod(user));
 	}
 }
