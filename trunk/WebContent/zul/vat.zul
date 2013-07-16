@@ -108,7 +108,7 @@
 									selectedItem="@bind(vm.selectedCostType)" height="200px"
 									width="340px">
 									<listhead>
-										<listheader label="Description"
+										<listheader label="Type omschrijving"
 											width="300px" />
 									</listhead>
 									<template name="model"
@@ -149,7 +149,8 @@
 										selectedItem="@bind(vm.selectedVatType)" />
 									<groupbox
 										visible="@load(not empty vm.selectedPrivateMatch)" mold="3d"
-										width="100%">
+										width="100%" >
+										<caption><label value="Match eigenschappen" /></caption>
 										<grid>
 											<columns>
 												<column />
@@ -158,21 +159,23 @@
 											<rows>
 												<row>
 													<label
-														value="Match tekst" />
+														value="Match tekst:" />
 													<textbox
 														value="@load(vm.selectedPrivateMatch.matchText) @save(vm.selectedPrivateMatch.matchText, before='saveMatch')" />
-												</row>
+												</row>	
 											</rows>
 										</grid>
 										<grid
-											visible="@load(vm.vatVisible)">
+											visible="@load(vm.vatVisible)" >
 											<columns>
+												<column />
 												<column />
 												<column />
 												<column />
 											</columns>
 											<rows>
 												<row>
+													<label value="btw:" />
 													<radio id="vatNone"
 														label="Geen" value="NONE" radiogroup="vat" />
 													<radio id="vatLow"
@@ -182,6 +185,20 @@
 												</row>
 											</rows>
 										</grid>
+										<grid visible="@load(vm.splitVisible)">
+											<columns>
+												<column />
+												<column />
+											</columns>
+											<rows>
+												<row>
+													<label
+														value="Prive percentage:" />
+													<textbox
+														value="@load(vm.selectedPrivateMatch.percentage) @save(vm.selectedPrivateMatch.percentage, before='saveMatch')" />
+												</row>	
+											</rows>
+										</grid>										
 									</groupbox>
 								</vbox>
 								<listbox id="publicMatchesList"

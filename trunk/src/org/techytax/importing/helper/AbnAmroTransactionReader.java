@@ -28,12 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.dao.KostensoortDao;
-import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
-import org.techytax.helper.CostSplitter;
+import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -44,9 +42,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 	private static CSVParser parser = null;
 
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
-		SettlementDao settlementDao = new SettlementDao();
-		KostensoortDao dao = new KostensoortDao();
-		List<Kostensoort> kostensoortList2 = dao.getCostTypesForAccount();
+		List<Kostensoort> kostensoortList2 = costTypeDao.getCostTypesForAccount();
 
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();
@@ -63,24 +59,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				for (int i=0; i< regel.length; i++) {
 					System.out.print(regel[i]+" ");
 				}
-				cost = processLine(regel, regelNummer, userId);
-				if (cost.getCostTypeId() != CostConstants.SETTLEMENT) {
-					kostLijst.add(cost);
-				} else {
-					// Administrative split
-					long percentage = settlementDao.getPercentage(Long.parseLong(userId));
-					Cost splitCost = new Cost();
-					splitCost.setAmount(cost.getAmount());
-					splitCost.setVat(cost.getVat());
-					splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
-					splitCost.setDate(cost.getDate());
-					splitCost.setDescription(cost.getDescription());
-					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
-					CostSplitter.applyPercentage(splitCost, (int)(100-percentage));
-					CostSplitter.applyPercentage(cost, (int)percentage);
-					kostLijst.add(cost);
-					kostLijst.add(splitCost);
-				}
+				processLine(regel, regelNummer, userId);
 			}
 
 		} catch (IOException e) {
@@ -103,8 +82,9 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	private Cost processLine(String[] line, int lineNumber, String userId) {
+	private void processLine(String[] line, int lineNumber, String userId) {
 		Cost kost = new Cost();
+		Kostmatch costMatch = null;
 		try {
 			String datum = line[2];
 			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
@@ -127,14 +107,12 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
-				kost = matchKost(kost, userId);
+				costMatch = matchKost(kost, userId);
 			}
-			return kost;
+			addCostOrHandleAdminstrativeSplitting(userId, kost, costMatch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 	public static void main(String[] args) throws NumberFormatException, Exception {

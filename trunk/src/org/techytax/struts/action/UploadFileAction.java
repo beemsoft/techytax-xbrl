@@ -35,6 +35,7 @@ import org.apache.struts.upload.FormFile;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
+import org.techytax.importing.helper.BaseTransactionReader;
 import org.techytax.importing.helper.IngTransactionReader;
 import org.techytax.struts.form.UploadForm;
 
@@ -51,7 +52,7 @@ public class UploadFileAction extends Action {
 		try {
 
 			String fileName = myFile.getFileName();
-			IngTransactionReader rekeningFileHelper = new IngTransactionReader();
+			BaseTransactionReader rekeningFileHelper = new IngTransactionReader();
 			AccountType accountType = rekeningFileHelper.getAccountType(fileName, user.getId());
 			if (accountType != null) {
 				switch (accountType) {

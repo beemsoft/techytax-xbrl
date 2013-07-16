@@ -61,7 +61,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<td><a href="editKostensoort.do?kostenSoortId=<%=obj.getKostenSoortId()%>"><%=obj.getKostenSoortId()%></a></td>
 		<td><bean:message key="<%=obj.getOmschrijving()%>"/></td>
 		<td><% if (obj.isBijschrijving()) {%>x<% } %></td>
-		<td><% if (obj.isBtwVerrekenbaar()) {%>x<% } %></td>
+		<td><%
+			if (obj.isVatDeclarable()) {
+		%>x<% } %></td>
 		<td><% if (obj.isBalansMeetellen()) {%>x<% } %></td>
 		<td><% if (obj.isAftrekbaar()) {%>x<%} %></td>		
 		<td><%

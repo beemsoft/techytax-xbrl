@@ -20,6 +20,7 @@
 package org.techytax.importing.helper;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -27,20 +28,26 @@ import java.util.Vector;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.dao.SettlementDao;
 import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.SplitMatch;
 import org.techytax.domain.VatMatch;
 import org.techytax.domain.VatType;
 import org.techytax.helper.CostSplitter;
+import org.techytax.jpa.dao.SplitMatchDao;
 
 public abstract class BaseTransactionReader implements TransactionReader {
 
 	protected static Vector<String[]> regels = null;
 	protected static List<Kostensoort> kostensoortList = null;
+	protected KostensoortDao costTypeDao = new KostensoortDao();
+	protected SettlementDao settlementDao = new SettlementDao();
+	protected List<Cost> kostLijst = new ArrayList<Cost>();
 
 	public AccountType getAccountType(String fileName, long userId) throws Exception {
 		int index = fileName.indexOf("_");
@@ -81,33 +88,85 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return "costtype.none";
 	}
 
-	protected Cost matchKost(Cost kost, String userId) throws Exception {
+	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
 		long kostensoortId = CostConstants.UNDETERMINED;
 		kost.setVat(new BigDecimal("0"));
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kostensoortId = costMatch.getKostenSoortId();
-			KostensoortDao kostensoortDao = new KostensoortDao();
-			Kostensoort costType = kostensoortDao.getKostensoort(Long.toString(kostensoortId));
-			if (costType.isBtwVerrekenbaar()) {
-				VatMatchDao vatMatchDao = new VatMatchDao();
-				VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));
-				if (vatMatch == null) {
-					vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(costMatch.getId()));
-				}
-				if (vatMatch != null) {
-					if (vatMatch.getVatType() == VatType.HIGH) {
-						CostSplitter.splitPercentagFromAmount(kost, (int) (100 * VatType.HIGH.getValue(kost.getDate())));
-					}
-					if (vatMatch.getVatType() == VatType.LOW) {
-						CostSplitter.splitPercentagFromAmount(kost, 6);
-					}
-				}
-			}
+			Kostensoort costType = costTypeDao.getKostensoort(Long.toString(kostensoortId));
+			handleVat(kost, costMatch, costType);
 		}
 		kost.setCostTypeId(kostensoortId);
 		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
-		return kost;
+		return costMatch;
+	}
+
+	private void handleVat(Cost kost, Kostmatch costMatch, Kostensoort costType) throws Exception {
+		if (costType.isVatDeclarable()) {
+			VatMatchDao vatMatchDao = new VatMatchDao();
+			VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));
+			if (vatMatch == null) {
+				vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(costMatch.getId()));
+			}
+			if (vatMatch != null) {
+				if (vatMatch.getVatType() == VatType.HIGH) {
+					CostSplitter.splitPercentagFromAmount(kost, (int) (100 * VatType.HIGH.getValue(kost.getDate())));
+				}
+				if (vatMatch.getVatType() == VatType.LOW) {
+					CostSplitter.splitPercentagFromAmount(kost, 6);
+				}
+			}
+		}
+	}
+
+	protected void addCostOrHandleAdminstrativeSplitting(String userId, Cost cost, Kostmatch costMatch) throws Exception {
+		if (cost.getCostTypeId() == CostConstants.SETTLEMENT || cost.getCostTypeId() == CostConstants.SETTLEMENT_DISCOUNT) {
+			doAdministrativeSplitForSettlement(userId, cost);
+		} else if (cost.getCostTypeId() == CostConstants.UITGAVE_DEZE_REKENING) {
+			SplitMatchDao splitMatchDao = new SplitMatchDao();
+			SplitMatch splitMatch = splitMatchDao.getSplitMatch(costMatch.getId());
+			if (splitMatch != null) {
+				doAdministrativeSplitForExpense(cost, splitMatch.getPercentage());
+			} else {
+				kostLijst.add(cost);
+			}
+		} else {
+			kostLijst.add(cost);
+		}
+	}
+
+	private void doAdministrativeSplitForExpense(Cost cost, int privatePercentage) throws Exception {
+		Cost splitCost = new Cost();
+		splitCost.setAmount(cost.getAmount());
+		splitCost.setVat(cost.getVat());
+		splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		splitCost.setDate(cost.getDate());
+		splitCost.setDescription(cost.getDescription());
+		splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
+		CostSplitter.applyPercentage(splitCost, privatePercentage);
+		CostSplitter.applyPercentage(cost, 100 - privatePercentage);
+		kostLijst.add(cost);
+		kostLijst.add(splitCost);
+	}
+
+	private void doAdministrativeSplitForSettlement(String userId, Cost cost) throws Exception {
+		long percentage = settlementDao.getPercentage(Long.parseLong(userId));
+		Cost splitCost = new Cost();
+		splitCost.setAmount(cost.getAmount());
+		splitCost.setVat(cost.getVat());
+		if (cost.getCostTypeId() == CostConstants.SETTLEMENT) {
+			splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		} else {
+			splitCost.setCostTypeId(CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE);
+		}
+		splitCost.setDate(cost.getDate());
+		splitCost.setDescription(cost.getDescription());
+		splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
+		CostSplitter.applyPercentage(splitCost, (int) (100 - percentage));
+		CostSplitter.applyPercentage(cost, (int) percentage);
+		kostLijst.add(cost);
+		kostLijst.add(splitCost);
 	}
 
 	protected static Vector<String[]> getRegels() {

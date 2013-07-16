@@ -70,7 +70,7 @@ public class Kostensoort {
 		this.bijschrijving = bijschrijving;
 	}
 
-	public boolean isBtwVerrekenbaar() {
+	public boolean isVatDeclarable() {
 		return btwVerrekenbaar;
 	}
 
