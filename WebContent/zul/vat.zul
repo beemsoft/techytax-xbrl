@@ -74,9 +74,9 @@
 					</tabpanel>
 					<tabpanel apply="org.zkoss.bind.BindComposer"
 						viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">
-						<vbox height="1300px">
+						<vbox>
 							<grid id="costGrid" hflex="true"
-								mold="paging" pageSize="6" width="100%" height="100%">
+								mold="paging" pageSize="5" width="100%" height="100%">
 								<columns sizable="true">
 									<column label="Omschrijving"
 										width="700px" />
@@ -122,7 +122,7 @@
 								<vbox width="250px">
 									<listbox id="privateMatchesList"
 										model="@load(vm.privateMatchesList)"
-										selectedItem="@bind(vm.selectedPrivateMatch)" height="200px">										
+										selectedItem="@bind(vm.selectedPrivateMatch)" height="100px">										
 										<listhead>
 											<listheader
 												label="Private matches" width="300px" />
