@@ -16,3 +16,13 @@ CREATE TABLE `btwmatch_private` (
 grant delete on kostmatch_private;
 grant delete on btwmatch_private;
 
+
+CREATE TABLE `splitmatch_private` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `kostmatch_id` bigint(20) NOT NULL,
+  `percentage` int(2) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+
+
+

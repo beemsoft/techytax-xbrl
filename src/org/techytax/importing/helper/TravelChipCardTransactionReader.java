@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -45,7 +44,6 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	private LabeledCSVParser parser = null;
 
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
-		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			parser.changeDelimiter(';');
@@ -95,7 +93,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		return null;
 	}
 
-	protected Cost matchKost(Cost kost, String userId) throws Exception {
+	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
 		long kostensoortId = CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
@@ -103,7 +101,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			kost.setCostTypeId(kostensoortId);
 			kost.setKostenSoortOmschrijving("costtype.expense.travel");
 			CostSplitter.splitPercentagFromAmount(kost, 6);
-			return kost;
+			return costMatch;
 		}
 		return null;
 	}
@@ -120,7 +118,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			String omschrijving = "Van " + line[2] + " naar " + line[4] + " (" + line[3] + ") " + line[6] + " " + line[7] + " " + line[8];
 
 			kost.setDescription(omschrijving);
-			kost = matchKost(kost, userId);
+			matchKost(kost, userId);
 			return kost;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,7 +129,6 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.csv");
-		KostensoortDao dao = new KostensoortDao();
 		TravelChipCardTransactionReader helper = new TravelChipCardTransactionReader();
 		List<Cost> result = helper.readFile(new BufferedReader(new InputStreamReader(fis)), "1");
 		System.out.println("Ok");

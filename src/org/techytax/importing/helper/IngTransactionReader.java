@@ -24,16 +24,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.dao.KostensoortDao;
-import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
-import org.techytax.helper.CostSplitter;
+import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -43,45 +40,19 @@ import com.Ostermiller.util.LabeledCSVParser;
 public class IngTransactionReader extends BaseTransactionReader {
 
 	private static LabeledCSVParser parser = null;
-
+	
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
-		KostensoortDao dao = new KostensoortDao();
-		List<Kostensoort> kostensoortList2 = dao.getCostTypesForAccount();
-		SettlementDao settlementDao = new SettlementDao();
-
+		List<Kostensoort> kostensoortList2 = costTypeDao.getCostTypesForAccount();
 		kostensoortList = kostensoortList2;
-		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			Cost cost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				cost = processLine(regel, regelNummer, userId);
-				if (cost.getCostTypeId() != CostConstants.SETTLEMENT && cost.getCostTypeId() != CostConstants.SETTLEMENT_DISCOUNT) {
-					kostLijst.add(cost);
-				} else {
-					// Administrative split
-					long percentage = settlementDao.getPercentage(Long.parseLong(userId));
-					Cost splitCost = new Cost();
-					splitCost.setAmount(cost.getAmount());
-					splitCost.setVat(cost.getVat());
-					if (cost.getCostTypeId() == CostConstants.SETTLEMENT) {
-						splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
-					} else {
-						splitCost.setCostTypeId(CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE);
-					}
-					splitCost.setDate(cost.getDate());
-					splitCost.setDescription(cost.getDescription());
-					splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
-					CostSplitter.applyPercentage(splitCost, (int)(100-percentage));
-					CostSplitter.applyPercentage(cost, (int)percentage);
-					kostLijst.add(cost);
-					kostLijst.add(splitCost);
-				}
+				processLine(regel, regelNummer, userId);
 			}
 
 		} catch (IOException e) {
@@ -104,8 +75,9 @@ public class IngTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	private Cost processLine(String[] line, int lineNumber, String userId) {
+	private void processLine(String[] line, int lineNumber, String userId) {
 		Cost kost = new Cost();
+		Kostmatch costMatch = null;
 		try {
 			String datum = line[0];
 			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
@@ -127,19 +99,18 @@ public class IngTransactionReader extends BaseTransactionReader {
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
-				kost = matchKost(kost, userId);
+				costMatch = matchKost(kost, userId);
 			}
-			return kost;
+			addCostOrHandleAdminstrativeSplitting(userId, kost, costMatch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return null;
 	}
 
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.bat");
-		IngTransactionReader rekeningFileHelper = new IngTransactionReader();
+		BaseTransactionReader rekeningFileHelper = new IngTransactionReader();
 		List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(fis)),  "1");
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,57 +19,37 @@
  */
 package org.techytax.domain;
 
-public class Kostmatch {
-	private VatType vatType = VatType.NONE;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-	private long id = 0;
-
-	private long kostenSoortId = 0;
-
-	private String matchText;
-
-	private long userId;
+@Entity
+@Table(name = "splitmatch_private") 
+public class SplitMatch {
 	
-	private int percentage;
+	@Id
+	private long id;
 
-	public VatType getVatType() {
-		return vatType;
-	}
+	@Column(name = "kostmatch_id")
+	private long kostmatchId;
+
+	private int percentage;
 
 	public long getId() {
 		return id;
-	}
-
-	public long getKostenSoortId() {
-		return kostenSoortId;
-	}
-
-	public String getMatchText() {
-		return matchText;
-	}
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setVatType(VatType vatType) {
-		this.vatType = vatType;
 	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
+	public long getKostmatchId() {
+		return kostmatchId;
 	}
 
-	public void setMatchText(String matchText) {
-		this.matchText = matchText;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setKostmatchId(long kostmatchId) {
+		this.kostmatchId = kostmatchId;
 	}
 
 	public int getPercentage() {
@@ -79,5 +59,6 @@ public class Kostmatch {
 	public void setPercentage(int percentage) {
 		this.percentage = percentage;
 	}
+
 
 }

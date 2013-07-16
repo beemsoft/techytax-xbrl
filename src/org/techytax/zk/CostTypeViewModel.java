@@ -29,9 +29,11 @@ import org.techytax.domain.CostConstants;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.SplitMatch;
 import org.techytax.domain.User;
 import org.techytax.domain.VatMatch;
 import org.techytax.domain.VatType;
+import org.techytax.jpa.dao.SplitMatchDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.zk.login.UserCredentialManager;
@@ -42,16 +44,19 @@ import org.zkoss.util.resource.Labels;
 
 public class CostTypeViewModel {
 
+	private User user = UserCredentialManager.getUser();
 	private Kostensoort selected;
 	private Kostmatch selectedPrivateMatch;
 	private String selectedVatType;
-	
+	private int selectedPercentage;
+
 	private List<Kostensoort> costTypes = new ArrayList<Kostensoort>();
 	private List<Kostmatch> publicMatches = new ArrayList<Kostmatch>();
 	private List<Kostmatch> privateMatches = new ArrayList<Kostmatch>();
 	private KostmatchDao kostmatchDao = new KostmatchDao();
 	private KostensoortDao kostensoortDao = new KostensoortDao();
-	private VatMatchDao vatMatchDao = new VatMatchDao();	
+	private VatMatchDao vatMatchDao = new VatMatchDao();
+	private SplitMatchDao splitMatchDao = new SplitMatchDao();
 
 	@Init
 	public void init() throws Exception {
@@ -67,52 +72,54 @@ public class CostTypeViewModel {
 	public List<Kostensoort> getCostTypeList() {
 		return costTypes;
 	}
-	
+
 	private void setPrivateMatches(Kostensoort costType) throws Exception {
-		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			KeyId key = new KeyId();
 			key.setId(selected.getKostenSoortId());
 			key.setUserId(user.getId());
 			privateMatches = kostmatchDao.getCostMatchPrivateListForId(key);
 		}
-		
+
 	}
 
-	@NotifyChange({"privateMatchesList", "publicMatchesList", "vatVisible", "selectedPrivateMatch"})
+	@NotifyChange({ "privateMatchesList", "publicMatchesList", "vatVisible", "selectedPrivateMatch", "splitVisible" })
 	public void setSelectedCostType(Kostensoort selected) throws Exception {
 		this.selected = selected;
 		setPrivateMatches(selected);
-		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getKostenSoortId()));
+		setPublicMatches(selected);
 		this.selectedPrivateMatch = null;
 	}
-	
+
+	private void setPublicMatches(Kostensoort selected) throws Exception {
+		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getKostenSoortId()));
+	}
+
 	@NotifyChange
 	public void setSelectedVatType(String vatType) {
 		this.selectedVatType = vatType;
 	}
-	
+
 	public String getSelectedVatType() {
 		return selectedVatType;
 	}
-	
-	@NotifyChange({"selectedPrivateMatch","privateMatchesList"})
+
+	@NotifyChange({ "selectedPrivateMatch", "privateMatchesList" })
 	@Command
-	public void newMatch(){
+	public void newMatch() {
 		Kostmatch kostMatch = new Kostmatch();
 		privateMatches.add(kostMatch);
 		selectedPrivateMatch = kostMatch;
 	}
-	
+
 	@NotifyChange("selectedPrivateMatch")
 	@Command
-	public void saveMatch() throws Exception{
-		User user = UserCredentialManager.getUser();
+	public void saveMatch() throws Exception {
 		if (user != null) {
-			AuditLogger.log(AuditType.MATCH_TRANSACTION, user);			
+			AuditLogger.log(AuditType.MATCH_TRANSACTION, user);
 			selectedPrivateMatch.setUserId(user.getId());
 			selectedPrivateMatch.setKostenSoortId(selected.getKostenSoortId());
-			
+
 			// Check create or update
 			KeyId key = new KeyId();
 			key.setId(selectedPrivateMatch.getId());
@@ -123,8 +130,8 @@ public class CostTypeViewModel {
 			} else {
 				kostmatchDao.updateCostMatchPrivate(selectedPrivateMatch);
 			}
-			
-			if (selected.isBtwVerrekenbaar()) {
+
+			if (selected.isVatDeclarable()) {
 				if (selectedVatType == null) {
 					selectedPrivateMatch.setVatType(VatType.NONE);
 				} else {
@@ -137,24 +144,37 @@ public class CostTypeViewModel {
 					vatMatchDao.updateVatMatchPrivate(selectedPrivateMatch);
 				}
 			}
+			SplitMatch splitMatch = new SplitMatch();
+			splitMatch.setKostmatchId(selectedPrivateMatch.getId());
+			if (selectedPrivateMatch.getPercentage() > 0) {
+				splitMatch.setPercentage(selectedPrivateMatch.getPercentage());
+				splitMatchDao.insertOrUpdate(splitMatch);
+			} else {
+				splitMatchDao.delete(selectedPrivateMatch.getId());
+			}
 		}
 	}
-	
-	@NotifyChange({"selectedPrivateMatch","privateMatchesList"})
+
+	@NotifyChange({ "selectedPrivateMatch", "privateMatchesList" })
 	@Command
-	public void deleteMatch() throws Exception{
-		User user = UserCredentialManager.getUser();
+	public void deleteMatch() throws Exception {
 		if (user != null) {
 			selectedPrivateMatch.setUserId(user.getId());
 			vatMatchDao.deleteVatMatchPrivate(Long.toString(selectedPrivateMatch.getId()));
+			splitMatchDao.delete(selectedPrivateMatch.getId());
 			kostmatchDao.deleteCostMatchPrivate(selectedPrivateMatch);
 		}
 		privateMatches.remove(selectedPrivateMatch);
-		selectedPrivateMatch = null;		
+		selectedPrivateMatch = null;
 	}
-	
+
 	public boolean getVatVisible() {
-		return selected.isBtwVerrekenbaar() && selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+		return selected.isVatDeclarable() && selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+	}
+
+	public boolean getSplitVisible() {
+		System.out.println("TEstje: " + selected.getKostenSoortId());
+		return selected.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING;
 	}
 
 	public Kostensoort getSelectedCostType() {
@@ -172,12 +192,26 @@ public class CostTypeViewModel {
 	public Kostmatch getSelectedPrivateMatch() {
 		return selectedPrivateMatch;
 	}
-	
-	@NotifyChange({"selectedPrivateMatch","selectedVatType"})
+
+	@NotifyChange({ "selectedPrivateMatch", "selectedVatType" })
 	public void setSelectedPrivateMatch(Kostmatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;
-		if (selected.isBtwVerrekenbaar()) {
+		if (selected.isVatDeclarable()) {
 			setSelectedVatType(selectedPrivateMatch.getVatType().name());
 		}
+		if (selected.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING) {
+			SplitMatch splitMatch = splitMatchDao.getSplitMatch(selectedPrivateMatch.getId());
+			if (splitMatch != null) {
+				this.selectedPrivateMatch.setPercentage(splitMatch.getPercentage());
+			}
+		}
+	}
+
+	public int getSelectedPercentage() {
+		return selectedPercentage;
+	}
+
+	public void setSelectedPercentage(int selectedPercentage) {
+		this.selectedPercentage = selectedPercentage;
 	}
 }
