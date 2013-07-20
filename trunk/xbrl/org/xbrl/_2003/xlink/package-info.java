@@ -6,9 +6,7 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(xmlns = {
-		@XmlNs(prefix = "xlink", namespaceURI = "http://www.w3.org/1999/xlink"),
-		@XmlNs(prefix = "bd-dim-dim", namespaceURI = "http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes"),
-		@XmlNs(prefix = "bd-dim-dom", namespaceURI = "http://www.nltaxonomie.nl/7.0/basis/bd/domains/bd-domains") }, namespace = "http://www.xbrl.org/2003/XLink", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+		@XmlNs(prefix = "xlink", namespaceURI = "http://www.w3.org/1999/xlink") }, namespace = "http://www.xbrl.org/2003/XLink", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.xbrl._2003.xlink;
 
 import javax.xml.bind.annotation.XmlNs;

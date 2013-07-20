@@ -5,5 +5,8 @@
 // Generated on: 2013.02.16 at 05:37:42 PM CET 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.nltaxonomie.nl/7.0/basis/bd/types/bd-codes")
+@javax.xml.bind.annotation.XmlSchema(xmlns = { @XmlNs(prefix = "bd-dim-dim", namespaceURI = "http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes"),
+		@XmlNs(prefix = "bd-dim-dom", namespaceURI = "http://www.nltaxonomie.nl/7.0/basis/bd/domains/bd-domains") }, namespace = "http://www.nltaxonomie.nl/7.0/basis/bd/types/bd-codes")
 package nl.nltaxonomie._7_0.basis.bd.types.bd_codes;
+import javax.xml.bind.annotation.XmlNs;
+
