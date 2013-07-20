@@ -107,15 +107,16 @@ public class XbrlHelper {
 			ContextScenarioType scenario = xbrlObjectFactory.createContextScenarioType();
 			ExplicitMember explicitMember = xbrldiObjectFactory.createExplicitMember();
 
-			QName qName = new QName("http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes", "PartyDimension", "bd-dim-dim");
+			QName qName = new QName("http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes", "PartyDimension");
 			explicitMember.setDimension(qName);
-			qName = new QName("bd-dim-dom:Declarant");
+
+			qName = new QName("http://www.nltaxonomie.nl/7.0/basis/bd/domains/bd-domains", "Declarant");
 			explicitMember.setValue(qName);
 			scenario.getAny().add(explicitMember);
 			explicitMember = xbrldiObjectFactory.createExplicitMember();
-			qName = new QName("bd-dim-dim:TimeDimension");
+			qName = new QName("http://www.nltaxonomie.nl/7.0/domein/bd/axes/bd-axes", "TimeDimension");
 			explicitMember.setDimension(qName);
-			qName = new QName("bd-dim-dom:Current");
+			qName = new QName("http://www.nltaxonomie.nl/7.0/basis/bd/domains/bd-domains", "Current");
 			explicitMember.setValue(qName);
 			scenario.getAny().add(explicitMember);
 			context.setPeriod(period);
