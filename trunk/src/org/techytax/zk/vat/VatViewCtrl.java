@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
@@ -62,6 +64,7 @@ import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
@@ -108,7 +111,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Media media = null;
 	private BufferedReader reader = null;
 	private Balans balans = null;
-
+	@Wire private Button reloadBtn;
+	@Wire private Button importBtn;
+	
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
@@ -123,17 +128,42 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
+			reloadBtn.setDisabled(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
 	}
+	
+	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
+		for (Cost cost: result) {
+			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private List<Cost> filterUnmatchedTransactions(List<Cost> result) {
+		List<Cost> filteredResult = new ArrayList<Cost>();
+		for (Cost cost: result) {
+			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
+				filteredResult.add(cost);
+			}
+		}
+		return filteredResult;
+	}	
 
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
 		reader = new BufferedReader(media.getReaderData());
 		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
 		List<Cost> result = importTransactions.readFile(reader, Long.toString(user.getId()));
+		if (!listContainsUnmatchedTransactions(result)) {
+			importBtn.setDisabled(false);
+		} else {
+			return filterUnmatchedTransactions(result);
+		}
 		return result;
 	}
 
@@ -177,6 +207,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			}
 		}
 		createVatOverview();
+		clearMatchListAfterImporting();
+	}
+
+	private void clearMatchListAfterImporting() {
+		ListModelList<Cost> costModel = new ListModelList<Cost>();
+		if (costGrid != null) {
+			costGrid.setModel(costModel);
+		}
 	}
 
 	@Listen("onClick=#controleTab")
@@ -204,10 +242,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		turnoverGross.setValue(AmountHelper.formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
 		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans.getNettoOmzet().toBigInteger()));
 		controleTab.setSelected(true);
-		costModel = new ListModelList<Cost>();
-		if (costGrid != null) {
-			costGrid.setModel(costModel);
-		}
 	}
 
 	@Listen("onClick=#digipoortBtn")

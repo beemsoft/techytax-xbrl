@@ -217,9 +217,9 @@
 									</template>
 								</listbox>
 								<vbox>
-									<button id="reloadBtn"
+									<button id="reloadBtn" disabled="true"
 										image="/images/Button-Refresh-icon.png" tooltip="reload" />
-									<button id="importBtn"
+									<button id="importBtn" disabled="true"
 										image="/images/Button-Add-icon.png" tooltip="import" />
 								</vbox>
 							</hbox>
