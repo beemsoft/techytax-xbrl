@@ -1,10 +1,19 @@
-<zk>
+	<zk>
     <toolbarbutton label="Release notes" onClick="info.doPopup()"/><span>
     <window id="info" visible="false"  border="normal" position="center" width="380px" height="500px" contentStyle="background:#FFFF66; overflow:auto" >
     <hbox>
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
+<h4>1.14 (upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Added ZK Calendar for registration of hours.</li>
+<li>Use popup window for editing costs.</li>
+<li>Added cost splitting.</li>
+</ul>
 <h4>1.13 (2013-07-22)</h4>
 <p>
 Changes:

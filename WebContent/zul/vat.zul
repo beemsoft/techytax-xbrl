@@ -276,18 +276,6 @@
 									<column label="btw" width="100px" />
 									<column label="type" width="200px" />
 								</columns>
-								<template name="model">
-									<row value="${each}" forward="onClick=onItemClicked">
-										<label
-											value="${each.description}" />
-										<label
-											value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
-										<label value="${each.amount}" />
-										<label value="${each.vat}" />
-										<label
-											value="${each.kostenSoortOmschrijving}" />
-									</row>
-								</template>
 							</grid>
 						</vbox>
 					</tabpanel>

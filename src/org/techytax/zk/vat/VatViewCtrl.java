@@ -27,6 +27,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.digipoort.DigipoortService;
@@ -50,6 +51,7 @@ import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.GlobalCommandEvent;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -57,13 +59,12 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.event.ForwardEvent;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkmax.ui.select.annotation.Subscribe;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
@@ -72,7 +73,6 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Popup;
-import org.zkoss.zul.Row;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
@@ -231,8 +231,29 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		for (Cost cost : vatCosts) {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
+		//<column label="Omschrijving"
+		//width="500px" />
+		//<column label="Datum" width="80px" />
+		//<column label="Bedrag"
+		//width="100px" />
+		//<column label="btw" width="100px" />
+		//<column label="type" width="200px" />
+		//</columns>
+		//<template name="model">
+		//<row value="${each}" >
+		//<label
+//			value="${each.description}" />
+		//<label
+//			value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
+		//<label value="${each.amount}" />
+		//<label value="${each.vat}" />
+		//<label
+//			value="${each.kostenSoortOmschrijving}" />
+		//</row>
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
+		vatGrid.setRowRenderer(new CostRowRenderer());
+		
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
@@ -312,23 +333,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		sbrPopup.open(this.getPage().getFirstRoot());
 	}
 	
-	@Listen("onItemClicked")
-	public void onItemClicked(Event ev) throws Exception {
-		Event origin;
-		// get event target
-		if (ev instanceof ForwardEvent) {
-			origin = Events.getRealOrigin((ForwardEvent)ev);
-		} else {
-			origin = ev;
-		}
-		Component target = origin.getTarget();
-		StringBuilder sb = new StringBuilder("You clicked item: ");
-		sb.append(target).append('\n').append("the value object: \n")
-			.append(((Row)target).getValue());
-//		tb2.setValue(sb.toString());
-		System.out.println(sb.toString());
-	}
-	
+
 	/**
 	 * If the vat declaration has not yet been sent and the user has a fiscal number,
 	 * then the button can be enabled.
@@ -358,4 +363,27 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		digipoortBtn.setDisabled(disableDigipoort());
 	}
 
+    @Subscribe("queueName")
+    public void updateVatOverview(Event evt) throws Exception{
+        if(evt instanceof GlobalCommandEvent){
+            if("refreshvalues".equals(((GlobalCommandEvent)evt).getCommand())){
+            	Map<String, Object> arguments = ((GlobalCommandEvent)evt).getArgs();
+            	Cost updatedCost = (Cost) arguments.get("returncost");
+            	BoekDao boekDao = new BoekDao();
+            	Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId().longValue());
+            	if (!updatedCost.equals(originalCost)) {
+            		updatedCost.setUserId(user.getId().longValue());
+            		boekDao.updateKost(updatedCost);
+            		
+            		Cost splitCost = (Cost) arguments.get("splitcost");
+            		if (splitCost != null) {
+            			splitCost.setDate(updatedCost.getDate());
+            			splitCost.setUserId(user.getId().longValue());
+            			boekDao.insertKost(splitCost);
+            		}
+            		createVatOverview();
+            	}
+            }              
+        }
+    }
 }

@@ -20,7 +20,9 @@
 package org.techytax.zk.cost;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.KostensoortDao;
@@ -32,10 +34,14 @@ import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.mail.MailHelper;
 import org.techytax.util.DateHelper;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Window;
 
 public class AllCostsVM extends CostVM3 {
 
@@ -106,4 +112,45 @@ public class AllCostsVM extends CostVM3 {
 	public Date getEndDate() {
 		return periode.getEindDatum();
 	}
+	
+	@Command
+	public void newCost() {
+		Cost newCost = new Cost();
+		newCost.setDate(new Date());
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		arguments.put("cost", newCost);
+		String template = "edit-cost.zul";
+		Window window = (Window) Executions.createComponents(template, null, arguments);
+		window.doModal();
+	}	
+	
+	@Command
+	public void onDoubleClicked() {
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		arguments.put("cost", selected);
+		String template = "edit-cost.zul";
+		Window window = (Window) Executions.createComponents(template, null, arguments);
+		window.doModal();
+	}
+	
+	@GlobalCommand
+	@NotifyChange({ "costs", "selected"})
+	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
+		System.out.println("Test: " + cost.getDescription());
+		BoekDao boekDao = new BoekDao();
+		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId().longValue());
+		cost.setUserId(user.getId().longValue());
+		if (originalCost == null) {
+			AuditLogger.log(AuditType.ENTER_COST, user);
+			boekDao.insertKost(cost);
+			this.selected = cost;
+		} else  if (!cost.equals(originalCost)) {
+			boekDao.updateKost(cost);
+		}
+		if (splitCost != null) {
+			splitCost.setDate(cost.getDate());
+			splitCost.setUserId(user.getId().longValue());
+			boekDao.insertKost(splitCost);
+		}
+	}	
 }
