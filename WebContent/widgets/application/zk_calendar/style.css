@@ -1,0 +1,15 @@
+.selectedButton .z-button-cm {
+    font-weight: bold;
+}
+ 
+.chooser-popup div.z-popup-cl {
+    border: none;
+}
+ 
+.chooser-popup .z-popup-cnt {
+    padding: 0;
+}
+ 
+.chooser-popup .z-groupbox {
+    -moz-border-radius: 1px 1px 1px 1px;
+}
