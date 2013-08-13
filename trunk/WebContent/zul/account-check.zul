@@ -7,7 +7,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 }
 </style>
 <window self="@define(content)" title="Zakelijke rekening controleren" border="normal" width="1015px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
-	validationMessages="@id('vmsgs')">
+	binder="@init(queueName='queueName',queueScope='desktop')" validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<groupbox hflex="true" mold="3d">
 			<grid hflex="true" >
@@ -39,7 +39,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<listheader label="Type" width="400px"/>
 			</listhead>
 			<template name="model" var="item">
-				<listitem >
+				<listitem onDoubleClick="@command('onDoubleClicked')">
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
 					<listcell label="@load(item.amount)"/>
 					<listcell label="@load(item.vat)"/>

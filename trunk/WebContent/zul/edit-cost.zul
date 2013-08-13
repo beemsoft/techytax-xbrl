@@ -1,0 +1,122 @@
+<window id="resultWin" title="Kost bewerken" width="900px"
+	height="600px" border="normal" apply="org.zkoss.bind.BindComposer"
+	onCancel="@command('closeThis')"
+	viewModel="@id('vm') @init('org.techytax.zk.vat.ModelWindowVM')">
+
+	<button label="Wijzig" onClick="@command('save')" />
+	<button label="Annuleer" onClick="@command('cancel')" />
+	<button label="Splits" onClick="@command('split')" disabled="@load(not empty vm.splitCost)" />
+	<button label="Annuleer splits" onClick="@command('unSplit')" disabled="@load(empty vm.splitCost)" />
+	<groupbox width="850px" mold="3d">
+		<hbox>
+			<vbox hflex="true">
+				<grid>
+					<columns>
+						<column width="90px" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+							Datum
+							<hlayout>
+								<datebox id="cdbox"
+									value="@bind(vm.cost.date) @save(vm.cost.date, before='saveCost')
+							@validator(vm.creationDateValidator)" />
+								<label value="@load(vmsgs[cdbox])"
+									sclass="red" />
+							</hlayout>
+						</row>
+						<row>
+							Bedrag
+							<hlayout>
+								<doublebox id="pbox"
+									value="@bind(vm.cost.amount) @save(vm.cost.amount,before='saveCost') 
+							@validator(vm.priceValidator)"
+									format="###,##0.00" />
+								<label value="@load(vmsgs[pbox])"
+									sclass="red" />
+								<button id="vatHighBtn" label="btw hoog"
+									onClick="@command('highVat')" />
+								<button id="vatLowBtn" label="btw laag"
+									onClick="@command('lowVat')" />
+							</hlayout>
+						</row>
+						<row>
+							btw
+							<hlayout>
+								<doublebox id="vbox"
+									value="@bind(vm.cost.vat) @save(vm.cost.vat,before='saveCost')"
+									format="###,##0.00" />
+							</hlayout>
+						</row>
+						<row>
+							Omschrijving
+							<hlayout>
+								<textbox id="tbx"
+									value="@bind(vm.cost.description) @save(vm.cost.description,before='saveCost')"
+									width="300px" height="60px" rows="4" />
+							</hlayout>
+						</row>
+					</rows>
+				</grid>
+				<groupbox visible="@load(not empty vm.splitCost)">
+					<grid>
+						<columns>
+							<column width="90px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								Bedrag
+								<hlayout>
+									<doublebox id="pboxsplit"
+										value="@bind(vm.splitCost.amount) @save(vm.splitCost.amount,before='saveCost') 
+							@validator(vm.priceValidator)"
+										format="###,##0.00" />
+								</hlayout>
+							</row>
+							<row>
+								btw
+								<hlayout>
+									<doublebox id="vboxsplit"
+										value="@bind(vm.splitCost.vat) @save(vm.splitCost.vat,before='saveCost')"
+										format="###,##0.00" />
+								</hlayout>
+							</row>
+							<row>
+								Omschrijving
+								<hlayout>
+									<textbox id="tbxsplit"
+										value="@bind(vm.splitCost.description) @save(vm.splitCost.description,before='saveCost')"
+										width="300px" height="60px" rows="4" />
+								</hlayout>
+							</row>
+						</rows>
+					</grid>
+				</groupbox>
+			</vbox>
+			<grid hflex="true" >
+				<columns>
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<listbox model="@load(vm.costTypes)"
+							selectedItem="@bind(vm.selectedCostType)" height="500px"
+							>
+							<listhead>
+								<listheader label="Type" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell
+										label="@load(item.omschrijving)" />
+								</listitem>
+							</template>
+						</listbox>
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+	</groupbox>
+</window>

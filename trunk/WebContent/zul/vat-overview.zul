@@ -1,0 +1,102 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+<style>
+.z-label.red{
+	color:red;
+}
+</style>
+<window self="@define(content)" title="Handmatig transacties invoeren" border="normal" width="100%"
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
+	validationMessages="@id('vmsgs')">
+	<vbox hflex="true">
+		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="100px">
+			<listhead>
+				<listheader label="Datum" align="center" width="80px" />
+				<listheader label="Bedrag" align="center" width="70px" />
+				<listheader label="btw" align="center" width="70px" />
+				<listheader label="Omschrijving" width="380px" />
+				<listheader label="Type" width="350px"/>
+			</listhead>
+			<template name="model" var="item">
+				<listitem >
+					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
+					<listcell label="@load(item.amount)"/>
+					<listcell label="@load(item.vat)"/>
+					<listcell label="@load(item.description)"/>
+					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
+				</listitem>
+			</template>
+		</listbox>
+		<toolbar>
+			<button label="New" onClick="@command('newCost')" />
+			<button label="Save" onClick="@command('saveCost')" disabled="@bind(empty vm.selected)" />
+			<!-- show confirm dialog when selected is persisted -->
+			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
+		</toolbar>
+		<groupbox visible="@load(not empty vm.selected)" hflex="true" mold="3d">
+			<grid hflex="true" >
+				<columns>
+					<column width="120px"/>
+					<column/>
+				</columns>
+				<rows>
+					<row>Datum
+						<hlayout> 
+							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost')
+							@validator(vm.creationDateValidator)"/>
+							<label value="@load(vmsgs[cdbox])" sclass="red" />
+						</hlayout>	
+					</row>				
+					<row>Bedrag 
+						<hlayout>
+							<doublebox value="@bind(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
+							@validator(vm.priceValidator)" />
+							<label value="@load(vmsgs[pbox])" sclass="red" />
+							<button id="vatHighBtn" label="btw hoog" onClick="@command('highVat')"/>
+							<button id="vatLowBtn" label="btw laag" onClick="@command('lowVat')"/>							
+						</hlayout>
+					</row>
+					<row>btw 
+						<hlayout>
+							<doublebox value="@bind(vm.selected.vat) @save(vm.selected.vat,before='saveCost')" format="###,##0.00" />
+							<label value="@load(vmsgs[pbox])" sclass="red" />
+						</hlayout>
+					</row>					
+					<row>Omschrijving 
+						<hlayout>
+							<textbox value="@bind(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" hflex="true" />
+						</hlayout>
+					</row>
+					<row>Type
+						<hlayout>
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" >
+								<listhead>
+									<listheader label="Omschrijving" width="400px" />
+								</listhead>
+								<template name="model" var="item">
+									<listitem >
+										<listcell label="@load(item.omschrijving)"/>					
+									</listitem>
+								</template>
+							</listbox>
+						</hlayout>
+					</row>					
+				</rows>
+			</grid>
+		</groupbox>
+	</vbox>
+	<window title="Confirm" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
+		<vbox hflex="true">
+			<hlayout height="50px">
+				<image src="~./zul/img/msgbox/question-btn.png"/>
+				<label value="@load(vm.deleteMessage)"/>
+			</hlayout>
+			<hbox pack="center" hflex="true">
+				<button label="Delete" onClick="@command('deleteCost')"/>
+				<button label="Cancel" onClick="@command('cancelDelete')"/>
+			</hbox>
+		</vbox>
+	</window>
+</window>
+</zk>

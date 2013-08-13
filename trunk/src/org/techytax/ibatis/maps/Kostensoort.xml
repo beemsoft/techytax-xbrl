@@ -1,5 +1,5 @@
 <!--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -47,6 +47,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<select id="getCostTypesForVatCostsWithPrivateMoney" resultClass="kostensoort">
 		select id as kostenSoortId, omschrijving  
 		from kostensoort
-		where id in (0,7,19,21,26,32) 
+		where id in (7,19,21,26,32) 
 	</select>	
 </sqlMap>

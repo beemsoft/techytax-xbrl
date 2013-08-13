@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,6 +22,8 @@ package org.techytax.domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class Cost implements Serializable {
 
@@ -115,5 +117,21 @@ public class Cost implements Serializable {
 		if (vat != null) {		
 			vat = vat.setScale(2,BigDecimal.ROUND_HALF_UP);
 		}		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Cost)) {
+			return false;
+		}
+		Cost other = (Cost) obj;
+		EqualsBuilder equalsBuilder = new EqualsBuilder();
+		equalsBuilder.append(id, other.id);
+		equalsBuilder.append(description, other.description);
+		equalsBuilder.append(date, other.date);
+		equalsBuilder.append(amount, other.amount);
+		equalsBuilder.append(vat, other.vat);
+		equalsBuilder.append(costTypeId, other.costTypeId);
+		return equalsBuilder.isEquals();
 	}
 }

@@ -78,31 +78,6 @@ public class CostVM {
 		return selected;
 	}
 	
-	private Kostensoort select(long costTypeId) {
-		for (Kostensoort costType: costTypes) {
-			if (costType.getKostenSoortId() == costTypeId) {
-				return costType;
-			}
-		}
-		return null;
-	}
-
-	@NotifyChange({"selected", "selectedCostType"})
-	public void setSelected(Cost selected) {
-		this.selected = selected;
-		setSelectedCostType(select(selected.getCostTypeId()));
-	}
-	
-	public Kostensoort getSelectedCostType() {
-		return selectedCostType;
-	}
-	
-	public void setSelectedCostType(Kostensoort selected) {
-		this.selectedCostType = selected;
-	}	
-
-	//action command
-	
 	@NotifyChange({"selected","costs"})
 	@Command
 	public void newCost() throws Exception{
@@ -130,8 +105,32 @@ public class CostVM {
 				boekDao.updateKost(selected);
 			}
 		}
+	}	
+	
+	private Kostensoort select(long costTypeId) {
+		for (Kostensoort costType: costTypes) {
+			if (costType.getKostenSoortId() == costTypeId) {
+				return costType;
+			}
+		}
+		return null;
+	}
+
+	@NotifyChange({"selected"})
+	public void setSelected(Cost selected) {
+		this.selected = selected;
+//		setSelectedCostType(select(selected.getCostTypeId()));
 	}
 	
+	public Kostensoort getSelectedCostType() {
+		return selectedCostType;
+	}
+	
+	public void setSelectedCostType(Kostensoort selected) {
+		this.selectedCostType = selected;
+	}	
+
+	//action command
 	
 	@NotifyChange({"selected","costs"})
 	@Command
