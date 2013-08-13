@@ -40,7 +40,8 @@
 								<toolbarbutton label="Controle-stap" href="account-check.zul" />
 								<toolbarbutton label="Digipoort" href="xbrl.zul" />
 								<toolbarbutton label="Activa" href="activa.zul" />
-								<toolbarbutton label="Facturen" href="invoices.zul" />								
+								<toolbarbutton label="Facturen" href="invoices.zul" />
+								<toolbarbutton label="Kalender" href="zk_calendar.zul" />								
 							</vbox>
 						</panelchildren>
 					</panel>
