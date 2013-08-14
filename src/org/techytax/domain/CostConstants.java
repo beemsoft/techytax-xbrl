@@ -27,6 +27,7 @@ public interface CostConstants {
 	public static final int UITGAVE_DEZE_REKENING_FOUTIEF = 3;
 	public static final int INLEG = 4;
 	public static final int OPNAME = 5;
+	public static final int EXPENSE_OTHER_ACCOUNT_IGNORE = 6;
 	public static final int UITGAVE_ANDERE_REKENING = 7;
 	public static final int REISKOST_ANDERE_REKENING_FOUTIEF = 8;
 	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT = 9;

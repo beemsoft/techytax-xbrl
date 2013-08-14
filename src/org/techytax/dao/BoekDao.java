@@ -33,9 +33,12 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.CostConstants;
+import org.techytax.domain.Kostensoort;
 
 public class BoekDao extends BaseDao {
-
+	
+	private KostensoortDao kostensoortDao = new KostensoortDao();
+	
 	private void encrypt(Cost cost) {
 		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
 			cost.setAmount(decimalEncryptor.encrypt(cost.getAmount()));
@@ -81,6 +84,20 @@ public class BoekDao extends BaseDao {
 		sqlMap.insert("insertKost", kost);
 		decrypt(kost);
 	}
+	
+	public void insertSplitCost(Cost originalCost, Cost splitCost) throws Exception {
+		splitCost.setDate(originalCost.getDate());
+		Kostensoort costType = kostensoortDao.getKostensoort(Long.toString(originalCost.getCostTypeId()));
+		if (costType.isBalansMeetellen()) {
+			splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		} else {
+			splitCost.setCostTypeId(CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE);
+		}
+		splitCost.roundValues();
+		encrypt(splitCost);
+		sqlMap.insert("insertKost", splitCost);
+		decrypt(splitCost);
+	}	
 
 	public void insertPrivateExpense(Cost kost) throws Exception {
 		kost.setAmount(BigDecimal.valueOf(kost.getAmount().doubleValue()).setScale(2));
