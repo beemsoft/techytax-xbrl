@@ -47,12 +47,14 @@ public class AllCostsVM extends CostVM3 {
 
 	private Periode periode = DateHelper.getLatestVatPeriod();
 	private BoekDao boekDao = new BoekDao();
+	private KostensoortDao kostensoortDao = new KostensoortDao();
 
 	@Command
 	public void audit() {
-		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);		
+		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);
 		try {
-			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit", Long.toString(user.getId()));
+			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+					"audit", Long.toString(user.getId()));
 			String message = DutchAuditFileHelper.createAuditFile(allCosts, user);
 			MailHelper.sendAuditReport(message, user.getEmail());
 		} catch (Exception e) {
@@ -62,7 +64,8 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user != null) {
-			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "alles", Long.toString(user.getId()));
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+					"alles", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
@@ -73,7 +76,8 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
 		if (user != null && costs == null) {
-			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+					"rekeningBalans", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
@@ -84,7 +88,6 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Kostensoort> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			KostensoortDao kostensoortDao = new KostensoortDao();
 			List<Kostensoort> vatCostTypes = kostensoortDao.getKostensoortLijst();
 			costTypes = new ListModelList<Kostensoort>(vatCostTypes);
 			for (Kostensoort costType : costTypes) {
@@ -112,7 +115,7 @@ public class AllCostsVM extends CostVM3 {
 	public Date getEndDate() {
 		return periode.getEindDatum();
 	}
-	
+
 	@Command
 	public void newCost() {
 		Cost newCost = new Cost();
@@ -122,8 +125,8 @@ public class AllCostsVM extends CostVM3 {
 		String template = "edit-cost.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
 		window.doModal();
-	}	
-	
+	}
+
 	@Command
 	public void onDoubleClicked() {
 		Map<String, Object> arguments = new HashMap<String, Object>();
@@ -132,9 +135,9 @@ public class AllCostsVM extends CostVM3 {
 		Window window = (Window) Executions.createComponents(template, null, arguments);
 		window.doModal();
 	}
-	
+
 	@GlobalCommand
-	@NotifyChange({ "costs", "selected"})
+	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
 		System.out.println("Test: " + cost.getDescription());
 		BoekDao boekDao = new BoekDao();
@@ -144,13 +147,12 @@ public class AllCostsVM extends CostVM3 {
 			AuditLogger.log(AuditType.ENTER_COST, user);
 			boekDao.insertKost(cost);
 			this.selected = cost;
-		} else  if (!cost.equals(originalCost)) {
+		} else if (!cost.equals(originalCost)) {
 			boekDao.updateKost(cost);
 		}
 		if (splitCost != null) {
-			splitCost.setDate(cost.getDate());
 			splitCost.setUserId(user.getId().longValue());
-			boekDao.insertKost(splitCost);
+			boekDao.insertSplitCost(cost, splitCost);
 		}
-	}	
+	}
 }

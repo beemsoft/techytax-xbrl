@@ -27,10 +27,13 @@ import java.util.Map;
 
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.BoekDao;
+import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
+import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
@@ -128,17 +131,14 @@ public class AccountCheckVM extends CostVM3 {
 	@GlobalCommand
 	@NotifyChange({ "costs" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		System.out.println("Test: " + cost.getDescription());
-		BoekDao boekDao = new BoekDao();
 		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId().longValue());
 		if (!cost.equals(originalCost)) {
 			cost.setUserId(user.getId().longValue());
 			boekDao.updateKost(cost);
 			
     		if (splitCost != null) {
-    			splitCost.setDate(cost.getDate());
     			splitCost.setUserId(user.getId().longValue());
-    			boekDao.insertKost(splitCost);
+    			boekDao.insertSplitCost(cost, splitCost);
     		}
 		}
 	}

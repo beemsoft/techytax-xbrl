@@ -81,7 +81,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private static final long serialVersionUID = -6147927083401382065L;
 
-	User user = UserCredentialManager.getUser();
+	private User user = UserCredentialManager.getUser();
+
+	private BoekDao boekDao = new BoekDao();
+
 	@Wire
 	private Grid costGrid;
 	@Wire
@@ -111,9 +114,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Media media = null;
 	private BufferedReader reader = null;
 	private Balans balans = null;
-	@Wire private Button reloadBtn;
-	@Wire private Button importBtn;
-	
+	@Wire
+	private Button reloadBtn;
+	@Wire
+	private Button importBtn;
+
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
 		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
@@ -134,25 +139,25 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		}
 	}
-	
+
 	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
-		for (Cost cost: result) {
+		for (Cost cost : result) {
 			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	private List<Cost> filterUnmatchedTransactions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<Cost>();
-		for (Cost cost: result) {
+		for (Cost cost : result) {
 			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
 				filteredResult.add(cost);
 			}
 		}
 		return filteredResult;
-	}	
+	}
 
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
@@ -231,29 +236,29 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		for (Cost cost : vatCosts) {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
-		//<column label="Omschrijving"
-		//width="500px" />
-		//<column label="Datum" width="80px" />
-		//<column label="Bedrag"
-		//width="100px" />
-		//<column label="btw" width="100px" />
-		//<column label="type" width="200px" />
-		//</columns>
-		//<template name="model">
-		//<row value="${each}" >
-		//<label
-//			value="${each.description}" />
-		//<label
-//			value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
-		//<label value="${each.amount}" />
-		//<label value="${each.vat}" />
-		//<label
-//			value="${each.kostenSoortOmschrijving}" />
-		//</row>
+		// <column label="Omschrijving"
+		// width="500px" />
+		// <column label="Datum" width="80px" />
+		// <column label="Bedrag"
+		// width="100px" />
+		// <column label="btw" width="100px" />
+		// <column label="type" width="200px" />
+		// </columns>
+		// <template name="model">
+		// <row value="${each}" >
+		// <label
+		// value="${each.description}" />
+		// <label
+		// value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
+		// <label value="${each.amount}" />
+		// <label value="${each.vat}" />
+		// <label
+		// value="${each.kostenSoortOmschrijving}" />
+		// </row>
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
-		
+
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
@@ -332,11 +337,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		msg.setValue(xbrlInstance);
 		sbrPopup.open(this.getPage().getFirstRoot());
 	}
-	
 
 	/**
-	 * If the vat declaration has not yet been sent and the user has a fiscal number,
-	 * then the button can be enabled.
+	 * If the vat declaration has not yet been sent and the user has a fiscal
+	 * number, then the button can be enabled.
 	 */
 	public boolean disableDigipoort() {
 		Date declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
@@ -356,34 +360,32 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 		return componentInfo;
 	}
-	
+
 	@Override
 	public void doAfterCompose(Window comp) throws Exception {
 		super.doAfterCompose(comp);
 		digipoortBtn.setDisabled(disableDigipoort());
 	}
 
-    @Subscribe("queueName")
-    public void updateVatOverview(Event evt) throws Exception{
-        if(evt instanceof GlobalCommandEvent){
-            if("refreshvalues".equals(((GlobalCommandEvent)evt).getCommand())){
-            	Map<String, Object> arguments = ((GlobalCommandEvent)evt).getArgs();
-            	Cost updatedCost = (Cost) arguments.get("returncost");
-            	BoekDao boekDao = new BoekDao();
-            	Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId().longValue());
-            	if (!updatedCost.equals(originalCost)) {
-            		updatedCost.setUserId(user.getId().longValue());
-            		boekDao.updateKost(updatedCost);
-            		
-            		Cost splitCost = (Cost) arguments.get("splitcost");
-            		if (splitCost != null) {
-            			splitCost.setDate(updatedCost.getDate());
-            			splitCost.setUserId(user.getId().longValue());
-            			boekDao.insertKost(splitCost);
-            		}
-            		createVatOverview();
-            	}
-            }              
-        }
-    }
+	@Subscribe("queueName")
+	public void updateVatOverview(Event evt) throws Exception {
+		if (evt instanceof GlobalCommandEvent) {
+			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
+				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
+				Cost updatedCost = (Cost) arguments.get("returncost");
+				Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId().longValue());
+				if (!updatedCost.equals(originalCost)) {
+					updatedCost.setUserId(user.getId().longValue());
+					boekDao.updateKost(updatedCost);
+
+					Cost splitCost = (Cost) arguments.get("splitcost");
+					if (splitCost != null) {
+						splitCost.setUserId(user.getId().longValue());
+		    			boekDao.insertSplitCost(originalCost, splitCost);
+					}
+					createVatOverview();
+				}
+			}
+		}
+	}
 }
