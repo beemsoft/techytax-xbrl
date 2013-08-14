@@ -27,13 +27,10 @@ import java.util.Map;
 
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
