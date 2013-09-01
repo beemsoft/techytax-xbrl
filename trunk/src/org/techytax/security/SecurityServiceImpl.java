@@ -60,7 +60,11 @@ public class SecurityServiceImpl implements SecurityService {
 			user.setLatestOnlineTime(currentDate);
 			userDao.updateUserTimeStamp(user);
 			initEncryption();
-			AuditLogger.log(AuditType.LOGON, user);
+			try {
+				AuditLogger.log(AuditType.LOGON, user);
+			} catch (Exception e) {
+				// Skip exception, it only occurs in the Struts version.
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
