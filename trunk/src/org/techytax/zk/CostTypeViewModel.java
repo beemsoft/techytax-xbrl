@@ -173,7 +173,6 @@ public class CostTypeViewModel {
 	}
 
 	public boolean getSplitVisible() {
-		System.out.println("TEstje: " + selected.getKostenSoortId());
 		return selected.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING;
 	}
 
