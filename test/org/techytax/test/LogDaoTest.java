@@ -35,14 +35,14 @@ public class LogDaoTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logDao = new GenericDao<LogRecord>(EntityManagerHelper.getEntityManager());
-		userDao = new GenericDao<User>(EntityManagerHelper.getEntityManager());
+		logDao = new GenericDao<LogRecord>(EntityManagerHelper.getEntityManager(), LogRecord.class, null);
+		userDao = new GenericDao<User>(EntityManagerHelper.getEntityManager(), User.class, null);
 	}
 
 	@Test
 	public void testStoreAndGetLogRecord() {
 		addLogRecord();
-		Collection<LogRecord> logRecords = logDao.findAllLogRecords();
+		Collection<LogRecord> logRecords = logDao.findAll();
 		assertEquals(1, logRecords.size());
 	}
 
