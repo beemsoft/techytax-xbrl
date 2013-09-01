@@ -42,7 +42,7 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
     
     private BigDecimal otherCostDeclaration;
     
-    private VatType vatTypeForOtherCostDeclaration;
+    private VatType vatTypeForOtherCostDeclaration = VatType.NONE;
     
     private float unitsOfWork;
     

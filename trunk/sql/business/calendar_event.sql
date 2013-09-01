@@ -17,4 +17,10 @@ CREATE TABLE calendar_event
    PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-ALTER TABLE techytax.calendar_event MODIFY COLUMN unitsOfWork FLOAT;
+ALTER TABLE calendar_event MODIFY COLUMN unitsOfWork FLOAT;
+
+ALTER TABLE calendar_event MODIFY COLUMN travelingByCarCostDeclaration decimal(50,2);
+ALTER TABLE calendar_event MODIFY COLUMN otherCostDeclaration decimal(50,2);
+
+ALTER TABLE calendar_event MODIFY COLUMN title varchar(200);
+ALTER TABLE calendar_event MODIFY COLUMN content varchar(100);

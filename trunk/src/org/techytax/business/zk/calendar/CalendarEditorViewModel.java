@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.cxf.common.util.StringUtils;
 import org.techytax.business.jpa.entities.Project;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
@@ -155,7 +156,11 @@ public class CalendarEditorViewModel {
 		return selectedProject;
 	}
 
+    @NotifyChange("calendarEvent")
 	public void setSelectedProject(Project selectedProject) {
 		this.selectedProject = selectedProject;
+		if (StringUtils.isEmpty(calendarEventData.getTitle())) {
+			calendarEventData.setContent(selectedProject.getCode());
+		}
 	}
 }

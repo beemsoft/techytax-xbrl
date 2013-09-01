@@ -181,16 +181,17 @@ public class CalendarController extends SelectorComposer<Component> {
     @Subscribe(value = QueueUtil.QUEUE_NAME)
     public void handleQueueMessage(QueueMessage message) throws Exception {
     	BusinessCalendarEvent calendarEvent = (BusinessCalendarEvent)message.getData();
-        calendarEvent.setUserId(user.getId());
         switch(message.getType()){
         case DELETE:
             calendarModel.remove((BusinessCalendarEvent)message.getData());
+            calendarEvent.setUserId(user.getId());
             businessCalendarDao.deleteEvent(calendarEvent);
             //clear the shadow of the event after editing
             calendarsEvent.clearGhost();
             calendarsEvent = null;
             break;
         case OK:
+            calendarEvent.setUserId(user.getId());
             if (calendarModel.indexOf(calendarEvent) >= 0) {
                 calendarModel.update(calendarEvent);
                 businessCalendarDao.updateEvent(calendarEvent);
