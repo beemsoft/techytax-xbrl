@@ -1,59 +1,113 @@
 <div apply="org.zkoss.bind.BindComposer"
-    viewModel="@id('vm') @init('demo.app.zk_calendar.CalendarEditorViewModel')"
-    validationMessages="@id('vmsgs')">
-    <window title="Create Calendar Event" border="normal" width="400px"
-        form="@id('fx') @load(vm.calendarEvent) @save(vm.calendarEvent, before='ok') @validator(vm.dateValidator)"
-        allDay="@ref(vm.isAllDay(fx.beginDate,fx.endDate))"
-        mode="popup" visible="@load(vm.visible)" position="center,center" >
-        <caption>
-            Lock this event : <checkbox checked="@bind(fx.locked)" />
-            All Day: <checkbox checked="@load(allDay)" disabled="true" />
-        </caption>
-        <grid hflex='1'>
-            <columns>
-                <column width="100px" align="right" />
-                <column />
-            </columns>
-            <rows>
-                <row>
-                    BeginDate:
-                    <div>
-                        <datebox hflex="true" locale="en" timeZone="GMT+0"
-                            format="@load(allDay ? 'long' : 'long+medium')"
-                            value="@bind(fx.beginDate)" errorMessage="@load(vmsgs.beginDate)" />
-                    </div>
-                </row>
-                <row>
-                    EndDate:
-                    <div>
-                        <datebox hflex="true" locale="en" timeZone="GMT+0"
-                            format="@load(allDay ? 'long' : 'long+medium')"
-                            value="@bind(fx.endDate)" errorMessage="@load(vmsgs.endDate)"/>
-                    </div>
-                </row>
-                <row>
-                    Color:
-                    <hlayout sclass="z-valign-middle">
-                        Border -
-                        <colorbox value="@bind(fx.headerColor)" height="20px" />
-                        Content -
-                        <colorbox value="@bind(fx.contentColor)" height="20px" />
-                    </hlayout>
-     
-                </row>
-                <row>
-                    Title:
-                    <textbox multiline="true" rows="3" width="97%"
-                        value="@bind(fx.content)" />
-                </row>
-                <row>
-                    <cell colspan="2" style="text-align:center;">
-                        <button label="OK" onClick="@command('ok')" width="80px" />
-                        <button label="Cancel" onClick="@command('cancel')" width="80px" />
-                        <button label="Delete" onClick="@command('delete')" width="80px" />
-                    </cell>
-                </row>
-            </rows>
-        </grid>
-    </window>
+	viewModel="@id('vm') @init('org.techytax.business.zk.calendar.CalendarEditorViewModel')"
+	validationMessages="@id('vmsgs')">
+	<window title="Maak een agenda item" border="normal" width="600px"
+		form="@id('fx') @load(vm.calendarEvent) @save(vm.calendarEvent, before='ok') @validator(vm.dateValidator)"
+		allDay="@ref(vm.isAllDay(fx.beginDate,fx.endDate))" mode="popup"
+		visible="@load(vm.visible)" position="center,center">
+		<caption>
+			Zet dit item vast :
+			<checkbox checked="@bind(fx.locked)" />
+			Hele dag:
+			<checkbox checked="@load(allDay)" disabled="true" />
+		</caption>
+		<hbox>
+			<grid>
+				<columns>
+					<column width="100px" align="right" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						Van::
+						<div>
+							<datebox hflex="true" locale="en"
+								timeZone="GMT+0" format="@load(allDay ? 'long' : 'long+medium')"
+								value="@bind(fx.beginDate)"
+								errorMessage="@load(vmsgs.beginDate)" />
+						</div>
+					</row>
+					<row>
+						Tot:
+						<div>
+							<datebox hflex="true" locale="en"
+								timeZone="GMT+0" format="@load(allDay ? 'long' : 'long+medium')"
+								value="@bind(fx.endDate)" errorMessage="@load(vmsgs.endDate)" />
+						</div>
+					</row>
+					<row>
+						Kleur:
+						<hlayout sclass="z-valign-middle">
+							Rand -
+							<colorbox value="@bind(fx.headerColor)"
+								height="20px" />
+							Inhoud -
+							<colorbox value="@bind(fx.contentColor)"
+								height="20px" />
+						</hlayout>
+
+					</row>
+					<row>
+						Titel:
+						<textbox width="97%" value="@bind(fx.title)" />
+					</row>
+					<row>
+						Omschrijving:
+						<textbox multiline="true" rows="3" width="97%"
+							value="@bind(fx.content)" />
+					</row>
+					<row>
+						Aantal:
+						<textbox width="97%" value="@bind(fx.unitsOfWork)" />
+					</row>
+					<row>
+						Billable:
+						<checkbox checked="@bind(fx.billable)" />
+					</row>
+					<row>
+						Kilometer vergoeding:
+						<doublebox value="@bind(fx.travelingByCarCostDeclaration)" />
+					</row>
+					<row>
+						Overige kosten:
+						<doublebox value="@bind(fx.otherCostDeclaration)" />						
+					</row>
+					<row>
+						btw type overige kosten:
+						<textbox value="@bind(fx.vatTypeForOtherCostDeclaration)" />
+					</row>
+					<row>
+						<cell colspan="2" style="text-align:center;">
+							<button label="OK" onClick="@command('ok')"
+								width="80px" />
+							<button label="Cancel"
+								onClick="@command('cancel')" width="80px" />
+							<button label="Delete"
+								onClick="@command('delete')" width="80px" />
+						</cell>
+					</row>
+				</rows>
+			</grid>
+			<grid>
+				<columns>
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<listbox model="@load(vm.projects)"
+							selectedItem="@bind(vm.selectedProject)" height="500px">
+							<listhead>
+								<listheader label="Project" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell label="@load(item.code)" />
+								</listitem>
+							</template>
+						</listbox>
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+	</window>
 </div>
