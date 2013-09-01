@@ -5,13 +5,13 @@ import java.util.List;
 import javax.persistence.Query;
 
 import org.techytax.domain.SplitMatch;
-import org.techytax.jpa.entities.EntityManagerHelper;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class SplitMatchDao {
 
 	public void insertOrUpdate(SplitMatch splitMatch) {
 		List<SplitMatch> result = getMatch(splitMatch);
-		GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(EntityManagerHelper.getEntityManager());
+		GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(SplitMatch.class, null);
 		if (result.size() == 0) {
 			genericDao.persistEntity(splitMatch);
 		} else {
@@ -34,7 +34,7 @@ public class SplitMatchDao {
 
 	@SuppressWarnings("unchecked")
 	private List<SplitMatch> getMatch(SplitMatch splitMatch) {
-		Query query = EntityManagerHelper.getEntityManager().createQuery("SELECT sm FROM SplitMatch sm WHERE sm.kostmatchId= :costMatchId");
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT sm FROM SplitMatch sm WHERE sm.kostmatchId= :costMatchId");
 		query.setParameter("costMatchId", splitMatch.getKostmatchId());
 		List<SplitMatch> result = query.getResultList();
 		return result;
@@ -45,7 +45,7 @@ public class SplitMatchDao {
 		splitMatch.setKostmatchId(costMatchId);
 		List<SplitMatch> result = getMatch(splitMatch);
 		if (result.size() == 1) {
-			GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(EntityManagerHelper.getEntityManager());
+			GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(SplitMatch.class, null);
 			genericDao.deleteEntity(result.get(0));
 		}
 	}
