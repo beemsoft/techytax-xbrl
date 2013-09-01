@@ -139,7 +139,6 @@ public class AllCostsVM extends CostVM3 {
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		System.out.println("Test: " + cost.getDescription());
 		BoekDao boekDao = new BoekDao();
 		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId().longValue());
 		cost.setUserId(user.getId().longValue());
