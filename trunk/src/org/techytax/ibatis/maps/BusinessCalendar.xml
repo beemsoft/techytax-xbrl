@@ -1,0 +1,44 @@
+<!--
+Copyright 2013 Hans Beemsterboer
+
+This file is part of the TechyTax program.
+
+TechyTax is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+TechyTax is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with TechyTax; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+<!DOCTYPE sqlMap 
+          PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+          "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BusinessCalendar">
+	<typeAlias alias="event" type="org.techytax.business.zk.calendar.BusinessCalendarEvent" />
+
+	<select id="getEvents" parameterClass="string"
+		resultClass="event">
+		SELECT id, beginDate, endDate, headerColor, contentColor, title, content, project_id as projectId, unitsOfWork, isBillable, travelingByCarCostDeclaration, otherCostDeclaration, vatTypeForOtherCostDeclaration 
+		FROM calendar_event
+		WHERE user_id = #value# 
+	</select>
+	<insert id="insertEvent" parameterClass="event">
+		insert into calendar_event
+		values(#id#,#userId#,#beginDate#,#endDate#,#headerColor#,#contentColor#,#title#,#content#,#projectId#,#unitsOfWork#,#isBillable#,#travelingByCarCostDeclaration#,#otherCostDeclaration#,#vatTypeForOtherCostDeclaration#)
+		<selectKey resultClass="int" keyProperty="id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+	<update id="updateEvent" parameterClass="event">
+		update calendar_event set beginDate = #beginDate#, endDate = #endDate#, headerColor = #headerColor#, contentColor = #contentColor#, title = #title#, content = #content#, project_id = #projectId#, unitsOfWork = #unitsOfWork#, isBillable = #isBillable#, travelingByCarCostDeclaration = #travelingByCarCostDeclaration#, otherCostDeclaration = #otherCostDeclaration#, vatTypeForOtherCostDeclaration = #vatTypeForOtherCostDeclaration# 
+		WHERE id = #id# 
+		AND user_id = #userId#
+	</update>
+</sqlMap>

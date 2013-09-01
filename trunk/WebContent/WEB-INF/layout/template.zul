@@ -41,7 +41,9 @@
 								<toolbarbutton label="Digipoort" href="xbrl.zul" />
 								<toolbarbutton label="Activa" href="activa.zul" />
 								<toolbarbutton label="Facturen" href="invoices.zul" />
-								<toolbarbutton label="Kalender" href="zk_calendar.zul" />								
+								<toolbarbutton label="Agenda" href="zk_calendar.zul" />
+								<toolbarbutton label="Klanten" href="customers.zul" />
+								<toolbarbutton label="Projecten" href="projects.zul" />							
 							</vbox>
 						</panelchildren>
 					</panel>

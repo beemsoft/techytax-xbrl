@@ -19,24 +19,52 @@
  */
 package org.techytax.jpa.dao;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.techytax.jpa.entities.LogRecord;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.techytax.domain.User;
+import org.techytax.jpa.entities.EntityManagerHelper;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class GenericDao<T> {
+	
 	private EntityManager entityManager;
+	private final Class<T> persistentClass;
+	private final User user;
+	private boolean isForTesting = false;
 
-	public GenericDao(EntityManager entityManager) {
-		this.entityManager = entityManager;
+	public GenericDao(final Class<T> persistentClass, final User user) {
+		entityManager = JpaUtil.getEntityManager();
+		this.persistentClass = persistentClass;
+		this.user = user;
 	}
-
+	
+	public GenericDao(final EntityManager entityManager, final Class<T> persistentClass, final User user) {
+		this.entityManager = entityManager;
+		this.persistentClass = persistentClass;
+		this.user = user;
+		isForTesting = true;
+	}
+	
+	private void getNewEntityManager() {
+		if (isForTesting) {
+			entityManager = EntityManagerHelper.getEntityManager();
+		} else {
+			entityManager = JpaUtil.getEntityManager();
+		}
+	}
+	
 	public void deleteEntity(T entity) {
 		try {
-			entityManager.remove(entity);
+			entityManager.remove(entityManager.merge(entity));
+			entityManager.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +77,16 @@ public class GenericDao<T> {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void merge(T entity) {
+		try {
+			EntityManager em = JpaUtil.getEntityManager();
+			em.merge(entity);
+		} catch (EntityExistsException e) {
+			e.printStackTrace();
+		}
+	}	
+	
 	public Object getEntity(T entity, Long id) {
 		Object retrievedEntity = null;
 		try {
@@ -60,10 +97,54 @@ public class GenericDao<T> {
 		}
 		return retrievedEntity;
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	public Collection<LogRecord> findAllLogRecords() {
-		Query query = entityManager.createQuery("SELECT lr FROM LogRecord lr");
-		return (Collection<LogRecord>) query.getResultList();
+	public List<T> findByNamedQuery(final String name, Object... params) {
+		Query query = entityManager.createNamedQuery(
+				name);
+
+		for (int i = 0; i < params.length; i++) {
+			query.setParameter(i + 1, params[i]);
+		}
+
+		final List<T> result = (List<T>) query.getResultList();
+		return result;
+	}	
+	
+	public List<T> findAll() {
+		return findByCriteria();
 	}
+	
+	protected List<T> findByCriteria(final Criterion... criterion) {
+		return findByCriteria(-1, -1, criterion);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<T> findByCriteria(final int firstResult,
+			final int maxResults, final Criterion... criterion) {
+//		EntityManager em = JpaUtil.getEntityManager();
+		getNewEntityManager();
+		Session session = (Session) entityManager.getDelegate();
+		Criteria crit = session.createCriteria(persistentClass);
+		
+		if (user != null) {
+			crit.add(Restrictions.eq("user", user));
+		}
+
+		for (final Criterion c : criterion) {
+			crit.add(c);
+		}
+
+		if (firstResult > 0) {
+			crit.setFirstResult(firstResult);
+		}
+
+		if (maxResults > 0) {
+			crit.setMaxResults(maxResults);
+		}
+
+		final List<T> result = crit.list();
+		return result;
+	}	
+
 }
