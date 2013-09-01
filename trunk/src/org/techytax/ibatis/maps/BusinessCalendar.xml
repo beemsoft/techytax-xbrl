@@ -41,4 +41,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		WHERE id = #id# 
 		AND user_id = #userId#
 	</update>
+	<delete id="deleteEvent" parameterClass="event">
+		delete from calendar_event
+		where id = #id#
+		and user_id = #userId#
+	</delete>	
 </sqlMap>

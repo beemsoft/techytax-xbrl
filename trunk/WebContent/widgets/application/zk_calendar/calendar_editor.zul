@@ -58,7 +58,7 @@
 					</row>
 					<row>
 						Aantal:
-						<textbox width="97%" value="@bind(fx.unitsOfWork)" />
+						<doublebox width="97%" value="@bind(fx.unitsOfWork)" />
 					</row>
 					<row>
 						Billable:

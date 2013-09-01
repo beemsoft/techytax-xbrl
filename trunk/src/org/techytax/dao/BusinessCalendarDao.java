@@ -99,5 +99,9 @@ public class BusinessCalendarDao extends BaseDao {
 		sqlMap.insert("updateEvent", event);
 		decrypt(event);
 	}
+	
+	public void deleteEvent(BusinessCalendarEvent event) throws Exception {
+		sqlMap.delete("deleteEvent", event);
+	}	
 
 }

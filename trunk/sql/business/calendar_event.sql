@@ -16,3 +16,5 @@ CREATE TABLE calendar_event
    vatTypeForOtherCostDeclaration CHAR(1)  NOT NULL,
    PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE techytax.calendar_event MODIFY COLUMN unitsOfWork FLOAT;
