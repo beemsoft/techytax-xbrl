@@ -13,6 +13,10 @@ Changes:
 <li>Added ZK Calendar for registration of hours.</li>
 <li>Use popup window for editing costs.</li>
 <li>Added cost splitting.</li>
+<li>Upgraded Jasypt to version 1.9</li>
+<li>Fixed configuration for C3P0 Connection pooling for Hibernate.</li>
+<li>Changed Hibernate version to 4.2.5.FINAL</li>
+<li>Use ZK JPA utility.</li>
 </ul>
 <h4>1.13 (2013-07-22)</h4>
 <p>
