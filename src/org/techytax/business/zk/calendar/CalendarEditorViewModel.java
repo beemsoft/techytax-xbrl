@@ -132,7 +132,9 @@ public class CalendarEditorViewModel {
     @Command
     @NotifyChange("visible")
     public void ok() {
-    	calendarEventData.setProjectId(selectedProject.getId());
+    	if (selectedProject != null) {
+    		calendarEventData.setProjectId(selectedProject.getId());
+    	}
         QueueMessage message = new QueueMessage(QueueMessage.Type.OK, calendarEventData);
         QueueUtil.lookupQueue().publish(message);
         this.visible = false;

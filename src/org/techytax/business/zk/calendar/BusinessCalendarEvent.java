@@ -44,7 +44,7 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
     
     private VatType vatTypeForOtherCostDeclaration;
     
-    private int unitsOfWork;
+    private float unitsOfWork;
     
     public void setBeginDate(Timestamp timestamp) {
     	super.setBeginDate(timestamp);
@@ -70,18 +70,18 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
     	}
     }
     
-    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String content) {
+    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String title) {
         setHeaderColor(headerColor);
         setContentColor(contentColor);
-        setContent(content);
+        setTitle(title);
         setBeginDate(beginDate);
         setEndDate(endDate);
     }
     
-    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String content, long projectId) {
+    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String title, long projectId) {
         setHeaderColor(headerColor);
         setContentColor(contentColor);
-        setContent(content);
+        setTitle(title);
         setBeginDate(beginDate);
         setEndDate(endDate);
         this.projectId = projectId;
@@ -178,11 +178,11 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
 		this.userId = userId;
 	}
 
-	public int getUnitsOfWork() {
+	public float getUnitsOfWork() {
 		return unitsOfWork;
 	}
 
-	public void setUnitsOfWork(int unitsOfWork) {
+	public void setUnitsOfWork(float unitsOfWork) {
 		this.unitsOfWork = unitsOfWork;
 	}
 	
