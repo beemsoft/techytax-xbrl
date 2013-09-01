@@ -49,12 +49,12 @@
 					</row>
 					<row>
 						Titel:
-						<textbox width="97%" value="@bind(fx.title)" />
+						<textbox width="97%" value="@bind(fx.content)" />
 					</row>
 					<row>
 						Omschrijving:
 						<textbox multiline="true" rows="3" width="97%"
-							value="@bind(fx.content)" />
+							value="@bind(fx.title)" />
 					</row>
 					<row>
 						Aantal:
