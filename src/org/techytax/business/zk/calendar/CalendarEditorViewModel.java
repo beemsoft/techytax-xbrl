@@ -1,8 +1,32 @@
-package demo.app.zk_calendar;
+/**
+ * Copyright 2013 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+package org.techytax.business.zk.calendar;
  
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
- 
+
+import org.techytax.business.jpa.entities.Project;
+import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.Property;
 import org.zkoss.bind.ValidationContext;
@@ -12,15 +36,27 @@ import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zul.ListModelList;
  
 public class CalendarEditorViewModel {
      
-    private DemoCalendarEvent calendarEventData = new DemoCalendarEvent();
+    private BusinessCalendarEvent calendarEventData = new BusinessCalendarEvent();
+    
+	private User user = UserCredentialManager.getUser();
+	
+	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
+	
+	private Project selectedProject;
      
     private boolean visible = false;
  
-    public DemoCalendarEvent getCalendarEvent() {
+    public BusinessCalendarEvent getCalendarEvent() {
         return calendarEventData;
+    }
+    
+    public ListModelList<Project> getProjects() {
+    	List<Project> projects = projectDao.findAll();
+    	return new ListModelList<Project>(projects);
     }
  
     public boolean isVisible() {
@@ -37,7 +73,7 @@ public class CalendarEditorViewModel {
         QueueUtil.lookupQueue().subscribe(new QueueListener());
     }
  
-    private void startEditing(DemoCalendarEvent calendarEventData) {
+    private void startEditing(BusinessCalendarEvent calendarEventData) {
         this.calendarEventData = calendarEventData;
         visible = true;
          
@@ -96,6 +132,7 @@ public class CalendarEditorViewModel {
     @Command
     @NotifyChange("visible")
     public void ok() {
+    	calendarEventData.setProjectId(selectedProject.getId());
         QueueMessage message = new QueueMessage(QueueMessage.Type.OK, calendarEventData);
         QueueUtil.lookupQueue().publish(message);
         this.visible = false;
@@ -107,8 +144,16 @@ public class CalendarEditorViewModel {
         public void onEvent(QueueMessage message)
                 throws Exception {
             if (QueueMessage.Type.EDIT.equals(message.getType())){
-                CalendarEditorViewModel.this.startEditing((DemoCalendarEvent)message.getData());
+                CalendarEditorViewModel.this.startEditing((BusinessCalendarEvent)message.getData());
             }
         }
     }
+
+	public Project getSelectedProject() {
+		return selectedProject;
+	}
+
+	public void setSelectedProject(Project selectedProject) {
+		this.selectedProject = selectedProject;
+	}
 }

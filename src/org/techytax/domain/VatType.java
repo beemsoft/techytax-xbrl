@@ -64,4 +64,9 @@ public enum VatType {
 		}
 		return balanceType;
 	}
+	
+	@Override
+	public String toString() {
+		return name();
+	}
 }

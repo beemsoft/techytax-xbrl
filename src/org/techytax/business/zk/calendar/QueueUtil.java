@@ -1,4 +1,4 @@
-package demo.app.zk_calendar;
+package org.techytax.business.zk.calendar;
 
 import org.zkoss.zk.ui.event.EventQueue;
 import org.zkoss.zk.ui.event.EventQueues;

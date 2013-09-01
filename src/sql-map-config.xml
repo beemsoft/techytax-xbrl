@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -60,5 +60,6 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 	<sqlMap resource="org/techytax/ibatis/maps/BookValue.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/Account.xml" />
 	<sqlMap resource="org/techytax/ibatis/maps/User.xml" />
-	<sqlMap resource="org/techytax/ibatis/maps/Settlement.xml" />	
+	<sqlMap resource="org/techytax/ibatis/maps/Settlement.xml" />
+	<sqlMap resource="org/techytax/ibatis/maps/BusinessCalendar.xml" />
 </sqlMapConfig>
