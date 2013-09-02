@@ -236,25 +236,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		for (Cost cost : vatCosts) {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
-		// <column label="Omschrijving"
-		// width="500px" />
-		// <column label="Datum" width="80px" />
-		// <column label="Bedrag"
-		// width="100px" />
-		// <column label="btw" width="100px" />
-		// <column label="type" width="200px" />
-		// </columns>
-		// <template name="model">
-		// <row value="${each}" >
-		// <label
-		// value="${each.description}" />
-		// <label
-		// value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
-		// <label value="${each.amount}" />
-		// <label value="${each.vat}" />
-		// <label
-		// value="${each.kostenSoortOmschrijving}" />
-		// </row>
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
