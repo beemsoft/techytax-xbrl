@@ -12,7 +12,7 @@
 			<checkbox checked="@load(allDay)" disabled="true" />
 		</caption>
 		<hbox>
-			<grid>
+			<grid width="380px">
 				<columns>
 					<column width="100px" align="right" />
 					<column />
@@ -88,7 +88,7 @@
 					</row>
 				</rows>
 			</grid>
-			<grid>
+			<grid width="200px">
 				<columns>
 					<column />
 				</columns>

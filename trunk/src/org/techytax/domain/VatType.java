@@ -46,6 +46,10 @@ public enum VatType {
 		return value;
 	}
 	
+	public int getValueAsInteger(Date payDate) throws Exception {
+		return (int) (100 * getValue(payDate));
+	}
+	
 	public static VatType getInstance(String type) {
 		VatType balanceType;
 		switch (Integer.parseInt(type)) {

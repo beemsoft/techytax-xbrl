@@ -17,6 +17,7 @@ Changes:
 <li>Fixed configuration for C3P0 Connection pooling for Hibernate.</li>
 <li>Changed Hibernate version to 4.2.5.FINAL</li>
 <li>Use ZK JPA utility.</li>
+<li>Added invoice sending from calendar page.</li>
 </ul>
 <h4>1.13 (2013-07-22)</h4>
 <p>

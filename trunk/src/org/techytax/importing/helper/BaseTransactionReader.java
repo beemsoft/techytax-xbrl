@@ -111,7 +111,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 			}
 			if (vatMatch != null) {
 				if (vatMatch.getVatType() == VatType.HIGH) {
-					CostSplitter.splitPercentagFromAmount(kost, (int) (100 * VatType.HIGH.getValue(kost.getDate())));
+					CostSplitter.splitPercentagFromAmount(kost, VatType.HIGH.getValueAsInteger(kost.getDate()));
 				}
 				if (vatMatch.getVatType() == VatType.LOW) {
 					CostSplitter.splitPercentagFromAmount(kost, 6);

@@ -10,7 +10,7 @@
 	<groupbox width="850px" mold="3d">
 		<hbox>
 			<vbox hflex="true">
-				<grid>
+				<grid width="550px">
 					<columns>
 						<column width="90px" />
 						<column />
