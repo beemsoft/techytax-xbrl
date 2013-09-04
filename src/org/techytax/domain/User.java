@@ -52,6 +52,7 @@ public class User implements Serializable {
 	private String username;
 	private String phoneNumber;
 	private String fiscalNumber;
+	private String accountNumber;
 
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -203,6 +204,14 @@ public class User implements Serializable {
 
 	public void setCompanyAddress(String companyAddress) {
 		this.companyAddress = companyAddress;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 
 }

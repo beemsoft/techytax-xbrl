@@ -7,7 +7,7 @@
 	<button label="Annuleer" onClick="@command('cancel')" />
 	<groupbox width="850px" mold="3d">
 		<hbox>
-			<grid>
+			<grid width="650px">
 				<columns>
 					<column width="90px" />
 					<column />
@@ -67,7 +67,7 @@
 				
 				<!--   TODO: color picker voor project code -->
 			</grid>
-			<grid hflex="true">
+			<grid width="150px">
 				<columns>
 					<column />
 				</columns>

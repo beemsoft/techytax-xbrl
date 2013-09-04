@@ -43,7 +43,16 @@ arg0="/WEB-INF/layout/template.zul"?>
 			        </template>
     			</listbox>
                 <button id="resetFilter" label="Reset"/>
-                <button id="invoiceButton" label="Factuur"/>
+                <button id="invoiceButton" label="Factuur" tooltiptext="Selecteer 1 project om een factuur te maken."/><span>
+			    <window id="invoiceWindow" visible="false" border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" >
+			    <button id="sendInvoiceButton" label="Verstuur factuur"/>
+				<borderlayout height="100%">
+					<center border="none" flex="true">
+						<iframe id="invoiceFrame" />
+					</center>
+				</borderlayout>    
+			    </window>
+			    </span>
             </hlayout>
             <separator bar="true" height="20px"/>
          

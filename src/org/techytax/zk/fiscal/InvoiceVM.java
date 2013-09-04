@@ -57,13 +57,13 @@ public class InvoiceVM {
 		if (user != null) {
 			AuditLogger.log(AuditType.INVOICE_OVERVIEW, user);
 			Periode period = DateHelper.getPeriodTillDate(balanceDate);
-			List<Cost> invoices2 = boekDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
+			List<Cost> sentAndPaidInvoicesInPeriod = boekDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
 					Long.toString(user.getId()));
 			invoices = new ListModelList<InvoiceCheck>();
 
 			int currentYear = DateHelper.getYear(new Date());
 
-			for (Cost cost : invoices2) {
+			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				InvoiceCheck invoiceCheck = new InvoiceCheck();
 				if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
 					invoiceCheck.setDateSent(cost.getDate());
@@ -78,7 +78,7 @@ public class InvoiceVM {
 					}
 				}
 			}
-			for (Cost cost : invoices2) {
+			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostTypeId() == CostConstants.INVOICE_PAID) {
 
 					Iterator<InvoiceCheck> sentInvoices = invoices.iterator();

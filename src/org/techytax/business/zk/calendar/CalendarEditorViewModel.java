@@ -162,5 +162,7 @@ public class CalendarEditorViewModel {
 		if (StringUtils.isEmpty(calendarEventData.getTitle())) {
 			calendarEventData.setContent(selectedProject.getCode());
 		}
+		calendarEventData.setBillable(true);
+		calendarEventData.setUnitsOfWork(8);
 	}
 }

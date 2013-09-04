@@ -40,6 +40,7 @@ public class DateHelper {
 	private static String timePattern = "yyyy-MM-dd HH:mm:ss";
 	private static String timePattern2 = "yyyyMMddHHmm";
 	private static String datePatternForTravelChipCard = "dd-MM-yyyy";
+	private static String datePatternForInvoice = "dd-MM-yyyy";
 
 	public static Date stringToDate(String date_str) throws Exception {
 		SimpleDateFormat format = new SimpleDateFormat(datePattern);
@@ -49,7 +50,7 @@ public class DateHelper {
 			throw new Exception("errors.date.invalid");
 		}
 	}
-	
+
 	public static Date stringToDateForTravelChipCard(String date_str) throws Exception {
 		SimpleDateFormat format = new SimpleDateFormat(datePatternForTravelChipCard);
 		try {
@@ -57,58 +58,56 @@ public class DateHelper {
 		} catch (ParseException e) {
 			throw new Exception("errors.date.invalid");
 		}
-	}	
+	}
 
 	public static String getDate(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(datePattern);
 		String dateString = format.format(date);
 		return dateString;
 	}
-	
+
 	public static String getTime(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(timePattern);
 		String timeString = format.format(date);
 		return timeString;
 	}
-	
+
 	public static String getTimeStamp(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(timePattern2);
 		String timeString = format.format(date);
 		return timeString;
-	}	
-	
+	}
+
 	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
-		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
-		.newXMLGregorianCalendar();
+		XMLGregorianCalendar calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 		Date date = stringToDate(date_str);
 		calendar.setDay(getDay(date));
-		calendar.setMonth(getMonth(date)+1);
+		calendar.setMonth(getMonth(date) + 1);
 		calendar.setYear(getYear(date));
 		return calendar;
 	}
-	
+
 	public static XMLGregorianCalendar getDateForXml(Date date) {
 		XMLGregorianCalendar calendar = null;
 		try {
-			calendar = DatatypeFactory.newInstance()
-			.newXMLGregorianCalendar();
+			calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 		} catch (DatatypeConfigurationException e) {
 			e.printStackTrace();
 		}
 		calendar.setDay(getDay(date));
-		calendar.setMonth(getMonth(date)+1);
+		calendar.setMonth(getMonth(date) + 1);
 		calendar.setYear(getYear(date));
 		calendar.setHour(0);
 		calendar.setMinute(0);
 		calendar.setSecond(0);
 		return calendar;
-	}	
-	
+	}
+
 	public static int getDay(Date date) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date);
 		return cal.get(Calendar.DAY_OF_MONTH);
-	}	
+	}
 
 	public static int getMonth(Date date) {
 		Calendar cal = new GregorianCalendar();
@@ -131,7 +130,7 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;
 	}
-	
+
 	public static Periode getLastVatPeriodPreviousYear() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
@@ -148,7 +147,7 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;
 	}
-	
+
 	public static Periode getLatestVatPeriod() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
@@ -168,9 +167,9 @@ public class DateHelper {
 		Periode periode = new Periode();
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
-		return periode;		
+		return periode;
 	}
-	
+
 	public static Periode getLatestVatPeriodTillToday() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
@@ -189,9 +188,9 @@ public class DateHelper {
 		Periode periode = new Periode();
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
-		return periode;		
-	}	
-	
+		return periode;
+	}
+
 	private static int getQuarter(int month) {
 		int quarter = 1;
 		switch (month) {
@@ -214,7 +213,7 @@ public class DateHelper {
 		case 11:
 		case 0:
 			quarter = 4;
-			break;			
+			break;
 		default:
 			break;
 		}
@@ -227,7 +226,7 @@ public class DateHelper {
 		int jaar = cal.get(Calendar.YEAR);
 		return jaar;
 	}
-	
+
 	public static Periode getPeriodPreviousYearThisYear(int thisYear) {
 		Calendar cal = new GregorianCalendar();
 		cal.set(Calendar.YEAR, thisYear - 1);
@@ -243,7 +242,7 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;
 	}
-	
+
 	public static boolean hasOneDayDifference(Date date1, String date2) throws Exception {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date1);
@@ -253,18 +252,18 @@ public class DateHelper {
 			return true;
 		}
 		cal.add(Calendar.DAY_OF_MONTH, -1);
-		date = getDate(cal.getTime());	
+		date = getDate(cal.getTime());
 		if (date.equals(date2)) {
 			return true;
 		}
 		cal.add(Calendar.DAY_OF_MONTH, -1);
-		date = getDate(cal.getTime());	
+		date = getDate(cal.getTime());
 		if (date.equals(date2)) {
 			return true;
-		}		
+		}
 		return false;
 	}
-	
+
 	public static Periode getPeriodTillDate(Date balanceDate) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(balanceDate);
@@ -275,9 +274,9 @@ public class DateHelper {
 		Periode periode = new Periode();
 		periode.setBeginDatum(beginDatum);
 		periode.setEindDatum(eindDatum);
-		return periode;		
+		return periode;
 	}
-	
+
 	public static Date getNTPDate() {
 		List<String> hosts = Arrays.asList("ntp.xs4all.nl");
 
@@ -298,13 +297,45 @@ public class DateHelper {
 			}
 		}
 		return null;
-	}	
+	}
+
+	public static String getInvoiceDateString(Date date) {
+		SimpleDateFormat df = null;
+		String returnValue = "";
+		if (date != null) {
+			df = new SimpleDateFormat(datePatternForInvoice);
+			returnValue = df.format(date);
+		}
+		return returnValue;
+	}
 	
+	public static String getMaand(Date date) {
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.setTime(date);
+		int maand = cal.get(Calendar.MONTH);
+		String maandString = null;
+		switch(maand) {
+			case 0: maandString = "januari"; break;
+			case 1: maandString = "februari"; break;
+			case 2: maandString = "maart"; break;
+			case 3: maandString = "april"; break;
+			case 4: maandString = "mei"; break;
+			case 5: maandString = "juni"; break;
+			case 6: maandString = "juli"; break;
+			case 7: maandString = "augustus"; break;
+			case 8: maandString = "september"; break;
+			case 9: maandString = "oktober"; break;
+			case 10: maandString = "november"; break;
+			case 11: maandString = "december"; break;			
+		}
+		return maandString;
+	}	
+
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod().getBeginDatum());
-		System.out.println(getLatestVatPeriod().getEindDatum());		
+		System.out.println(getLatestVatPeriod().getEindDatum());
 		System.out.println(getDateForXml(new Date()));
-		System.out.println(getNTPDate());		
+		System.out.println(getNTPDate());
 	}
 
 }
