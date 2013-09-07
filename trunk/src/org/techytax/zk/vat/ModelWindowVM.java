@@ -93,6 +93,7 @@ public class ModelWindowVM {
 	@Command
 	public void save() {
 		Map args = new HashMap();
+		cost.setCostTypeId(selectedCostType.getKostenSoortId());
 		args.put("returncost", this.cost);
 		args.put("splitcost", this.splitCost);
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
