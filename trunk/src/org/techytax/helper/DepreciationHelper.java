@@ -123,7 +123,7 @@ public class DepreciationHelper {
 			}
 			depreciation.setDate(cal.getTime());
 			depreciation.setAmount(yearlyDepreciation.setScale(2));
-			depreciation.setDescription("Afschrijving " + (i + 1));
+			depreciation.setDescription("Afschrijving " + (i + 1) + ", " + cost.getDescription());
 			depreciations.add(depreciation);
 			cal.add(Calendar.YEAR, 1);
 		}
