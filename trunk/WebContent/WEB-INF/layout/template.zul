@@ -70,7 +70,7 @@
 						<panelchildren>
 							<html>
 								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
-								 <li>SBR ondersteuning</li>
+								 <li>SBR ondersteuning voor de btw aangifte</li>
 								 <li>Vertaling van Belastingdienst-codes</li>
 								 <li>Administratief splitsen</li>
 								 <li>Afschrijven</li>
