@@ -173,7 +173,7 @@ public class CostTypeViewModel {
 	}
 
 	public boolean getSplitVisible() {
-		return selected.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING;
+		return selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT;
 	}
 
 	public Kostensoort getSelectedCostType() {
@@ -198,7 +198,7 @@ public class CostTypeViewModel {
 		if (selected.isVatDeclarable()) {
 			setSelectedVatType(selectedPrivateMatch.getVatType().name());
 		}
-		if (selected.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING) {
+		if (selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
 			SplitMatch splitMatch = splitMatchDao.getSplitMatch(selectedPrivateMatch.getId());
 			if (splitMatch != null) {
 				this.selectedPrivateMatch.setPercentage(splitMatch.getPercentage());

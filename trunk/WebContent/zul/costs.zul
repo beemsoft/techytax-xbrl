@@ -47,6 +47,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</grid>
 		</groupbox>
 		<button label="Export XML Audit File" onClick="@command('audit')" />
+		<button label="Er zijn nog onbehandelde investeringen" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="540px">
 			<auxhead>

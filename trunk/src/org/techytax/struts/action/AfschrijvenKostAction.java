@@ -43,7 +43,7 @@ public class AfschrijvenKostAction extends Action {
 		BoekDao dao = new BoekDao();
 		User user = (User) request.getSession().getAttribute("user");
 		Cost kost = dao.getKost(Long.toString(id), user.getId());
-		helper.splitCost(kost, depreciationForm.isCar(), depreciationForm.getNofYears(), user.getId());
+		helper.splitCost(kost, depreciationForm.isCar(), depreciationForm.getNofYears(), user.getId(), 10);
 		return mapping.findForward(forward);
 	}
 

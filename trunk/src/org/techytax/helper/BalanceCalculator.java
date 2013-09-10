@@ -184,9 +184,9 @@ public class BalanceCalculator {
 						totalBaat = totalBaat.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
-					} else if (id == CostConstants.UITGAVE_DEZE_REKENING || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF
+					} else if (id == CostConstants.EXPENSE_CURRENT_ACCOUNT || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF
 							|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING
-							|| id == CostConstants.UITGAVE_CREDIT_CARD || id == CostConstants.UITGAVE_ANDERE_REKENING || id == CostConstants.ADVERTENTIE) {
+							|| id == CostConstants.UITGAVE_CREDIT_CARD || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.ADVERTENTIE) {
 						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
@@ -302,7 +302,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.AFSCHRIJVING_AUTO) {
+			if (aftrekpost.getKostenSoortId() == CostConstants.DEPRECIATION_CAR) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -384,7 +384,7 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.UITGAVE_DEZE_REKENING || aftrekpost.getKostenSoortId() == CostConstants.UITGAVE_ANDERE_REKENING
+			if (aftrekpost.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT || aftrekpost.getKostenSoortId() == CostConstants.EXPENSE_OTHER_ACCOUNT
 					|| aftrekpost.getKostenSoortId() == CostConstants.UITGAVE_CREDIT_CARD || aftrekpost.getKostenSoortId() == CostConstants.ADVERTENTIE
 					|| aftrekpost.getKostenSoortId() == CostConstants.ADVERTENTIE_ZONDER_BTW) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());

@@ -5,7 +5,14 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>1.14 (upcoming)</h4>
+<h4>1.15 (upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Migrated depreciation functionality from Struts to ZK.</li>
+</ul>
+<h4>1.14 (2013-09-04)</h4>
 <p>
 Changes:
 </p>

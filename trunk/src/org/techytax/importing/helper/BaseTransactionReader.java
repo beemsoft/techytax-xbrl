@@ -123,7 +123,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	protected void addCostOrHandleAdminstrativeSplitting(String userId, Cost cost, Kostmatch costMatch) throws Exception {
 		if (cost.getCostTypeId() == CostConstants.SETTLEMENT || cost.getCostTypeId() == CostConstants.SETTLEMENT_DISCOUNT) {
 			doAdministrativeSplitForSettlement(userId, cost);
-		} else if (cost.getCostTypeId() == CostConstants.UITGAVE_DEZE_REKENING) {
+		} else if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
 			SplitMatchDao splitMatchDao = new SplitMatchDao();
 			SplitMatch splitMatch = splitMatchDao.getSplitMatch(costMatch.getId());
 			if (splitMatch != null) {

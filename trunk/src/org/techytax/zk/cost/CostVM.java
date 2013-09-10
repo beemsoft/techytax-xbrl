@@ -37,13 +37,13 @@ import org.zkoss.zul.ListModelList;
 public class CostVM {
 
 	protected User user = UserCredentialManager.getUser();
-	
+
 	protected ListModelList<Cost> costs;
-	
+
 	ListModelList<Kostensoort> costTypes;
-	
+
 	protected Cost selected;
-	
+
 	Kostensoort selectedCostType;
 
 	public ListModelList<Cost> getCosts() throws Exception {
@@ -51,16 +51,17 @@ public class CostVM {
 			BoekDao boekDao = new BoekDao();
 			if (user != null) {
 				Periode vatPeriod = DateHelper.getLatestVatPeriod();
-				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
+				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
+						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
 				for (Cost cost : vatCosts) {
 					cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-				}				
+				}
 				costs = new ListModelList<Cost>(vatCosts);
 			}
 		}
 		return costs;
 	}
-	
+
 	public ListModelList<Kostensoort> getCostTypes() throws Exception {
 		if (costTypes == null) {
 			KostensoortDao kostensoortDao = new KostensoortDao();
@@ -69,28 +70,28 @@ public class CostVM {
 			for (Kostensoort costType : costTypes) {
 				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 			}
-			selectedCostType = costTypes.get(0); 			
+			selectedCostType = costTypes.get(0);
 		}
 		return costTypes;
-	}	
+	}
 
 	public Cost getSelected() {
 		return selected;
 	}
-	
-	@NotifyChange({"selected","costs"})
+
+	@NotifyChange({ "selected", "costs" })
 	@Command
-	public void newCost() throws Exception{
+	public void newCost() throws Exception {
 		AuditLogger.log(AuditType.ENTER_COST, user);
 		Cost cost = new Cost();
 		cost.setDate(new Date());
 		getCosts().add(cost);
-		selected = cost;//select the new one
+		selected = cost;// select the new one
 	}
-	
+
 	@NotifyChange("selected")
 	@Command
-	public void saveCost() throws Exception{
+	public void saveCost() throws Exception {
 		BoekDao boekDao = new BoekDao();
 		if (user != null) {
 			selected.setUserId(user.getId());
@@ -105,73 +106,63 @@ public class CostVM {
 				boekDao.updateKost(selected);
 			}
 		}
-	}	
-	
-	private Kostensoort select(long costTypeId) {
-		for (Kostensoort costType: costTypes) {
-			if (costType.getKostenSoortId() == costTypeId) {
-				return costType;
-			}
-		}
-		return null;
 	}
 
-	@NotifyChange({"selected"})
+	@NotifyChange({ "selected" })
 	public void setSelected(Cost selected) {
 		this.selected = selected;
-//		setSelectedCostType(select(selected.getCostTypeId()));
 	}
-	
+
 	public Kostensoort getSelectedCostType() {
 		return selectedCostType;
 	}
-	
+
 	public void setSelectedCostType(Kostensoort selected) {
 		this.selectedCostType = selected;
-	}	
+	}
 
-	//action command
-	
-	@NotifyChange({"selected","costs"})
+	// action command
+
+	@NotifyChange({ "selected", "costs" })
 	@Command
-	public void deleteCost() throws Exception{
+	public void deleteCost() throws Exception {
 		BoekDao boekDao = new BoekDao();
 		if (user != null) {
 			AuditLogger.log(AuditType.DELETE_COST, user);
 			selected.setUserId(user.getId());
 			boekDao.deleteCost(selected);
 			getCosts().remove(selected);
-			selected = null;			
+			selected = null;
 		}
 	}
-	
+
 	@NotifyChange("selected")
 	@Command
-	public void highVat() throws Exception{
+	public void highVat() throws Exception {
 		AmountHelper.applyHighVat(selected);
 	}
 
 	@NotifyChange("selected")
 	@Command
-	public void lowVat() throws Exception{
+	public void lowVat() throws Exception {
 		BigDecimal amount = selected.getAmount();
 		if (amount != null) {
-			BigDecimal bd = new BigDecimal(amount.doubleValue()/1.06d);
-			bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+			BigDecimal bd = new BigDecimal(amount.doubleValue() / 1.06d);
+			bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 			selected.setAmount(bd);
-			selected.setVat(amount.subtract(bd));			
+			selected.setVat(amount.subtract(bd));
 		}
-	}	
+	}
 
-	public Validator getPriceValidator(){
-		return new AbstractValidator(){
+	public Validator getPriceValidator() {
+		return new AbstractValidator() {
 			public void validate(ValidationContext ctx) {
-				Double price = (Double)ctx.getProperty().getValue();
-				if(price==null || price<0){
+				Double price = (Double) ctx.getProperty().getValue();
+				if (price == null || price < 0) {
 					addInvalidMessage(ctx, "must be equal to or larger than 0");
 				}
 			}
 		};
 	}
-	
+
 }
