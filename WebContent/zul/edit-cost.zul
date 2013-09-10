@@ -139,7 +139,7 @@
 							</row>
 						</rows>
 					</grid>
-					<listbox model="@load(vm.deprecationList)">
+					<listbox model="@load(vm.deprecationList)" height="315px">
 						<listhead>
 							<listheader label="Afschrijvingen" />
 							<listheader label="Omschrijving" />
