@@ -23,12 +23,12 @@ public interface CostConstants {
 
 	public static final int UNDETERMINED = 0;
 	public static final int INKOMST_DEZE_REKENING = 1;
-	public static final int UITGAVE_DEZE_REKENING = 2;
+	public static final int EXPENSE_CURRENT_ACCOUNT = 2;
 	public static final int UITGAVE_DEZE_REKENING_FOUTIEF = 3;
 	public static final int INLEG = 4;
 	public static final int OPNAME = 5;
 	public static final int EXPENSE_OTHER_ACCOUNT_IGNORE = 6;
-	public static final int UITGAVE_ANDERE_REKENING = 7;
+	public static final int EXPENSE_OTHER_ACCOUNT = 7;
 	public static final int REISKOST_ANDERE_REKENING_FOUTIEF = 8;
 	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT = 9;
 	public static final int TO_SAVINGS_ACCOUNT = 10;	
@@ -36,13 +36,15 @@ public interface CostConstants {
 	public static final int BUSINESS_FOOD = 13;
 	public static final int AUTO_VAN_DE_ZAAK = 14;
 	public static final int FROM_SAVINGS_ACCOUNT = 15;
+	public static final int INVESTMENT = 16;
 	public static final int TO_PRIVATE_ACCOUNT = 17;
 	public static final int FROM_PRIVATE_ACCOUNT = 18;	
 	public static final int AUTO_VAN_DE_ZAAK_ANDERE_REKENING = 19;	
 	public static final int BUSINESS_FOOD_OTHER_ACCOUNT = 20;	
-	public static final int AFSCHRIJVING_AUTO = 23;
+	public static final int DEPRECIATION_CAR = 23;
 	public static final int FISCALE_BIJTELLING_AUTO = 24;
 	public static final int DEPRECIATION_MACHINE = 25;
+	public static final int INVESTMENT_OTHER_ACCOUNT = 26;
 	public static final int ADVERTENTIE = 27;
 	public static final int ADVERTENTIE_ZONDER_BTW = 28;
 	public static final int INKOMSTEN_BELASTING = 29;

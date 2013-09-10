@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,8 +21,11 @@ package org.techytax.helper;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
@@ -34,55 +37,39 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.RemainingValue;
 import org.techytax.util.DateHelper;
+import org.zkoss.util.resource.Labels;
 
 public class DepreciationHelper {
 
-	/**
-	 * Split the cost into yearly depreciations. The number of depreciation
-	 * terms is read from the properties file. The restvalue is 10%.
-	 * 
-	 * @param kost
-	 * @return
-	 */
-	public void splitCost(Cost kost, boolean isCar, int nofYears, long userId) throws Exception {
-		BoekDao boekDao = new BoekDao();
-		// Use the net value.
-		BigDecimal aanschafKost = kost.getAmount();
-		BigInteger restWaarde = aanschafKost.divide(new BigDecimal(10)).toBigInteger();
-		BigDecimal jaarlijkseAfschrijving = (aanschafKost.subtract(new BigDecimal(restWaarde))).divide(new BigDecimal(nofYears));
-		// afronden
-		jaarlijkseAfschrijving = jaarlijkseAfschrijving.setScale(0, BigDecimal.ROUND_UP);
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(kost.getDate());
-		cal.set(Calendar.MONTH, Calendar.DECEMBER);
-		cal.set(Calendar.DAY_OF_MONTH, 31);
-		int bookYear = cal.get(Calendar.YEAR);
-		BigDecimal boekwaardeBegin = aanschafKost;
-		BigDecimal boekwaarde = aanschafKost.subtract(jaarlijkseAfschrijving);
-		boekwaarde = boekwaarde.setScale(0, BigDecimal.ROUND_UP);
-		for (int i = 0; i < nofYears; i++) {
-			Cost afschrijving = new Cost();
-			afschrijving.setVat(new BigDecimal(0));
-			if (isCar) {
-				afschrijving.setCostTypeId(CostConstants.AFSCHRIJVING_AUTO);
-			} else {
-				afschrijving.setCostTypeId(CostConstants.DEPRECIATION_MACHINE);
-			}
-			afschrijving.setKostenSoortOmschrijving("costtype.depreciation");
-			afschrijving.setDate(cal.getTime());
-			afschrijving.setAmount(jaarlijkseAfschrijving.setScale(2));
-			afschrijving.setDescription("Afschrijving: " + (i + 1) + ", item " + kost.getId() + ", boekwaarde begin: " + boekwaardeBegin + ", boekwaarde eind: " + boekwaarde);
-			afschrijving.setUserId(userId);
-			boekDao.insertKost(afschrijving);
-			cal.add(Calendar.YEAR, 1);
+	private BoekDao boekDao = new BoekDao();
 
-			boekwaardeBegin = boekwaarde;
-			boekwaarde = boekwaarde.subtract(jaarlijkseAfschrijving);
+	public void splitCost(Cost cost, boolean isCar, int nofYears, long userId, int remainingValuePercentage) throws Exception {
+		BigDecimal initialNetAmount = cost.getAmount();
+		BigInteger remainingValue = null;
+		if (remainingValuePercentage == 0) {
+			remainingValue = new BigInteger("0");
+		} else {
+			remainingValue = initialNetAmount.divide(new BigDecimal(remainingValuePercentage)).toBigInteger();
 		}
-		// Add activum
+		BigDecimal yearlyDepreciation = getYearlyDepreciation(nofYears, initialNetAmount, remainingValue);
+
+		List<Cost> depreciations = getDepreciations(cost, isCar, nofYears, yearlyDepreciation);
+		storeDepreciations(depreciations, userId);
+		putOnBalance(cost, isCar, userId, remainingValue, yearlyDepreciation, DateHelper.getYear(cost.getDate()));
+	}
+
+	public BigDecimal getYearlyDepreciation(int nofYears, BigDecimal initialNetAmount, BigInteger remainingValue) {
+		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2,
+				RoundingMode.HALF_UP);
+		yearlyDepreciation = yearlyDepreciation.setScale(0, BigDecimal.ROUND_UP);
+		return yearlyDepreciation;
+	}
+
+	private void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear)
+			throws Exception {
 		Activum activum = new Activum();
 		activum.setUserId(userId);
-		activum.setCostId(kost.getId());
+		activum.setCostId(cost.getId());
 		BookValueDao boekwaardeDao = new BookValueDao();
 		if (!isCar) {
 			activum.setBalanceType(BalanceType.MACHINERY);
@@ -97,7 +84,7 @@ public class DepreciationHelper {
 		remainingValue.setActivaId(activumId);
 		remainingValue.setRestwaarde(restWaarde);
 		boekwaardeDao.insertRemainingValue(remainingValue);
-		
+
 		// Add or update boekwaarde
 		BookValue activumValue = new BookValue();
 		activumValue.setJaar(bookYear);
@@ -105,54 +92,49 @@ public class DepreciationHelper {
 		activumValue.setUserId(userId);
 		activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
 		if (activumValue != null) {
-			activumValue.setSaldo(activumValue.getSaldo().subtract(jaarlijkseAfschrijving.toBigInteger()));
+			activumValue.setSaldo(activumValue.getSaldo().subtract(yearlyDepreciation.toBigInteger()));
 			boekwaardeDao.updateBookValue(activumValue);
 		} else {
 			activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(activum.getBalanceType());
 			activumValue.setUserId(userId);
-			aanschafKost = aanschafKost.setScale(0, BigDecimal.ROUND_UP);
-			activumValue.setSaldo(aanschafKost.toBigInteger().subtract(jaarlijkseAfschrijving.toBigInteger()));
+			BigDecimal initialNetAmount = cost.getAmount().setScale(0, BigDecimal.ROUND_UP);
+			activumValue.setSaldo(initialNetAmount.toBigInteger().subtract(yearlyDepreciation.toBigInteger()));
 			boekwaardeDao.insertBookValue(activumValue);
-		}		
+		}
 	}
 
-	/**
-	 * Voeg de hele lijst met afschrijvingen toe aan de Activa balans. Maak
-	 * hierbij onderscheid tussen afschrijvingen voor de auto van de zaak en
-	 * overige afschrijvingen.
-	 */
-//	public void toevoegenAfschrijvingenAanActiva(String userId) throws Exception {
-//		BoekDao boekDao = new BoekDao();
-//		Periode periode = DateHelper.getPeriodeVorigJaar();
-//		BigDecimal totaalAfschrijvingenOverig = new BigDecimal("0");
-//		BigDecimal totaalAfschrijvingenAuto = new BigDecimal("0");
-//		List<Aftrekpost> aftrekpostenLijst = boekDao.getDeductableCosts(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), userId);
-//		totaalAfschrijvingenAuto = BalanceCalculator.getAfschrijvingAuto(aftrekpostenLijst);
-//		totaalAfschrijvingenOverig = BalanceCalculator.getOverigeAfschrijvingen(aftrekpostenLijst);
-//		Boekwaarde boekwaarde = new Boekwaarde();
-//		int ditJaar = DateHelper.getYear(periode.getBeginDatum());
-//		boekwaarde.setJaar(ditJaar);
-//		boekwaarde.setBalanceType(BalanceType.CAR);
-//		boekwaarde.setUserId(Long.parseLong(userId));
-//		BoekwaardeDao boekwaardeDao = new BoekwaardeDao();
-//		boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
-//		if (boekwaarde != null) {
-//			boekwaarde.setId(0);
-//			boekwaarde.setJaar(ditJaar);
-//			boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenAuto.toBigInteger()));
-//			boekwaarde.setUserId(Long.parseLong(userId));
-//			boekwaardeDao.insertBoekwaarde(boekwaarde);
-//
-//			boekwaarde.setBalanceType(BalanceType.MACHINERY);
-//			boekwaarde = boekwaardeDao.getVorigeBoekwaarde(boekwaarde);
-//
-//			boekwaarde.setId(0);
-//			boekwaarde.setJaar(ditJaar);
-//			boekwaarde.setSaldo(boekwaarde.getSaldo().subtract(totaalAfschrijvingenOverig.toBigInteger()));
-//			boekwaarde.setUserId(Long.parseLong(userId));
-//			boekwaardeDao.insertBoekwaarde(boekwaarde);
-//		}
-//	}
+	public List<Cost> getDepreciations(Cost cost, boolean isCar, int nofYears, BigDecimal yearlyDepreciation) throws Exception {
+		List<Cost> depreciations = new ArrayList<Cost>();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(cost.getDate());
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		for (int i = 0; i < nofYears; i++) {
+			Cost depreciation = new Cost();
+			depreciation.setVat(new BigDecimal(0));
+			if (isCar) {
+				depreciation.setCostTypeId(CostConstants.DEPRECIATION_CAR);
+				depreciation.setKostenSoortOmschrijving(Labels.getLabel("costtype.business.car.depreciation"));
+			} else {
+				depreciation.setCostTypeId(CostConstants.DEPRECIATION_MACHINE);
+				depreciation.setKostenSoortOmschrijving(Labels.getLabel("costtype.depreciation"));
+			}
+			depreciation.setDate(cal.getTime());
+			depreciation.setAmount(yearlyDepreciation.setScale(2));
+			depreciation.setDescription("Afschrijving " + (i + 1));
+			depreciations.add(depreciation);
+			cal.add(Calendar.YEAR, 1);
+		}
+		return depreciations;
+	}
+
+	public void storeDepreciations(List<Cost> depreciations, long userId) throws Exception {
+		for (Cost depreciation : depreciations) {
+			depreciation.setUserId(userId);
+			boekDao.insertKost(depreciation);
+		}
+	}
+
 }

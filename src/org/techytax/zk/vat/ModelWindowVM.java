@@ -20,6 +20,8 @@
 package org.techytax.zk.vat;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,10 @@ import java.util.Map;
 
 import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.Kostensoort;
 import org.techytax.helper.AmountHelper;
+import org.techytax.helper.DepreciationHelper;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
@@ -49,20 +53,27 @@ import org.zkoss.zul.Window;
 public class ModelWindowVM {
 	@Wire("#resultWin")
 	private Window win;
-
 	private Cost cost;
-
 	private Cost splitCost;
-
 	private Cost originalCost;
-
-	ListModelList<Kostensoort> costTypes;
-	Kostensoort selectedCostType;
+	private ListModelList<Kostensoort> costTypes;
+	private Kostensoort selectedCostType;
+	private boolean investment;
+	private boolean carDepreciation;
+	private BigInteger deprecationRemainingValue;
+	private int depreciationNofYears;
+	private ListModelList<Cost> depreciationList;
+	private List<Integer> depreciationYearsList;
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("cost") Cost cost) {
 		Selectors.wireComponents(view, this, false);
 		this.cost = cost;
+		if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
+				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
+			investment = true;
+		}
+		depreciationYearsList = Arrays.asList(1, 2, 3, 4, 5);
 	}
 
 	public ListModelList<Kostensoort> getCostTypes() throws Exception {
@@ -96,6 +107,7 @@ public class ModelWindowVM {
 		cost.setCostTypeId(selectedCostType.getKostenSoortId());
 		args.put("returncost", this.cost);
 		args.put("splitcost", this.splitCost);
+		args.put("depreciations", this.depreciationList.getInnerList());
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
 		win.detach();
 	}
@@ -167,6 +179,31 @@ public class ModelWindowVM {
 		cost.setVat(originalCost.getVat());
 	}
 
+	@NotifyChange("investment")
+	@Command
+	public void checkInvestment() {
+		if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0) {
+			investment = true;
+		} else {
+			investment = false;
+		}
+	}
+
+	@NotifyChange("deprecationList")
+	@Command
+	public void deprecateCost() throws Exception {
+		if (depreciationNofYears > 0 && deprecationRemainingValue != null && deprecationRemainingValue.compareTo(new BigInteger("0")) >= 0) {
+			BigDecimal initialNetAmount = cost.getAmount();
+			DepreciationHelper depreciationHelper = new DepreciationHelper();
+
+			BigDecimal yearlyDepreciation = depreciationHelper.getYearlyDepreciation(depreciationNofYears, initialNetAmount,
+					deprecationRemainingValue);
+
+			List<Cost> deprecations = depreciationHelper.getDepreciations(cost, carDepreciation, depreciationNofYears, yearlyDepreciation);
+			depreciationList = new ListModelList<Cost>(deprecations);
+		}
+	}
+
 	@Command
 	public void closeThis() {
 		win.detach();
@@ -186,5 +223,49 @@ public class ModelWindowVM {
 
 	public void setSplitCost(Cost splitCost) {
 		this.splitCost = splitCost;
+	}
+
+	public boolean isInvestment() {
+		return investment;
+	}
+
+	public void setInvestment(boolean investment) {
+		this.investment = investment;
+	}
+
+	public boolean isCarDepreciation() {
+		return carDepreciation;
+	}
+
+	public void setCarDepreciation(boolean carDepreciation) {
+		this.carDepreciation = carDepreciation;
+	}
+
+	public BigInteger getDeprecationRemainingValue() {
+		return deprecationRemainingValue;
+	}
+
+	public void setDeprecationRemainingValue(BigInteger deprecationRemainingValue) {
+		this.deprecationRemainingValue = deprecationRemainingValue;
+	}
+
+	public int getDepreciationNofYears() {
+		return depreciationNofYears;
+	}
+
+	public void setDepreciationNofYears(int depreciationNofYears) {
+		this.depreciationNofYears = depreciationNofYears;
+	}
+
+	public ListModelList<Cost> getDeprecationList() {
+		return depreciationList;
+	}
+
+	public List<Integer> getDepreciationYearsList() {
+		return depreciationYearsList;
+	}
+
+	public void setDepreciationYearsList(List<Integer> depreciationYearsList) {
+		this.depreciationYearsList = depreciationYearsList;
 	}
 }

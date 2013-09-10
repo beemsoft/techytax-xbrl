@@ -1,12 +1,14 @@
 <window id="resultWin" title="Kost bewerken" width="900px"
-	height="600px" border="normal" apply="org.zkoss.bind.BindComposer"
+	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.vat.ModelWindowVM')">
 
 	<button label="Wijzig" onClick="@command('save')" />
 	<button label="Annuleer" onClick="@command('cancel')" />
-	<button label="Splits" onClick="@command('split')" disabled="@load(not empty vm.splitCost)" />
-	<button label="Annuleer splits" onClick="@command('unSplit')" disabled="@load(empty vm.splitCost)" />
+	<button label="Splits" onClick="@command('split')"
+		disabled="@load(not empty vm.splitCost)" />
+	<button label="Annuleer splits" onClick="@command('unSplit')"
+		disabled="@load(empty vm.splitCost)" />
 	<groupbox width="850px" mold="3d">
 		<hbox>
 			<vbox hflex="true">
@@ -32,7 +34,7 @@
 								<doublebox id="pbox"
 									value="@bind(vm.cost.amount) @save(vm.cost.amount,before='saveCost') 
 							@validator(vm.priceValidator)"
-									format="###,##0.00" />
+									format="###,##0.00" onChange="@command('checkInvestment')" />
 								<label value="@load(vmsgs[pbox])"
 									sclass="red" />
 								<button id="vatHighBtn" label="btw hoog"
@@ -60,6 +62,7 @@
 					</rows>
 				</grid>
 				<groupbox visible="@load(not empty vm.splitCost)">
+					<caption label="Splitsen" />
 					<grid>
 						<columns>
 							<column width="90px" />
@@ -94,16 +97,74 @@
 						</rows>
 					</grid>
 				</groupbox>
+				<groupbox visible="@load(vm.investment)">
+					<caption label="Afschrijven" />
+					<grid>
+						<columns>
+							<column width="90px" />
+							<column />
+							<column width="90px" />
+							<column />
+							<column width="90px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								Restwaarde
+								<hlayout>
+									<doublebox id="pboxsplit1"
+										value="@bind(vm.deprecationRemainingValue)"
+										format="###,##0" onChange="@command('deprecateCost')" />
+								</hlayout>										
+								Aantal jaren
+								<hlayout>
+									<listbox id="numberOfYearsListbox"
+										mold="select" rows="1"
+										model="@load(vm.depreciationYearsList))"
+										selectedItem="@bind(vm.depreciationNofYears)"
+										onSelect="@command('deprecateCost')">
+										<template name="model">
+											<listitem>
+												<listcell
+													label="@load(each)" />
+											</listitem>
+										</template>
+									</listbox>
+								</hlayout>
+								Voor auto
+								<hlayout>
+									<checkbox
+										checked="@bind(vm.carDepreciation)" onClick="@command('deprecateCost')"/>
+								</hlayout>
+							</row>
+						</rows>
+					</grid>
+					<listbox model="@load(vm.deprecationList)">
+						<listhead>
+							<listheader label="Afschrijvingen" />
+							<listheader label="Omschrijving" />
+							<listheader label="Datum" />
+							<listheader label="Type" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell label="@load(item.amount)" />
+								<listcell label="@load(item.description)" />
+								<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')" />
+								<listcell label="@load(item.kostenSoortOmschrijving)" />
+							</listitem>
+						</template>
+					</listbox>
+				</groupbox>
 			</vbox>
-			<grid hflex="true" >
+			<grid hflex="true">
 				<columns>
 					<column />
 				</columns>
 				<rows>
 					<row>
 						<listbox model="@load(vm.costTypes)"
-							selectedItem="@bind(vm.selectedCostType)" height="500px"
-							>
+							selectedItem="@bind(vm.selectedCostType)" height="550px">
 							<listhead>
 								<listheader label="Type" />
 							</listhead>
