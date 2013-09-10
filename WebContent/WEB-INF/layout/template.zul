@@ -47,7 +47,7 @@
 							</vbox>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal" title="Wat is TechyTax?" visible="@load(!vm.loggedOn)">
+					<panel width="100%" border="normal" title="Online boekhouden" visible="@load(!vm.loggedOn)">
 						<panelchildren>
 							<html>
 								<![CDATA[<p>TechyTax is een online boekhoudpakket voor kleine bedrijven. Het berekent de btw en geeft fiscale overzichten. Hiervoor is geen boekhoudkundige kennis vereist. Het doel van dit project is om, m.b.v. de laatste technieken, de belastingaangifte zo simpel mogelijk te maken voor kleine bedrijven.</p> 
@@ -55,7 +55,7 @@
 							</html>
 						</panelchildren>
 					</panel>					
-					<panel width="100%" border="normal" title="Waarom TechyTax? " visible="@load(!vm.loggedOn)">
+					<panel width="100%" border="normal" title="Voordelen " visible="@load(!vm.loggedOn)">
 						<panelchildren>
 							<html>
 								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
@@ -73,6 +73,9 @@
 								 <li>SBR ondersteuning</li>
 								 <li>Vertaling van Belastingdienst-codes</li>
 								 <li>Administratief splitsen</li>
+								 <li>Afschrijven</li>
+								 <li>Urenregistratie</li>
+								 <li>Factureren</li>
 								 </ul> ]]>
 							</html>
 						</panelchildren>
