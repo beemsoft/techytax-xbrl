@@ -14,10 +14,14 @@ public class RssReader implements Serializable {
 	private RssEntry selectEntry;
 	protected String feedUrl;
 
-	protected void init() throws Exception {
-		selected = new RssBinder().lookUpFeed(feedUrl);
-		if (selected.getFeedEntries().size() > 0) {
-			selectEntry = selected.getFeedEntries().get(0);
+	protected void init() {
+		try {
+			selected = new RssBinder().lookUpFeed(feedUrl);
+			if (selected.getFeedEntries().size() > 0) {
+				selectEntry = selected.getFeedEntries().get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
