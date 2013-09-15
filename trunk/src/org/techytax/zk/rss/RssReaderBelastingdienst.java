@@ -7,7 +7,7 @@ public class RssReaderBelastingdienst extends RssReader {
 	private static final long serialVersionUID = 4683057507461954305L;
 
 	@Init
-	public void init() throws Exception {
+	public void init() {
 		feedUrl = "http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/nieuws/rss/nieuwsfeed_actueel_zakelijk.xml";
 		super.init();
 	}
