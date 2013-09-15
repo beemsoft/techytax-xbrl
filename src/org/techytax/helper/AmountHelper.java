@@ -59,7 +59,9 @@ public class AmountHelper {
 	}
 	
 	public static String formatDecimal(BigDecimal b) {
-
+		if (b == null) {
+			return null;
+		}
 		Locale loc = new Locale("nl", "NL", "EURO");
 		NumberFormat n = NumberFormat.getCurrencyInstance(loc);
 		double doublePayment = b.doubleValue();
@@ -83,10 +85,30 @@ public class AmountHelper {
 		otherSymbols.setGroupingSeparator('.');
 		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0", otherSymbols);
 		return df.format(amount.doubleValue());
-	}	
+	}
+	
+	public static String format(int amount) {
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("###,###,###,##0", otherSymbols);
+		return df.format(amount);
+	}
+	
+	public static String format(BigInteger amount) {
+		if (amount == null) {
+			return null;
+		}
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("###,###,###,##0", otherSymbols);
+		return df.format(amount);
+	}
 	
 	public static void main(String[] args) {
 		System.out.println(roundToInteger(new BigDecimal("1.55")));
-		System.out.println(roundToInteger(new BigDecimal("1.45")));		
+		System.out.println(roundToInteger(new BigDecimal("1.45")));
+		System.out.println(format(1000));
 	}
 }

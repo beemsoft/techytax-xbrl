@@ -11,6 +11,8 @@ Changes:
 </p>
 <ul>
 <li>Migrated depreciation functionality from Struts to ZK.</li>
+<li>Migrated income tax overview from Struts to ZK.</li>
+<li>Overridden ZK style for grid and listbox components.</li>
 </ul>
 <h4>1.14 (2013-09-04)</h4>
 <p>
