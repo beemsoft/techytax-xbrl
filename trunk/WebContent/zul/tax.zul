@@ -1,0 +1,162 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+	<window self="@define(content)" title="Inkomstenbelasting"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.techytax.zk.fiscal.TaxVM')"
+		border="normal">
+		<hbox>
+			<groupbox width="380px">
+				<caption label="Winst- en Verliesrekening" />
+				<listbox model="@load(vm.profitAndLossTableItems)">
+					<template name="model" var="item">
+						<listitem>
+							<listcell
+								style="width:150px; font-size: 10px;" label="@load(item.label)" />
+							<listcell style="text-align:right;">
+								<label value="@load(item.value1)"
+									style="font-size: 10px;" visible="@load(not empty item.value1)" />
+							</listcell>
+							<listcell style="text-align:right;">
+								<label value="@load(item.value2)"
+									style="font-size: 10px;" visible="@load(not empty item.value2)" />
+							</listcell>
+							<listcell style="text-align:right;">
+								<label value="@load(item.value3)"
+									style="font-size: 10px;" visible="@load(not empty item.value3)" />
+							</listcell>
+							<listcell style="text-align:right;">
+								<label value="@load(item.value4)"
+									style="font-size: 10px;" visible="@load(not empty item.value4)" />
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</groupbox>
+			<vbox>
+				<groupbox>
+					<caption label="Activa" width="350px" />
+					<listbox model="@load(vm.activaTableItems)">
+						<listhead>
+							<listheader width="120px"
+								style="font-size: 10px;" label="Soort activa" />
+							<listheader width="90px"
+								style="font-size: 10px;" label="Kosten aanschaf" />
+							<listheader width="100px"
+								style="font-size: 10px;" label="Boekwaarde begin" />
+							<listheader width="100px"
+								style="font-size: 10px;" label="Boekwaarde einde" />
+							<listheader width="60px"
+								style="font-size: 10px;" label="Restwaarde" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									style="width:150px; font-size: 10px;" label="@load(item.label)" />
+								<listcell style="text-align:right;">
+									<label value="@load(item.value1)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value1)" />
+								</listcell>
+								<listcell style="text-align:right;">
+									<label value="@load(item.value2)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value2)" />
+								</listcell>
+								<listcell style="text-align:right;">
+									<label value="@load(item.value3)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value3)" />
+								</listcell>
+								<listcell style="text-align:right;">
+									<label value="@load(item.value4)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value4)" />
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</groupbox>
+				<groupbox>
+					<caption label="Passiva" width="350px" />
+					<listbox model="@load(vm.passivaTableItems)">
+						<listhead>
+							<listheader width="120px"
+								style="font-size: 10px;" label="Soort passiva" />
+							<listheader width="85px" />
+							<listheader width="100px"
+								style="font-size: 10px;" label="Boekwaarde begin" />
+							<listheader width="100px"
+								style="font-size: 10px;" label="Boekwaarde einde" />
+							<listheader width="60px" />
+						</listhead>
+						<template name="model" var="item">
+							<listitem>
+								<listcell
+									style="width:150px; font-size: 10px;" label="@load(item.label)" />
+								<listcell />
+								<listcell style="text-align:right;">
+									<label value="@load(item.value2)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value2)" />
+								</listcell>
+								<listcell style="text-align:right;">
+									<label value="@load(item.value3)"
+										style="font-size: 10px;"
+										visible="@load(not empty item.value3)" />
+								</listcell>
+								<listcell />
+							</listitem>
+						</template>
+					</listbox>
+				</groupbox>
+				<tabbox mold="accordion">
+					<tabs>
+						<tab label="Privéonttrekkingen" />
+						<tab label="Privéstortingen" />
+						<tab label="Voorlopige aanslag" />
+					</tabs>
+					<tabpanels>
+						<tabpanel>
+							<grid model="@load(vm.privatWithDrawalTableItems)" width="300px">
+								<template name="model" var="item">
+									<row>
+										<label style="font-size: 10px;"
+											value="@load(item.label)" />
+										<label value="@load(item.value1)" style="float:right; font-size: 10px;" />
+									</row>
+								</template>
+							</grid>
+						</tabpanel>
+						<tabpanel>
+							<grid
+								model="@load(vm.privatDepositTableItems)" width="300px">
+								<template name="model" var="item">
+									<row>
+										<label  style="font-size: 10px;"
+											value="@load(item.label)" />
+										<label
+											value="@load(item.value1)" style="float:right; font-size: 10px;" />
+									</row>
+								</template>
+							</grid>
+						</tabpanel>
+						<tabpanel>
+							<grid model="@load(vm.prepaidTaxTableItems)"
+								width="300px">
+								<template name="model" var="item">
+									<row>
+										<label  style="font-size: 10px;"
+											value="@load(item.label)" />
+										<label
+											value="@load(item.value1)" style="float:right; font-size: 10px;" />
+									</row>
+								</template>
+							</grid>
+						</tabpanel>
+					</tabpanels>
+				</tabbox>
+			</vbox>
+		</hbox>
+	</window>
+</zk>
