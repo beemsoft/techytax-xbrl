@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.techytax.domain.Cost;
+import org.techytax.helper.AmountHelper;
 import org.techytax.util.DateHelper;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -39,8 +40,9 @@ public class CostRowRenderer implements RowRenderer<Cost> {
 	public void render(Row row, final Cost cost, int index) throws Exception {
 		row.appendChild(new Label(cost.getDescription()));
 		row.appendChild(new Label(DateHelper.getDate(cost.getDate())));
-		row.appendChild(new Label(cost.getAmount().toString()));
-		row.appendChild(new Label(cost.getVat().toString()));
+		row.appendChild(new Label(AmountHelper.formatDecimal(cost.getAmount())));
+		row.appendChild(new Label(AmountHelper.formatDecimal(cost.getVat())));
+		row.appendChild(new Label(cost.getKostenSoortOmschrijving().toString()));
 		row.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 			public void onEvent(Event event) throws Exception {
 				Map<String, Object> arguments = new HashMap<String, Object>();
