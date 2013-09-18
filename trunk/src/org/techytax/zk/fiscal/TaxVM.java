@@ -48,18 +48,24 @@ public class TaxVM {
 	private User user = UserCredentialManager.getUser();
 	private static BoekDao boekDao = new BoekDao();
 	private FiscalOverview overview;
+	private int fiscalYear;
 
 	public TaxVM() throws Exception {
 		Session zkSession = Sessions.getCurrent();
 		if (overview == null) {
 			Locale locale = (Locale) zkSession.getAttribute(Globals.LOCALE_KEY);
-			Periode previousYear = DateHelper.getPeriodPreviousYear();
-			List<Cost> costs = boekDao.getKostLijst(DateHelper.getDate(previousYear.getBeginDatum()),
-					DateHelper.getDate(previousYear.getEindDatum()), "alles", Long.toString(user.getId()));
-			overview = FiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousYear.getBeginDatum()),
-					DateHelper.getDate(previousYear.getEindDatum()), costs, user.getId().longValue(), locale);
+			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
+			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
+			List<Cost> costs = boekDao.getKostLijst(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
+					DateHelper.getDate(previousFiscalPeriod.getEindDatum()), "alles", Long.toString(user.getId()));
+			overview = FiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
+					DateHelper.getDate(previousFiscalPeriod.getEindDatum()), costs, user.getId().longValue(), locale);
 			AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 		}
+	}
+	
+	public int getFiscalYear() {
+		return fiscalYear;
 	}
 
 	public ListModelList<ReportTableItem> getProfitAndLossTableItems() {
