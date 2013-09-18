@@ -1,7 +1,7 @@
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
-	<window self="@define(content)" title="Inkomstenbelasting"
+	<window self="@define(content)" title="@load(c:cat('Inkomstenbelasting ',vm.fiscalYear))"
 		apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.techytax.zk.fiscal.TaxVM')"
 		border="normal">
