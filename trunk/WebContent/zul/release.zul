@@ -1,6 +1,6 @@
 	<zk>
     <toolbarbutton label="Release notes" onClick="info.doPopup()"/><span>
-    <window id="info" visible="false"  border="normal" position="center" width="380px" height="500px" contentStyle="background:#FFFF66; overflow:auto" >
+    <window id="info" visible="false"  border="normal" position="center" width="380px" height="500px" contentStyle="background:#ECFA8E; overflow:auto" >
     <hbox>
     <html><![CDATA[
  <body>
@@ -13,6 +13,7 @@ Changes:
 <li>Migrated depreciation functionality from Struts to ZK.</li>
 <li>Migrated income tax overview from Struts to ZK.</li>
 <li>Overridden ZK style for grid and listbox components.</li>
+<li>Improved style for VAT overview page.</li>
 </ul>
 <h4>1.14 (2013-09-04)</h4>
 <p>

@@ -32,7 +32,7 @@
 					<tab id="matchTab" label="3: Transacties matchen" />
 					<tab id="manualTab"
 						label="4: Handmatig transacties toevoegen" />
-					<tab id="controleTab" label="5: btw overzicht" />
+					<tab id="controleTab" label="5: Btw overzicht" />
 				</tabs>
 				<tabpanels>
 					<tabpanel>
@@ -231,7 +231,7 @@
 					<tabpanel>
 						btw overzicht
 						<hbox>
-							<grid width="300px" hflex="true">
+							<grid width="150px" hflex="true">
 								<columns>
 									<column />
 									<column />
@@ -239,23 +239,23 @@
 								<rows>
 									<row>
 										btw uit:
-										<label id="vatOut" />
+										<label id="vatOut" style="float:right;" />
 									</row>
 									<row>
 										btw in:
-										<label id="vatIn" />
+										<label id="vatIn" style="float:right;" />
 									</row>
 									<row>
 										btw saldo:
-										<label id="vatBalance" />
+										<label id="vatBalance" style="float:right;" />
 									</row>
 									<row>
 										bruto omzet:
-										<label id="turnoverGross" />
+										<label id="turnoverGross" style="float:right;" />
 									</row>
 									<row>
 										netto omzet:
-										<label id="turnoverNet" />
+										<label id="turnoverNet" style="float:right;" />
 									</row>
 								</rows>
 							</grid>
@@ -269,12 +269,11 @@
 								mold="paging" pageSize="7" >
 								<columns sizable="true">
 									<column label="Omschrijving"
-										width="500px" />
-									<column label="Datum" width="80px" />
-									<column label="Bedrag"
-										width="100px" />
-									<column label="btw" width="100px" />
-									<column label="type" width="200px" />
+										width="690px" />
+									<column label="Datum" width="70px" />
+									<column label="Bedrag" width="70px" align="right"/>
+									<column label="Btw" width="70px" align="right" />
+									<column label="Type" width="180px" />
 								</columns>
 							</grid>
 						</vbox>
