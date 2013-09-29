@@ -17,8 +17,24 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.log;
+package org.techytax.domain;
 
-public enum AuditType {
-	UPLOAD_TRANSACTIONS, IMPORT_TRANSACTIONS, LOGOFF, LOGON, MATCH_TRANSACTION, SEND_INVOICE, SEND_AUDIT_FILE, SEND_VAT_DECLARATION, ENTER_COST, UPDATE_COST, DELETE_COST, SPLIT_COST, DEPRECIATE_COST, VAT_OVERVIEW, TAX_OVERVIEW, CHECK_VAT, CHECK_ACCOUNT, INVOICE_OVERVIEW, ENTER_BOOKVALUE, UPDATE_BOOKVALUE, DELETE_BOOKVALUE;
+import java.util.List;
+
+public class BookValueHistory {
+	
+	private List<BookValue> bookValues;
+	
+	public BookValueHistory(List<BookValue> bookValues) {
+		this.bookValues = bookValues;
+	}
+
+	public List<BookValue> getBookValues() {
+		return bookValues;
+	}
+
+	public void setBookValues(List<BookValue> bookValues) {
+		this.bookValues = bookValues;
+	}
+
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,9 +19,24 @@
  */
 package org.techytax.domain;
 
+import org.techytax.helper.Translator;
+import org.zkoss.util.Locales;
+
 public enum BalanceType {
-	NONE, MACHINERY, CAR, CURRENT_ASSETS, NON_CURRENT_ASSETS, PENSION, STOCK, OFFICE, VAT_TO_BE_PAID, INVOICES_TO_BE_PAID;
+	MACHINERY("balance.type.machines"), CAR("balance.type.car"), CURRENT_ASSETS("balance.type.liquid.assets"), NON_CURRENT_ASSETS(
+			"balance.type.equity"), PENSION("balance.type.pension"), STOCK("balance.type.stock"), OFFICE("balance.type.settlement"), VAT_TO_BE_PAID(
+			"balance.type.debt.sales.tax"), INVOICES_TO_BE_PAID("balance.type.loans.customers");
+
+	private String key;
+
+	private BalanceType(String key) {
+		this.key = key;
+	}
 	
+	public String getKey() {
+		return Translator.translateKey(key, Locales.getCurrent());
+	}
+
 	public static BalanceType getInstance(int type) {
 		BalanceType balanceType;
 		switch (type) {
@@ -51,11 +66,11 @@ public enum BalanceType {
 			break;
 		case 9:
 			balanceType = INVOICES_TO_BE_PAID;
-			break;			
+			break;
 		default:
-			balanceType = NONE;
+			balanceType = null;
 			break;
 		}
 		return balanceType;
-	}	
+	}
 }

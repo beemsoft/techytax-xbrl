@@ -21,6 +21,7 @@ package org.techytax.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -219,6 +220,10 @@ public class DateHelper {
 		}
 		return quarter;
 	}
+	
+	public static int getCurrentYear() {
+		return getYear(new Date());
+	}
 
 	public static int getYear(Date date) {
 		Calendar cal = GregorianCalendar.getInstance();
@@ -330,6 +335,18 @@ public class DateHelper {
 		}
 		return maandString;
 	}	
+	
+	public static List<Integer> getLatestSevenYears() {
+		List<Integer> yearList = new ArrayList<Integer>();
+		int yearInt = getCurrentYear();
+		Integer year = new Integer(yearInt);
+		for (int i = 0; i< 7; i++) {
+			yearList.add(year);
+			yearInt--;
+			year = new Integer(yearInt);
+		}
+		return yearList;
+	}
 
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod().getBeginDatum());

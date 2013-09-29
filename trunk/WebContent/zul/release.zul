@@ -14,6 +14,9 @@ Changes:
 <li>Migrated income tax overview from Struts to ZK.</li>
 <li>Overridden ZK style for grid and listbox components.</li>
 <li>Improved style for VAT overview page.</li>
+<li>Introduced multilinguality for ZK pages.</li>
+<li>Display billable hours in agenda when selecting a project.</li>
+<li>Replaced activa page with bookvalue page.</li>
 </ul>
 <h4>1.14 (2013-09-04)</h4>
 <p>

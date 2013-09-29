@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,19 +22,14 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class Activum {
+public class Activum extends Passivum {
 
 	private long id;
 	private BigDecimal aanschafKosten;
 	private BigDecimal bedrag;
-	private int boekjaar;
 	private BigDecimal btw;
-	private String omschrijving;
 	private BigInteger restwaarde;
-	private BigInteger saldo;
-	
 	private long userId;
-	private BalanceType balanceType;
 	private String endDate;
 	private Long costId;
 
@@ -46,24 +41,12 @@ public class Activum {
 		return bedrag;
 	}
 
-	public int getBoekjaar() {
-		return boekjaar;
-	}
-
 	public BigDecimal getBtw() {
 		return btw;
 	}
 
-	public String getOmschrijving() {
-		return omschrijving;
-	}
-
 	public BigInteger getRestwaarde() {
 		return restwaarde;
-	}
-
-	public BigInteger getSaldo() {
-		return saldo;
 	}
 
 	public void setAanschafKosten(BigDecimal aanschafKosten) {
@@ -74,24 +57,12 @@ public class Activum {
 		this.bedrag = bedrag;
 	}
 
-	public void setBoekjaar(int boekjaar) {
-		this.boekjaar = boekjaar;
-	}
-
 	public void setBtw(BigDecimal btw) {
 		this.btw = btw;
 	}
 
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
-	}
-
 	public void setRestwaarde(BigInteger restwaarde) {
 		this.restwaarde = restwaarde;
-	}
-
-	public void setSaldo(BigInteger saldo) {
-		this.saldo = saldo;
 	}
 
 	public long getUserId() {
@@ -100,14 +71,6 @@ public class Activum {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
-	}
-
-	public BalanceType getBalanceType() {
-		return balanceType;
-	}
-
-	public void setBalanceType(BalanceType balanceType) {
-		this.balanceType = balanceType;
 	}
 
 	public String getEndDate() {

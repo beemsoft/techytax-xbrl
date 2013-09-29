@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -29,6 +29,16 @@ public class BookValue {
 	private BigInteger saldo;
 	private long userId;
 	private String description;
+	
+	public BookValue() {
+	}
+	
+	public BookValue(long id, BalanceType balanceType, int jaar, BigInteger saldo) {
+		this.id = id;
+		this.balanceType = balanceType;
+		this.jaar = jaar;
+		this.saldo = saldo;
+	}
 
 	public BalanceType getBalanceType() {
 		return balanceType;
