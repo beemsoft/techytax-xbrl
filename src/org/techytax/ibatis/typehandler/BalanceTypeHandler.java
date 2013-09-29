@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -44,7 +44,7 @@ public class BalanceTypeHandler implements TypeHandlerCallback {
 			setter.setNull(Types.INTEGER);
 		} else {
 			BalanceType balanceType = (BalanceType) parameter;
-			setter.setInt(balanceType.ordinal());
+			setter.setInt(balanceType.ordinal() + 1);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -102,6 +102,15 @@ public class BookValueDao extends BaseDao {
 		}
 		return bookValues;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BookValue> getBookValuesHistory(KeyId key) throws Exception {
+		List<BookValue> bookValues = sqlMap.queryForList("getBookValuesHistory", key);
+		for (BookValue boekwaarde: bookValues) {
+			decrypt(boekwaarde);
+		}
+		return bookValues;
+	}	
 	
 	public BookValue getBookValue(KeyId key) throws Exception {
 		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValue", key);

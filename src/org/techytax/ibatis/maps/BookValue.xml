@@ -1,5 +1,5 @@
 <!--
-Copyright 2012 Hans Beemsterboer
+Copyright 2013 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -105,4 +105,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and activa.user_id = #userId#
 	    and restwaarde.user_id = #userId#
 	</select>
+	<select id="getBookValuesHistory" parameterClass="key" resultClass="bookValue">
+		select bw.id, omschrijving as description, balans_id as balanceType, boekjaar as jaar, saldo 
+		from boekwaarde as bw, balanssoort as bs, balans as b
+		where user_id=#userId# 
+		and b.balanssoort_id = bs.id 
+		and bw.balans_id = b.id 
+		order by balans_id asc, boekjaar desc;
+	</select>	
 </sqlMap>

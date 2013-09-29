@@ -25,6 +25,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 import org.techytax.domain.Cost;
@@ -104,6 +105,17 @@ public class AmountHelper {
 		otherSymbols.setGroupingSeparator('.');
 		DecimalFormat df = new DecimalFormat("###,###,###,##0", otherSymbols);
 		return df.format(amount);
+	}
+	
+	public static BigInteger parse(String amount) throws ParseException {
+		if (amount == null) {
+			return null;
+		}
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("###,###,###,##0", otherSymbols);
+		return BigInteger.valueOf(df.parse(amount).intValue());
 	}
 	
 	public static void main(String[] args) {

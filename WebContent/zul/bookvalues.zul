@@ -1,0 +1,22 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+	<window self="@define(content)" title="${c:l('bookvalues.title')}"
+		border="normal" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('org.techytax.zk.activa.ActivaVM')" binder="@init(queueName='queueName',queueScope='desktop')"
+		validationMessages="@id('vmsgs')">
+		<hbox>
+			<vbox hflex="true" width="600px">
+				<listbox width="600px"
+					model="@load(vm.bookValueHistories)"
+					itemRenderer="org.techytax.zk.activa.InplaceEditingActivumRenderer"
+					onModelDataChange="@command('updateModelData')">
+				</listbox>
+				<hlayout>
+					<button label="${c:l('button.new')}"
+						onClick="@command('addNew')" />
+				</hlayout>
+			</vbox>
+		</hbox>
+	</window>
+</zk>
