@@ -107,7 +107,9 @@ public class ModelWindowVM {
 		cost.setCostTypeId(selectedCostType.getKostenSoortId());
 		args.put("returncost", this.cost);
 		args.put("splitcost", this.splitCost);
-		args.put("depreciations", this.depreciationList.getInnerList());
+		if (this.depreciationList != null) {
+			args.put("depreciations", this.depreciationList.getInnerList());
+		}
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
 		win.detach();
 	}
