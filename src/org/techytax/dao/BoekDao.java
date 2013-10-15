@@ -39,7 +39,7 @@ public class BoekDao extends BaseDao {
 	
 	private KostensoortDao kostensoortDao = new KostensoortDao();
 	
-	private void encrypt(Cost cost) {
+	public void encrypt(Cost cost) {
 		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
 			cost.setAmount(decimalEncryptor.encrypt(cost.getAmount()));
 		}
@@ -61,6 +61,7 @@ public class BoekDao extends BaseDao {
 			} catch (EncryptionOperationNotPossibleException e) {
 				e.printStackTrace();
 				System.out.println("Could not decrypt: " + cost.getDescription());
+				throw e;
 			}
 		}
 		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
@@ -68,6 +69,7 @@ public class BoekDao extends BaseDao {
 				cost.setVat(decimalEncryptor.decrypt(cost.getVat()));
 			} catch (EncryptionOperationNotPossibleException e) {
 				System.out.println("Could not decrypt: " + cost.getDescription());
+				throw e;				
 			}				
 		}
 	}

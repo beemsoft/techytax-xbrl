@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.dao.KostensoortDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
@@ -94,12 +93,12 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	}
 
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+		long kostensoortId = CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF;
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kost.setDescription(kost.getDescription());
 			kost.setCostTypeId(kostensoortId);
-			kost.setKostenSoortOmschrijving("costtype.expense.travel");
+			kost.setKostenSoortOmschrijving("costtype.expense.travel.other.account.erroneous");
 			CostSplitter.splitPercentagFromAmount(kost, 6);
 			return costMatch;
 		}
