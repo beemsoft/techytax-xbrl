@@ -38,7 +38,7 @@
 								<label value="@load(vmsgs[pbox])"
 									sclass="red" />
 								<button id="vatHighBtn" label="btw hoog"
-									onClick="@cohflex='1'mmand('highVat')" />
+									onClick="@command('highVat')" />
 								<button id="vatLowBtn" label="btw laag"
 									onClick="@command('lowVat')" />
 							</hlayout>
