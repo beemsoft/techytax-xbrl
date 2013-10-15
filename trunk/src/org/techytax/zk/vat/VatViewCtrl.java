@@ -139,6 +139,18 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		}
 	}
+	
+	private boolean listContainsLongDescriptions(List<Cost> result) {
+		for (Cost cost : result) {
+			boekDao.encrypt(cost);
+			if (cost.getDescription().length() > 400) {
+				boekDao.decrypt(cost);
+				return true;
+			}
+			boekDao.decrypt(cost);
+		}
+		return false;
+	}	
 
 	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
 		for (Cost cost : result) {
@@ -158,16 +170,34 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 		return filteredResult;
 	}
+	
+	private List<Cost> filterLongDescriptions(List<Cost> result) {
+		List<Cost> filteredResult = new ArrayList<Cost>();
+		for (Cost cost : result) {
+			boekDao.encrypt(cost);
+			if (cost.getDescription().length() > 400) {
+				boekDao.decrypt(cost);
+				filteredResult.add(cost);
+			}
+		}
+		return filteredResult;
+	}	
 
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
 		reader = new BufferedReader(media.getReaderData());
 		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
 		List<Cost> result = importTransactions.readFile(reader, Long.toString(user.getId()));
-		if (!listContainsUnmatchedTransactions(result)) {
+		boolean unmatchedTransactions = listContainsUnmatchedTransactions(result);
+		boolean longDescriptions = listContainsLongDescriptions(result);
+		if (!unmatchedTransactions && !longDescriptions) {
 			importBtn.setDisabled(false);
-		} else {
+		} else if (unmatchedTransactions) {
+			Messagebox.show("Er zijn nog onbepaalde transacties", null, 0, Messagebox.EXCLAMATION);
 			return filterUnmatchedTransactions(result);
+		} else if (longDescriptions) {
+			Messagebox.show("Er zijn nog lange omschrijvingen", null, 0, Messagebox.EXCLAMATION);
+			return filterLongDescriptions(result);
 		}
 		return result;
 	}
@@ -206,9 +236,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 			for (int i = 0; i < result.getSize(); i++) {
 				kost = (Cost) result.getElementAt(i);
-				kost.setId(0);
-				kost.setUserId(user.getId());
-				boekDao.insertKost(kost);
+				if (kost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE) {
+					kost.setId(0);
+					kost.setUserId(user.getId());
+					boekDao.insertKost(kost);
+				}
 			}
 		}
 		createVatOverview();
