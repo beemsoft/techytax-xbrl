@@ -80,7 +80,11 @@ public class IngTransactionReader extends BaseTransactionReader {
 		Kostmatch costMatch = null;
 		try {
 			String datum = line[0];
-			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
+			if (datum.contains("-")) {
+				kost.setDate(DateHelper.stringToDateForIng(datum));
+			} else {
+				kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
+			}
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			kost.setAmount(bedrag);
 			if (line[5].equals("Af")) {
