@@ -27,7 +27,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</select>
 	
 	<select id="getCostTypesForAccount" resultClass="kostensoort">
-		SELECT id as kostenSoortId, omschrijving, btwVerrekenbaar, balansMeetellen FROM kostensoort where balansMeetellen=true
+		SELECT id as kostenSoortId, omschrijving, btwVerrekenbaar, balansMeetellen 
+		FROM kostensoort 
+		where balansMeetellen=true
+		or id in (6,8)
 	</select>	
 
 	<insert id="insertKostensoort" parameterClass="kostensoort">
@@ -47,6 +50,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<select id="getCostTypesForVatCostsWithPrivateMoney" resultClass="kostensoort">
 		select id as kostenSoortId, omschrijving  
 		from kostensoort
-		where id in (7,19,21,26,32) 
+		where id in (7,19,20,21,26,32) 
 	</select>	
 </sqlMap>

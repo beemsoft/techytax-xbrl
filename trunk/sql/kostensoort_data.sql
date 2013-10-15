@@ -51,7 +51,7 @@ INSERT INTO `kostensoort` VALUES
 (5,'costtype.withdrawal',0,0,1,0,0),
 (6,'costtype.expense.other.account.ignore',0,0,0,0,0),
 (7,'costtype.expense.other.account.erroneous',0,1,0,1,0),
-(8,'costtype.expense.travel.other.account.erroneous',0,0,0,1,0),
+(8,'costtype.expense.travel.other.account.erroneous',0,1,0,1,0),
 (9,'costtype.expense.travel',0,1,1,1,0),
 (10,'costtype.saving.in',0,0,1,0,0),
 (11,'costtype.creditcard.partial.payment',0,0,1,0,0),
