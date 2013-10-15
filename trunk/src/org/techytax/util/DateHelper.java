@@ -42,7 +42,8 @@ public class DateHelper {
 	private static String timePattern2 = "yyyyMMddHHmm";
 	private static String datePatternForTravelChipCard = "dd-MM-yyyy";
 	private static String datePatternForInvoice = "dd-MM-yyyy";
-
+	private static String datePatternForIng = "dd-MM-yyyy";
+	
 	public static Date stringToDate(String date_str) throws Exception {
 		SimpleDateFormat format = new SimpleDateFormat(datePattern);
 		try {
@@ -52,6 +53,15 @@ public class DateHelper {
 		}
 	}
 
+	public static Date stringToDateForIng(String date_str) throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat(datePatternForIng);
+		try {
+			return format.parse(date_str);
+		} catch (ParseException e) {
+			throw new Exception("errors.date.invalid");
+		}
+	}	
+	
 	public static Date stringToDateForTravelChipCard(String date_str) throws Exception {
 		SimpleDateFormat format = new SimpleDateFormat(datePatternForTravelChipCard);
 		try {
