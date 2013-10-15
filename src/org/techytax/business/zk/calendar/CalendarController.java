@@ -268,8 +268,11 @@ public class CalendarController extends SelectorComposer<Component> {
 		try {
 
 			Calendar cal = GregorianCalendar.getInstance();
-			Date endDate = calendars.getCurrentDate();
-			cal.setTime(endDate);
+			Date calendarDate = calendars.getCurrentDate();
+			cal.setTime(calendarDate);
+			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			Date endDate = cal.getTime();
+			
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			Date beginDate = cal.getTime();
 			List<CalendarEvent> eventList = calendarModel.get(beginDate, endDate, null);
@@ -290,7 +293,10 @@ public class CalendarController extends SelectorComposer<Component> {
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
-					invoices.add(cost);
+					String monthStr = Integer.toString(maand);
+					if (cost.getDescription().charAt(6) == monthStr.charAt(monthStr.length()-1)) {
+						invoices.add(cost);						
+					}
 				}
 			}
 
