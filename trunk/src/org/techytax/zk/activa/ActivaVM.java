@@ -63,7 +63,6 @@ public class ActivaVM {
 
 			int firstYear = 0;
 			for (BookValue bookValue : bookValues) {
-				System.out.println("Test2 : "+ bookValue.getId());
 				BalanceType balanceType = bookValue.getBalanceType();
 				if (balanceType != currentBalanceType) {
 					if (firstYear < bookValue.getJaar()) {
