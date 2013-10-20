@@ -31,9 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionMessage;
 import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
 
@@ -47,7 +44,6 @@ public class UserFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute("user");
-		ActionErrors errors = new ActionErrors();
 		if (user != null) {
 			UserDao userDao = new UserDao();
 			try {
@@ -58,18 +54,18 @@ public class UserFilter implements Filter {
 
 			if (user == null) {
 				session.invalidate();
-				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.user.removed"));
+//				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.user.removed"));
 			} else if (user.isBlocked()) {
 				session.invalidate();
-				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.user.blocked"));
+//				errors.add(ActionErrors.GLOBAL_MESSAGE, new ActionMessage("error.user.blocked"));
 			}
 		}
-		if (errors.isEmpty()) {
+//		if (errors.isEmpty()) {
 			chain.doFilter(request, response);
-		} else {
-			req.setAttribute(Globals.ERROR_KEY, errors);
-			req.getRequestDispatcher("/index.jsp").forward(req, res);
-		}
+//		} else {
+//			req.setAttribute(Globals.ERROR_KEY, errors);
+//			req.getRequestDispatcher("/index.jsp").forward(req, res);
+//		}
 	}
 
 	public void destroy() {
