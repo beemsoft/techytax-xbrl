@@ -1,0 +1,58 @@
+<?init class="org.zkoss.zk.ui.util.Composition"
+arg0="/WEB-INF/layout/template.zul"?>
+<zk>
+<window self="@define(content)" title="${c:l('settlement.title')}" border="normal"
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.fiscal.SettlementVM')" 
+	validationMessages="@id('vmsgs')">
+	<hbox>
+	<vbox hflex="true" width="1090px" height="490px">
+		<groupbox hflex="true" mold="3d">
+			<grid hflex="true" >
+				<columns>
+					<column width="120px"/>
+					<column/>
+				</columns>
+				<rows>
+					<row>Adres
+						<hlayout>
+							<label value="@load(vm.address)" />
+						</hlayout>
+					</row>				
+					<row>Omschrijving
+						<hlayout>
+							<textbox value="@bind(vm.settlement.description)" cols="100" rows="10" />
+						</hlayout>
+					</row>
+					<row>Startdatum
+						<hlayout> 
+							<datebox value="@bind(vm.startDate) @save(vm.selected.date, before='saveCost')"/>
+						</hlayout>	
+					</row>									
+					<row>Koopsom
+						<hlayout>
+							<textbox value="@bind(vm.settlement.purchasePrice)" />
+						</hlayout>
+					</row>
+					<row>Aanloopkosten
+						<hlayout>
+							<textbox value="@bind(vm.settlement.startupCosts)" />
+						</hlayout>
+					</row>
+					<row>Aantal vierkante meters voor zakelijk gebruik
+						<hlayout>
+							<intbox value="@bind(vm.settlement.nofSquareMetersBusiness)" />
+						</hlayout>
+					</row>
+					<row>Aantal vierkante meters voor privégebruik
+						<hlayout>
+							<intbox value="@bind(vm.settlement.nofSquareMetersPrivate)" />
+						</hlayout>
+					</row>					
+				</rows>
+			</grid>
+			<button label="Wijzig" onClick="@command('save')" />
+		</groupbox>		
+	</vbox>
+	</hbox>
+</window>
+</zk>
