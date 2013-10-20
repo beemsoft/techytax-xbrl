@@ -5,7 +5,7 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>1.15 (upcoming)</h4>
+<h4>2.0 (upcoming)</h4>
 <p>
 Changes:
 </p>
@@ -17,6 +17,12 @@ Changes:
 <li>Introduced multilinguality for ZK pages.</li>
 <li>Display billable hours in agenda when selecting a project.</li>
 <li>Replaced activa page with bookvalue page.</li>
+<li>Fixed invoice creation.</li>
+<li>Fixed importing of travel costs.</li>
+<li>Added importing ING transactions from CSV file.</li>
+<li>Prevented importing of transactions with long description.</li>
+<li>Migrated settlement page from Struts to ZK.</li>
+<li>Removed old Struts-based TechyTax version.</li>
 </ul>
 <h4>1.14 (2013-09-04)</h4>
 <p>
