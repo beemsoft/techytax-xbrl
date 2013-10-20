@@ -85,7 +85,8 @@
 								<toolbarbutton label="Facturen" href="invoices.zul" />
 								<toolbarbutton label="Agenda" href="zk_calendar.zul" />
 								<toolbarbutton label="Klanten" href="customers.zul" />
-								<toolbarbutton label="Projecten" href="projects.zul" />							
+								<toolbarbutton label="Projecten" href="projects.zul" />
+								<toolbarbutton label="${c:l('settlement.title')}" href="settlement.zul" />							
 							</vbox>
 						</panelchildren>
 					</panel>
@@ -127,7 +128,7 @@
 			<east width="130px" title="Links" hflex="true" splittable="true">
 				<vlayout>
 					<html>
-						<![CDATA[ <ul> <li><a href="/TechyTax/index.jsp">Oude TechyTax versie</a></li>
+						<![CDATA[ <ul>
 						<li><a href="http://www.techytax.org/forum/">Forum</a></li>
 						<li><a href="http://www.softwarepakket.nl/cmm/swp/raadpleeg_pakket.php?zm=EPS&id=5787&slt=29&eigs=29&vn=XML%20Auditfile%20Financieel%20%28XAF%29&bronw=1">Software pakketten</a></li>
 						<li><a href="https://www.ohloh.net/p/techytax">Ohloh analyse</a></li>
