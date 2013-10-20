@@ -25,54 +25,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<display-name>TechyTax</display-name>
 	<description></description>
 	<filter>
-		<filter-name>sitemesh</filter-name>
-		<filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>sitemesh</filter-name>
-		<url-pattern>*.jsp</url-pattern>
-		<url-pattern>*.do</url-pattern>
-	</filter-mapping>
-	<filter>
-		<filter-name>authorizationFilter</filter-name>
-		<filter-class>org.techytax.security.AuthorizationFilter</filter-class>
-		<init-param>
-			<param-name>onError</param-name>
-			<param-value>/index.jsp</param-value>
-		</init-param>
-	</filter>
-	<filter>
 		<filter-name>userFilter</filter-name>
 		<filter-class>org.techytax.security.UserFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>authorizationFilter</filter-name>
-		<url-pattern>*.do</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
 		<filter-name>userFilter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
-	<servlet>
-		<servlet-name>action</servlet-name>
-		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
-		<init-param>
-			<param-name>config</param-name>
-			<param-value>
-				/WEB-INF/struts-boek-config.xml
-			</param-value>
-		</init-param>
-		<init-param>
-			<param-name>debug</param-name>
-			<param-value>2</param-value>
-		</init-param>
-		<init-param>
-			<param-name>detail</param-name>
-			<param-value>2</param-value>
-		</init-param>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-	
 	<servlet>
 		<servlet-name>TechyTaxChart</servlet-name>
 		<servlet-class>org.techytax.chart.ChartGeneratorServlet</servlet-class>
@@ -170,11 +129,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</servlet-mapping>	
 
 	<servlet-mapping>
-		<servlet-name>action</servlet-name>
-		<url-pattern>*.do</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
 		<servlet-name>TechyTaxChart</servlet-name>
 		<url-pattern>/chart</url-pattern>
 	</servlet-mapping>	
@@ -244,43 +198,4 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<welcome-file-list>
 		<welcome-file>/zul/login.zul</welcome-file>
 	</welcome-file-list>
-
-	<jsp-config>
-		<taglib>
-			<taglib-uri>struts-bean</taglib-uri>
-			<taglib-location>/WEB-INF/tld/struts-bean.tld</taglib-location>
-		</taglib>
-
-		<taglib>
-			<taglib-uri>struts-html</taglib-uri>
-			<taglib-location>/WEB-INF/tld/struts-html.tld</taglib-location>
-		</taglib>
-
-		<taglib>
-			<taglib-uri>struts-logic</taglib-uri>
-			<taglib-location>/WEB-INF/tld/struts-logic.tld</taglib-location>
-		</taglib>
-
-		<taglib>
-			<taglib-uri>sitemesh-decorator</taglib-uri>
-			<taglib-location>/WEB-INF/tld/sitemesh-decorator.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>fmt</taglib-uri>
-			<taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
-		</taglib>
-
-		<taglib>
-			<taglib-uri>i18n</taglib-uri>
-			<taglib-location>/WEB-INF/tld/i18n.tld</taglib-location>
-		</taglib>
-
-		<taglib>
-			<taglib-uri>sitemesh-page</taglib-uri>
-			<taglib-location>/WEB-INF/tld/sitemesh-page.tld</taglib-location>
-		</taglib>
-
-	</jsp-config>
-
-
 </web-app>

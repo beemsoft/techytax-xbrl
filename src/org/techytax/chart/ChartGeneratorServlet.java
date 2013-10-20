@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.Globals;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.User;
 
@@ -45,7 +44,8 @@ public class ChartGeneratorServlet extends HttpServlet {
 			User user = (User) httpServletRequest.getSession().getAttribute("user");
 
 			String chartType = httpServletRequest.getParameter("chartType");
-			Locale locale = (Locale)httpServletRequest.getSession().getAttribute(Globals.LOCALE_KEY);
+//			Locale locale = (Locale)httpServletRequest.getSession().getAttribute(Globals.LOCALE_KEY);
+			Locale locale = null;
 			if (chartType.equals("bookValues")) {
 				image = ChartFactory.createBookValueGraph(user.getId(), locale);
 			} else if (chartType.equals("profitAndLoss")) {
