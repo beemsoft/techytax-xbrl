@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.struts.Globals;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalOverview;
@@ -39,8 +38,6 @@ import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.domain.ReportBalance;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 
@@ -52,9 +49,8 @@ public class TaxVM {
 	private int fiscalYear;
 
 	public TaxVM() throws Exception {
-		Session zkSession = Sessions.getCurrent();
 		if (overview == null) {
-			Locale locale = (Locale) zkSession.getAttribute(Globals.LOCALE_KEY);
+			Locale locale = org.zkoss.util.Locales.getCurrent();
 			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
 			List<Cost> costs = boekDao.getKostLijst(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
