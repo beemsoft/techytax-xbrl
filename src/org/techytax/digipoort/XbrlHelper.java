@@ -181,7 +181,7 @@ public class XbrlHelper {
 			ACAPITALstring4FItemType code = bdTypeObjectFactory.createACAPITALstring4FItemType();
 
 			MessageReferenceSupplierVATItemType supplier = new MessageReferenceSupplierVATItemType();
-			supplier.setValue("OB-TXTAX-11");
+			supplier.setValue("OB-TXTAX-20");
 			supplier.setContextRef(context);
 			vatDeclaration.setMessageReferenceSupplierVAT(supplier);
 			code.setValue("TXTX");
@@ -196,7 +196,7 @@ public class XbrlHelper {
 			vatDeclaration.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
 
 			Anstring2FItemType version = bdTypeObjectFactory.createAnstring2FItemType();
-			version.setValue("13");
+			version.setValue("20");
 			version.setContextRef(context);
 			vatDeclaration.setVersionApplication(version);
 
