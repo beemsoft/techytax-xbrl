@@ -40,7 +40,11 @@ public class SettlementVM {
 	public void init() throws Exception {
 		if (user != null) {
 			settlement = settlementDao.getSettlement(user.getId());
-			startDate = DateHelper.stringToDate(settlement.getStartDate());
+			if (settlement != null) {
+				startDate = DateHelper.stringToDate(settlement.getStartDate());
+			} else {
+				startDate = new Date();
+			}
 		}
 	}
 	
