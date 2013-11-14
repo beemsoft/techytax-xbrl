@@ -1,39 +1,43 @@
 <?page title="TechyTax - Login"?>
 <zk>
 	<window self="@define(content)" id="loginWin" border="normal"
-		title="Inloggen" apply="org.zkoss.bind.BindComposer"
+		apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')"
-		onOK="@command('login')">
+		onOK="@command('login')" >
 		<?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 		<vbox>
-			<grid width="200px">
-				<rows>
-					<row>
-						<label value="Naam:" />
-						<textbox id="nameTxb"
-							value="@bind(vm.username)" />
-					</row>
-					<row>
-						<label value="Wachtwoord:" />
-						<textbox id="passwordTxb" type="password"
-							value="@bind(vm.password)" />
-					</row>
-				</rows>
-			</grid>
-			<hlayout>
-				<button id="confirmBtn" label="Inloggen"
-					onClick="@command('login')" tooltip="new" mold="os" />
-				Demo: guest/guest
-				<toolbar mold="panel" align="center">
-					<toolbarbutton id="secure"
-						label="Kies veilige connectie"
+			<hbox>
+				<vbox>
+					<grid width="200px" tooltip="loginInfo">
+						<rows>
+							<row>
+								<label value="Naam:" />
+								<textbox id="nameTxb"
+									value="@bind(vm.username)" />
+							</row>
+							<row>
+								<label value="Wachtwoord:" />
+								<textbox id="passwordTxb" type="password"
+									value="@bind(vm.password)" />
+							</row>
+						</rows>
+					</grid>
+ 					<button label="Inloggen"
+					onClick="@command('login')" tooltip="loginInfo" mold="os" />
+				</vbox>								
+				<toolbarbutton id="secure"
+					label="Kies veilige connectie"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
-						tooltip="secureInfo" />
-					<toolbarbutton label="Registreren"
-						href="../../TechyTax2/index.jsp" />
-					<toolbarbutton label="Wachtwoord vergeten"
+						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg"/>
+			</hbox>		
+			<hlayout>
+				<button label="Registreren" onClick="@command('register')" />
+				<toolbar mold="panel" align="center">
+					<toolbarbutton label="Wachtwoord vergeten?"
 						href="../../TechyTax2/user/user-forgot-password.action" />
+					<toolbarbutton label="Vragen?"
+						href="http://www.beemsoft.nl/BeemsoftPhp/contact.php" />
 				</toolbar>
 			</hlayout>
 		</vbox>
@@ -49,6 +53,14 @@ arg0="/WEB-INF/layout/template.zul"?>
 				als veilig aangeven.]]>
 			</html>
 		</popup>
+		<popup id="loginInfo" width="300px">
+			<html>
+				<![CDATA[ Indien u geregistreerd bent, kunt u hier inloggen.
+				Zoniet, dan kunt u hier voor een demo inloggen met de volgende
+				gegevens: Naam: guest, Wachtwoord: guest
+				]]>
+			</html>
+		</popup>		
 	</window>
 	<script defer="true">
 		if (window.location.protocol == 'https:') {

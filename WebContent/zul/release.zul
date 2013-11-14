@@ -5,6 +5,16 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
+<h4>2.0.1 (upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Added security checks.</li>
+<li>Migrated SaaS options to ZK.</li>
+<li>Fixed bug when updating project details.</li>
+<li>Changed RSS reader from forum to latest changes.</li>
+</ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>
 Changes:
