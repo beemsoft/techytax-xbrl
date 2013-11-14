@@ -24,14 +24,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	id="WebApp_ID" version="2.5">
 	<display-name>TechyTax</display-name>
 	<description></description>
-	<filter>
-		<filter-name>userFilter</filter-name>
-		<filter-class>org.techytax.security.UserFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>userFilter</filter-name>
-		<url-pattern>*.do</url-pattern>
-	</filter-mapping>
 	<servlet>
 		<servlet-name>TechyTaxChart</servlet-name>
 		<servlet-class>org.techytax.chart.ChartGeneratorServlet</servlet-class>
