@@ -26,6 +26,7 @@ import javax.persistence.Query;
 
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.jpa.entities.LogRecord;
 import org.techytax.util.DateHelper;
@@ -36,18 +37,22 @@ public class AuditLogger {
 	public static void log(AuditType auditType, User user) {
 		GenericDao<LogRecord> logDao = new GenericDao<LogRecord>(LogRecord.class, null);
 		LogRecord logRecord = new LogRecord();
-		logRecord.setUser(user);
+		UserEntity userEntity = new UserEntity(user);
+		logRecord.setUser(userEntity);
 		logRecord.setAuditType(auditType);
 		logRecord.setTimeStamp(new Date());
 		logDao.persistEntity(logRecord);
 	}
 
-	public static Date getVatDeclarationTimeForLatestVatPeriod(User user) {
+	public static Date getVatDeclarationTimeForLatestVatPeriod(User user) throws IllegalAccessException {
+		if (user == null) {
+			throw new IllegalAccessException();
+		}
 		Periode latestVatPeriod = DateHelper.getLatestVatPeriod();
 		Periode latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
 		Query query = JpaUtil.getEntityManager()
 				.createQuery(
-						"SELECT lr FROM LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId");
+						"SELECT lr FROM org.techytax.jpa.entities.LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId");
 		query.setParameter("beginTime", latestVatPeriod.getEindDatum());
 		query.setParameter("endTime", latestVatPeriodTillToday.getEindDatum());
 		query.setParameter("userId", user.getId());
@@ -60,7 +65,7 @@ public class AuditLogger {
 		return result.getTimeStamp();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IllegalAccessException {
 		User user = new User();
 		user.setId(1L);
 		System.out.println(getVatDeclarationTimeForLatestVatPeriod(user));

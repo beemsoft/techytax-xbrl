@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.techytax.business.jpa.entities.Customer;
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
@@ -35,42 +36,46 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 public class CustomerVM {
-	
+
 	private User user = UserCredentialManager.getUser();
 	private GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
-	
+
 	protected ListModelList<Customer> customers;
-	
+
 	protected Customer selected;
 
 	private String deleteMessage;
-	
-	public String getDeleteMessage(){
+
+	public String getDeleteMessage() {
 		return deleteMessage;
 	}
-	
-	@NotifyChange({"selected","customers","deleteMessage"})
+
+	@NotifyChange({ "selected", "customers", "deleteMessage" })
 	@Command
-	public void deleteCustomer() throws Exception{
+	public void deleteCustomer() throws Exception {
 		deleteMessage = null;
 		customerDao.deleteEntity(selected);
-		selected = null;			
+		selected = null;
 	}
-	
+
 	@NotifyChange("deleteMessage")
 	@Command
-	public void confirmDelete(){
-		deleteMessage = "Do you want to delete "+selected.getDescription()+" ?";
+	public void confirmDelete() {
+		deleteMessage = "Do you want to delete " + selected.getDescription() + " ?";
 	}
-	
+
 	@NotifyChange("deleteMessage")
 	@Command
-	public void cancelDelete(){
+	public void cancelDelete() {
 		deleteMessage = null;
 	}
 
 	public ListModelList<Customer> getCustomers() throws Exception {
-		customers = new ListModelList<Customer>(customerDao.findAll());
+		try {
+			customers = new ListModelList<Customer>(customerDao.findAll());
+		} catch (IllegalAccessException e) {
+			Executions.sendRedirect("login.zul");
+		}
 		return customers;
 	}
 
@@ -96,7 +101,7 @@ public class CustomerVM {
 	@GlobalCommand
 	@NotifyChange({ "customers", "selected" })
 	public void refreshvalues(@BindingParam("customer") Customer customer) throws Exception {
-		customer.setUser(user);
+		customer.setUser(new UserEntity(user));
 		customerDao.merge(customer);
 	}
 

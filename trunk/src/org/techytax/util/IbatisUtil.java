@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,13 +20,7 @@
 package org.techytax.util;
 
 import java.io.Reader;
-import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.sql.DataSource;
-
-import com.ibatis.common.jdbc.SimpleDataSource;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
@@ -54,58 +48,6 @@ public class IbatisUtil {
 
 	public static SqlMapClient getSqlMapInstance() {
 		return sqlMap;
-	}
-
-	public static void changeUserConnection(String username, String password,
-			String host, String catalog) throws Exception {
-		sqlMap.setUserConnection(null);
-		Map<String, String> props = new HashMap<String, String>();
-		props.put("JDBC.Driver", "com.mysql.jdbc.Driver");
-		props
-				.put(
-						"JDBC.ConnectionURL",
-						"jdbc:mysql://"
-								+ host
-								+ "/"
-								+ catalog
-								+ "?enableDeprecatedAutoreconnect=true&autoReconnect=true&zeroDateTimeBehavior=convertToNull");
-		props.put("JDBC.Username", username);
-		props.put("JDBC.Password", password);
-		props.put("JDBC.DefaultAutoCommit", "true");
-		DataSource dataSource = new SimpleDataSource(props);
-		Connection userConnection = dataSource.getConnection();
-		sqlMap.setUserConnection(userConnection);
-	}
-
-
-	public static ConnectionInfo getInfo() {
-		try {
-			if (sqlMap.getDataSource() != null) {
-				ConnectionInfo connectionInfo = new ConnectionInfo();
-				Connection connection = sqlMap.getDataSource().getConnection();
-				String username = connection.getMetaData().getUserName();
-				username = username.replaceFirst("@.*", "");
-				String url = connection.getMetaData().getURL();
-				String host = null;
-				if (url.contains("///")) {
-					host = "localhost";
-				} else {
-					host = url.replaceFirst(".*//", "");
-					host = host.replaceFirst(":.*", "");
-				}
-				String catalog = connection.getMetaData().getURL();
-				catalog = catalog.replaceAll(".*/", "");
-				catalog = catalog.replaceFirst("\\?.*", "");
-				connectionInfo.setUsername(username);
-				connectionInfo.setHost(host);
-				connectionInfo.setCatalog(catalog);
-				connection.close();
-				return connectionInfo;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

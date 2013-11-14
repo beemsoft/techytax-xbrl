@@ -111,17 +111,17 @@ public class GenericDao<T> {
 		return result;
 	}	
 	
-	public List<T> findAll() {
+	public List<T> findAll() throws IllegalAccessException {
 		return findByCriteria();
 	}
 	
-	protected List<T> findByCriteria(final Criterion... criterion) {
+	protected List<T> findByCriteria(final Criterion... criterion) throws IllegalAccessException {
 		return findByCriteria(-1, -1, criterion);
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected List<T> findByCriteria(final int firstResult,
-			final int maxResults, final Criterion... criterion) {
+			final int maxResults, final Criterion... criterion) throws IllegalAccessException {
 //		EntityManager em = JpaUtil.getEntityManager();
 		getNewEntityManager();
 		Session session = (Session) entityManager.getDelegate();
@@ -129,6 +129,8 @@ public class GenericDao<T> {
 		
 		if (user != null) {
 			crit.add(Restrictions.eq("user", user));
+		} else {
+			throw new IllegalAccessException("Please logon first");
 		}
 
 		for (final Criterion c : criterion) {

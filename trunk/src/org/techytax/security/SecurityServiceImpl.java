@@ -26,6 +26,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
 import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
@@ -60,11 +61,7 @@ public class SecurityServiceImpl implements SecurityService {
 			user.setLatestOnlineTime(currentDate);
 			userDao.updateUserTimeStamp(user);
 			initEncryption();
-			try {
-				AuditLogger.log(AuditType.LOGON, user);
-			} catch (Exception e) {
-				// Skip exception, it only occurs in the Struts version.
-			}
+			AuditLogger.log(AuditType.LOGON, new UserEntity(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

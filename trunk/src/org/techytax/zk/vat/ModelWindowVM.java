@@ -45,6 +45,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.ListModelList;
@@ -69,15 +70,19 @@ public class ModelWindowVM {
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("cost") Cost cost) {
 		Selectors.wireComponents(view, this, false);
 		this.cost = cost;
-		if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
-				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
-			investment = true;
+		if (cost != null) {
+			if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
+					&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
+				investment = true;
+			}
+			depreciationYearsList = Arrays.asList(1, 2, 3, 4, 5);
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
-		depreciationYearsList = Arrays.asList(1, 2, 3, 4, 5);
 	}
 
 	public ListModelList<Kostensoort> getCostTypes() throws Exception {
-		if (costTypes == null) {
+		if (cost != null && costTypes == null) {
 			KostensoortDao kostensoortDao = new KostensoortDao();
 			List<Kostensoort> vatCostTypes = kostensoortDao.getKostensoortLijst();
 			costTypes = new ListModelList<Kostensoort>(vatCostTypes);

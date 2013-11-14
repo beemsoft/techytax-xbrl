@@ -23,12 +23,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "user") 
+@MappedSuperclass
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
@@ -40,15 +38,11 @@ public class User implements Serializable {
 	
 	private String companyName;
 	private String email;
-	private Date freezeEndDate;
-	private Date freezeStartDate;
 	private String fullName;
 	@Id
-	private Long id;
+	private long id;
 	private Date latestOnlineTime;
-	private boolean paid;
 	private String password;
-	private String role;
 	private String username;
 	private String phoneNumber;
 	private String fiscalNumber;
@@ -78,19 +72,11 @@ public class User implements Serializable {
 		return email;
 	}
 
-	public Date getFreezeEndDate() {
-		return freezeEndDate;
-	}
-
-	public Date getFreezeStartDate() {
-		return freezeStartDate;
-	}
-
 	public String getFullName() {
 		return fullName;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -102,48 +88,12 @@ public class User implements Serializable {
 		return password;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
 	public String getUsername() {
 		return username;
 	}
 
-	public boolean hasRole(String role) {
-		if (this.role != null && this.role.equals(role)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean isAdministrator() {
-		return hasRole("admin");
-	}
-
 	public boolean isBlocked() {
 		return blocked;
-	}
-
-	public boolean isFrozen() {
-		boolean frozen = false;
-		Date currentDate = new Date();
-		if (freezeStartDate != null && freezeStartDate.before(currentDate) && (freezeEndDate == null || freezeEndDate.after(currentDate))) {
-			frozen = true;
-		}
-		return frozen;
-	}
-
-	public boolean isGuest() {
-		return hasRole("guest");
-	}
-
-	public boolean isPaid() {
-		return paid;
-	}
-
-	public boolean isUser() {
-		return hasRole("user");
 	}
 
 	public boolean passwordMatch(String pwd) {
@@ -162,19 +112,11 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
-	public void setFreezeEndDate(Date freezeEndDate) {
-		this.freezeEndDate = freezeEndDate;
-	}
-
-	public void setFreezeStartDate(Date freezeStartDate) {
-		this.freezeStartDate = freezeStartDate;
-	}
-
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -182,16 +124,8 @@ public class User implements Serializable {
 		this.latestOnlineTime = latestOnlineTime;
 	}
 
-	public void setPaid(boolean paid) {
-		this.paid = paid;
-	}
-
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public void setUsername(String username) {

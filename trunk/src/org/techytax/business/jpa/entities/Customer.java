@@ -31,7 +31,7 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.jasypt.hibernate4.type.EncryptedStringType;
-import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 
 @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") })
 @Entity
@@ -43,7 +43,7 @@ public class Customer {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private UserEntity user;
 
 	@Type(type = "encryptedString")
 	private String name;
@@ -65,11 +65,11 @@ public class Customer {
 		return id;
 	}
 
-	public User getUser() {
+	public UserEntity getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 
