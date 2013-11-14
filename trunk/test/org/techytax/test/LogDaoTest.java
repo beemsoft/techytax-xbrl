@@ -13,6 +13,7 @@ import javax.persistence.Persistence;
 import org.junit.Before;
 import org.junit.Test;
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.jpa.entities.EntityManagerHelper;
 import org.techytax.jpa.entities.LogRecord;
@@ -40,7 +41,7 @@ public class LogDaoTest {
 	}
 
 	@Test
-	public void testStoreAndGetLogRecord() {
+	public void testStoreAndGetLogRecord() throws IllegalAccessException {
 		addLogRecord();
 		Collection<LogRecord> logRecords = logDao.findAll();
 		assertEquals(1, logRecords.size());
@@ -53,7 +54,7 @@ public class LogDaoTest {
 		User user = new User();
 		user.setId(1L);
 		userDao.persistEntity(user);
-		logRecord.setUser(user);
+		logRecord.setUser((UserEntity) user);
 		logDao.persistEntity(logRecord);
 		EntityManagerHelper.commit();
 	}
