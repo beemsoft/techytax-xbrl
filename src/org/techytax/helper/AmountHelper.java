@@ -88,6 +88,14 @@ public class AmountHelper {
 		return df.format(amount.doubleValue());
 	}
 	
+	public static String formatWithEuroSymbol(BigDecimal amount) {
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+		otherSymbols.setDecimalSeparator(',');
+		otherSymbols.setGroupingSeparator('.');
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
+		return df.format(amount.doubleValue());
+	}	
+	
 	public static String format(int amount) {
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
 		otherSymbols.setDecimalSeparator(',');

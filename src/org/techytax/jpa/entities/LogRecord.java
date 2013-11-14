@@ -33,9 +33,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.log.AuditType;
 
-@Entity
+@Entity(name = "org.techytax.jpa.entities.LogRecord")
 @Table(name = "log_record")
 public class LogRecord {
     @Id
@@ -44,7 +45,7 @@ public class LogRecord {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
     
     @Enumerated(EnumType.STRING)
     private AuditType auditType;
@@ -72,7 +73,7 @@ public class LogRecord {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserEntity user) {
 		this.user = user;
 	}
 }

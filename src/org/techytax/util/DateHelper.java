@@ -180,6 +180,46 @@ public class DateHelper {
 		periode.setEindDatum(eindDatum);
 		return periode;
 	}
+	
+	public static Date getLastDayOfFirstMonthOfNextQuarter() {
+		int month = getMonth(new Date());
+		Calendar cal = new GregorianCalendar();
+		Date lastDay = null;
+		switch (month) {
+		case 1:
+		case 2:
+		case 3:
+			cal.set(Calendar.MONTH, Calendar.APRIL);
+			cal.set(Calendar.DAY_OF_MONTH, 30);
+			lastDay = cal.getTime();
+			break;
+		case 4:
+		case 5:
+		case 6:
+			cal.set(Calendar.MONTH, Calendar.JULY);
+			cal.set(Calendar.DAY_OF_MONTH, 31);
+			lastDay = cal.getTime();
+			break;
+		case 7:
+		case 8:
+		case 9:
+			cal.set(Calendar.MONTH, Calendar.OCTOBER);
+			cal.set(Calendar.DAY_OF_MONTH, 31);
+			lastDay = cal.getTime();
+			break;
+		case 10:
+		case 11:
+		case 0:
+			cal.add(Calendar.YEAR, 1);
+			cal.set(Calendar.MONTH, Calendar.JANUARY);
+			cal.set(Calendar.DAY_OF_MONTH, 31);
+			lastDay = cal.getTime();
+			break;
+		default:
+			break;
+		}
+		return lastDay;
+	}	
 
 	public static Periode getLatestVatPeriodTillToday() {
 		Calendar cal = new GregorianCalendar();
