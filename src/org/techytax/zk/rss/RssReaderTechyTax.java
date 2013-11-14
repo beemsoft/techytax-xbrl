@@ -8,7 +8,7 @@ public class RssReaderTechyTax extends RssReader {
 
 	@Init
 	public void init() {
-		feedUrl = "http://www.techytax.org/jforum/rss/forumTopics/1.page";
+		feedUrl = "http://sourceforge.net/p/techytax/code/feed";
 		super.init();
 	}
 
