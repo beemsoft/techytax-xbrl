@@ -33,13 +33,14 @@
 		try {
 
 			final byte[] buf = org.techytax.report.helper.PdfReportHelper.createVatReport();
-
-			//prepare the AMedia for iframe
-			final InputStream mediais = new ByteArrayInputStream(buf);
-			final AMedia amedia = new AMedia("VatReport.pdf", "pdf", "application/pdf", mediais);
-
-			//set iframe content
-			reportFrame.setContent(amedia);
+			if (buf != null) {
+				//prepare the AMedia for iframe
+				final InputStream mediais = new ByteArrayInputStream(buf);
+				final AMedia amedia = new AMedia("VatReport.pdf", "pdf", "application/pdf", mediais);
+	
+				//set iframe content
+				reportFrame.setContent(amedia);
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		} finally {
