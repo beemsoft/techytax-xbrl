@@ -39,6 +39,7 @@ import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 
 public class InvoiceVM {
@@ -119,6 +120,8 @@ public class InvoiceVM {
 			if (bookValuePreviousYear != null) {
 				unpaidInvoicesFromPreviousYear = bookValuePreviousYear.getSaldo();
 			} 
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
 		return invoices;
 	}

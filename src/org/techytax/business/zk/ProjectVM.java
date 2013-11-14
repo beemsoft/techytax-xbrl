@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.techytax.business.jpa.entities.Project;
 import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
@@ -35,42 +36,46 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 public class ProjectVM {
-	
+
 	private User user = UserCredentialManager.getUser();
 	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
-	
+
 	protected ListModelList<Project> projects;
-	
+
 	protected Project selected;
 
 	private String deleteMessage;
-	
-	public String getDeleteMessage(){
+
+	public String getDeleteMessage() {
 		return deleteMessage;
 	}
-	
-	@NotifyChange({"selected","projects","deleteMessage"})
+
+	@NotifyChange({ "selected", "projects", "deleteMessage" })
 	@Command
-	public void deleteProject() throws Exception{
+	public void deleteProject() throws Exception {
 		deleteMessage = null;
 		projectDao.deleteEntity(selected);
-		selected = null;			
+		selected = null;
 	}
-	
+
 	@NotifyChange("deleteMessage")
 	@Command
-	public void confirmDelete(){
-		deleteMessage = "Do you want to delete "+selected.getCode()+" ?";
+	public void confirmDelete() {
+		deleteMessage = "Do you want to delete " + selected.getCode() + " ?";
 	}
-	
+
 	@NotifyChange("deleteMessage")
 	@Command
-	public void cancelDelete(){
+	public void cancelDelete() {
 		deleteMessage = null;
 	}
 
 	public ListModelList<Project> getProjects() throws Exception {
-		projects = new ListModelList<Project>(projectDao.findAll());
+		try {
+			projects = new ListModelList<Project>(projectDao.findAll());
+		} catch (IllegalAccessException e) {
+			Executions.sendRedirect("login.zul");
+		}
 		return projects;
 	}
 
@@ -96,7 +101,7 @@ public class ProjectVM {
 	@GlobalCommand
 	@NotifyChange({ "projects", "selected" })
 	public void refreshvalues(@BindingParam("project") Project project) throws Exception {
-		project.setUser(user);
+		project.setUser(new UserEntity(user));
 		projectDao.merge(project);
 	}
 

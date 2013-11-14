@@ -32,6 +32,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 
 public class CostVM {
@@ -45,11 +46,12 @@ public class CostVM {
 	protected Cost selected;
 
 	Kostensoort selectedCostType;
-
+	
 	public ListModelList<Cost> getCosts() throws Exception {
-		if (costs == null) {
+		if (user == null) {
+			Executions.sendRedirect("login.zul");
+		} else if (costs == null) {
 			BoekDao boekDao = new BoekDao();
-			if (user != null) {
 				Periode vatPeriod = DateHelper.getLatestVatPeriod();
 				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
 						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
@@ -57,7 +59,6 @@ public class CostVM {
 					cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 				}
 				costs = new ListModelList<Cost>(vatCosts);
-			}
 		}
 		return costs;
 	}

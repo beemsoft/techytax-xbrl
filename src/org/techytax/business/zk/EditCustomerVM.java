@@ -30,6 +30,7 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Window;
@@ -44,6 +45,9 @@ public class EditCustomerVM {
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("customer") Customer customer) {
 		Selectors.wireComponents(view, this, false);
 		this.customer = customer;
+		if (customer == null) {
+			Executions.sendRedirect("login.zul");
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

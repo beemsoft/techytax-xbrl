@@ -70,45 +70,50 @@ public class AccountCheckVM extends CostVM3 {
 			}
 			costs = new ListModelList<Cost>(costList);
 			getAccountCheck();
+		} else {
+			Executions.sendRedirect("login.zul");	
 		}
 		return costs;
 	}
 
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
-		BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()),
-				DateHelper.getDate(periode.getEindDatum()), user.getId());
-		Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-		List<Cost> result2 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-				"btwBalans", Long.toString(user.getId()));
-		Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
-		BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
-		BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
-		List<Cost> result3 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax",
-				Long.toString(user.getId()));
-		BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
-		List<Cost> result4 = boekDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
-				DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
-		BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
-		BigDecimal interest = boekDao.getInterest(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-				Long.toString(user.getId()));
-		BigDecimal costIgnoreBalance = boekDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
-				DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
-		accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
-		BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
-				.subtract(liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
+		if (user != null) {
+			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()),
+					DateHelper.getDate(periode.getEindDatum()), user.getId());
+			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
+			List<Cost> result2 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+					"btwBalans", Long.toString(user.getId()));
+			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
+			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
+			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
+			List<Cost> result3 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax",
+					Long.toString(user.getId()));
+			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
+			List<Cost> result4 = boekDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
+					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
+			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
+			BigDecimal interest = boekDao.getInterest(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+					Long.toString(user.getId()));
+			BigDecimal costIgnoreBalance = boekDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
+					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
+			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
+			BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
+					.subtract(liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
 
-		accountCheckData.setAccountBalance(liquiditeit.getRekeningBalans());
-		accountCheckData.setCostBalance(costBalance);
-		accountCheckData.setGrossIncome(brutoOmzet);
-		accountCheckData.setInterest(interest);
-		accountCheckData.setPaidInvoices(totalPaidInvoices);
-		accountCheckData.setPrivateWithdrawalBalance(liquiditeit.getPriveBalans());
-		accountCheckData.setSavingBalance(liquiditeit.getSpaarBalans());
-		accountCheckData.setTaxBalance(taxBalance);
-		accountCheckData.setDoubleCheck(doubleCheck);
-		accountCheckData.setActualBalance(actualBalance);
-
+			accountCheckData.setAccountBalance(liquiditeit.getRekeningBalans());
+			accountCheckData.setCostBalance(costBalance);
+			accountCheckData.setGrossIncome(brutoOmzet);
+			accountCheckData.setInterest(interest);
+			accountCheckData.setPaidInvoices(totalPaidInvoices);
+			accountCheckData.setPrivateWithdrawalBalance(liquiditeit.getPriveBalans());
+			accountCheckData.setSavingBalance(liquiditeit.getSpaarBalans());
+			accountCheckData.setTaxBalance(taxBalance);
+			accountCheckData.setDoubleCheck(doubleCheck);
+			accountCheckData.setActualBalance(actualBalance);
+		} else {
+			Executions.sendRedirect("login.zul");
+		}
 	}
 
 	@NotifyChange({ "selected" })
@@ -128,15 +133,15 @@ public class AccountCheckVM extends CostVM3 {
 	@GlobalCommand
 	@NotifyChange({ "costs" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId().longValue());
+		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId());
 		if (!cost.equals(originalCost)) {
-			cost.setUserId(user.getId().longValue());
+			cost.setUserId(user.getId());
 			boekDao.updateKost(cost);
-			
-    		if (splitCost != null) {
-    			splitCost.setUserId(user.getId().longValue());
-    			boekDao.insertSplitCost(cost, splitCost);
-    		}
+
+			if (splitCost != null) {
+				splitCost.setUserId(user.getId());
+				boekDao.insertSplitCost(cost, splitCost);
+			}
 		}
 	}
 

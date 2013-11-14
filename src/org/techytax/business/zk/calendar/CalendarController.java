@@ -95,7 +95,7 @@ public class CalendarController extends SelectorComposer<Component> {
 	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao();
 	private BoekDao boekDao = new BoekDao();
 
-	private ListModel<Project> projectsModel = new ListModelList<Project>(projectDao.findAll());
+	private ListModel<Project> projectsModel;
 
 	@Wire
 	private Listbox projectListbox;
@@ -115,10 +115,12 @@ public class CalendarController extends SelectorComposer<Component> {
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
-		List<BusinessCalendarEvent> calendarEvents = businessCalendarDao.getEvents(user.getId().toString());
-		calendarModel = new BusinessCalendarModel(calendarEvents);
-		calendars.setModel(this.calendarModel);
-		invoiceButton.setDisabled(true);
+		if (user != null) {
+			List<BusinessCalendarEvent> calendarEvents = businessCalendarDao.getEvents(Long.toString(user.getId()));
+			calendarModel = new BusinessCalendarModel(calendarEvents);
+			calendars.setModel(this.calendarModel);
+			invoiceButton.setDisabled(true);
+		}
 	}
 
 	// control the calendar position
@@ -245,7 +247,10 @@ public class CalendarController extends SelectorComposer<Component> {
 		}
 	}
 
-	public ListModel<Project> getProjectsModel() {
+	public ListModel<Project> getProjectsModel() throws IllegalAccessException {
+		if (user != null) {
+			projectsModel = new ListModelList<Project>(projectDao.findAll());
+		}
 		return projectsModel;
 	}
 
@@ -272,7 +277,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			cal.setTime(calendarDate);
 			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 			Date endDate = cal.getTime();
-			
+
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			Date beginDate = cal.getTime();
 			List<CalendarEvent> eventList = calendarModel.get(beginDate, endDate, null);
@@ -294,8 +299,8 @@ public class CalendarController extends SelectorComposer<Component> {
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
 					String monthStr = Integer.toString(maand);
-					if (cost.getDescription().charAt(6) == monthStr.charAt(monthStr.length()-1)) {
-						invoices.add(cost);						
+					if (cost.getDescription().charAt(6) == monthStr.charAt(monthStr.length() - 1)) {
+						invoices.add(cost);
 					}
 				}
 			}
@@ -315,7 +320,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setVat(selectedProject.getVatType().getValueAsInteger(new Date()));
 			invoice.setActivityDescription(selectedProject.getActivityDescription());
 			invoice.setRate(selectedProject.getRate());
-			
+
 			BigDecimal bd = new BigDecimal(invoice.getUnitsOfWork() * invoice.getRate().floatValue());
 			int decimalPlace = 2;
 
@@ -326,7 +331,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			btwBedrag = btwBedrag.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
 			BigDecimal totaalBedrag = bd.add(btwBedrag);
 			totaalBedrag = totaalBedrag.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-			
+
 			invoice.setNetAmount(bd);
 			invoice.setVatAmount(btwBedrag);
 			invoice.setTotalAmount(totaalBedrag);
@@ -359,7 +364,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					BoekDao boekDao = new BoekDao();
 					Cost cost = new Cost();
 					cost.setUserId(user.getId());
-					cost.setDescription("Factuur "+invoice.getInvoiceNumber());
+					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
 					cost.setAmount(invoice.getNetAmount());
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());

@@ -176,7 +176,7 @@ public class AllCostsVM extends CostVM3 {
 		if (depreciations != null && depreciations.size() > 0) {
 			AuditLogger.log(AuditType.DEPRECIATE_COST, user);
 			for (Cost depreciation : depreciations) {
-				depreciation.setUserId(user.getId().longValue());
+				depreciation.setUserId(user.getId());
 				boekDao.insertKost(depreciation);
 			}
 			if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
@@ -186,8 +186,8 @@ public class AllCostsVM extends CostVM3 {
 			} 
 		}
 
-		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId().longValue());
-		cost.setUserId(user.getId().longValue());
+		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId());
+		cost.setUserId(user.getId());
 		if (originalCost == null) {
 			AuditLogger.log(AuditType.ENTER_COST, user);
 			boekDao.insertKost(cost);
@@ -198,7 +198,7 @@ public class AllCostsVM extends CostVM3 {
 		}
 		if (splitCost != null) {
 			AuditLogger.log(AuditType.SPLIT_COST, user);
-			splitCost.setUserId(user.getId().longValue());
+			splitCost.setUserId(user.getId());
 			boekDao.insertSplitCost(cost, splitCost);
 		}
 	}

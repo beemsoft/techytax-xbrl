@@ -30,6 +30,7 @@ import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 
 public class AccountVM {
@@ -50,6 +51,8 @@ public class AccountVM {
 				key.setUserId(user.getId());
 				List<Account> accounts2 = accountDao.getAccounts(key);
 				accounts = new ListModelList<Account>(accounts2);
+			} else {
+				Executions.sendRedirect("login.zul");
 			}
 		}
 		return accounts;
