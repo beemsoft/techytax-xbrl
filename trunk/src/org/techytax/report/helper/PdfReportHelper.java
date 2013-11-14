@@ -63,22 +63,26 @@ public class PdfReportHelper {
 
 	public static byte[] createVatReport() throws Exception {
 		User user = UserCredentialManager.getUser();
-		Periode period = DateHelper.getLatestVatPeriod();
-		BoekDao boekDao = new BoekDao();
-		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
-				"btwBalans", Long.toString(user.getId()));
-		VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
-		Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-		vatDeclarationData.setName(user.getFullName());
-		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
-		vatDeclarationData.setStartDate(period.getBeginDatum());
-		vatDeclarationData.setEndDate(period.getEindDatum());
-		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		vatReportData.setVatDeclarationData(vatDeclarationData);
-		PdfReportHelper pdfHelper = new PdfReportHelper();
-		return pdfHelper.createVatReportBytes(vatReportData);
+		if (user != null) {
+			Periode period = DateHelper.getLatestVatPeriod();
+			BoekDao boekDao = new BoekDao();
+			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
+					"btwBalans", Long.toString(user.getId()));
+			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
+			Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData();
+			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+			vatDeclarationData.setName(user.getFullName());
+			vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
+			vatDeclarationData.setStartDate(period.getBeginDatum());
+			vatDeclarationData.setEndDate(period.getEindDatum());
+			XbrlHelper.addBalanceData(vatDeclarationData, balans);
+			vatReportData.setVatDeclarationData(vatDeclarationData);
+			PdfReportHelper pdfHelper = new PdfReportHelper();
+			return pdfHelper.createVatReportBytes(vatReportData);
+		} else {
+			return null;
+		}
 	}
 
 	public byte[] createVatReportBytes(VatReportData vatReportData) {

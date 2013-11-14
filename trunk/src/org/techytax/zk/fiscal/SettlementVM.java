@@ -28,6 +28,7 @@ import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
+import org.zkoss.zk.ui.Executions;
 
 public class SettlementVM {
 
@@ -35,7 +36,7 @@ public class SettlementVM {
 	private SettlementDao settlementDao = new SettlementDao();
 	private Settlement settlement = new Settlement();
 	private Date startDate;
-
+	
 	@Init
 	public void init() throws Exception {
 		if (user != null) {
@@ -45,6 +46,8 @@ public class SettlementVM {
 			} else {
 				startDate = new Date();
 			}
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
 	}
 	
@@ -56,7 +59,12 @@ public class SettlementVM {
 	}	
 	
 	public String getAddress() {
-		return user.getCompanyAddress();
+		if (user == null) {
+			Executions.sendRedirect("login.zul");
+			return "";
+		} else {
+			return user.getCompanyAddress();
+		}
 	}
 
 	public Settlement getSettlement() {

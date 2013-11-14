@@ -38,6 +38,7 @@ import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.domain.ReportBalance;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 
@@ -49,7 +50,7 @@ public class TaxVM {
 	private int fiscalYear;
 
 	public TaxVM() throws Exception {
-		if (overview == null) {
+		if (user != null && overview == null) {
 			Locale locale = org.zkoss.util.Locales.getCurrent();
 			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
@@ -57,11 +58,13 @@ public class TaxVM {
 					DateHelper.getDate(previousFiscalPeriod.getEindDatum()), "alles", Long.toString(user.getId()));
 			try {
 				overview = FiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
-						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), costs, user.getId().longValue(), locale);
+						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), costs, user.getId(), locale);
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 			}
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
 	}
 
@@ -84,10 +87,10 @@ public class TaxVM {
 			items.add(new ReportTableItem("Autokosten", "-" + format(overview.getKostenAuto()), "", "", ""));
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
 			items.add(new ReportTableItem("Overige transportkosten", "", "-" + format(overview.getKostenOverigTransport()), "", ""));
-			items.add(new ReportTableItem("Auto- en transportkosten", "", "", "-" + format(overview.getCarAndTransportCosts()), ""));
+			items.add(new ReportTableItem("Auto- en transportkosten", "", "", format(overview.getCarAndTransportCosts()), ""));
 			items.add(new ReportTableItem("Overige kosten", "", "", "-" + format(overview.getKostenOverig()), ""));
 			items.add(new ReportTableItem("Huisvestingskosten", "", "", "-" + format(overview.getSettlementCosts()), ""));
-			items.add(new ReportTableItem("Totaal overige bedrijfskosten", "", "", "", "-" + format(overview.getOtherCostsTotal())));
+			items.add(new ReportTableItem("Totaal overige bedrijfskosten", "", "", "", format(overview.getOtherCostsTotal())));
 			items.add(new ReportTableItem("Winst", "", "", "", format(overview.getProfit())));
 			items.add(new ReportTableItem("Wijzigingen in toelaatbare reserves, toevoeging oudedagsreserve", "", "", "", "("
 					+ format(overview.getOudedagsReserveMaximaal()) + ")"));

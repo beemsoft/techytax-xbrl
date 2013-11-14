@@ -105,6 +105,8 @@ public class ActivaVM {
 				BookValueHistory bookValueHistory = new BookValueHistory(bookValuesForBalanceType);
 				bookValueHistories.add(bookValueHistory);
 			}
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
 		return new ListModelList<BookValueHistory>(bookValueHistories);
 	}
@@ -165,7 +167,7 @@ public class ActivaVM {
 		key.setId(bookValue.getId());
 		key.setUserId(user.getId());
 		BookValue originalBookValue = bookValueDao.getBookValue(key);
-		bookValue.setUserId(user.getId().longValue());
+		bookValue.setUserId(user.getId());
 		if (originalBookValue == null) {
 			AuditLogger.log(AuditType.ENTER_BOOKVALUE, user);
 			bookValueDao.insertBookValue(bookValue);

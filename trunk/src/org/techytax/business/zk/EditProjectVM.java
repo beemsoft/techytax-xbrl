@@ -34,6 +34,7 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.ListModelList;
@@ -46,8 +47,10 @@ public class EditProjectVM {
 	private Project project;
 
 	private User user = UserCredentialManager.getUser();
-	
+
 	private Customer selectedCustomer;
+
+	private ListModelList<Customer> customers;
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("project") Project project) {
@@ -55,9 +58,18 @@ public class EditProjectVM {
 		this.project = project;
 	}
 
-	public ListModelList<Customer> getCustomers() {
-		GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
-		ListModelList<Customer> customers = new ListModelList<Customer>(customerDao.findAll());
+	public ListModelList<Customer> getCustomers() throws IllegalAccessException {
+		try {
+			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
+			customers = new ListModelList<Customer>(customerDao.findAll());
+			for (Customer customer: customers) {
+				if (customer.getId() == project.getCustomer().getId()) {
+					selectedCustomer = customer;
+				}
+			}			
+		} catch (IllegalAccessException e) {
+			Executions.sendRedirect("login.zul");
+		}
 		return customers;
 	}
 

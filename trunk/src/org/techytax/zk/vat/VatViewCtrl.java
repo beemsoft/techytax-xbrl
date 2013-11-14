@@ -356,11 +356,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	 * number, then the button can be enabled.
 	 */
 	public boolean disableDigipoort() {
-		Date declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
-		if (declarationTime != null && user.getFiscalNumber() != null) {
-			return true;
-		} else if (declarationTime == null && user.getFiscalNumber() == null) {
-			return true;
+		Date declarationTime;
+		try {
+			declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
+			if (declarationTime != null && user.getFiscalNumber() != null) {
+				return true;
+			} else if (declarationTime == null && user.getFiscalNumber() == null) {
+				return true;
+			}
+		} catch (IllegalAccessException e) {
+			Executions.sendRedirect("login.zul");
 		}
 		return false;
 	}
@@ -386,14 +391,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
 				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId().longValue());
+				Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId());
 				if (!updatedCost.equals(originalCost)) {
-					updatedCost.setUserId(user.getId().longValue());
+					updatedCost.setUserId(user.getId());
 					boekDao.updateKost(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
-						splitCost.setUserId(user.getId().longValue());
+						splitCost.setUserId(user.getId());
 		    			boekDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();

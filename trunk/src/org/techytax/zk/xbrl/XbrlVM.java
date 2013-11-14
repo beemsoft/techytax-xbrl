@@ -36,6 +36,7 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Label;
@@ -59,16 +60,20 @@ public class XbrlVM implements Serializable {
 	private StatusResultaat selected;
 	
 	public XbrlVM() throws IOException {
-		String digipoort = PropsFactory.getProperty("digipoort");
-		if (digipoort.equals("prod")) {
-			isTestEnvironment = false;
+		if (user != null) {
+			String digipoort = PropsFactory.getProperty("digipoort");
+			if (digipoort.equals("prod")) {
+				isTestEnvironment = false;
+			} else {
+				isTestEnvironment = true;
+			}
+			if (digipoort.equals("stub")) {
+				digipoortService = new DigipoortServiceStub();
+			} else {
+				digipoortService = new DigipoortServiceImpl();
+			}
 		} else {
-			isTestEnvironment = true;
-		}
-		if (digipoort.equals("stub")) {
-			digipoortService = new DigipoortServiceStub();
-		} else {
-			digipoortService = new DigipoortServiceImpl();
+			Executions.sendRedirect("login.zul");
 		}
 	}
 	
