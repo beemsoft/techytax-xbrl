@@ -3,7 +3,7 @@
     width="100%" height="470px">
     <style src="/widgets/application/rss_reader/Style.css" />
     <borderlayout width="490px" >
-        <west width="220px" collapsible="true" title="TechyTax forum">
+        <west width="220px" collapsible="true" title="Laatste TechyTax wijzigingen">
             <div>
                 <image src="@load(vm.selectedFeed.feedImageLink)" />
                 <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" width="100%" height="350px"
