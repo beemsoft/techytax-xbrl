@@ -148,7 +148,7 @@
 			<south size="30px" border="0"
 				style="background: none repeat scroll 0 0 ;" >
 				<toolbar mold="panel" align="center">
-					<toolbarbutton label="Algemene Voorwaarden" href="../../TechyTax2/av.html" />
+					<toolbarbutton label="Algemene Voorwaarden" onClick="@command('termsAndConditions')" />
 					<separator orient="vertical" bar="true" />
 					<include src="release.zul"/>
 					<separator orient="vertical" bar="true" />
