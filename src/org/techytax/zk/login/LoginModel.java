@@ -54,6 +54,20 @@ public class LoginModel {
 	}
 	
 	@Command
+	public void forgotPassword() {
+		String template = "~./saas/forgot-password.zul";
+		Window window = (Window) Executions.createComponents(template, null, null);
+		window.doModal();
+	}
+	
+	@Command
+	public void editUser() {
+		String template = "~./saas/edit-user.zul";
+		Window window = (Window) Executions.createComponents(template, null, null);
+		window.doModal();
+	}	
+	
+	@Command
 	public void termsAndConditions() {
 		String template = "~./saas/av.zul";
 		Window window = (Window) Executions.createComponents(template, null, null);

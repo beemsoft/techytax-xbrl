@@ -29,13 +29,13 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<toolbarbutton id="secure"
 					label="Kies veilige connectie"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
-						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg"/>
+						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" width="
+						70px"/>
 			</hbox>		
 			<hlayout>
 				<button label="Registreren" onClick="@command('register')" />
 				<toolbar mold="panel" align="center">
-					<toolbarbutton label="Wachtwoord vergeten?"
-						href="../../TechyTax2/user/user-forgot-password.action" />
+					<toolbarbutton label="Wachtwoord vergeten?" onClick="@command('forgotPassword')" />
 					<toolbarbutton label="Vragen?"
 						href="http://www.beemsoft.nl/BeemsoftPhp/contact.php" />
 				</toolbar>
