@@ -139,7 +139,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		}
 	}
-	
+
 	private boolean listContainsLongDescriptions(List<Cost> result) {
 		for (Cost cost : result) {
 			boekDao.encrypt(cost);
@@ -150,7 +150,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			boekDao.decrypt(cost);
 		}
 		return false;
-	}	
+	}
 
 	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
 		for (Cost cost : result) {
@@ -170,7 +170,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		}
 		return filteredResult;
 	}
-	
+
 	private List<Cost> filterLongDescriptions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<Cost>();
 		for (Cost cost : result) {
@@ -181,7 +181,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			}
 		}
 		return filteredResult;
-	}	
+	}
 
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
@@ -193,10 +193,26 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		if (!unmatchedTransactions && !longDescriptions) {
 			importBtn.setDisabled(false);
 		} else if (unmatchedTransactions) {
-			Messagebox.show("Er zijn nog onbepaalde transacties", null, 0, Messagebox.EXCLAMATION);
+			Messagebox.show("Er zijn nog onbepaalde transacties", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
+					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+						public void onEvent(ClickEvent e) {
+							switch (e.getButton()) {
+							case OK:
+							default:
+							}
+						}
+					});
 			return filterUnmatchedTransactions(result);
 		} else if (longDescriptions) {
-			Messagebox.show("Er zijn nog lange omschrijvingen", null, 0, Messagebox.EXCLAMATION);
+			Messagebox.show("Er zijn nog lange omschrijvingen", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
+					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+						public void onEvent(ClickEvent e) {
+							switch (e.getButton()) {
+							case OK:
+							default:
+							}
+						}
+					});
 			return filterLongDescriptions(result);
 		}
 		return result;
@@ -294,8 +310,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								digipoortBtn.setDisabled(true);
-								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, 0,
-										Messagebox.INFORMATION);
+								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null,
+										new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.INFORMATION,
+										new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+											public void onEvent(ClickEvent e) {
+												switch (e.getButton()) {
+												case OK:
+												default:
+												}
+											}
+										});
 							} catch (AanleverServiceFault asf) {
 								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 							}
@@ -399,7 +423,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
 						splitCost.setUserId(user.getId());
-		    			boekDao.insertSplitCost(originalCost, splitCost);
+						boekDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();
 				}
