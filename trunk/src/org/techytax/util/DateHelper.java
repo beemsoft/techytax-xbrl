@@ -181,9 +181,11 @@ public class DateHelper {
 		return periode;
 	}
 	
-	public static Date getLastDayOfFirstMonthOfNextQuarter() {
-		int month = getMonth(new Date());
+	public static Date getLastDayOfFirstMonthOfNextQuarter(Date date) {
+		int month = getMonth(date);
+		int year = getYear(date);
 		Calendar cal = new GregorianCalendar();
+		cal.set(Calendar.YEAR, year);
 		Date lastDay = null;
 		switch (month) {
 		case 1:
