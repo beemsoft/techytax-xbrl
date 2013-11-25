@@ -59,6 +59,11 @@ public class CalendarEditorViewModel {
 	public ListModelList<Project> getProjects() {
 		try {
 			List<Project> projects = projectDao.findAll();
+			for (Project project : projects) {
+				if (project.getId() == calendarEventData.getProjectId()) {
+					selectedProject = project;
+				}
+			}
 			return new ListModelList<Project>(projects);
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
