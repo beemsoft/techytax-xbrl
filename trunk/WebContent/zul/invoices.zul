@@ -1,3 +1,4 @@
+<?page title="TechyTax"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -63,7 +64,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 							<textbox value="@load(vm.unpaidInvoicesFromThisYear)" width="300px" />
 						</hlayout>
 					</row>										
-					<row>Income
+					<row>Totale omzet
 						<hlayout>
 							<textbox value="@load(vm.totalIncome)" width="300px" />
 						</hlayout>

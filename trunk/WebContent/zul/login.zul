@@ -13,12 +13,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 						<rows>
 							<row>
 								<label value="Naam:" />
-								<textbox id="nameTxb"
+								<textbox id="nameTxb" width="85px"
 									value="@bind(vm.username)" />
 							</row>
 							<row>
 								<label value="Wachtwoord:" />
-								<textbox id="passwordTxb" type="password"
+								<textbox id="passwordTxb" type="password" width="85px"
 									value="@bind(vm.password)" />
 							</row>
 						</rows>
@@ -29,8 +29,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<toolbarbutton id="secure"
 					label="Kies veilige connectie"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
-						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" width="
-						70px"/>
+						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" height="80px"/>
 			</hbox>		
 			<hlayout>
 				<button label="Registreren" onClick="@command('register')" />

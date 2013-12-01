@@ -1,4 +1,4 @@
-<window id="resultWin" title="Kost bewerken" width="900px"
+<window id="resultWin" title="Kost bewerken" width="1050px"
 	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.vat.ModelWindowVM')">
@@ -9,12 +9,12 @@
 		disabled="@load(not empty vm.splitCost)" />
 	<button label="Annuleer splits" onClick="@command('unSplit')"
 		disabled="@load(empty vm.splitCost)" />
-	<groupbox width="850px" mold="3d">
+	<groupbox width="1040px">
 		<hbox>
 			<vbox hflex="true">
 				<grid width="550px">
 					<columns>
-						<column width="90px" />
+						<column width="120px" />
 						<column />
 					</columns>
 					<rows>
@@ -54,7 +54,7 @@
 						<row>
 							Omschrijving
 							<hlayout>
-								<textbox id="tbx"
+								<textbox id="tbx" constraint="no empty"
 									value="@bind(vm.cost.description) @save(vm.cost.description,before='saveCost')"
 									width="300px" height="60px" rows="4" />
 							</hlayout>
@@ -157,7 +157,7 @@
 					</listbox>
 				</groupbox>
 			</vbox>
-			<grid hflex="true">
+			<grid>
 				<columns>
 					<column />
 				</columns>

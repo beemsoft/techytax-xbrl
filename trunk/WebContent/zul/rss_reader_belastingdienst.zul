@@ -1,12 +1,12 @@
 <window  apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('org.techytax.zk.rss.RssReaderBelastingdienst')"
-    width="490px" height="470px">
+    width="500px" height="470px">
     <style src="/widgets/application/rss_reader/Style.css" />
-    <borderlayout width="100%" >
+    <borderlayout>
         <west width="220px" collapsible="true" title="Belastingdienst info voor ondernemers">
             <div>
                 <image src="@load(vm.selectedFeed.feedImageLink)" />
-                <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" width="100%" height="350px"
+                <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" height="350px"
                     selectedItem="@bind(vm.selectedEntry)"  >
                     <template name="model" var="feed">
                         <listitem>
