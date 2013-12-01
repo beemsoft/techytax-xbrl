@@ -31,12 +31,21 @@
 	td.z-listcell {
 	    border: 1px solid transparent;
 	}
-	tr.z-row td.z-row-inner, tr.z-row .z-cell {
-	    line-height: 12px;
+	tr.z-row td.z-row-inner, tr.z-row .z-cell, .z-listcell-content, .z-row-content {
+	    line-height: 18px;
 	}
-	div.z-listbox-body .z-listcell {
+	div.z-listbox-body .z-listcell, .z-listcell-content {
 	   padding: 0px;
 	}
+	
+	.z-listitem-selected .z-listcell-content {
+		background-color: yellow;
+	}
+	
+	.z-listheader-content, .z-tab {
+	   padding: 2px;
+	   line-height: 20px;
+	}	
 	tr.z-row td.z-row-inner, tr.z-row .z-cell, tr.z-row {
 	    background: none repeat scroll 0% 0% white;
 	}
@@ -51,11 +60,11 @@
 	}
 	.z-intbox {
 	   	text-align: right;
-	}	
+	}
 	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
-		<borderlayout sclass="complex-layout" height="740px">
+		<borderlayout sclass="complex-layout" height="800px">
 			<north size="45px" border="0">
 				<div>
 					<div style="float:right; padding: 10px">
@@ -134,8 +143,8 @@
 						<li><a href="https://www.ohloh.net/p/techytax">Ohloh analyse</a></li>
 						</ul> ]]>
 					</html>
-					<vlayout style="text-align:center;">
-						<toolbarbutton href="http://sourceforge.net/projects/techytax" image="/images/sf-footer-logo.png" target="_other" />
+					<vlayout>
+						<toolbarbutton href="http://sourceforge.net/projects/techytax" image="/images/sf-footer-logo.png" target="_other" height="100px"/>
 					</vlayout>
 				</vlayout>
 			</east>
@@ -152,7 +161,7 @@
 					<separator orient="vertical" bar="true" />
 					<include src="release.zul"/>
 					<separator orient="vertical" bar="true" />
-					<toolbarbutton label="Powered by ZK ${desktop.webApp.version}" href="http://www.zkoss.org" />					
+					<toolbarbutton label="Powered by ZK ${desktop.webApp.version}" href="http://www.zkoss.org" target="_other" />					
 				</toolbar>
 			</south>
 		</borderlayout>
