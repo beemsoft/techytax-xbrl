@@ -1,4 +1,4 @@
-<?page title="XBRL" contentType="text/html;charset=UTF-8"?>
+<?page title="TechyTax"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>

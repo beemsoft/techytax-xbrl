@@ -1,3 +1,4 @@
+<?page title="TechyTax"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -25,7 +26,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 ]]></zscript>	
 	<vbox hflex="true">
 		<hbox>
-		<groupbox hflex="true" mold="3d" width="500px">
+		<groupbox hflex="true" width="650px">
 			<grid hflex="true" >
 				<columns>
 					<column/>
@@ -49,7 +50,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 		<button label="Export XML Audit File" onClick="@command('audit')" />
 		<button label="Er zijn nog onbehandelde investeringen" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>
-		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="540px">
+		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="490px">
 			<auxhead>
             	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
         	</auxhead>

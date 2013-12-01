@@ -1,6 +1,6 @@
 <window  apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('org.techytax.zk.rss.RssReaderTechyTax')"
-    width="100%" height="470px">
+    height="470px">
     <style src="/widgets/application/rss_reader/Style.css" />
     <borderlayout width="490px" >
         <west width="220px" collapsible="true" title="Laatste TechyTax wijzigingen">
