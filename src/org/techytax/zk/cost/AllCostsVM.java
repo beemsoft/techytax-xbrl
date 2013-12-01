@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.helper.DutchAuditFileHelper;
 import org.techytax.log.AuditLogger;
@@ -50,7 +50,7 @@ public class AllCostsVM extends CostVM3 {
 
 	private Periode periode = DateHelper.getLatestVatPeriod();
 	private BoekDao boekDao = new BoekDao();
-	private KostensoortDao kostensoortDao = new KostensoortDao();
+	private CostTypeDao kostensoortDao = new CostTypeDao();
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;
 
@@ -88,6 +88,8 @@ public class AllCostsVM extends CostVM3 {
 			} else {
 				costs = new ListModelList<Cost>(unhandledCosts);
 			}
+		} else {
+			Executions.sendRedirect("login.zul");
 		}
 		return costs;
 	}
@@ -117,11 +119,11 @@ public class AllCostsVM extends CostVM3 {
 		return costs;
 	}
 
-	public ListModelList<Kostensoort> getCostTypes() throws Exception {
+	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			List<Kostensoort> vatCostTypes = kostensoortDao.getKostensoortLijst();
-			costTypes = new ListModelList<Kostensoort>(vatCostTypes);
-			for (Kostensoort costType : costTypes) {
+			List<CostType> vatCostTypes = kostensoortDao.getKostensoortLijst();
+			costTypes = new ListModelList<CostType>(vatCostTypes);
+			for (CostType costType : costTypes) {
 				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 			}
 			selectedCostType = costTypes.get(0);

@@ -45,7 +45,7 @@ import org.zkoss.zul.ListModelList;
 public class InvoiceVM {
 
 	private ListModelList<InvoiceCheck> invoices;
-	private Cost selected;
+	private InvoiceCheck selected;
 	private static BoekDao boekDao = new BoekDao();
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
@@ -133,12 +133,12 @@ public class InvoiceVM {
 		return invoiceNumber;
 	}
 
-	public Cost getSelected() {
+	public InvoiceCheck getSelected() {
 		return selected;
 	}
 
 	@NotifyChange({ "selected" })
-	public void setSelected(Cost selected) {
+	public void setSelected(InvoiceCheck selected) {
 		this.selected = selected;
 	}
 

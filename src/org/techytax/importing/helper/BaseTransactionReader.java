@@ -25,15 +25,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.SettlementDao;
 import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.SplitMatch;
 import org.techytax.domain.VatMatch;
@@ -44,8 +45,8 @@ import org.techytax.jpa.dao.SplitMatchDao;
 public abstract class BaseTransactionReader implements TransactionReader {
 
 	protected static Vector<String[]> regels = null;
-	protected static List<Kostensoort> kostensoortList = null;
-	protected KostensoortDao costTypeDao = new KostensoortDao();
+	protected static List<CostType> kostensoortList = null;
+	protected CostTypeDao costTypeDao = new CostTypeDao();
 	protected SettlementDao settlementDao = new SettlementDao();
 	protected List<Cost> kostLijst = new ArrayList<Cost>();
 
@@ -78,9 +79,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected static String getKostOmschrijving(long kostensoortId) {
-		Iterator<Kostensoort> iter = kostensoortList.iterator();
+		Iterator<CostType> iter = kostensoortList.iterator();
 		while (iter.hasNext()) {
-			Kostensoort kostensoort = iter.next();
+			CostType kostensoort = iter.next();
 			if (kostensoort.getKostenSoortId() == kostensoortId) {
 				return kostensoort.getOmschrijving();
 			}
@@ -94,7 +95,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kostensoortId = costMatch.getKostenSoortId();
-			Kostensoort costType = costTypeDao.getKostensoort(Long.toString(kostensoortId));
+			CostType costType = CostTypeCache.getCostType(kostensoortId);
 			handleVat(kost, costMatch, costType);
 		}
 		kost.setCostTypeId(kostensoortId);
@@ -102,7 +103,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return costMatch;
 	}
 
-	private void handleVat(Cost kost, Kostmatch costMatch, Kostensoort costType) throws Exception {
+	private void handleVat(Cost kost, Kostmatch costMatch, CostType costType) throws Exception {
 		if (costType.isVatDeclarable()) {
 			VatMatchDao vatMatchDao = new VatMatchDao();
 			VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));

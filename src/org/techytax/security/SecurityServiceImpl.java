@@ -33,22 +33,17 @@ import org.techytax.props.PropsFactory;
 
 public class SecurityServiceImpl implements SecurityService {
 
-	public User authenticate(String username, String password) throws AuthenticationException {
+	public User authenticate(String username, String password) throws Exception {
 
 		UserDao userDao = new UserDao();
 		User user = null;
 		Date latestOnlineTime = null;
 
-		try {
-			user = userDao.getUser(username);
-			latestOnlineTime = user.getLatestOnlineTime();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		user = userDao.getUser(username);
 		if (user == null) {
 			throw new AuthenticationException("Unknown user");
 		}
+		latestOnlineTime = user.getLatestOnlineTime();
 		boolean passwordIsValid = user.passwordMatch(password);
 		if (!passwordIsValid) {
 			throw new AuthenticationException("Invalid password");

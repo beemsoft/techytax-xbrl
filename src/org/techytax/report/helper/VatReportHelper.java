@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatJournals;
@@ -38,8 +38,6 @@ import org.techytax.report.domain.VatReportData;
 import org.techytax.util.DateHelper;
 
 public class VatReportHelper {
-
-	private static KostensoortDao costTypeDao = new KostensoortDao();
 
 	public static VatReportData createReportData(List<Cost> vatCosts) throws Exception {
 
@@ -93,7 +91,7 @@ public class VatReportHelper {
 	private static void groupCosts(List<Cost> vatCosts, Map<String, List<Cost>> journalMapIn, Map<String, List<Cost>> journalMapOut) throws Exception {
 		List<Cost> journalCosts;
 		for (Cost cost : vatCosts) {
-			Kostensoort costType = costTypeDao.getKostensoort(Long.toString(cost.getCostTypeId()));
+			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
 			if (costType.isBijschrijving() || costType.getKostenSoortId() == CostConstants.INVOICE_SENT) {
 				if (journalMapIn.containsKey(cost.getKostenSoortOmschrijving())) {
 					journalCosts = journalMapIn.get(cost.getKostenSoortOmschrijving());

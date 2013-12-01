@@ -30,7 +30,7 @@ import java.util.Vector;
 
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
@@ -42,7 +42,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 	private static CSVParser parser = null;
 
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
-		List<Kostensoort> kostensoortList2 = costTypeDao.getCostTypesForAccount();
+		List<CostType> kostensoortList2 = costTypeDao.getCostTypesForAccount();
 
 		kostensoortList = kostensoortList2;
 		List<Cost> kostLijst = new ArrayList<Cost>();

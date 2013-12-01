@@ -16,9 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
@@ -41,11 +41,11 @@ public class CostVM {
 
 	protected ListModelList<Cost> costs;
 
-	ListModelList<Kostensoort> costTypes;
+	ListModelList<CostType> costTypes;
 
 	protected Cost selected;
 
-	Kostensoort selectedCostType;
+	CostType selectedCostType;
 	
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user == null) {
@@ -63,12 +63,12 @@ public class CostVM {
 		return costs;
 	}
 
-	public ListModelList<Kostensoort> getCostTypes() throws Exception {
+	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			KostensoortDao kostensoortDao = new KostensoortDao();
-			List<Kostensoort> vatCostTypes = kostensoortDao.getCostTypesForVatCostsWithPrivateMoney();
-			costTypes = new ListModelList<Kostensoort>(vatCostTypes);
-			for (Kostensoort costType : costTypes) {
+			CostTypeDao kostensoortDao = new CostTypeDao();
+			List<CostType> vatCostTypes = kostensoortDao.getCostTypesForVatCostsWithPrivateMoney();
+			costTypes = new ListModelList<CostType>(vatCostTypes);
+			for (CostType costType : costTypes) {
 				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 			}
 			selectedCostType = costTypes.get(0);
@@ -114,11 +114,11 @@ public class CostVM {
 		this.selected = selected;
 	}
 
-	public Kostensoort getSelectedCostType() {
+	public CostType getSelectedCostType() {
 		return selectedCostType;
 	}
 
-	public void setSelectedCostType(Kostensoort selected) {
+	public void setSelectedCostType(CostType selected) {
 		this.selectedCostType = selected;
 	}
 
