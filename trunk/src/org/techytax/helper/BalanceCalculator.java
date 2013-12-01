@@ -27,23 +27,21 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
-import org.techytax.dao.KostensoortDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
-import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.Balans;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.DeductableCostGroup;
+import org.techytax.domain.KeyId;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Reiskosten;
 import org.techytax.util.DateHelper;
 
 public class BalanceCalculator {
-
-	private static KostensoortDao dao = new KostensoortDao();
 
 	public static Balans calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
@@ -62,7 +60,7 @@ public class BalanceCalculator {
 					if (obj.getCostTypeId() == CostConstants.INVOICE_SENT && isForAccountBalance) {
 						// skip
 					} else {
-						Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
+						CostType kostensoort = CostTypeCache.getCostType(id);
 						if (kostensoort.isVatDeclarable()) {
 							if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == CostConstants.INVOICE_SENT) {
 								totalBtwIn = totalBtwIn.add(obj.getVat());
@@ -130,7 +128,7 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
+					CostType kostensoort = CostTypeCache.getCostType(id);
 					if (kostensoort.isBalansMeetellen()) {
 						if (kostensoort.isBijschrijving()) {
 							totalKost = totalKost.add(obj.getAmount());
@@ -161,12 +159,12 @@ public class BalanceCalculator {
 	}
 
 	public static boolean meetellenVoorAccount(long id) throws Exception {
-		Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
+		CostType kostensoort = CostTypeCache.getCostType(id);
 		return kostensoort.isBalansMeetellen();
 	}
 
 	public static boolean optellenVoorAccount(long id) throws Exception {
-		Kostensoort kostensoort = dao.getKostensoort(Long.toString(id));
+		CostType kostensoort = CostTypeCache.getCostType(id);
 		return kostensoort.isBalansMeetellen() && kostensoort.isBijschrijving();
 	}
 
