@@ -47,11 +47,11 @@ public class ActivaHelper {
 	private static BoekDao boekDao = new BoekDao();
 	
 	public static List<Activum> handleActiva(String beginDatum, String eindDatum, long userId, Locale locale, Properties props,
-			FiscalOverview overview, int bookYear, int currentBookYear, List<DeductableCostGroup> deductableCosts) throws Exception {
+			FiscalOverview overview, int bookYear, int currentBookYear, List<DeductableCostGroup> deductableCosts, List<Cost> rekeningLijst) throws Exception {
 		if (bookYear == currentBookYear) {
 
 			KeyYear keyYear = new KeyYear(userId, bookYear);
-			handleCurrentAssets(beginDatum, eindDatum, userId, props, bookYear, keyYear);
+			handleCurrentAssets(beginDatum, eindDatum, userId, props, bookYear, keyYear, rekeningLijst);
 
 			handleMachinery(beginDatum, userId, bookYear, deductableCosts);
 			
@@ -283,14 +283,13 @@ public class ActivaHelper {
 		}
 	}	
 
-	private static void handleCurrentAssets(String beginDatum, String eindDatum, long userId, Properties props, int bookYear, KeyYear keyYear)
+	private static void handleCurrentAssets(String beginDatum, String eindDatum, long userId, Properties props, int bookYear, KeyYear keyYear, List<Cost> rekeningLijst)
 			throws Exception {
 		Liquiditeit liquiditeit;
 		BookValue boekwaarde;
 		boekwaarde = BookValueHelper.getCurrentBookValue(BalanceType.CURRENT_ASSETS, keyYear);
 		if (boekwaarde == null) {
 			String startDate = props.getProperty("start.date");
-			List<Cost> rekeningLijst = boekDao.getKostLijst(startDate, eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 
 			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
@@ -307,7 +306,6 @@ public class ActivaHelper {
 			if (vorigeBoekwaarde != null) {
 				saldo = vorigeBoekwaarde.getSaldo();
 			}
-			List<Cost> rekeningLijst = boekDao.getKostLijst(beginDatum, eindDatum, "rekeningBalans", Long.toString(userId));
 			liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 			saldo = saldo.add(liquiditeit.getRekeningBalans().toBigInteger());
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());

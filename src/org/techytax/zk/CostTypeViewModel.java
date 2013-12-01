@@ -22,12 +22,12 @@ package org.techytax.zk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.SplitMatch;
 import org.techytax.domain.User;
@@ -45,23 +45,23 @@ import org.zkoss.util.resource.Labels;
 public class CostTypeViewModel {
 
 	private User user = UserCredentialManager.getUser();
-	private Kostensoort selected;
+	private CostType selected;
 	private Kostmatch selectedPrivateMatch;
 	private String selectedVatType;
 	private int selectedPercentage;
 
-	private List<Kostensoort> costTypes = new ArrayList<Kostensoort>();
+	private List<CostType> costTypes = new ArrayList<CostType>();
 	private List<Kostmatch> publicMatches = new ArrayList<Kostmatch>();
 	private List<Kostmatch> privateMatches = new ArrayList<Kostmatch>();
 	private KostmatchDao kostmatchDao = new KostmatchDao();
-	private KostensoortDao kostensoortDao = new KostensoortDao();
+	private CostTypeDao kostensoortDao = new CostTypeDao();
 	private VatMatchDao vatMatchDao = new VatMatchDao();
 	private SplitMatchDao splitMatchDao = new SplitMatchDao();
 
 	@Init
 	public void init() throws Exception {
 		costTypes = kostensoortDao.getCostTypesForAccount();
-		for (Kostensoort costType : costTypes) {
+		for (CostType costType : costTypes) {
 			costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 		}
 
@@ -69,11 +69,11 @@ public class CostTypeViewModel {
 		setPrivateMatches(selected);
 	}
 
-	public List<Kostensoort> getCostTypeList() {
+	public List<CostType> getCostTypeList() {
 		return costTypes;
 	}
 
-	private void setPrivateMatches(Kostensoort costType) throws Exception {
+	private void setPrivateMatches(CostType costType) throws Exception {
 		if (user != null) {
 			KeyId key = new KeyId();
 			key.setId(selected.getKostenSoortId());
@@ -84,14 +84,14 @@ public class CostTypeViewModel {
 	}
 
 	@NotifyChange({ "privateMatchesList", "publicMatchesList", "vatVisible", "selectedPrivateMatch", "splitVisible" })
-	public void setSelectedCostType(Kostensoort selected) throws Exception {
+	public void setSelectedCostType(CostType selected) throws Exception {
 		this.selected = selected;
 		setPrivateMatches(selected);
 		setPublicMatches(selected);
 		this.selectedPrivateMatch = null;
 	}
 
-	private void setPublicMatches(Kostensoort selected) throws Exception {
+	private void setPublicMatches(CostType selected) throws Exception {
 		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getKostenSoortId()));
 	}
 
@@ -176,7 +176,7 @@ public class CostTypeViewModel {
 		return selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT;
 	}
 
-	public Kostensoort getSelectedCostType() {
+	public CostType getSelectedCostType() {
 		return selected;
 	}
 

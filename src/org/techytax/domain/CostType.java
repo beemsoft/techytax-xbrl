@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,7 +19,7 @@
  */
 package org.techytax.domain;
 
-public class Kostensoort {
+public class CostType {
 	private long kostenSoortId = 0;
 
 	private String omschrijving;

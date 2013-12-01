@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,33 +21,22 @@ package org.techytax.dao;
 
 import java.util.List;
 
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 
-public class KostensoortDao extends BaseDao {
-	public void insertKostensoort(Kostensoort kost) throws Exception {
-		sqlMap.insert("insertKostensoort", kost);
-	}
+public class CostTypeDao extends BaseDao {
 
 	@SuppressWarnings("unchecked")
-	public List<Kostensoort> getKostensoortLijst() throws Exception {
+	public List<CostType> getKostensoortLijst() throws Exception {
 		return sqlMap.queryForList("getKostensoortLijst", null);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Kostensoort> getCostTypesForAccount() throws Exception {
+	public List<CostType> getCostTypesForAccount() throws Exception {
 		return sqlMap.queryForList("getCostTypesForAccount", null);
 	}	
 
-	public void updateKostensoort(Kostensoort kostensoort) throws Exception {
-		sqlMap.insert("updateKostensoort", kostensoort);
-	}
-
-	public Kostensoort getKostensoort(String id) throws Exception {
-		return (Kostensoort) sqlMap.queryForObject("getKostensoort", id);
-	}
-	
 	@SuppressWarnings("unchecked")
-	public List<Kostensoort> getCostTypesForVatCostsWithPrivateMoney() throws Exception {
+	public List<CostType> getCostTypesForVatCostsWithPrivateMoney() throws Exception {
 		return sqlMap.queryForList("getCostTypesForVatCostsWithPrivateMoney", null);
 	}	
 

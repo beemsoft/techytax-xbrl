@@ -40,7 +40,9 @@ public interface CostConstants {
 	public static final int TO_PRIVATE_ACCOUNT = 17;
 	public static final int FROM_PRIVATE_ACCOUNT = 18;	
 	public static final int AUTO_VAN_DE_ZAAK_ANDERE_REKENING = 19;	
-	public static final int BUSINESS_FOOD_OTHER_ACCOUNT = 20;	
+	public static final int BUSINESS_FOOD_OTHER_ACCOUNT = 20;
+	public static final int BUSINESS_TRAVEL_CREDIT_CARD = 21;
+	public static final int BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = 22;	
 	public static final int DEPRECIATION_CAR = 23;
 	public static final int FISCALE_BIJTELLING_AUTO = 24;
 	public static final int DEPRECIATION_MACHINE = 25;
@@ -51,6 +53,8 @@ public interface CostConstants {
 	public static final int INKOMSTEN_BELASTING_TERUGGAVE = 30;
 	public static final int WEGEN_BELASTING = 31;
 	public static final int UITGAVE_CREDIT_CARD = 32;
+	public static final int INTEREST = 33;	
+	public static final int VAT_CORRECTION_CAR_DEPRECIATION = 35;	
 	public static final int VAT_CORRECTION_CAR_PRIVATE = 36;
 	public static final int INVOICE_PAID = 38;	
 	public static final int INVOICE_SENT = 39;
