@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.techytax.cache.CostCache;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Account;
@@ -55,16 +56,18 @@ public class AccountCheckVM extends CostVM3 {
 	private BigDecimal businessAccountBalance;
 
 	protected Periode periode = DateHelper.getLatestVatPeriod();
+	private CostCache costCache = new CostCache();
 
 	protected List<Cost> costList;
 	private AccountCheckData accountCheckData = new AccountCheckData();
 
 	public ListModelList<Cost> getCosts() throws Exception {
-		BoekDao boekDao = new BoekDao();
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			costList = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-					"rekeningBalans", Long.toString(user.getId()));
+			costCache.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
+			costCache.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
+			costCache.getCosts();
+			costList = costCache.getBusinessAccountCosts();
 			for (Cost cost : costList) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 			}
@@ -93,8 +96,7 @@ public class AccountCheckVM extends CostVM3 {
 			List<Cost> result4 = boekDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
 					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
-			BigDecimal interest = boekDao.getInterest(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-					Long.toString(user.getId()));
+			BigDecimal interest = costCache.getInterest();
 			BigDecimal costIgnoreBalance = boekDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
 					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);

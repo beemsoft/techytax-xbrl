@@ -19,9 +19,6 @@
  */
 package org.techytax.zk.login;
 
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-
 import org.techytax.domain.User;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
@@ -30,6 +27,8 @@ import org.techytax.security.SecurityService;
 import org.techytax.security.SecurityServiceImpl;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Window;
 
 public class LoginModel {
@@ -39,11 +38,23 @@ public class LoginModel {
 	private String password = "";
 
 	@Command
-	public void login() throws NoSuchAlgorithmException, UnsupportedEncodingException, AuthenticationException {
+	public void login() throws Exception {
 		SecurityService securityService = new SecurityServiceImpl();
-		User user = securityService.authenticate(username, Sha.SHA1(password));
-		UserCredentialManager.setUser(user);
-		Executions.sendRedirect("/zul/zk_calendar.zul");
+		try {
+			User user = securityService.authenticate(username, Sha.SHA1(password));
+			UserCredentialManager.setUser(user);
+			Executions.sendRedirect("/zul/zk_calendar.zul");
+		} catch (AuthenticationException e) {
+			Messagebox.show(e.getMessage(), null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
+					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+						public void onEvent(ClickEvent e) {
+							switch (e.getButton()) {
+							case OK:
+							default:
+							}
+						}
+					});
+		}
 	}
 
 	@Command
@@ -52,27 +63,37 @@ public class LoginModel {
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doModal();
 	}
-	
+
 	@Command
 	public void forgotPassword() {
 		String template = "~./saas/forgot-password.zul";
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doModal();
 	}
-	
+
 	@Command
 	public void editUser() {
-		String template = "~./saas/edit-user.zul";
-		Window window = (Window) Executions.createComponents(template, null, null);
-		window.doModal();
-	}	
-	
+		if (!isGuestUser()) {
+			String template = "~./saas/edit-user.zul";
+			Window window = (Window) Executions.createComponents(template, null, null);
+			window.doModal();
+		}
+	}
+
+	private boolean isGuestUser() {
+		User user = UserCredentialManager.getUser();
+		if (user != null && "guest".equals(user.getUsername())) {
+			return true;
+		}
+		return false;
+	}
+
 	@Command
 	public void termsAndConditions() {
 		String template = "~./saas/av.zul";
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doPopup();
-	}	
+	}
 
 	public boolean getLoggedOn() {
 		return UserCredentialManager.getUser() != null;

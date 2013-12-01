@@ -27,10 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.dao.KostensoortDao;
+import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostensoort;
+import org.techytax.domain.CostType;
 import org.techytax.helper.AmountHelper;
 import org.techytax.helper.DepreciationHelper;
 import org.zkoss.bind.BindUtils;
@@ -57,8 +57,8 @@ public class ModelWindowVM {
 	private Cost cost;
 	private Cost splitCost;
 	private Cost originalCost;
-	private ListModelList<Kostensoort> costTypes;
-	private Kostensoort selectedCostType;
+	private ListModelList<CostType> costTypes;
+	private CostType selectedCostType;
 	private boolean investment;
 	private boolean carDepreciation;
 	private BigInteger deprecationRemainingValue;
@@ -71,8 +71,10 @@ public class ModelWindowVM {
 		Selectors.wireComponents(view, this, false);
 		this.cost = cost;
 		if (cost != null) {
-			if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
-					&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
+			if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
+					&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT
+					&& cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR && cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE
+					&& cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT) {
 				investment = true;
 			}
 			depreciationYearsList = Arrays.asList(1, 2, 3, 4, 5);
@@ -81,12 +83,12 @@ public class ModelWindowVM {
 		}
 	}
 
-	public ListModelList<Kostensoort> getCostTypes() throws Exception {
+	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (cost != null && costTypes == null) {
-			KostensoortDao kostensoortDao = new KostensoortDao();
-			List<Kostensoort> vatCostTypes = kostensoortDao.getKostensoortLijst();
-			costTypes = new ListModelList<Kostensoort>(vatCostTypes);
-			for (Kostensoort costType : costTypes) {
+			CostTypeDao kostensoortDao = new CostTypeDao();
+			List<CostType> vatCostTypes = kostensoortDao.getKostensoortLijst();
+			costTypes = new ListModelList<CostType>(vatCostTypes);
+			for (CostType costType : costTypes) {
 				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 
 				if (costType.getKostenSoortId() == cost.getCostTypeId()) {
@@ -97,11 +99,11 @@ public class ModelWindowVM {
 		return costTypes;
 	}
 
-	public Kostensoort getSelectedCostType() {
+	public CostType getSelectedCostType() {
 		return selectedCostType;
 	}
 
-	public void setSelectedCostType(Kostensoort selected) {
+	public void setSelectedCostType(CostType selected) {
 		this.selectedCostType = selected;
 	}
 

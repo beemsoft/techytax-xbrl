@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.techytax.dao.BoekDao;
-import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
@@ -45,7 +43,6 @@ import org.zkoss.zul.Messagebox;
 public class TaxVM {
 
 	private User user = UserCredentialManager.getUser();
-	private static BoekDao boekDao = new BoekDao();
 	private FiscalOverview overview;
 	private int fiscalYear;
 
@@ -54,11 +51,10 @@ public class TaxVM {
 			Locale locale = org.zkoss.util.Locales.getCurrent();
 			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
-			List<Cost> costs = boekDao.getKostLijst(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
-					DateHelper.getDate(previousFiscalPeriod.getEindDatum()), "alles", Long.toString(user.getId()));
 			try {
-				overview = FiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
-						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), costs, user.getId(), locale);
+				FiscalOverviewHelper fiscalOverviewHelper = new FiscalOverviewHelper();
+				overview = fiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
+						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), user.getId(), locale);
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
