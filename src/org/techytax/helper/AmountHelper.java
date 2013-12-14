@@ -28,6 +28,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Cost;
 import org.techytax.domain.VatType;
 
@@ -116,7 +117,7 @@ public class AmountHelper {
 	}
 	
 	public static BigInteger parse(String amount) throws ParseException {
-		if (amount == null) {
+		if (StringUtils.isEmpty(amount)) {
 			return null;
 		}
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
