@@ -37,16 +37,16 @@
 				<tabpanels>
 					<tabpanel>
 						Download je transacties van online bankieren of ov-chipkaart.
-						<vbox>
+						<hbox>
 							<toolbarbutton href="https://mijn.ing.nl/"
-								target="other" image="/images/logo_ing.gif" />
+								target="other" image="/images/logo_ing.gif" height="60px"/>
 							<toolbarbutton
 								href="https://www.abnamro.nl/nl/logon/" target="other"
-								image="/images/logo_abn_amro.gif" />
+								image="/images/logo_abn_amro.gif" height="60px" />
 							<toolbarbutton
 								href="https://www.ov-chipkaart.nl/mijnovchipkaart/reizenentransacties/mijnreizenentransacties/" target="other"
-								image="/images/ov.png" />								
-						</vbox>
+								image="/images/ov.png" height="60px" />								
+						</hbox>
 						<hbox width="500px">
 							Op dit moment ondersteunt TechyTax voor online bankieren alleen
 							transactie bestanden van de ING en ABN-AMRO.
@@ -231,7 +231,7 @@
 					<tabpanel>
 						btw overzicht
 						<hbox>
-							<grid width="150px" hflex="true">
+							<grid width="250px" height="170px" >
 								<columns>
 									<column />
 									<column />
@@ -260,9 +260,9 @@
 								</rows>
 							</grid>
 							<toolbarbutton id="digipoortBtn" disabled="true" 
-								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax."/>
+								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax." height="155px"/>
 							<include src="vat-report.zul"/>
-							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL."/>															
+							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL." height="155px"/>															
 						</hbox>
 						<vbox>
 							<grid id="vatGrid" hflex="true"
@@ -270,9 +270,9 @@
 								<columns sizable="true">
 									<column label="Omschrijving"
 										width="690px" />
-									<column label="Datum" width="70px" />
-									<column label="Bedrag" width="70px" align="right"/>
-									<column label="Btw" width="70px" align="right" />
+									<column label="Datum" width="90px" />
+									<column label="Bedrag" width="90px" align="right"/>
+									<column label="Btw" width="90px" align="right" />
 									<column label="Type" width="180px" />
 								</columns>
 							</grid>

@@ -57,6 +57,7 @@ public class TaxVM {
 						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), user.getId(), locale);
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
+				e.printStackTrace();
 				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
 			}
 		} else {

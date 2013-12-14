@@ -22,12 +22,13 @@ package org.techytax.zk.vat;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.dao.CostTypeDao;
+import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -85,12 +86,9 @@ public class ModelWindowVM {
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (cost != null && costTypes == null) {
-			CostTypeDao kostensoortDao = new CostTypeDao();
-			List<CostType> vatCostTypes = kostensoortDao.getKostensoortLijst();
+			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
 			costTypes = new ListModelList<CostType>(vatCostTypes);
 			for (CostType costType : costTypes) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-
 				if (costType.getKostenSoortId() == cost.getCostTypeId()) {
 					selectedCostType = costType;
 				}

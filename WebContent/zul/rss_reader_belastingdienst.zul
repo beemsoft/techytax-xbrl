@@ -3,7 +3,7 @@
     width="500px" height="470px">
     <style src="/widgets/application/rss_reader/Style.css" />
     <borderlayout>
-        <west width="220px" collapsible="true" title="Belastingdienst info voor ondernemers">
+        <west width="220px" collapsible="true" title="Info voor ondernemers">
             <div>
                 <image src="@load(vm.selectedFeed.feedImageLink)" />
                 <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" height="350px"
@@ -17,13 +17,11 @@
             </div>
         </west>
         <center>
-            <groupbox hflex="1" vflex="1" closable="false" mold="3d">
-                <caption label="@load(vm.selectedEntry.title)">
-                    <div width="70px"><a sclass="link" href="@load(vm.selectedEntry.link)" target="other">Volledige artikel</a></div>
-                </caption>
-                <div hflex="1" vflex="1" style="overflow:auto">
+            <groupbox hflex="1" vflex="1" closable="false">
+                <div>
                     <html class="desc" content="@load(vm.selectedEntry.descValue)"  />
                 </div>
+                <div width="120px"><a sclass="link" href="@load(vm.selectedEntry.link)" target="other">Volledige artikel</a></div>                
             </groupbox>
         </center>
     </borderlayout>
