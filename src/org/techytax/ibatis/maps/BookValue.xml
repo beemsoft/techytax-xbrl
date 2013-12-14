@@ -112,5 +112,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and b.balanssoort_id = bs.id 
 		and bw.balans_id = b.id 
 		order by balans_id asc, boekjaar desc;
-	</select>	
+	</select>
+	<delete id="deleteBookValue" parameterClass="key">
+		delete from
+		boekwaarde
+		where user_id = #userId#
+		and id = #id#
+	</delete>		
 </sqlMap>

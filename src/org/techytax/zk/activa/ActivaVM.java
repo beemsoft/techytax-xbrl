@@ -151,8 +151,6 @@ public class ActivaVM {
 	@NotifyChange("bookValueHistories")
 	public void updateModelData(@ContextParam(ContextType.TRIGGER_EVENT) ModelDataChangeEvent event) throws Exception {
 		BookValue bookValue = (BookValue) event.getData();
-		System.out.println("TEST: "+bookValue.getId());
-		bookValue.setId(bookValue.getId());
 		insertOrUpdate(bookValue);
 	}
 
@@ -168,12 +166,14 @@ public class ActivaVM {
 		key.setUserId(user.getId());
 		BookValue originalBookValue = bookValueDao.getBookValue(key);
 		bookValue.setUserId(user.getId());
-		if (originalBookValue == null) {
+		if (originalBookValue == null && bookValue.getSaldo() != null) {
 			AuditLogger.log(AuditType.ENTER_BOOKVALUE, user);
 			bookValueDao.insertBookValue(bookValue);
-		} else if (!bookValue.equals(originalBookValue)) {
+		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
 			AuditLogger.log(AuditType.UPDATE_BOOKVALUE, user);
 			bookValueDao.updateBookValue(bookValue);
+		} else if (bookValue.getSaldo() == null) {
+			bookValueDao.deleteBookValue(key);
 		}
 	}
 

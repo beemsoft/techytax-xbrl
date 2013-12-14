@@ -19,6 +19,7 @@
  */
 package org.techytax.zk.activa;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 
 import org.techytax.domain.BookValue;
@@ -80,7 +81,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 
 	private Listheader createListheader(String label) {
 		Listheader lhr = new Listheader(label);
-		lhr.setWidth("50px");
+		lhr.setWidth("80px");
 		return lhr;
 	}
 
@@ -100,7 +101,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 		}
 		ibx.setParent(lc);
 		ibx.setFormat("###,##0");
-		ibx.setWidth("45px");
+		ibx.setWidth("70px");
 		lc.setParent(listitem);
 		return ibx;
 	}
@@ -110,8 +111,9 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 		return new EventListener() {
 			public void onEvent(Event event) throws ParseException {
 				InputEvent ievent = (InputEvent) event;
+				BigInteger amount = AmountHelper.parse(ievent.getValue());
 				Events.postEvent(ModelDataChangeEvent.getModelDataChangeEvent(listbox,
-						new BookValue(oldBookValue.getId(), oldBookValue.getBalanceType(), oldBookValue.getJaar(), AmountHelper.parse(ievent.getValue())),
+						new BookValue(oldBookValue.getId(), oldBookValue.getBalanceType(), oldBookValue.getJaar(), amount),
 						listitem.getIndex()));
 			}
 		};
