@@ -136,4 +136,8 @@ public class BookValueDao extends BaseDao {
 		return remainingValues;
 	}
 	
+	public void deleteBookValue(KeyId key) throws Exception {
+		sqlMap.delete("deleteBookValue", key);
+	}	
+	
 }
