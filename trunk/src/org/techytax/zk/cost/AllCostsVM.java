@@ -21,13 +21,14 @@ package org.techytax.zk.cost;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.BoekDao;
-import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -50,7 +51,6 @@ public class AllCostsVM extends CostVM3 {
 
 	private Periode periode = DateHelper.getLatestVatPeriod();
 	private BoekDao boekDao = new BoekDao();
-	private CostTypeDao kostensoortDao = new CostTypeDao();
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;
 
@@ -121,11 +121,8 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			List<CostType> vatCostTypes = kostensoortDao.getKostensoortLijst();
+			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
 			costTypes = new ListModelList<CostType>(vatCostTypes);
-			for (CostType costType : costTypes) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-			}
 			selectedCostType = costTypes.get(0);
 		}
 		return costTypes;

@@ -8,7 +8,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 		validationMessages="@id('vmsgs')">
 		<hbox>
 			<vbox hflex="true" width="600px">
-				<listbox width="600px"
+				<listbox width="800px"
 					model="@load(vm.bookValueHistories)"
 					itemRenderer="org.techytax.zk.activa.InplaceEditingActivumRenderer"
 					onModelDataChange="@command('updateModelData')">

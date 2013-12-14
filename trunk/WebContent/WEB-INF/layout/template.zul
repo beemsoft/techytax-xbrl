@@ -62,6 +62,10 @@
 	   	text-align: right;
 	}
 	
+	.loggedOnUserButton .z-toolbarbutton-content {
+		color: white;
+	}	
+	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
 		<borderlayout sclass="complex-layout" height="800px">
@@ -69,7 +73,7 @@
 				<div>
 					<div style="float:right; padding: 10px">
 						<hbox visible="@load(vm.loggedOn)">
-							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" />
+							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" sclass="loggedOnUserButton"/>
 							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" mold="os" />
 						</hbox>
 					</div>				
@@ -143,9 +147,6 @@
 						<li><a href="https://www.ohloh.net/p/techytax">Ohloh analyse</a></li>
 						</ul> ]]>
 					</html>
-					<vlayout>
-						<toolbarbutton href="http://sourceforge.net/projects/techytax" image="/images/sf-footer-logo.png" target="_other" height="100px"/>
-					</vlayout>
 				</vlayout>
 			</east>
 			<!-- Content -->

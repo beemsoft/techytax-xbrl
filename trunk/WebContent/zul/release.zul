@@ -5,7 +5,7 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>2.0.1 (upcoming)</h4>
+<h4>2.1 (upcoming)</h4>
 <p>
 Changes:
 </p>
@@ -14,6 +14,12 @@ Changes:
 <li>Migrated SaaS options to ZK.</li>
 <li>Fixed bug when updating project details.</li>
 <li>Changed RSS reader from forum to latest changes.</li>
+<li>Fixed issue: project was not selected when editing calendar event.</li>
+<li>Upgraded to ZK 7.</li>
+<li>Changed design to flat design Atlantic.</li>
+<li>Improved performance of Income Tax page.</li>
+<li>Added delete option by clearing value in bookvalue page.</li>
+<li>Fixed timezone issue in calendar.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

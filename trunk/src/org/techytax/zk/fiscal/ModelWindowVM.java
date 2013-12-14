@@ -52,6 +52,7 @@ public class ModelWindowVM {
 		Selectors.wireComponents(view, this, false);
 		this.bookValue = bookValue;
 		this.yearsList = DateHelper.getLatestSevenYears();
+		this.selectedYear = yearsList.get(0);
 	}
 
 	public ListModelList<BalanceType> getBalanceTypes() throws Exception {

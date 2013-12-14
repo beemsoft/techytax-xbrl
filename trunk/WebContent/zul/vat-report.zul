@@ -18,7 +18,7 @@
 		along with TechyTax; if not, write to the Free Software
 		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	-->
-    <toolbarbutton onClick="reportWindow.doPopup()" image="/images/report.png" tooltiptext="Genereer een btw overzicht in PDF."/><span>
+    <toolbarbutton onClick="reportWindow.doPopup()" image="/images/report.png" tooltiptext="Genereer een btw overzicht in PDF." height="155px" /><span>
     <window id="reportWindow" visible="false" onCreate="doReport()"  border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" >
 	<borderlayout height="100%">
 		<center border="none" flex="true">
