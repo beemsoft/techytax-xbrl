@@ -19,32 +19,49 @@
  */
 package org.techytax.cache;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.CostTypeDao;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
+import org.zkoss.util.resource.Labels;
 
 public class CostTypeCache {
-	
-	private static Map<Long,CostType> costTypeMap = null;
-	
+
+	private static Map<Long, CostType> costTypeMap = null;
+
 	private CostTypeCache() {
 		//
 	}
-	
+
 	public static CostType getCostType(long id) throws Exception {
-		
+
 		if (costTypeMap == null) {
-			costTypeMap = new HashMap<Long, CostType>();
-			CostTypeDao kostensoortDao = new CostTypeDao();
-			List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
-			for (CostType costType : costTypes) {
+			fill();
+		}
+		return costTypeMap.get(id);
+	}
+
+	private static void fill() throws Exception {
+		costTypeMap = new HashMap<Long, CostType>();
+		CostTypeDao kostensoortDao = new CostTypeDao();
+		List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
+		for (CostType costType : costTypes) {
+			if (costType.getKostenSoortId() != CostConstants.VAT_CORRECTION_CAR_DEPRECIATION) {
+				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 				costTypeMap.put(costType.getKostenSoortId(), costType);
 			}
 		}
-		return costTypeMap.get(id);
+	}
+
+	public static Collection<CostType> getCostTypes() throws Exception {
+		if (costTypeMap == null) {
+			fill();
+		}
+		return costTypeMap.values();
 	}
 
 }
