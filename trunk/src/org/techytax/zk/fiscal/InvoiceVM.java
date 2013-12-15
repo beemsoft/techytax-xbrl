@@ -34,6 +34,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.helper.AmountHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
@@ -151,32 +152,32 @@ public class InvoiceVM {
 		this.balanceDate = balanceDate;
 	}
 
-	public BigDecimal getTotalIncome() {
-		return totalIncome;
+	public String getTotalIncome() {
+		return AmountHelper.formatWithEuroSymbol(totalIncome);
 	}
 
 	public void setTotalIncome(BigDecimal totalIncome) {
 		this.totalIncome = totalIncome;
 	}
 
-	public BigInteger getUnpaidInvoicesFromPreviousYear() {
-		return unpaidInvoicesFromPreviousYear;
+	public String getUnpaidInvoicesFromPreviousYear() {
+		return AmountHelper.formatWithEuroSymbol(unpaidInvoicesFromPreviousYear);
 	}
 
 	public void setUnpaidInvoicesFromPreviousYear(BigInteger unpaidInvoicesFromPreviousYear) {
 		this.unpaidInvoicesFromPreviousYear = unpaidInvoicesFromPreviousYear;
 	}
 
-	public BigDecimal getPaidInvoicesWithoutMatch() {
-		return paidInvoicesWithoutMatch;
+	public String getPaidInvoicesWithoutMatch() {
+		return AmountHelper.formatWithEuroSymbol(paidInvoicesWithoutMatch);
 	}
 
 	public void setPaidInvoicesWithoutMatch(BigDecimal paidInvoicesWithoutMatch) {
 		this.paidInvoicesWithoutMatch = paidInvoicesWithoutMatch;
 	}
 
-	public BigDecimal getUnpaidInvoicesFromThisYear() {
-		return unpaidInvoicesFromThisYear;
+	public String getUnpaidInvoicesFromThisYear() {
+		return AmountHelper.formatWithEuroSymbol(unpaidInvoicesFromThisYear);
 	}
 
 	public void setUnpaidInvoicesFromThisYear(BigDecimal unpaidInvoicesFromThisYear) {
