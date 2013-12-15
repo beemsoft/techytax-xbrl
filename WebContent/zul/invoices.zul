@@ -6,7 +6,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.fiscal.InvoiceVM')" 
 	validationMessages="@id('vmsgs')">
 	<hbox>
-	<vbox hflex="true" width="1090px" height="490px">
+	<vbox hflex="true" width="650px" height="490px">
 		<groupbox hflex="true" mold="3d">
 			<grid hflex="true" >
 				<columns>
@@ -29,43 +29,43 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<listheader label="Datum verstuurd"/>
 				<listheader label="Datum betaald"/>				
 				<listheader label="Factuurnummer"/>
-				<listheader label="Bedrag"/>				
-				<listheader label="btw"/>
+				<listheader label="Bedrag" width="90px"/>				
+				<listheader label="btw" width="80px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.dateSent) @converter('formatedDate', format='yyyy/MM/dd')"/>
 					<listcell label="@load(item.dateReceived) @converter('formatedDate', format='yyyy/MM/dd')"/>
 					<listcell label="@load(item.invoiceNumber)"/>
-					<listcell label="@load(item.netAmount)"/>					
-					<listcell label="@load(item.vatAmount)"/>
+					<listcell label="@load(item.netAmount) @converter('formatedNumber', format='###,##0.00')" style="text-align: right" />					
+					<listcell label="@load(item.vatAmount) @converter('formatedNumber', format='###,##0.00')" style="text-align: right" />
 				</listitem>
 			</template>
 		</listbox>
-		<groupbox hflex="true" mold="3d">
-			<grid hflex="true" >
+		<groupbox>
+			<grid width="500px">
 				<columns>
-					<column width="120px"/>
+					<column width="150px"/>
 					<column/>
 				</columns>
 				<rows>
 					<row>Onbetaalde facturen van vorig jaar
-						<hlayout>
+						<hlayout style="float:right">
 							<textbox value="@load(vm.unpaidInvoicesFromPreviousYear)" width="300px" />
 						</hlayout>
 					</row>
 					<row>Betaalde facturen van vorig jaar
-						<hlayout>
+						<hlayout style="float:right">
 							<textbox value="@load(vm.paidInvoicesWithoutMatch)" width="300px" />
 						</hlayout>
 					</row>
 					<row>Onbetaalde facturen van dit jaar
-						<hlayout>
+						<hlayout style="float:right">
 							<textbox value="@load(vm.unpaidInvoicesFromThisYear)" width="300px" />
 						</hlayout>
 					</row>										
 					<row>Totale omzet
-						<hlayout>
+						<hlayout style="float:right">
 							<textbox value="@load(vm.totalIncome)" width="300px" />
 						</hlayout>
 					</row>													

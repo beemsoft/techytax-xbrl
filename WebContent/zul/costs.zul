@@ -56,7 +56,7 @@ arg0="/WEB-INF/layout/template.zul"?>
         	</auxhead>
 			<listhead>
 				<listheader label="Datum" align="center" width="100px" sortAscending="${cDateAsc}" sortDescending="${cDateDsc}" />
-				<listheader label="Bedrag" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}"  />
+				<listheader label="Bedrag" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}" />
 				<listheader label="btw" align="center" width="80px" sortAscending="${cVatAsc}" sortDescending="${cVatDsc}" />
 				<listheader label="Omschrijving" width="400px" sortAscending="${cDescrAsc}" sortDescending="${cDescrDsc}" />
 				<listheader label="Type" width="400px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
@@ -64,8 +64,8 @@ arg0="/WEB-INF/layout/template.zul"?>
 			<template name="model" var="item">
 				<listitem onDoubleClick="@command('onDoubleClicked')">
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
-					<listcell label="@load(item.amount)"/>
-					<listcell label="@load(item.vat)"/>
+					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
+					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')"/>
 					<listcell label="@load(item.description)"/>
 					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
 				</listitem>
