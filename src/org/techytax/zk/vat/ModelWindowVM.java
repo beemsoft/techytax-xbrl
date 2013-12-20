@@ -71,12 +71,7 @@ public class ModelWindowVM {
 		Selectors.wireComponents(view, this, false);
 		this.cost = cost;
 		if (cost != null) {
-			if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
-					&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT
-					&& cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR && cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE
-					&& cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT) {
-				investment = true;
-			}
+			checkInvestment();
 			depreciationYearsList = Arrays.asList(1, 2, 3, 4, 5);
 		} else {
 			Executions.sendRedirect("login.zul");
@@ -188,7 +183,10 @@ public class ModelWindowVM {
 	@NotifyChange("investment")
 	@Command
 	public void checkInvestment() {
-		if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0) {
+		if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
+				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT
+				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR && cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE
+				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT && cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT) {
 			investment = true;
 		} else {
 			investment = false;

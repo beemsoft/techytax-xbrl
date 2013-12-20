@@ -49,8 +49,10 @@ public class ActivaVM {
 
 	private List<BookValueHistory> bookValueHistories = new ArrayList<BookValueHistory>();
 	private Activum selected;
-	private static FiscalDao fiscalDao = new FiscalDao();
-	private static BookValueDao bookValueDao = new BookValueDao();
+	private FiscalDao fiscalDao = new FiscalDao();
+	private BookValueDao bookValueDao = new BookValueDao();
+	private ListModelList<Activum> activa;
+
 	private User user = UserCredentialManager.getUser();
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
@@ -175,6 +177,27 @@ public class ActivaVM {
 		} else if (bookValue.getSaldo() == null) {
 			bookValueDao.deleteBookValue(key);
 		}
+	}
+
+	public ListModelList<Activum> getActiva() throws Exception {
+		if (user != null) {
+			KeyId key = new KeyId();
+			key.setUserId(user.getId());
+			List<Activum> activaList = fiscalDao.getAllActivaForUser(key);
+			return new ListModelList<Activum>(activaList);
+		} else {
+			Executions.sendRedirect("login.zul");
+		}
+		return null;
+	}
+
+	@Command
+	public void onDoubleClicked() {
+		Map<String, Object> arguments = new HashMap<String, Object>();
+		arguments.put("activum", selected);
+		String template = "edit-activum.zul";
+		Window window = (Window) Executions.createComponents(template, null, arguments);
+		window.doModal();
 	}
 
 }

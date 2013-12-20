@@ -21,6 +21,7 @@ package org.techytax.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Activum;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.KeyYear;
@@ -88,5 +89,21 @@ public class FiscalDao extends BaseDao {
 		}
 		return activum;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Activum> getAllActivaForUser(KeyId key) throws Exception {
+		List<Activum> activumList = sqlMap.queryForList("getAllActivaForUser", key);
+		for (Activum activum : activumList) {
+			decrypt(activum);
+			if (activum.getOmschrijving() != null && StringUtils.isNotEmpty(activum.getOmschrijving().trim())) {
+				activum.setOmschrijving(textEncryptor.decrypt(activum.getOmschrijving()));
+			}
+			if (activum.getBedrag() != null) {
+				activum.setAanschafKosten(activum.getBedrag().add(activum.getBtw()));
+			}			
+		}
+		return activumList;
+	}
+	
 
 }

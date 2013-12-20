@@ -4,7 +4,8 @@ arg0="/WEB-INF/layout/template.zul"?>
 <zk>
 	<window self="@define(content)" title="${c:l('bookvalues.title')}"
 		border="normal" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('org.techytax.zk.activa.ActivaVM')" binder="@init(queueName='queueName',queueScope='desktop')"
+		viewModel="@id('vm') @init('org.techytax.zk.activa.ActivaVM')"
+		binder="@init(queueName='queueName',queueScope='desktop')"
 		validationMessages="@id('vmsgs')">
 		<hbox>
 			<vbox hflex="true" width="600px">
@@ -17,6 +18,33 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<button label="${c:l('button.new')}"
 						onClick="@command('addNew')" />
 				</hlayout>
+				<listbox model="@load(vm.activa)"
+					selectedItem="@bind(vm.selected)" hflex="true" height="490px">
+					<auxhead>
+						<auxheader colspan="5" class="topic">
+							Activa
+						</auxheader>
+					</auxhead>
+					<listhead>
+						<listheader label="Einddatum" align="center"
+							width="100px" />
+						<listheader label="Aanschaf" align="right"
+							width="90px" />
+						<listheader label="Omschrijving" width="500px" />
+						<listheader label="Restwaarde" align="right" width="90px" />
+					</listhead>
+					<template name="model" var="item">
+						<listitem
+							onDoubleClick="@command('onDoubleClicked')">
+							<listcell
+								label="@load(item.endDate) @converter('formatedDate', format='yyyy/MM/dd')" />
+							<listcell
+								label="@load(item.aanschafKosten) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.omschrijving)" />
+							<listcell label="@load(item.restwaarde) @converter('formatedNumber', format='###,##0.00')" />
+						</listitem>
+					</template>
+				</listbox>
 			</vbox>
 		</hbox>
 	</window>
