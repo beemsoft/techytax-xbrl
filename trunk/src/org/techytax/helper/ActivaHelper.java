@@ -41,21 +41,21 @@ import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.RemainingValue;
 
 public class ActivaHelper {
-	
+
 	private static FiscalDao fiscaalDao = new FiscalDao();
 	private static BookValueDao bookValueDao = new BookValueDao();
 	private static BoekDao boekDao = new BoekDao();
-	
-	public static List<Activum> handleActiva(String beginDatum, String eindDatum, long userId, Locale locale, Properties props,
-			FiscalOverview overview, int bookYear, int currentBookYear, List<DeductableCostGroup> deductableCosts, List<Cost> rekeningLijst) throws Exception {
+
+	public static List<Activum> handleActiva(long userId, Locale locale, Properties props, FiscalOverview overview, int bookYear,
+			int currentBookYear, List<DeductableCostGroup> deductableCosts, List<Cost> rekeningLijst) throws Exception {
 		if (bookYear == currentBookYear) {
 
 			KeyYear keyYear = new KeyYear(userId, bookYear);
-			handleCurrentAssets(beginDatum, eindDatum, userId, props, bookYear, keyYear, rekeningLijst);
+			handleCurrentAssets(userId, props, bookYear, keyYear, rekeningLijst);
 
-			handleMachinery(beginDatum, userId, bookYear, deductableCosts);
-			
-			handleSettlement(beginDatum, userId, bookYear, deductableCosts);
+			handleMachinery(userId, bookYear, deductableCosts);
+
+			handleSettlement(userId, bookYear, deductableCosts);
 
 			handleBusinessCar(userId, overview, bookYear);
 
@@ -74,7 +74,7 @@ public class ActivaHelper {
 		overview.setActiva(activaLijst);
 		return activaLijst;
 	}
-	
+
 	private static boolean checkActivaOpgegeven(List<Activum> activaLijst, int fiscaalJaar) {
 		Iterator<Activum> iterator = activaLijst.iterator();
 		while (iterator.hasNext()) {
@@ -84,8 +84,8 @@ public class ActivaHelper {
 			}
 		}
 		return false;
-	}	
-	
+	}
+
 	public static List<Activum> getAndTranslate(Locale locale, KeyYear keyYear) throws Exception {
 		List<Activum> activaLijst = fiscaalDao.getActivaLijst(keyYear);
 		for (Activum activum : activaLijst) {
@@ -94,7 +94,6 @@ public class ActivaHelper {
 		return activaLijst;
 	}
 
-	// TODO: use new invoices screen.
 	private static void handleInvoicesToBePaid(long userId, FiscalOverview overview, int bookYear) throws Exception {
 		BookValue activumValue;
 		BookValue currentBookValue;
@@ -112,7 +111,7 @@ public class ActivaHelper {
 				bookValueDao.insertBookValue(activumValue);
 			} else {
 				activumValue.setId(currentBookValue.getId());
-//				bookValueDao.updateBookValue(activumValue);
+				// bookValueDao.updateBookValue(activumValue);
 			}
 		}
 	}
@@ -150,7 +149,6 @@ public class ActivaHelper {
 
 	private static void handleBusinessCar(long userId, FiscalOverview overview, int bookYear) throws Exception {
 		BookValue activumValue;
-		// Car
 		BigInteger carDepreciation = BigInteger.valueOf(overview.getAfschrijvingAuto());
 		activumValue = new BookValue();
 		activumValue.setJaar(bookYear);
@@ -179,7 +177,7 @@ public class ActivaHelper {
 		}
 	}
 
-	private static void handleMachinery(String beginDatum, long userId, int bookYear, List<DeductableCostGroup> deductableCosts) throws Exception {
+	private static void handleMachinery(long userId, int bookYear, List<DeductableCostGroup> deductableCosts) throws Exception {
 		BookValue activumValue = new BookValue();
 		activumValue.setJaar(bookYear);
 		activumValue.setBalanceType(BalanceType.MACHINERY);
@@ -195,7 +193,6 @@ public class ActivaHelper {
 		Activum activum = new Activum();
 		activum.setUserId(userId);
 		activum.setBalanceType(BalanceType.MACHINERY);
-		activum.setEndDate(beginDatum);
 		BigInteger totalCost = boekDao.getTotalCostForActivumThisYear(activum);
 
 		if (previousBookValue != null) {
@@ -204,7 +201,7 @@ public class ActivaHelper {
 			KeyId key = new KeyId();
 			key.setUserId(userId);
 			List<RemainingValue> remainingValues = bookValueDao.getRemainingValueForMachines(key);
-			
+
 			BigInteger totalRemainingValue = new BigInteger("0");
 			for (RemainingValue remainingValue : remainingValues) {
 				totalRemainingValue = totalRemainingValue.add(remainingValue.getRestwaarde());
@@ -238,8 +235,8 @@ public class ActivaHelper {
 			}
 		}
 	}
-	
-	private static void handleSettlement(String beginDatum, long userId, int bookYear, List<DeductableCostGroup> deductableCosts) throws Exception {
+
+	private static void handleSettlement(long userId, int bookYear, List<DeductableCostGroup> deductableCosts) throws Exception {
 		BookValue activumValue = new BookValue();
 		activumValue.setJaar(bookYear);
 		activumValue.setBalanceType(BalanceType.OFFICE);
@@ -251,7 +248,6 @@ public class ActivaHelper {
 		Activum activum = new Activum();
 		activum.setUserId(userId);
 		activum.setBalanceType(BalanceType.OFFICE);
-		activum.setEndDate(beginDatum);
 		BigInteger totalCost = boekDao.getTotalCostForActivumThisYear(activum);
 
 		if (previousBookValue != null) {
@@ -281,15 +277,13 @@ public class ActivaHelper {
 				}
 			}
 		}
-	}	
+	}
 
-	private static void handleCurrentAssets(String beginDatum, String eindDatum, long userId, Properties props, int bookYear, KeyYear keyYear, List<Cost> rekeningLijst)
-			throws Exception {
+	private static void handleCurrentAssets(long userId, Properties props, int bookYear, KeyYear keyYear, List<Cost> rekeningLijst) throws Exception {
 		Liquiditeit liquiditeit;
 		BookValue boekwaarde;
 		boekwaarde = BookValueHelper.getCurrentBookValue(BalanceType.CURRENT_ASSETS, keyYear);
 		if (boekwaarde == null) {
-			String startDate = props.getProperty("start.date");
 			liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 
 			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
@@ -313,5 +307,5 @@ public class ActivaHelper {
 			bookValueDao.updateBookValue(boekwaarde);
 		}
 	}
-	
+
 }

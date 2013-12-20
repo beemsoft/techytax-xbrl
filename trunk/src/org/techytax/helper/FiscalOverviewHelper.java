@@ -74,7 +74,7 @@ public class FiscalOverviewHelper {
 
 		handleProfitAndLoss(userId, bookYear, overview, privatWithdrawal, btwBalans, deductableCosts);
 
-		List<Activum> activaLijst = handleActiva(beginDatum, eindDatum, userId, locale, props, overview, bookYear, currentBookYear, deductableCosts,
+		List<Activum> activaLijst = handleActiva(userId, locale, props, overview, bookYear, currentBookYear, deductableCosts,
 				costCache.getBusinessAccountCosts());
 
 		List<Passivum> passivaLijst = handlePassiva(userId, locale, overview, bookYear, currentBookYear, activaLijst);

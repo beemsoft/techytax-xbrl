@@ -21,6 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 public class Activum extends Passivum {
 
@@ -30,7 +31,7 @@ public class Activum extends Passivum {
 	private BigDecimal btw;
 	private BigInteger restwaarde;
 	private long userId;
-	private String endDate;
+	private Date endDate;
 	private Long costId;
 
 	public BigDecimal getAanschafKosten() {
@@ -73,11 +74,11 @@ public class Activum extends Passivum {
 		this.userId = userId;
 	}
 
-	public String getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 

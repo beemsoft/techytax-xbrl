@@ -122,4 +122,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and balans_id=#balanceType# 
 		and kosten.user_id=#userId#;
 	</select>
+	<select id="getAllActivaForUser" parameterClass="keyId" resultClass="activum">
+		SELECT activa.id, activa.user_id as userId, activa.balans_id as balanceType, activa.kost_id as costId, kosten.omschrijving, kosten.bedrag, kosten.btw, restwaarde.restwaarde, activa.einddatum as endDate
+		FROM activa, restwaarde, kosten
+		WHERE activa.user_id=#userId#
+		AND activa.id = restwaarde.activa_id
+		AND activa.kost_id = kosten.id
+	</select>	
 </sqlMap>
