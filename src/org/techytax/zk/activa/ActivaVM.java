@@ -24,12 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.log.AuditLogger;
@@ -51,7 +53,6 @@ public class ActivaVM {
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
-	private ListModelList<Activum> activa;
 
 	private User user = UserCredentialManager.getUser();
 
@@ -156,12 +157,6 @@ public class ActivaVM {
 		insertOrUpdate(bookValue);
 	}
 
-	@GlobalCommand
-	@NotifyChange("bookValueHistories")
-	public void refreshvalues(@BindingParam("returnbookvalue") BookValue bookValue) throws Exception {
-		insertOrUpdate(bookValue);
-	}
-
 	private void insertOrUpdate(BookValue bookValue) throws Exception {
 		KeyId key = new KeyId();
 		key.setId(bookValue.getId());
@@ -198,6 +193,23 @@ public class ActivaVM {
 		String template = "edit-activum.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
 		window.doModal();
+	}
+
+	@GlobalCommand
+	@NotifyChange("activa")
+	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
+		BoekDao boekDao = new BoekDao();
+
+		AuditLogger.log(AuditType.UPDATE_ACTIVUM, user);
+
+		Cost cost = boekDao.getKost(Long.toString(activum.getCostId()), user.getId());
+		cost.setUserId(user.getId());
+		cost.setDescription(activum.getOmschrijving());
+		boekDao.updateKost(cost);
+
+		Activum originalActivum = fiscalDao.getActivumByCostId(activum);
+		originalActivum.setEndDate(activum.getEndDate());
+		fiscalDao.updateActivum(originalActivum);
 	}
 
 }
