@@ -7,11 +7,11 @@
 	<button label="Annuleer" onClick="@command('cancel')" />
 	<groupbox>
 		<hbox>
-			<vbox hflex="true">
-				<grid>
+			<vbox>
+				<grid width="440px">
 					<columns>
-						<column width="120px" />
-						<column />
+						<column width="130px" />
+						<column width="300px" />
 					</columns>
 					<rows>
 						<row>

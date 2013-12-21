@@ -184,9 +184,12 @@ public class ModelWindowVM {
 	@Command
 	public void checkInvestment() {
 		if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
-				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR && cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT && cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT) {
+				&& cost.getCostTypeId() != CostConstants.UNDETERMINED && cost.getCostTypeId() != CostConstants.INVESTMENT
+				&& cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT && cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR
+				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE && cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT
+				&& cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT && cost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT
+				&& cost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE && cost.getCostTypeId() != CostConstants.FROM_PRIVATE_ACCOUNT
+				&& cost.getCostTypeId() != CostConstants.FROM_SAVINGS_ACCOUNT && cost.getCostTypeId() != CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF) {
 			investment = true;
 		} else {
 			investment = false;

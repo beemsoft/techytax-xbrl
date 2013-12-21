@@ -26,27 +26,25 @@ arg0="/WEB-INF/layout/template.zul"?>
 ]]></zscript>	
 	<vbox hflex="true">
 		<hbox>
-		<groupbox hflex="true" width="650px">
-			<grid hflex="true" >
+			<grid width="360px" >
 				<columns>
-					<column/>
-					<column/>
-					<column/>
-					<column/>														
+					<column width="30px"/>
+					<column width="145px"/>
+					<column width="30px"/>
+					<column width="145px"/>														
 				</columns>
 				<rows>
-					<row>Datum begin
+					<row>Van
 						<hlayout> 
 							<datebox id="cdbeginbox" value="@bind(vm.beginDate)"/>
 						</hlayout>	
-						Datum eind
+						t/m
 						<hlayout> 
 							<datebox id="cdendbox" value="@bind(vm.endDate)"/>
 						</hlayout>	
 					</row>								
 				</rows>
 			</grid>
-		</groupbox>
 		<button label="Export XML Audit File" onClick="@command('audit')" />
 		<button label="Er zijn nog onbehandelde investeringen" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>

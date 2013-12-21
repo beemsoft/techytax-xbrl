@@ -157,7 +157,7 @@
 					</listbox>
 				</groupbox>
 			</vbox>
-			<grid>
+			<grid width="470px">
 				<columns>
 					<column />
 				</columns>
