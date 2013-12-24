@@ -31,6 +31,7 @@ import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.util.resource.Labels;
 
 public class CostCache {
 
@@ -53,6 +54,9 @@ public class CostCache {
 	private void fillCosts() throws Exception {
 		BoekDao boekDao = new BoekDao();
 		costs = boekDao.getKostLijst(beginDatum, eindDatum, "alles", Long.toString(user.getId()));
+		for (Cost cost : costs) {
+			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+		}
 	}
 
 	public List<DeductableCostGroup> getDeductableCosts() throws Exception {
@@ -163,7 +167,9 @@ public class CostCache {
 	}
 
 	public void setBeginDatum(String beginDatum) {
-		costs = null;
+		if (!beginDatum.equals(this.beginDatum)) {
+			costs = null;
+		}
 		this.beginDatum = beginDatum;
 	}
 
@@ -172,7 +178,9 @@ public class CostCache {
 	}
 
 	public void setEindDatum(String eindDatum) {
-		costs = null;
+		if (!eindDatum.equals(this.eindDatum)) {
+			costs = null;
+		}
 		this.eindDatum = eindDatum;
 	}
 

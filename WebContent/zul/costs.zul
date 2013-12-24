@@ -26,12 +26,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 ]]></zscript>	
 	<vbox hflex="true">
 		<hbox>
-			<grid width="360px" >
+			<grid width="365px" >
 				<columns>
 					<column width="30px"/>
-					<column width="145px"/>
+					<column width="150px"/>
 					<column width="30px"/>
-					<column width="145px"/>														
+					<column width="150px"/>														
 				</columns>
 				<rows>
 					<row>Van
@@ -45,10 +45,16 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>								
 				</rows>
 			</grid>
+	 	<label value="Zoeken:" />
+		<textbox id="searchBox" value="@bind(vm.searchString) @save(vm.searchString, before='filterCosts')" width="60px" onChanging="@command('filterCosts')">
+		    <attribute name="onChanging">
+      			searchBox.setValue(event.getValue());
+    		</attribute>
+    	</textbox>			
 		<button label="Export XML Audit File" onClick="@command('audit')" />
 		<button label="Er zijn nog onbehandelde investeringen" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>
-		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="490px">
+		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" height="490px">
 			<auxhead>
             	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
         	</auxhead>

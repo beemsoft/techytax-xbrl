@@ -21,6 +21,7 @@ Changes:
 <li>Added delete option by clearing value in bookvalue page.</li>
 <li>Fixed timezone issue in calendar.</li>
 <li>In the bookvalue page, added activa list and setting enddate for activum.</i>
+<li>Added search option in cost page.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>
