@@ -68,9 +68,6 @@ public class AccountCheckVM extends CostVM3 {
 			costCache.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
 			costCache.getCosts();
 			costList = costCache.getBusinessAccountCosts();
-			for (Cost cost : costList) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-			}
 			costs = new ListModelList<Cost>(costList);
 			getAccountCheck();
 		} else {

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
@@ -38,6 +39,7 @@ import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.mail.MailHelper;
 import org.techytax.util.DateHelper;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
@@ -52,7 +54,11 @@ public class AllCostsVM extends CostVM3 {
 	private Periode periode = DateHelper.getLatestVatPeriod();
 	private BoekDao boekDao = new BoekDao();
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
+	private List<Cost> filteredCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;
+	private boolean filterCosts = false;	
+	private String searchString;
+	private CostCache costCache = new CostCache();
 
 	@Command
 	public void audit() {
@@ -68,30 +74,47 @@ public class AllCostsVM extends CostVM3 {
 	}
 
 	public ListModelList<Cost> getCosts() throws Exception {
+		System.out.println("Get costs");
 		if (user != null) {
-			List<Cost> allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-					"alles", Long.toString(user.getId()));
+			costCache.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
+			costCache.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
+			List<Cost> allCosts = costCache.getCosts();
 			unhandledCosts = new ArrayList<Cost>();
+			filteredCosts = new ArrayList<Cost>();
 			for (Cost cost : allCosts) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-				if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
-					if (cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
-						if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT
-								|| cost.getCostTypeId() == CostConstants.EXPENSE_OTHER_ACCOUNT) {
-							unhandledCosts.add(cost);
-						}
+				if (filterCosts) {
+					if (cost.getDescription().toLowerCase().contains(searchString.toLowerCase())) {
+						System.out.println("Filtered: "+cost.getDescription());
+						filteredCosts.add(cost);
 					}
-				}
+				} else if (showUnhandledInvestments) {
+					filterUnhandledCosts(cost);					
+				} 
 			}
-			if (!showUnhandledInvestments) {
+			if (!showUnhandledInvestments && !filterCosts) {
 				costs = new ListModelList<Cost>(allCosts);
-			} else {
+			} else if (showUnhandledInvestments) {
 				costs = new ListModelList<Cost>(unhandledCosts);
-			}
+				showUnhandledInvestments = false;
+			} else if (filterCosts) {
+				costs = new ListModelList<Cost>(filteredCosts);
+				filterCosts = false;
+			} 
 		} else {
 			Executions.sendRedirect("login.zul");
 		}
 		return costs;
+	}
+
+	private void filterUnhandledCosts(Cost cost) {
+		if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
+			if (cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT) {
+				if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT
+						|| cost.getCostTypeId() == CostConstants.EXPENSE_OTHER_ACCOUNT) {
+					unhandledCosts.add(cost);
+				}
+			}
+		}
 	}
 
 	@NotifyChange("costs")
@@ -99,7 +122,7 @@ public class AllCostsVM extends CostVM3 {
 	public void showUnhandledInvestments() throws Exception {
 		showUnhandledInvestments = true;
 	}
-
+	
 	public boolean isListWithUnhandledInvestments() throws Exception {
 		if (unhandledCosts != null && unhandledCosts.size() > 0) {
 			return true;
@@ -165,6 +188,11 @@ public class AllCostsVM extends CostVM3 {
 		Window window = (Window) Executions.createComponents(template, null, arguments);
 		window.doModal();
 	}
+	
+	@Command
+	public void filterCosts() {
+		doFilter(searchString);
+	}	
 
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
@@ -199,6 +227,26 @@ public class AllCostsVM extends CostVM3 {
 			AuditLogger.log(AuditType.SPLIT_COST, user);
 			splitCost.setUserId(user.getId());
 			boekDao.insertSplitCost(cost, splitCost);
+		}
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) throws Exception {
+		System.out.println("Set: "+ searchString);
+		this.searchString = searchString;
+	}
+
+	private void doFilter(String searchString) {
+		this.searchString = searchString;
+		if (searchString != null && searchString.length() > 1) {
+			filterCosts = true;
+			BindUtils.postNotifyChange("queueName", "desktop", this, "costs");
+		} else {
+			filterCosts = false;
+			BindUtils.postNotifyChange("queueName", "desktop", this, "costs");
 		}
 	}
 }
