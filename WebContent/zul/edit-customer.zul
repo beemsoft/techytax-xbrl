@@ -50,6 +50,7 @@
 								<textbox
 									value="@bind(vm.customer.postalCode)" width="70px"
 									onChange="@command('checkKvK')" />
+								<image src="/images/kvk_icon.png" tooltiptext="Na het invoeren van een postcode wordt een lijst van bedrijven getoond."/>
 							</hlayout>
 						</row>
 						<row>
