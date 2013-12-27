@@ -1,0 +1,29 @@
+<window id="selectWin" title="Klant selecteren" width="640px"
+	height="500px" border="normal" apply="org.zkoss.bind.BindComposer"
+	onCancel="@command('closeThis')"
+	viewModel="@id('vm') @init('org.techytax.business.zk.SelectCustomerVM')">
+
+	<button label="Selecteer" onClick="@command('select')" />
+	<button label="Annuleer" onClick="@command('cancel')" />
+	<listbox model="@load(vm.customers)"
+		selectedItem="@bind(vm.selectedCustomer)" height="350px">
+		<auxhead>
+			<auxheader colspan="5" class="topic">
+				Alle bedrijven op deze postcode
+			</auxheader>
+		</auxhead>
+		<listhead>
+			<listheader label="Bedrijfsnaam" width="300px" />
+			<listheader label="KvK" align="center" width="80px" />
+			<listheader label="Adres" align="center" width="220px" />
+		</listhead>
+		<template name="model" var="item">
+			<listitem onDoubleClick="@command('onDoubleClicked')">
+				<listcell label="@load(item.name)" />
+				<listcell label="@load(item.commerceNr)" />
+				<listcell label="@load(item.address)" />
+			</listitem>
+		</template>
+	</listbox>
+
+</window>

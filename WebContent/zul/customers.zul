@@ -1,4 +1,4 @@
-<?page title="TechyTax"?>
+<?page title="TechyTax - Online boekhouden"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -10,7 +10,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 <window self="@define(content)" title="Alle klanten beheren" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.business.zk.CustomerVM')" 
 	binder="@init(queueName='queueName',queueScope='desktop')" validationMessages="@id('vmsgs')">
-	<vbox hflex="true">
+	<vbox>
 		<listbox model="@load(vm.customers)" selectedItem="@bind(vm.selected)" hflex="true" height="540px">
 			<auxhead>
             	<auxheader colspan="5" class="topic">Klanten</auxheader>
@@ -20,7 +20,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<listheader label="Omschrijving" width="250px" />
 				<listheader label="Adres" width="200px" />
 				<listheader label="Contact" width="100px" />
-				<listheader label="Factuur email" width="100px" />
+				<listheader label="Factuur email" width="200px" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem onDoubleClick="@command('onDoubleClicked')">
