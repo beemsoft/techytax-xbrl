@@ -25,6 +25,7 @@ import java.util.Map;
 import org.techytax.business.jpa.entities.Customer;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
+import org.techytax.helper.DutchAuditFileHelper;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
@@ -104,6 +105,11 @@ public class CustomerVM {
 		customer.setUser(new UserEntity(user));
 		customerDao.merge(customer);
 	}
+	
+	@Command
+	public void audit() {
+		DutchAuditFileHelper.sendAuditFile(user, null);
+	}	
 
 	public Customer getSelected() {
 		return selected;

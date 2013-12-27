@@ -21,6 +21,7 @@ package org.techytax.helper;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,34 +33,57 @@ import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import nl.auditfiles.xaf._3.Auditfile;
+import nl.auditfiles.xaf._3.Auditfile.Company;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier.StreetAddress;
-import nl.auditfiles.xaf._3.CountryCodeType;
-import nl.auditfiles.xaf._3.CurrencyCodeType;
-import nl.auditfiles.xaf._3.ObjectFactory;
-import nl.auditfiles.xaf._3.Auditfile.Company;
-import nl.auditfiles.xaf._3.Auditfile.Header;
 import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger;
-import nl.auditfiles.xaf._3.Auditfile.Company.OpeningBalance;
-import nl.auditfiles.xaf._3.Auditfile.Company.Periods;
-import nl.auditfiles.xaf._3.Auditfile.Company.Transactions;
 import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger.Basics;
 import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger.Basics.Basic;
+import nl.auditfiles.xaf._3.Auditfile.Company.OpeningBalance;
+import nl.auditfiles.xaf._3.Auditfile.Company.Periods;
 import nl.auditfiles.xaf._3.Auditfile.Company.Periods.Period;
+import nl.auditfiles.xaf._3.Auditfile.Company.Transactions;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
+import nl.auditfiles.xaf._3.Auditfile.Header;
+import nl.auditfiles.xaf._3.CountryCodeType;
+import nl.auditfiles.xaf._3.CurrencyCodeType;
+import nl.auditfiles.xaf._3.ObjectFactory;
 
-import org.apache.commons.lang.StringUtils;
 import org.techytax.business.jpa.entities.Customer;
+import org.techytax.dao.BoekDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.log.AuditLogger;
+import org.techytax.log.AuditType;
+import org.techytax.mail.MailHelper;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
 public class DutchAuditFileHelper {
+
+	public static void sendAuditFile(User user, Periode periode) {
+		BoekDao boekDao = new BoekDao();
+		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);
+		try {
+			List<Cost> allCosts = new ArrayList<Cost>();
+			if (periode != null) {
+				allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit",
+						Long.toString(user.getId()));
+			}
+			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
+			List<Customer> customers = customerDao.findAll();
+			String message = DutchAuditFileHelper.createAuditFile(allCosts, customers, user);
+			MailHelper.sendAuditReport(message, user.getEmail());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static Transaction createTransaction(Cost cost) throws Exception {
 		ObjectFactory objectFactory = new ObjectFactory();
@@ -150,9 +174,14 @@ public class DutchAuditFileHelper {
 
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencyCodeType.EUR);
-			Cost firstCost = (Cost) costList.get(0);
-			Date firstDate = firstCost.getDate();
-			int year = DateHelper.getYear(firstDate);
+			int year = 0;
+			if (costList != null && costList.size() > 0) {
+				Cost firstCost = (Cost) costList.get(0);
+				Date firstDate = firstCost.getDate();
+				year = DateHelper.getYear(firstDate);
+			} else {
+				year = DateHelper.getYear(new Date());
+			}
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
