@@ -22,6 +22,10 @@ Changes:
 <li>Fixed timezone issue in calendar.</li>
 <li>In the bookvalue page, added activa list and setting enddate for activum.</i>
 <li>Added search option in cost page.</li>
+<li>Added extra info fields in customer page.</li>
+<li>Added Chamber-of-Commerce integration in customer page for postal code.</li>
+<li>Added export button in customer page.</li>
+<li>Added customer list to export file for XAF version 3.1.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

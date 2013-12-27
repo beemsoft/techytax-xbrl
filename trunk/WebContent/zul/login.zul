@@ -1,4 +1,4 @@
-<?page title="TechyTax - Login"?>
+<?page title="TechyTax - Online boekhouden"?>
 <zk>
 	<window self="@define(content)" id="loginWin" border="normal"
 		apply="org.zkoss.bind.BindComposer"
