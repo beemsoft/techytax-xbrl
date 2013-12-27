@@ -32,6 +32,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import nl.auditfiles.xaf._3.Auditfile;
+import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers;
+import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier;
+import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier.StreetAddress;
+import nl.auditfiles.xaf._3.CountryCodeType;
 import nl.auditfiles.xaf._3.CurrencyCodeType;
 import nl.auditfiles.xaf._3.ObjectFactory;
 import nl.auditfiles.xaf._3.Auditfile.Company;
@@ -48,14 +52,15 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
 
+import org.apache.commons.lang.StringUtils;
+import org.techytax.business.jpa.entities.Customer;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
-
 public class DutchAuditFileHelper {
-	
+
 	private static Transaction createTransaction(Cost cost) throws Exception {
 		ObjectFactory objectFactory = new ObjectFactory();
 		Transaction transaction = objectFactory.createAuditfileCompanyTransactionsJournalTransaction();
@@ -72,16 +77,15 @@ public class DutchAuditFileHelper {
 		}
 		return transaction;
 	}
-	
-	public static String createAuditFile(List<Cost> costList, User user) throws DatatypeConfigurationException {
 
-		
+	public static String createAuditFile(List<Cost> costList, List<Customer> customers, User user) throws DatatypeConfigurationException {
+
 		JAXBContext jc = null;
 		Marshaller m = null;
 		try {
 			// Load properties
 			Properties props = PropsFactory.loadProperties();
-			
+
 			jc = JAXBContext.newInstance("nl.auditfiles.xaf._3");
 			m = jc.createMarshaller();
 			StringWriter writer = new StringWriter();
@@ -96,50 +100,75 @@ public class DutchAuditFileHelper {
 			company.setTaxRegIdent(props.getProperty("tax.id"));
 			company.setTaxRegistrationCountry(props.getProperty("tax.country"));
 
-//			company.setCustomersSuppliers(value)   not yet filled by TechyTax
+			CustomersSuppliers customersElement = objectFactory.createAuditfileCompanyCustomersSuppliers();
+			for (Customer customer : customers) {
+				CustomerSupplier customerElement = objectFactory.createAuditfileCompanyCustomersSuppliersCustomerSupplier();
+				customerElement.setContact(customer.getContact());
+				customerElement.setEMail(customer.getEmailInvoice());
+				customerElement.setCustSupName(customer.getName());
+				customerElement.setContact(customer.getContact());
+				if (customer.getCommerceNr() != null) {
+					customerElement.setCommerceNr(customer.getCommerceNr().toString());
+				}
+				customerElement.setFax(customer.getFax());
+				customerElement.setTelephone(customer.getTelephone());
+				customerElement.setWebsite(customer.getWebsite());
+				StreetAddress address = objectFactory.createAuditfileCompanyCustomersSuppliersCustomerSupplierStreetAddress();
+				address.setStreetname(customer.getAddress());
+				address.setCity(customer.getCity());
+				if (customer.getNumber() != null) {
+					address.setNumber(customer.getNumber().toString());
+				}
+				address.setNumberExtension(customer.getNumberExtension());
+				address.setPostalCode(customer.getPostalCode());
+				address.setCountry(CountryCodeType.NL);
+				customerElement.getStreetAddress().add(address);
+				customersElement.getCustomerSupplier().add(customerElement);
+			}
+			company.setCustomersSuppliers(customersElement);
+
 			GeneralLedger generalLedger = objectFactory.createAuditfileCompanyGeneralLedger();
 			Basics basics = objectFactory.createAuditfileCompanyGeneralLedgerBasics();
-//			basics.
+			// basics.
 			Basic basic = objectFactory.createAuditfileCompanyGeneralLedgerBasicsBasic();
 
-			
 			generalLedger.setBasics(basics);
-//			company.setGeneralLedger(generalLedger);
-			
+			// company.setGeneralLedger(generalLedger);
+
 			OpeningBalance openingBalance = objectFactory.createAuditfileCompanyOpeningBalance();
-//			company.setOpeningBalance(openingBalance);
-			
+			// company.setOpeningBalance(openingBalance);
+
 			Periods periods = objectFactory.createAuditfileCompanyPeriods();
 			Period period = objectFactory.createAuditfileCompanyPeriodsPeriod();
-			period.setPeriodNumber(new BigInteger("1")); // referenced by transactions
-			period.setPeriodDesc("Period"); 
+			period.setPeriodNumber(new BigInteger("1")); // referenced by
+															// transactions
+			period.setPeriodDesc("Period");
 			periods.getPeriod().add(period);
-//			company.setPeriods(periods);
-			
+			// company.setPeriods(periods);
 
 			auditfile.setCompany(company);
-			
+
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencyCodeType.EUR);
-			Cost firstCost = (Cost)costList.get(0);
+			Cost firstCost = (Cost) costList.get(0);
 			Date firstDate = firstCost.getDate();
 			int year = DateHelper.getYear(firstDate);
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("1.11");
+			header.setSoftwareVersion("2.1");
 
 			auditfile.setHeader(header);
-			
+
 			// Transactions
 			Transactions transactions = objectFactory.createAuditfileCompanyTransactions();
 			transactions.setLinesCount(new BigInteger(Long.toString(costList.size())));
-			
+
 			String currentKostenSoortOmschrijving = null;
 			Journal journal = null;
-			
+
 			ResourceBundle resource = ResourceBundle.getBundle("properties/messages", new Locale("NL"));
-			for (Cost cost: costList) {
+			for (Cost cost : costList) {
 				String kostenSoortOmschrijving = cost.getKostenSoortOmschrijving();
 				Transaction transaction = createTransaction(cost);
 				if (!kostenSoortOmschrijving.equals(currentKostenSoortOmschrijving)) {
@@ -151,7 +180,7 @@ public class DutchAuditFileHelper {
 					// Start a new journal
 					journal = objectFactory.createAuditfileCompanyTransactionsJournal();
 					journal.setDesc(resource.getString(cost.getKostenSoortOmschrijving()).trim());
-				} 
+				}
 				journal.getTransaction().add(transaction);
 			}
 			if (journal != null) {
@@ -159,14 +188,14 @@ public class DutchAuditFileHelper {
 			}
 			company.setTransactions(transactions);
 			auditfile.setCompany(company);
-			
+
 			m.marshal(auditfile, writer);
-			System.out.println(writer.toString());		
+			System.out.println(writer.toString());
 			return writer.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 }
