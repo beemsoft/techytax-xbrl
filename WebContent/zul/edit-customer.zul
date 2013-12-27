@@ -1,12 +1,12 @@
-<window id="resultWin" title="Klant wijzigen" width="900px"
-	height="600px" border="normal" apply="org.zkoss.bind.BindComposer"
+<window id="resultWin" title="Klant wijzigen" width="500px"
+	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.business.zk.EditCustomerVM')"
 	binder="@init(queueName='queueName',queueScope='desktop')">
 
 	<button label="Wijzig" onClick="@command('save')" />
 	<button label="Annuleer" onClick="@command('cancel')" />
-	<groupbox width="850px">
+	<groupbox width="490px">
 		<hbox>
 			<vbox>
 				<grid>
@@ -48,9 +48,22 @@
 							Postcode
 							<hlayout>
 								<textbox
-									value="@bind(vm.customer.postalCode)" width="70px"
-									onChange="@command('checkKvK')" />
-								<image src="/images/kvk_icon.png" tooltiptext="Na het invoeren van een postcode wordt een lijst van bedrijven getoond."/>
+									value="@bind(vm.customer.postalCode)" width="70px" />
+								<image src="/images/kvk_icon.png" onClick="@command('checkKvK')"
+									tooltiptext="Toon lijst met bedrijven op deze postcode." />
+							</hlayout>
+						</row>
+						<row>
+							Huisnummer
+							<hlayout>
+								<textbox
+									value="@bind(vm.customer.number)" width="40px" />
+								Toevoeging
+								<textbox
+									value="@bind(vm.customer.numberExtension)" width="40px" />
+								<image src="/images/postcode-logo.png"
+									height="40px" onClick="@command('checkPostalCode')"
+									tooltiptext="Vul postcode en huisnummer aan met straat en plaats" />
 							</hlayout>
 						</row>
 						<row>
@@ -84,17 +97,17 @@
 						<row>
 							Fax
 							<hlayout>
-								<textbox
-									value="@bind(vm.customer.fax)" width="100px" />
+								<textbox value="@bind(vm.customer.fax)"
+									width="100px" />
 							</hlayout>
-						</row>												
+						</row>
 						<row>
 							Website
 							<hlayout>
 								<textbox
 									value="@bind(vm.customer.website)" width="300px" />
 							</hlayout>
-						</row>						
+						</row>
 					</rows>
 				</grid>
 			</vbox>

@@ -27,7 +27,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					onClick="@command('login')" tooltip="loginInfo" mold="os" />
 				</vbox>								
 				<toolbarbutton id="secure"
-					label="Kies veilige connectie"
+					label="Kies veilige verbinding"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
 						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" height="80px"/>
 			</hbox>		
