@@ -19,16 +19,29 @@
  */
 package org.techytax.business.zk;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.techytax.business.jpa.entities.Customer;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.json.JSONArray;
+import org.zkoss.json.parser.JSONParser;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
@@ -49,6 +62,60 @@ public class EditCustomerVM {
 			Executions.sendRedirect("login.zul");
 		}
 	}
+
+	@SuppressWarnings({ "rawtypes" })
+	@NotifyChange("customer")
+	@Command
+	public void checkKvK() throws Exception {
+		String postalCode = customer.getPostalCode();
+		String kvkUrl = "http://api.openkvk.nl/json/SELECT%20*%20FROM%20kvk%20WHERE%20postcode%20=%20'" + postalCode + "';";
+		URL obj = new URL(kvkUrl);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		JSONParser parser = new JSONParser();
+		JSONArray map = (JSONArray) parser.parse(in);
+		Map map2 = (HashMap) map.get(0);
+		Map map3 = (HashMap) map2.get("RESULT");
+		JSONArray array = (JSONArray) map3.get("ROWS");
+		if (array != null && array.size() > 0) {
+			List<Customer> customers = getCustomers(array);
+			Map<String, Object> arguments = new HashMap<String, Object>();
+			arguments.put("customers", customers);
+			String template = "select-customer.zul";
+			Window window = (Window) Executions.createComponents(template, null, arguments);
+			window.doModal();
+		} else {
+		}
+	}
+
+	private List<Customer> getCustomers(JSONArray rowsArray) {
+		List<Customer> customers = new ArrayList<Customer>();
+		Iterator<Object> iterator = rowsArray.iterator();
+		while (iterator.hasNext()) {
+			JSONArray customerArray = (JSONArray) iterator.next();
+			String status = (String) customerArray.get(8);
+			if (status == null) {
+				Customer customer = new Customer();
+				customer.setName((String) customerArray.get(1));
+				customer.setCommerceNr(new BigInteger((String) customerArray.get(2)));
+				customer.setAddress((String) customerArray.get(4));
+				customer.setCity((String) customerArray.get(6));
+				customer.setWebsite((String) customerArray.get(9));
+				customers.add(customer);
+			}
+		}
+		return customers;
+	}
+	
+	@GlobalCommand
+	@NotifyChange( "customer" )
+	public void updateCustomerWithInfo(@BindingParam("selectedCustomer") Customer selectedCustomer) throws Exception {
+		customer.setName(selectedCustomer.getName());
+		customer.setCommerceNr(selectedCustomer.getCommerceNr());
+		customer.setAddress(selectedCustomer.getAddress());
+		customer.setCity(selectedCustomer.getCity());
+		customer.setWebsite(selectedCustomer.getWebsite());
+	}	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Command
