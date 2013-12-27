@@ -35,6 +35,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 		<toolbar>
 			<button label="New" onClick="@command('newCustomer')" />
 			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCustomer':'confirmDelete')" disabled="@load(empty vm.selected)" />
+			<button label="Exporteer klanten" onClick="@command('audit')" tooltiptext="Er wordt een email gestuurd met een XAF 3.1 XML bestand"/>
 		</toolbar>
 	</vbox>
 	<window title="Confirm" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
