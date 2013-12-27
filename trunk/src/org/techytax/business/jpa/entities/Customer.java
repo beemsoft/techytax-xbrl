@@ -37,10 +37,9 @@ import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 import org.techytax.domain.UserEntity;
 
-@TypeDefs({ 
-	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") })
-})
+@TypeDefs({
+		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -54,43 +53,43 @@ public class Customer {
 
 	@Type(type = "encryptedString")
 	private String name;
-	
+
 	@Type(type = "encryptedString")
 	private String description;
-	
+
 	@Type(type = "encryptedInteger")
 	private BigInteger commerceNr;
-	
+
 	@Type(type = "encryptedString")
 	private String address;
-	
+
 	@Type(type = "encryptedInteger")
 	private BigInteger number;
-	
+
 	@Type(type = "encryptedString")
 	@Column(name = "number_extension")
 	private String numberExtension;
-	
+
 	@Type(type = "encryptedString")
 	@Column(name = "postal_code")
 	private String postalCode;
-	
+
 	@Type(type = "encryptedString")
-	private String city;	
+	private String city;
 
 	@Type(type = "encryptedString")
 	private String contact;
-	
+
 	@Type(type = "encryptedString")
 	@Column(name = "email_invoice")
 	private String emailInvoice;
-	
+
 	@Type(type = "encryptedString")
 	private String telephone;
-	
+
 	@Type(type = "encryptedString")
 	private String fax;
-	
+
 	@Type(type = "encryptedString")
 	private String website;
 
@@ -125,9 +124,23 @@ public class Customer {
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public String getFullAddress() {
-		return address + " " + postalCode + " " + city;
+		StringBuffer fullAddress = new StringBuffer();
+		fullAddress.append(address);
+		if (number != null) {
+			fullAddress.append(" ");
+			fullAddress.append(number);
+		}
+		if (numberExtension != null) {
+			fullAddress.append(" ");
+			fullAddress.append(numberExtension);
+		}
+		fullAddress.append(", ");
+		fullAddress.append(postalCode);
+		fullAddress.append(", ");
+		fullAddress.append(city);
+		return fullAddress.toString();
 	}
 
 	public void setAddress(String address) {

@@ -20,17 +20,21 @@
 package org.techytax.business.zk;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.techytax.business.jpa.entities.Customer;
+import org.techytax.props.PropsFactory;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -41,6 +45,7 @@ import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.json.JSONArray;
+import org.zkoss.json.JSONObject;
 import org.zkoss.json.parser.JSONParser;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -54,13 +59,20 @@ public class EditCustomerVM {
 
 	private Customer customer;
 
+	private String postalCodeCheckerKey;
+
+	private String postalCodeCheckerSecret;
+
 	@Init
-	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("customer") Customer customer) {
+	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("customer") Customer customer) throws IOException {
 		Selectors.wireComponents(view, this, false);
 		this.customer = customer;
 		if (customer == null) {
 			Executions.sendRedirect("login.zul");
 		}
+		Properties props = PropsFactory.loadProperties();
+		postalCodeCheckerKey = props.getProperty("postalcode.checker.key");
+		postalCodeCheckerSecret = props.getProperty("postalcode.checker.secret");
 	}
 
 	@SuppressWarnings({ "rawtypes" })
@@ -88,6 +100,32 @@ public class EditCustomerVM {
 		}
 	}
 
+	@NotifyChange("customer")
+	@Command
+	public void checkPostalCode() throws Exception {
+		if (customer.getPostalCode() == null || customer.getNumber() == null) {
+			return;
+		}
+		String postalCodeCheckUrl = "https://api.postcode.nl/rest/addresses/" + customer.getPostalCode() + "/" + customer.getNumber();
+		if (customer.getNumberExtension() != null) {
+			postalCodeCheckUrl += "/" + customer.getNumberExtension();
+		}
+		URL url = new URL(postalCodeCheckUrl);
+		URLConnection con = url.openConnection();
+
+		String userpass = postalCodeCheckerKey + ":" + postalCodeCheckerSecret;
+		String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
+
+		con.setRequestProperty("Authorization", basicAuth);
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		JSONParser parser = new JSONParser();
+		JSONObject map = (JSONObject) parser.parse(in);
+		customer.setAddress((String) map.get("street"));
+		customer.setCity((String) map.get("city"));
+
+	}
+
 	private List<Customer> getCustomers(JSONArray rowsArray) {
 		List<Customer> customers = new ArrayList<Customer>();
 		Iterator<Object> iterator = rowsArray.iterator();
@@ -106,16 +144,18 @@ public class EditCustomerVM {
 		}
 		return customers;
 	}
-	
+
 	@GlobalCommand
-	@NotifyChange( "customer" )
+	@NotifyChange("customer")
 	public void updateCustomerWithInfo(@BindingParam("selectedCustomer") Customer selectedCustomer) throws Exception {
 		customer.setName(selectedCustomer.getName());
 		customer.setCommerceNr(selectedCustomer.getCommerceNr());
 		customer.setAddress(selectedCustomer.getAddress());
 		customer.setCity(selectedCustomer.getCity());
 		customer.setWebsite(selectedCustomer.getWebsite());
-	}	
+		customer.setNumber(null);
+		customer.setNumberExtension(null);
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Command
