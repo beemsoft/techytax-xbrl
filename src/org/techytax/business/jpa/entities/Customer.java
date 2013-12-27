@@ -19,6 +19,8 @@
  */
 package org.techytax.business.jpa.entities;
 
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,10 +32,15 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 import org.techytax.domain.UserEntity;
 
-@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") })
+@TypeDefs({ 
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") })
+})
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -47,19 +54,45 @@ public class Customer {
 
 	@Type(type = "encryptedString")
 	private String name;
-
+	
 	@Type(type = "encryptedString")
 	private String description;
+	
+	@Type(type = "encryptedInteger")
+	private BigInteger commerceNr;
 	
 	@Type(type = "encryptedString")
 	private String address;
 	
+	@Type(type = "encryptedInteger")
+	private BigInteger number;
+	
+	@Type(type = "encryptedString")
+	@Column(name = "number_extension")
+	private String numberExtension;
+	
+	@Type(type = "encryptedString")
+	@Column(name = "postal_code")
+	private String postalCode;
+	
+	@Type(type = "encryptedString")
+	private String city;	
+
 	@Type(type = "encryptedString")
 	private String contact;
 	
 	@Type(type = "encryptedString")
 	@Column(name = "email_invoice")
 	private String emailInvoice;
+	
+	@Type(type = "encryptedString")
+	private String telephone;
+	
+	@Type(type = "encryptedString")
+	private String fax;
+	
+	@Type(type = "encryptedString")
+	private String website;
 
 	public long getId() {
 		return id;
@@ -92,6 +125,10 @@ public class Customer {
 	public String getAddress() {
 		return address;
 	}
+	
+	public String getFullAddress() {
+		return address + " " + postalCode + " " + city;
+	}
 
 	public void setAddress(String address) {
 		this.address = address;
@@ -115,5 +152,69 @@ public class Customer {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public BigInteger getCommerceNr() {
+		return commerceNr;
+	}
+
+	public void setCommerceNr(BigInteger commerceNr) {
+		this.commerceNr = commerceNr;
+	}
+
+	public BigInteger getNumber() {
+		return number;
+	}
+
+	public void setNumber(BigInteger number) {
+		this.number = number;
+	}
+
+	public String getNumberExtension() {
+		return numberExtension;
+	}
+
+	public void setNumberExtension(String numberExtension) {
+		this.numberExtension = numberExtension;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
 	}
 }
