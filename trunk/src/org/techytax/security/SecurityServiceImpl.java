@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2013 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,6 +22,7 @@ package org.techytax.security;
 import java.util.Date;
 
 import org.jasypt.encryption.pbe.StandardPBEBigDecimalEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEBigIntegerEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
 import org.techytax.dao.UserDao;
@@ -67,11 +68,13 @@ public class SecurityServiceImpl implements SecurityService {
 	private void initEncryption() {
 		StandardPBEStringEncryptor strongEncryptor = new StandardPBEStringEncryptor();
 		StandardPBEBigDecimalEncryptor bigDecimalEncryptor = new StandardPBEBigDecimalEncryptor();
+		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
 
 		try {
 			String encryptionPassword = PropsFactory.getProperty("security.password");
 			strongEncryptor.setPassword(encryptionPassword);
 			bigDecimalEncryptor.setPassword(encryptionPassword);
+			bigIntegerEncryptor.setPassword(encryptionPassword);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("TechyTax properties not found!");
@@ -80,5 +83,6 @@ public class SecurityServiceImpl implements SecurityService {
 		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry.getInstance();
 		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor", strongEncryptor);
 		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor", bigDecimalEncryptor);
+		registry.registerPBEBigIntegerEncryptor("integerEncryptor", bigIntegerEncryptor);
 	}
 }
