@@ -34,13 +34,42 @@
 	tr.z-row td.z-row-inner, tr.z-row .z-cell, .z-listcell-content, .z-row-content {
 	    line-height: 18px;
 	}
+	
+	.z-listitem-selected:hover > .z-listcell {
+	    border-color: rgb(227, 227, 27);
+	    background: none repeat scroll 0% 0% rgb(86, 135, 168);
+	}
+	
+	.z-listitem-selected:hover .z-listcell-content {
+	    color: #4b93fe;
+	}
+	
+	.z-listitem:hover > .z-listcell {
+	    border-color: rgb(227, 227, 227);
+	    background: none repeat scroll 0% 0% #66ccff;
+	}
+	
+	.z-row-content:hover  {
+	    border-color: rgb(227, 227, 227);
+	    background: none repeat scroll 0% 0% #66ccff;
+	}
+	
+	.z-row-inner:hover  {
+	    border-color: rgb(227, 227, 227);
+	    background: none repeat scroll 0% 0% #66ccff;
+	}			
+	
 	div.z-listbox-body .z-listcell, .z-listcell-content {
 	   padding: 0px;
 	}
 	
 	.z-listitem-selected .z-listcell-content {
-		background-color: yellow;
+		background-color: #ffff99;
 	}
+	
+	.z-listitem-selected .z-listcell  {
+		background-color: #ffff99;
+	}	
 	
 	.z-listheader-content, .z-tab {
 	   padding: 2px;
@@ -64,7 +93,12 @@
 	
 	.loggedOnUserButton .z-toolbarbutton-content {
 		color: white;
-	}	
+	}
+	
+	a {
+		font-weight: bold;
+		color: #4b93fe;
+	}		
 	
 	</style>
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
