@@ -315,7 +315,7 @@ public class CalendarController extends SelectorComposer<Component> {
 
 			Customer customer = selectedProject.getCustomer();
 
-			invoice.setConsumerAddress(customer.getAddress());
+			invoice.setConsumerAddress(customer.getFullAddress());
 			invoice.setConsumerName(customer.getName());
 			invoice.setVat(selectedProject.getVatType().getValueAsInteger(new Date()));
 			invoice.setActivityDescription(selectedProject.getActivityDescription());
