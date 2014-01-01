@@ -85,7 +85,7 @@ public class AmountHelper {
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
 		otherSymbols.setDecimalSeparator(',');
 		otherSymbols.setGroupingSeparator('.');
-		DecimalFormat df = new DecimalFormat("â‚¬ ###,###,###,##0", otherSymbols);
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0", otherSymbols);
 		return df.format(amount.doubleValue());
 	}
 	
@@ -93,7 +93,7 @@ public class AmountHelper {
 		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
 		otherSymbols.setDecimalSeparator(',');
 		otherSymbols.setGroupingSeparator('.');
-		DecimalFormat df = new DecimalFormat("â‚¬ ###,###,###,##0.00", otherSymbols);
+		DecimalFormat df = new DecimalFormat("€ ###,###,###,##0.00", otherSymbols);
 		return df.format(amount.doubleValue());
 	}	
 	
