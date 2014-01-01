@@ -10,8 +10,6 @@
   <class>org.techytax.domain.UserEntity</class>
   <class>org.techytax.business.jpa.entities.Customer</class>
   <class>org.techytax.business.jpa.entities.Project</class>
-  <class>nl.beemsoft.techytax.log.SaasLogRecord</class>
-  <class>nl.beemsoft.techytax.domain.SaasUser</class>
   <exclude-unlisted-classes>true</exclude-unlisted-classes>
  </persistence-unit>
 </persistence>
