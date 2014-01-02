@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,14 +20,18 @@
 package org.techytax.security;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.NoResultException;
+
+import org.apache.cxf.common.util.CollectionUtils;
 import org.jasypt.encryption.pbe.StandardPBEBigDecimalEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEBigIntegerEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
-import org.techytax.dao.UserDao;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
@@ -36,15 +40,18 @@ public class SecurityServiceImpl implements SecurityService {
 
 	public User authenticate(String username, String password) throws Exception {
 
-		UserDao userDao = new UserDao();
-		User user = null;
-		Date latestOnlineTime = null;
-
-		user = userDao.getUser(username);
-		if (user == null) {
+		GenericDao<UserEntity> userDao = new GenericDao<UserEntity>(
+				UserEntity.class, null);
+		List<UserEntity> users = null;
+		try {
+			users = userDao.findByNamedQuery("UserEntity.findByName", username);
+		} catch (NoResultException nre) {
+			return null;
+		}
+		if (CollectionUtils.isEmpty(users)) {
 			throw new AuthenticationException("Unknown user");
 		}
-		latestOnlineTime = user.getLatestOnlineTime();
+		UserEntity user = users.get(0);
 		boolean passwordIsValid = user.passwordMatch(password);
 		if (!passwordIsValid) {
 			throw new AuthenticationException("Invalid password");
@@ -55,13 +62,12 @@ public class SecurityServiceImpl implements SecurityService {
 		Date currentDate = new Date();
 		try {
 			user.setLatestOnlineTime(currentDate);
-			userDao.updateUserTimeStamp(user);
+			userDao.merge(user);
 			initEncryption();
 			AuditLogger.log(AuditType.LOGON, new UserEntity(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		user.setLatestOnlineTime(latestOnlineTime);
 		return user;
 	}
 
@@ -71,7 +77,8 @@ public class SecurityServiceImpl implements SecurityService {
 		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
 
 		try {
-			String encryptionPassword = PropsFactory.getProperty("security.password");
+			String encryptionPassword = PropsFactory
+					.getProperty("security.password");
 			strongEncryptor.setPassword(encryptionPassword);
 			bigDecimalEncryptor.setPassword(encryptionPassword);
 			bigIntegerEncryptor.setPassword(encryptionPassword);
@@ -80,9 +87,13 @@ public class SecurityServiceImpl implements SecurityService {
 			throw new RuntimeException("TechyTax properties not found!");
 		}
 
-		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry.getInstance();
-		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor", strongEncryptor);
-		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor", bigDecimalEncryptor);
-		registry.registerPBEBigIntegerEncryptor("integerEncryptor", bigIntegerEncryptor);
+		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry
+				.getInstance();
+		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor",
+				strongEncryptor);
+		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor",
+				bigDecimalEncryptor);
+		registry.registerPBEBigIntegerEncryptor("integerEncryptor",
+				bigIntegerEncryptor);
 	}
 }
