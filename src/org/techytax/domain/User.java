@@ -25,6 +25,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @MappedSuperclass
 public class User implements Serializable {
@@ -41,6 +43,8 @@ public class User implements Serializable {
 	private String fullName;
 	@Id
 	private long id;
+	
+    @Temporal(TemporalType.TIMESTAMP)
 	private Date latestOnlineTime;
 	private String password;
 	private String username;
