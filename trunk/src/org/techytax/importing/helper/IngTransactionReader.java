@@ -93,12 +93,19 @@ public class IngTransactionReader extends BaseTransactionReader {
 				kost.setIncoming(true);
 			}
 			String omschrijving = line[1] + " " + line[8];
-
 			if (omschrijving.trim().equals("")) {
 				kost.setCostTypeId(CostConstants.UNDETERMINED);
 				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
 				kost.setVat(new BigDecimal("0"));
 			} else {
+				omschrijving = omschrijving.replace("SEPA Incasso, eersteIBAN:", "");
+				omschrijving = omschrijving.replace("SEPA Incasso, eerste IBAN:", "");
+				omschrijving = omschrijving.replace("SEPA Incasso, doorlopendIBAN:", "");
+				omschrijving = omschrijving.replace("SEPA Incasso, doorlopend IBAN:", "");
+				int index = omschrijving.indexOf("Mandaat:");
+				if (index > 0) {
+					omschrijving = omschrijving.substring(0, index);
+				}
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);

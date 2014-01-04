@@ -1,7 +1,7 @@
 <?page title="TechyTax - Online boekhouden"?>
 <zk xmlns:html="http://www.w3.org/1999/xhtml">
 	<!--
-		Copyright 2013 Hans Beemsterboer
+		Copyright 2014 Hans Beemsterboer
 		
 		This file is part of the TechyTax program.
 		
@@ -24,8 +24,8 @@
 		border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
 		Bereken je omzetbelasting in vijf stappen.
 
-		<hbox hflex="true">
-			<tabbox width="1090px" height="608px">
+		<hbox>
+			<tabbox width="1150px" height="630px">
 				<tabs>
 					<tab label="1: Transacties downloaden" />
 					<tab label="2: Transacties selecteren" />
@@ -36,7 +36,7 @@
 				</tabs>
 				<tabpanels>
 					<tabpanel>
-						Download je transacties van online bankieren of ov-chipkaart.
+						Download je transacties van online bankieren of ov-chipkaart voor het afgelopen kwartaal.
 						<hbox>
 							<toolbarbutton href="https://mijn.ing.nl/"
 								target="other" image="/images/logo_ing.gif" height="60px"/>
@@ -63,8 +63,7 @@
 						Hier kun je het gedownloade bestand met
 						transacties selecteren.
 						<vbox>
-							<button id="uploadBtn" upload="true"
-								image="/images/fileopen-96.png" />
+							<toolbarbutton id="uploadBtn" label="Selecteer bestand" upload="true,maxsize=1024"/>
 						</vbox>
 						Hierna kun je de transacties bekijken en
 						eventueel matchen in het volgende tabblad. De
@@ -265,8 +264,7 @@
 							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL." height="155px"/>															
 						</hbox>
 						<vbox>
-							<grid id="vatGrid" hflex="true"
-								mold="paging" pageSize="7" >
+							<grid id="vatGrid" mold="paging" pageSize="6" >
 								<columns sizable="true">
 									<column label="Omschrijving"
 										width="690px" />
