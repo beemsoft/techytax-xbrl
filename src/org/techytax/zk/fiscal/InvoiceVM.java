@@ -147,7 +147,7 @@ public class InvoiceVM {
 		return balanceDate;
 	}
 
-	@NotifyChange({ "invoices" })
+	@NotifyChange( "*" )
 	public void setBalanceDate(Date balanceDate) {
 		this.balanceDate = balanceDate;
 	}
