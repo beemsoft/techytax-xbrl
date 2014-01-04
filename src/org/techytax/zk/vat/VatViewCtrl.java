@@ -120,14 +120,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Button importBtn;
 
 	@Listen("onUpload=#uploadBtn")
-	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
+	public void upload(UploadEvent event) throws WrongValueException,
+			AuthenticationException, NoSuchAlgorithmException, IOException {
 		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
 		try {
 			media = event.getMedia();
 			List<Cost> result = readTransactions();
 
 			for (Cost cost : result) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+				cost.setKostenSoortOmschrijving(Labels.getLabel(cost
+						.getKostenSoortOmschrijving()));
 			}
 
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
@@ -186,33 +188,27 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
 		reader = new BufferedReader(media.getReaderData());
-		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
-		List<Cost> result = importTransactions.readFile(reader, Long.toString(user.getId()));
+		TransactionReader importTransactions = TransactionReaderFactory
+				.getTransactionReader(firstLine);
+		List<Cost> result = importTransactions.readFile(reader,
+				Long.toString(user.getId()));
 		boolean unmatchedTransactions = listContainsUnmatchedTransactions(result);
 		boolean longDescriptions = listContainsLongDescriptions(result);
 		if (!unmatchedTransactions && !longDescriptions) {
 			importBtn.setDisabled(false);
 		} else if (unmatchedTransactions) {
-			Messagebox.show("Er zijn nog onbepaalde transacties", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
-					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-						public void onEvent(ClickEvent e) {
-							switch (e.getButton()) {
-							case OK:
-							default:
-							}
-						}
-					});
+			Messagebox
+					.show("Er zijn nog onbepaalde transacties. Voeg tekstfragmenten toe, waarmee transacties herkend kunnen worden voor een bepaalde kostensoort.",
+							null,
+							new Messagebox.Button[] { Messagebox.Button.OK },
+							Messagebox.EXCLAMATION, null);
 			return filterUnmatchedTransactions(result);
 		} else if (longDescriptions) {
-			Messagebox.show("Er zijn nog lange omschrijvingen", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
-					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-						public void onEvent(ClickEvent e) {
-							switch (e.getButton()) {
-							case OK:
-							default:
-							}
-						}
-					});
+			Messagebox
+					.show("Er zijn nog lange omschrijvingen. Maak deze wat korter om ze in te kunnen lezen.",
+							null,
+							new Messagebox.Button[] { Messagebox.Button.OK },
+							Messagebox.EXCLAMATION, null);
 			return filterLongDescriptions(result);
 		}
 		return result;
@@ -230,7 +226,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			List<Cost> result = readTransactions();
 
 			for (Cost cost : result) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+				cost.setKostenSoortOmschrijving(Labels.getLabel(cost
+						.getKostenSoortOmschrijving()));
 			}
 
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
@@ -279,10 +276,13 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		BoekDao boekDao = new BoekDao();
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod();
-		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()),
-				"btwBalans", Long.toString(user.getId()));
+		List<Cost> vatCosts = boekDao.getKostLijst(
+				DateHelper.getDate(vatPeriod.getBeginDatum()),
+				DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans",
+				Long.toString(user.getId()));
 		for (Cost cost : vatCosts) {
-			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
+			cost.setKostenSoortOmschrijving(Labels.getLabel(cost
+					.getKostenSoortOmschrijving()));
 		}
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
@@ -291,27 +291,43 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
-		vatIn.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
-		vatBalance.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
-		turnoverGross.setValue(AmountHelper.formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
-		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans.getNettoOmzet().toBigInteger()));
+		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData
+				.getValueAddedTaxSuppliesServicesGeneralTariff()));
+		vatIn.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData
+				.getValueAddedTaxOnInput()));
+		vatBalance.setValue(AmountHelper
+				.formatWithEuroSymbol(vatDeclarationData
+						.getValueAddedTaxOwedToBePaidBack()));
+		turnoverGross.setValue(AmountHelper.formatWithEuroSymbol(balans
+				.getBrutoOmzet().toBigInteger()));
+		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans
+				.getNettoOmzet().toBigInteger()));
 		controleTab.setSelected(true);
 	}
 
 	@Listen("onClick=#digipoortBtn")
-	public void aanleveren() throws FileNotFoundException, IOException, GeneralSecurityException {
-		Messagebox.show("Weet u zeker dat u wilt aanleveren?", "Vraag", new Messagebox.Button[] { Messagebox.Button.OK, Messagebox.Button.CANCEL },
-				Messagebox.QUESTION, new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-					public void onEvent(ClickEvent e) throws FileNotFoundException, IOException, GeneralSecurityException {
+	public void aanleveren() throws FileNotFoundException, IOException,
+			GeneralSecurityException {
+		Messagebox.show("Weet u zeker dat u wilt aanleveren?", "Vraag",
+				new Messagebox.Button[] { Messagebox.Button.OK,
+						Messagebox.Button.CANCEL }, Messagebox.QUESTION,
+				new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+					public void onEvent(ClickEvent e)
+							throws FileNotFoundException, IOException,
+							GeneralSecurityException {
 						switch (e.getButton()) {
 						case OK:
 							try {
-								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
+								AuditLogger.log(AuditType.SEND_VAT_DECLARATION,
+										user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								digipoortBtn.setDisabled(true);
-								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null,
-										new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.INFORMATION,
+								Messagebox.show(
+										"Uw aanlevering is gelukt en heeft als kenmerk: "
+												+ aanleverResponse.getKenmerk(),
+										null,
+										new Messagebox.Button[] { Messagebox.Button.OK },
+										Messagebox.INFORMATION,
 										new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
 											public void onEvent(ClickEvent e) {
 												switch (e.getButton()) {
@@ -321,7 +337,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 											}
 										});
 							} catch (AanleverServiceFault asf) {
-								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
+								Messagebox.show(asf.getFaultInfo()
+										.getFoutbeschrijving(), null, 0,
+										Messagebox.ERROR);
 							}
 						case CANCEL:
 						default:
@@ -330,18 +348,23 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				});
 	}
 
-	private AanleverResponse doAanleveren() throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
+	private AanleverResponse doAanleveren() throws FileNotFoundException,
+			IOException, GeneralSecurityException, AanleverServiceFault {
 		VatDeclarationData vatDeclarationData = createVatDeclarationData();
 		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
-		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
+		String xbrlInstance = createXbrlInstanceForEnvironment(
+				vatDeclarationData, digipoortEnvironment);
 		if (!digipoortEnvironment.equals("prod")) {
-			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+			vatDeclarationData
+					.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
 		}
 		DigipoortService digipoortService = new DigipoortServiceImpl();
-		return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getFiscalNumber());
+		return digipoortService.aanleveren(xbrlInstance,
+				vatDeclarationData.getFiscalNumber());
 	}
 
-	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) {
+	private String createXbrlInstanceForEnvironment(
+			VatDeclarationData vatDeclarationData, String digipoort) {
 		String xbrlInstance = null;
 		if (digipoort.equals("prod")) {
 			xbrlInstance = XbrlHelper.createXbrlInstance(vatDeclarationData);
@@ -364,12 +387,15 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	@Listen("onClick=#sbrBtn")
-	public void showSbrMessage() throws FileNotFoundException, IOException, GeneralSecurityException {
+	public void showSbrMessage() throws FileNotFoundException, IOException,
+			GeneralSecurityException {
 		VatDeclarationData vatDeclarationData = createVatDeclarationData();
 		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
-		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
+		String xbrlInstance = createXbrlInstanceForEnvironment(
+				vatDeclarationData, digipoortEnvironment);
 		if (!digipoortEnvironment.equals("prod")) {
-			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
+			vatDeclarationData
+					.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
 		}
 		msg.setValue(xbrlInstance);
 		sbrPopup.open(this.getPage().getFirstRoot());
@@ -382,10 +408,12 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public boolean disableDigipoort() {
 		Date declarationTime;
 		try {
-			declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
+			declarationTime = AuditLogger
+					.getVatDeclarationTimeForLatestVatPeriod(user);
 			if (declarationTime != null && user.getFiscalNumber() != null) {
 				return true;
-			} else if (declarationTime == null && user.getFiscalNumber() == null) {
+			} else if (declarationTime == null
+					&& user.getFiscalNumber() == null) {
 				return true;
 			}
 		} catch (IllegalAccessException e) {
@@ -395,8 +423,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	@Override
-	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
-		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
+	public ComponentInfo doBeforeCompose(Page page, Component parent,
+			ComponentInfo compInfo) {
+		ComponentInfo componentInfo = super.doBeforeCompose(page, parent,
+				compInfo);
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		}
@@ -413,9 +443,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void updateVatOverview(Event evt) throws Exception {
 		if (evt instanceof GlobalCommandEvent) {
 			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
-				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
+				Map<String, Object> arguments = ((GlobalCommandEvent) evt)
+						.getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = boekDao.getKost(Long.toString(updatedCost.getId()), user.getId());
+				Cost originalCost = boekDao.getKost(
+						Long.toString(updatedCost.getId()), user.getId());
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUserId(user.getId());
 					boekDao.updateKost(updatedCost);
