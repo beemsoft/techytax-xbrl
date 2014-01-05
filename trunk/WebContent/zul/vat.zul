@@ -228,34 +228,37 @@
 						<include src="cost-enter.zul" />
 					</tabpanel>
 					<tabpanel>
-						btw overzicht
 						<hbox>
-							<grid width="250px" height="170px" >
+							<grid width="300px" height="200px" >
 								<columns>
 									<column />
-									<column />
+									<column width="90px" />
 								</columns>
 								<rows>
 									<row>
-										btw uit:
+										btw uit
 										<label id="vatOut" style="float:right;" />
 									</row>
 									<row>
-										btw in:
+										btw in
 										<label id="vatIn" style="float:right;" />
 									</row>
 									<row>
-										btw saldo:
+										btw saldo
 										<label id="vatBalance" style="float:right;" />
 									</row>
 									<row>
-										bruto omzet:
+										bruto omzet
 										<label id="turnoverGross" style="float:right;" />
 									</row>
 									<row>
-										netto omzet:
+										netto omzet
 										<label id="turnoverNet" style="float:right;" />
 									</row>
+									<row>
+										btw correctie voor privé gebruik zakelijke auto
+										<label id="vatCorrection" style="float:right;" />
+									</row>									
 								</rows>
 							</grid>
 							<toolbarbutton id="digipoortBtn" disabled="true" 
