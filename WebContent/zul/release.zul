@@ -28,6 +28,8 @@ Changes:
 <li>Added customer list to export file for XAF version 3.1.</li>
 <li>Added postal code checker in customer page.</li>
 <li>Migrated User DAO to JPA.</li>
+<li>Removed SEPA info from transaction description.</li>
+<li>Added VAT correction for private usage to VAT overview.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

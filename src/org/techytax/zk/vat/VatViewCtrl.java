@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -99,6 +99,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Label turnoverGross;
 	@Wire
 	private Label turnoverNet;
+	@Wire
+	private Label vatCorrection;	
 	@Wire
 	private Tab matchTab;
 	@Wire
@@ -302,6 +304,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				.getBrutoOmzet().toBigInteger()));
 		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans
 				.getNettoOmzet().toBigInteger()));
+		vatCorrection.setValue(AmountHelper.formatWithEuroSymbol(balans.getCorrection().toBigInteger()));
 		controleTab.setSelected(true);
 	}
 
@@ -327,15 +330,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 												+ aanleverResponse.getKenmerk(),
 										null,
 										new Messagebox.Button[] { Messagebox.Button.OK },
-										Messagebox.INFORMATION,
-										new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-											public void onEvent(ClickEvent e) {
-												switch (e.getButton()) {
-												case OK:
-												default:
-												}
-											}
-										});
+										Messagebox.INFORMATION, null);
 							} catch (AanleverServiceFault asf) {
 								Messagebox.show(asf.getFaultInfo()
 										.getFoutbeschrijving(), null, 0,
