@@ -22,7 +22,7 @@ public class CostVM3 extends CostVM2{
 	@NotifyChange("deleteMessage")
 	@Command
 	public void confirmDelete(){
-		deleteMessage = "Do you want to delete "+selected.getDescription()+" ?";
+		deleteMessage = "Weet u zeker dat u wilt verwijderen: "+selected.getDescription()+" ?";
 	}
 	
 	@NotifyChange("deleteMessage")

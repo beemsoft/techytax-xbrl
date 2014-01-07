@@ -86,17 +86,6 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</grid>
 		</groupbox>
 	</vbox>
-	<window title="Confirm" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
-		<vbox hflex="true">
-			<hlayout height="50px">
-				<image src="~./zul/img/msgbox/question-btn.png"/>
-				<label value="@load(vm.deleteMessage)"/>
-			</hlayout>
-			<hbox pack="center" hflex="true">
-				<button label="Delete" onClick="@command('deleteCost')"/>
-				<button label="Cancel" onClick="@command('cancelDelete')"/>
-			</hbox>
-		</vbox>
-	</window>
+	<include src="confirm.zul"/>
 </window>
 </zk>

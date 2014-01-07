@@ -29,7 +29,7 @@ public interface CostConstants {
 	public static final int OPNAME = 5;
 	public static final int EXPENSE_OTHER_ACCOUNT_IGNORE = 6;
 	public static final int EXPENSE_OTHER_ACCOUNT = 7;
-	public static final int REISKOST_ANDERE_REKENING_FOUTIEF = 8;
+	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT = 8;
 	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT = 9;
 	public static final int TO_SAVINGS_ACCOUNT = 10;	
 	public static final int OMZET_BELASTING = 12;

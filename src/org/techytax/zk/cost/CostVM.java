@@ -1,13 +1,21 @@
-/* OrderVM.java
-
-	Purpose:
-		
-	Description:
-		
-	History:
-		2011/10/31 Created by Dennis Chen
-
-Copyright (C) 2011 Potix Corporation. All Rights Reserved.
+/**
+ * Copyright 2014 Hans Beemsterboer
+ * 
+ * This file is part of the TechyTax program.
+ *
+ * TechyTax is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * TechyTax is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with TechyTax; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.techytax.zk.cost;
 
@@ -15,7 +23,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.cache.CostCache;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
@@ -41,19 +50,22 @@ public class CostVM {
 
 	protected ListModelList<Cost> costs;
 
-	ListModelList<CostType> costTypes;
+	protected ListModelList<CostType> costTypes;
 
 	protected Cost selected;
 
-	CostType selectedCostType;
+	protected CostType selectedCostType;
+	
+	protected CostDao costDao = new CostDao();
+	
+	protected CostCache costCache = new CostCache();
 	
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
-			BoekDao boekDao = new BoekDao();
 				Periode vatPeriod = DateHelper.getLatestVatPeriod();
-				List<Cost> vatCosts = boekDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
+				List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
 						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
 				for (Cost cost : vatCosts) {
 					cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
@@ -93,18 +105,17 @@ public class CostVM {
 	@NotifyChange("selected")
 	@Command
 	public void saveCost() throws Exception {
-		BoekDao boekDao = new BoekDao();
 		if (user != null) {
 			selected.setUserId(user.getId());
 			selected.setCostTypeId(selectedCostType.getKostenSoortId());
 			selected.setKostenSoortOmschrijving(selectedCostType.getOmschrijving());
-			Cost cost = boekDao.getKost(Long.toString(selected.getId()), user.getId());
+			Cost cost = costDao.getKost(Long.toString(selected.getId()), user.getId());
 			if (cost == null) {
 				AuditLogger.log(AuditType.ENTER_COST, user);
-				boekDao.insertKost(selected);
+				costDao.insertKost(selected);
 			} else {
 				AuditLogger.log(AuditType.UPDATE_COST, user);
-				boekDao.updateKost(selected);
+				costDao.updateKost(selected);
 			}
 		}
 	}
@@ -127,13 +138,13 @@ public class CostVM {
 	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void deleteCost() throws Exception {
-		BoekDao boekDao = new BoekDao();
 		if (user != null) {
 			AuditLogger.log(AuditType.DELETE_COST, user);
 			selected.setUserId(user.getId());
-			boekDao.deleteCost(selected);
+			costDao.deleteCost(selected);
 			getCosts().remove(selected);
 			selected = null;
+			costCache.invalidate();
 		}
 	}
 

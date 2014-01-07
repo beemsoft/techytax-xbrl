@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.techytax.cache.CostTypeCache;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -118,8 +118,8 @@ public class VatReportHelper {
 
 	public static void main(String[] args) throws Exception {
 		Periode period = DateHelper.getLatestVatPeriod();
-		BoekDao boekDao = new BoekDao();
-		List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
+		CostDao costDao = new CostDao();
+		List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
 				"btwBalans", "");
 		createReportData(vatCosts);
 	}

@@ -83,7 +83,8 @@ public class CostTypeViewModel {
 
 	}
 
-	@NotifyChange({ "privateMatchesList", "publicMatchesList", "vatVisible", "selectedPrivateMatch", "splitVisible" })
+	@NotifyChange({ "privateMatchesList", "publicMatchesList", "vatVisible",
+			"selectedPrivateMatch", "splitVisible" })
 	public void setSelectedCostType(CostType selected) throws Exception {
 		this.selected = selected;
 		setPrivateMatches(selected);
@@ -92,7 +93,8 @@ public class CostTypeViewModel {
 	}
 
 	private void setPublicMatches(CostType selected) throws Exception {
-		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getKostenSoortId()));
+		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long
+				.toString(selected.getKostenSoortId()));
 	}
 
 	@NotifyChange
@@ -135,11 +137,14 @@ public class CostTypeViewModel {
 				if (selectedVatType == null) {
 					selectedPrivateMatch.setVatType(VatType.NONE);
 				} else {
-					selectedPrivateMatch.setVatType(VatType.valueOf(selectedVatType));
+					selectedPrivateMatch.setVatType(VatType
+							.valueOf(selectedVatType));
 				}
-				VatMatch vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(selectedPrivateMatch.getId()));
+				VatMatch vatMatch = vatMatchDao.getVatMatchPrivate(Long
+						.toString(selectedPrivateMatch.getId()));
 				if (vatMatch == null) {
-					vatMatchDao.insertVatMatchPrivateComplete(selectedPrivateMatch);
+					vatMatchDao
+							.insertVatMatchPrivateComplete(selectedPrivateMatch);
 				} else {
 					vatMatchDao.updateVatMatchPrivate(selectedPrivateMatch);
 				}
@@ -160,7 +165,8 @@ public class CostTypeViewModel {
 	public void deleteMatch() throws Exception {
 		if (user != null) {
 			selectedPrivateMatch.setUserId(user.getId());
-			vatMatchDao.deleteVatMatchPrivate(Long.toString(selectedPrivateMatch.getId()));
+			vatMatchDao.deleteVatMatchPrivate(Long
+					.toString(selectedPrivateMatch.getId()));
 			splitMatchDao.delete(selectedPrivateMatch.getId());
 			kostmatchDao.deleteCostMatchPrivate(selectedPrivateMatch);
 		}
@@ -169,7 +175,9 @@ public class CostTypeViewModel {
 	}
 
 	public boolean getVatVisible() {
-		return selected.isVatDeclarable() && selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+		return selected.isVatDeclarable()
+				&& selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT
+				&& selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
 	}
 
 	public boolean getSplitVisible() {
@@ -195,13 +203,16 @@ public class CostTypeViewModel {
 	@NotifyChange({ "selectedPrivateMatch", "selectedVatType" })
 	public void setSelectedPrivateMatch(Kostmatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;
-		if (selected.isVatDeclarable()) {
+		if (selected.isVatDeclarable()
+				&& selectedPrivateMatch.getVatType() != null) {
 			setSelectedVatType(selectedPrivateMatch.getVatType().name());
 		}
 		if (selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
-			SplitMatch splitMatch = splitMatchDao.getSplitMatch(selectedPrivateMatch.getId());
+			SplitMatch splitMatch = splitMatchDao
+					.getSplitMatch(selectedPrivateMatch.getId());
 			if (splitMatch != null) {
-				this.selectedPrivateMatch.setPercentage(splitMatch.getPercentage());
+				this.selectedPrivateMatch.setPercentage(splitMatch
+						.getPercentage());
 			}
 		}
 	}

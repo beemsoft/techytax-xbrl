@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.techytax.cache.CostCache;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
@@ -54,6 +54,7 @@ public class FiscalOverviewHelper {
 	private FiscalDao fiscaalDao = new FiscalDao();
 	private BookValueDao boekwaardeDao = new BookValueDao();
 	private CostCache costCache = new CostCache();
+	private CostDao costDao = new CostDao();
 
 	public FiscalOverview createFiscalOverview(String beginDatum, String eindDatum, long userId, Locale locale) throws Exception {
 
@@ -168,8 +169,7 @@ public class FiscalOverviewHelper {
 			}
 
 			Periode lastVatPeriod = DateHelper.getLastVatPeriodPreviousYear();
-			BoekDao boekDao = new BoekDao();
-			vatDebt = boekDao.getVatDebtFromPreviousYear(DateHelper.getDate(lastVatPeriod.getBeginDatum()),
+			vatDebt = costDao.getVatDebtFromPreviousYear(DateHelper.getDate(lastVatPeriod.getBeginDatum()),
 					DateHelper.getDate(lastVatPeriod.getEindDatum()), Long.toString(userId));
 
 			if (vatDebt != null && vatDebt.compareTo(new BigDecimal("0")) == 1) {
@@ -289,6 +289,7 @@ public class FiscalOverviewHelper {
 		if (afschrijvingAuto != null) {
 			overview.setAfschrijvingAuto(afschrijvingAuto.intValue());
 		}
+		// TODO: fiscale bijtelling laten invoeren
 		overview.setBijtellingAuto(BalanceCalculator.getFiscaleBijtelling(deductableCosts).intValue());
 		overview.setKostenAuto(BalanceCalculator.getKostenVoorAuto(deductableCosts).intValue());
 		handleDepreciationCorrections(overview);

@@ -27,9 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -51,13 +53,11 @@ import org.zkoss.zul.Window;
 public class AllCostsVM extends CostVM3 {
 
 	private Periode periode = DateHelper.getLatestVatPeriod();
-	private BoekDao boekDao = new BoekDao();
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
 	private List<Cost> filteredCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;
 	private boolean filterCosts = false;	
 	private String searchString;
-	private CostCache costCache = new CostCache();
 
 	@Command
 	public void audit() {
@@ -65,7 +65,6 @@ public class AllCostsVM extends CostVM3 {
 	}
 
 	public ListModelList<Cost> getCosts() throws Exception {
-		System.out.println("Get costs");
 		if (user != null) {
 			costCache.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
 			costCache.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
@@ -73,12 +72,11 @@ public class AllCostsVM extends CostVM3 {
 			unhandledCosts = new ArrayList<Cost>();
 			filteredCosts = new ArrayList<Cost>();
 			for (Cost cost : allCosts) {
-				if (filterCosts) {
+				if (filterCosts && StringUtils.isNotEmpty(searchString)) {
 					if (cost.getDescription().toLowerCase().contains(searchString.toLowerCase())) {
-						System.out.println("Filtered: "+cost.getDescription());
 						filteredCosts.add(cost);
 					}
-				} else if (showUnhandledInvestments) {
+				} else {
 					filterUnhandledCosts(cost);					
 				} 
 			}
@@ -115,7 +113,7 @@ public class AllCostsVM extends CostVM3 {
 	}
 	
 	public boolean isListWithUnhandledInvestments() throws Exception {
-		if (unhandledCosts != null && unhandledCosts.size() > 0) {
+		if (unhandledCosts != null && !unhandledCosts.isEmpty()) {
 			return true;
 		}
 		return false;
@@ -123,7 +121,7 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
 		if (user != null && costs == null) {
-			List<Cost> vatCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+			List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
 					"rekeningBalans", Long.toString(user.getId()));
 			for (Cost cost : vatCosts) {
 				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
@@ -144,6 +142,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setBeginDate(Date beginDate) {
+		filterCosts = true;
 		periode.setBeginDatum(beginDate);
 	}
 
@@ -153,6 +152,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setEndDate(Date endDate) {
+		filterCosts = true;
 		periode.setEindDatum(endDate);
 	}
 
@@ -189,13 +189,11 @@ public class AllCostsVM extends CostVM3 {
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost,
 			@BindingParam("depreciations") List<Cost> depreciations) throws Exception {
-		BoekDao boekDao = new BoekDao();
-
 		if (depreciations != null && depreciations.size() > 0) {
 			AuditLogger.log(AuditType.DEPRECIATE_COST, user);
 			for (Cost depreciation : depreciations) {
 				depreciation.setUserId(user.getId());
-				boekDao.insertKost(depreciation);
+				costDao.insertKost(depreciation);
 			}
 			if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
 				cost.setCostTypeId(CostConstants.INVESTMENT);
@@ -204,20 +202,20 @@ public class AllCostsVM extends CostVM3 {
 			} 
 		}
 
-		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId());
+		Cost originalCost = costDao.getKost(Long.toString(cost.getId()), user.getId());
 		cost.setUserId(user.getId());
 		if (originalCost == null) {
 			AuditLogger.log(AuditType.ENTER_COST, user);
-			boekDao.insertKost(cost);
+			costDao.insertKost(cost);
 			this.selected = cost;
 		} else if (!cost.equals(originalCost)) {
 			AuditLogger.log(AuditType.UPDATE_COST, user);
-			boekDao.updateKost(cost);
+			costDao.updateKost(cost);
 		}
 		if (splitCost != null) {
 			AuditLogger.log(AuditType.SPLIT_COST, user);
 			splitCost.setUserId(user.getId());
-			boekDao.insertSplitCost(cost, splitCost);
+			costDao.insertSplitCost(cost, splitCost);
 		}
 	}
 

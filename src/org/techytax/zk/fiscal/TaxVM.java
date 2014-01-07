@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -79,7 +79,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Afschrijvingen apparaten", "", "", "-" + format(overview.getAfschrijvingOverig()), ""));
 			items.add(new ReportTableItem("Afschrijving bedrijfsruimte", "", "", "-" + format(overview.getSettlementDepreciation()), ""));
 			items.add(new ReportTableItem("Totale afschrijving", "", "", "", "-" + format(overview.getAfschrijvingTotaal())));
-			items.add(new ReportTableItem("Bijtelling privÃ©gebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
+			items.add(new ReportTableItem("Bijtelling privégebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
 			items.add(new ReportTableItem("Afschrijving auto", "-" + format(overview.getAfschrijvingAuto()), "", "", ""));
 			items.add(new ReportTableItem("Autokosten", "-" + format(overview.getKostenAuto()), "", "", ""));
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
@@ -129,7 +129,7 @@ public class TaxVM {
 		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Onttrekking in contanten", format(overview.getOnttrekking().getWithdrawalCash())));
-			items.add(new ReportTableItem("Onttrekking voor privÃ©gebruik zakelijke auto", format(overview.getOnttrekking()
+			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking()
 					.getWithdrawalPrivateUsageBusinessCar())));
 			items.add(new ReportTableItem("Totale onttrekking", format(overview.getOnttrekking().getTotaleOnttrekking())));
 		}
@@ -139,7 +139,7 @@ public class TaxVM {
 	public ListModelList<ReportTableItem> getPrivatDepositTableItems() {
 		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
 		if (overview != null) {
-			items.add(new ReportTableItem("PrivÃ©stortingen", format(overview.getPrivateDeposit())));
+			items.add(new ReportTableItem("Privéstortingen", format(overview.getPrivateDeposit())));
 		}
 		return new ListModelList<ReportTableItem>(items);
 	}

@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
@@ -83,7 +83,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private User user = UserCredentialManager.getUser();
 
-	private BoekDao boekDao = new BoekDao();
+	private CostDao costDao = new CostDao();
 
 	@Wire
 	private Grid costGrid;
@@ -146,12 +146,12 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private boolean listContainsLongDescriptions(List<Cost> result) {
 		for (Cost cost : result) {
-			boekDao.encrypt(cost);
+			costDao.encrypt(cost);
 			if (cost.getDescription().length() > 400) {
-				boekDao.decrypt(cost);
+				costDao.decrypt(cost);
 				return true;
 			}
-			boekDao.decrypt(cost);
+			costDao.decrypt(cost);
 		}
 		return false;
 	}
@@ -178,9 +178,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private List<Cost> filterLongDescriptions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<Cost>();
 		for (Cost cost : result) {
-			boekDao.encrypt(cost);
+			costDao.encrypt(cost);
 			if (cost.getDescription().length() > 400) {
-				boekDao.decrypt(cost);
+				costDao.decrypt(cost);
 				filteredResult.add(cost);
 			}
 		}
@@ -245,7 +245,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void importTransactions(Event event) throws Exception {
 		AuditLogger.log(AuditType.IMPORT_TRANSACTIONS, user);
 		ListModel<Cost> result = costGrid.getModel();
-		BoekDao boekDao = new BoekDao();
 		if (result != null) {
 			Cost kost = null;
 
@@ -254,7 +253,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				if (kost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE) {
 					kost.setId(0);
 					kost.setUserId(user.getId());
-					boekDao.insertKost(kost);
+					costDao.insertKost(kost);
 				}
 			}
 		}
@@ -275,10 +274,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void createVatOverview() throws Exception {
-		BoekDao boekDao = new BoekDao();
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod();
-		List<Cost> vatCosts = boekDao.getKostLijst(
+		List<Cost> vatCosts = costDao.getKostLijst(
 				DateHelper.getDate(vatPeriod.getBeginDatum()),
 				DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans",
 				Long.toString(user.getId()));
@@ -441,16 +439,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				Map<String, Object> arguments = ((GlobalCommandEvent) evt)
 						.getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = boekDao.getKost(
+				Cost originalCost = costDao.getKost(
 						Long.toString(updatedCost.getId()), user.getId());
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUserId(user.getId());
-					boekDao.updateKost(updatedCost);
+					costDao.updateKost(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
 						splitCost.setUserId(user.getId());
-						boekDao.insertSplitCost(originalCost, splitCost);
+						costDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();
 				}

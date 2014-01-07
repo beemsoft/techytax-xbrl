@@ -188,6 +188,7 @@ public class DateHelper {
 		cal.set(Calendar.YEAR, year);
 		Date lastDay = null;
 		switch (month) {
+		case 0:
 		case 1:
 		case 2:
 		case 3:
@@ -211,7 +212,6 @@ public class DateHelper {
 			break;
 		case 10:
 		case 11:
-		case 0:
 			cal.add(Calendar.YEAR, 1);
 			cal.set(Calendar.MONTH, Calendar.JANUARY);
 			cal.set(Calendar.DAY_OF_MONTH, 31);

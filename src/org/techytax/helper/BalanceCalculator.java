@@ -182,7 +182,7 @@ public class BalanceCalculator {
 						totalBaat = totalBaat.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
-					} else if (id == CostConstants.EXPENSE_CURRENT_ACCOUNT || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF
+					} else if (id == CostConstants.EXPENSE_CURRENT_ACCOUNT || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
 							|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING
 							|| id == CostConstants.UITGAVE_CREDIT_CARD || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.ADVERTENTIE) {
 						totalKost = totalKost.add(obj.getAmount());
@@ -257,7 +257,7 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					if (id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF) {
+					if (id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
 						totalKostOV = totalKostOV.add(obj.getAmount());
 					} else if (id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING) {
 						totalKostAuto = totalKostAuto.add(obj.getAmount());
@@ -327,7 +327,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		return null;
+		return BigDecimal.valueOf(0);
 	}
 	
 	public static BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
@@ -338,7 +338,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		return null;
+		return BigDecimal.valueOf(0);
 	}	
 
 	public static BigDecimal getFiscaleBijtelling(List<DeductableCostGroup> aftrekpostenLijst) throws Exception {
@@ -349,7 +349,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		throw new Exception("errors.fiscal.car");
+		return BigDecimal.valueOf(0);
 	}
 
 	public static BigDecimal getKostenVoorAuto(List<DeductableCostGroup> aftrekpostenLijst) {

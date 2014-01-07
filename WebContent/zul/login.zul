@@ -12,12 +12,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<grid width="200px" tooltip="loginInfo">
 						<rows>
 							<row>
-								<label value="Naam:" />
+								<label value="Naam" />
 								<textbox id="nameTxb" width="85px"
 									value="@bind(vm.username)" />
 							</row>
 							<row>
-								<label value="Wachtwoord:" />
+								<label value="Wachtwoord" />
 								<textbox id="passwordTxb" type="password" width="85px"
 									value="@bind(vm.password)" />
 							</row>

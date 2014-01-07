@@ -54,7 +54,7 @@ import nl.auditfiles.xaf._3.CurrencyCodeType;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
 import org.techytax.business.jpa.entities.Customer;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
@@ -68,12 +68,12 @@ import org.techytax.util.DateHelper;
 public class DutchAuditFileHelper {
 
 	public static void sendAuditFile(User user, Periode periode) {
-		BoekDao boekDao = new BoekDao();
+		CostDao costDao = new CostDao();
 		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<Cost>();
 			if (periode != null) {
-				allCosts = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit",
+				allCosts = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit",
 						Long.toString(user.getId()));
 			}
 			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
