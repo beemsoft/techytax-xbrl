@@ -34,7 +34,7 @@ import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.KeyId;
 
-public class BoekDao extends BaseDao {
+public class CostDao extends BaseDao {
 	
 	public void encrypt(Cost cost) {
 		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
@@ -198,8 +198,8 @@ public class BoekDao extends BaseDao {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public  BigInteger getTotalCostForActivumThisYear(Activum activum) throws Exception {
-		BigInteger totalCost = new BigInteger("0");
+	public  BigInteger getTotalCostForActivum(Activum activum) throws Exception {
+		BigInteger totalCost = BigInteger.valueOf(0);
 		List<Cost> costs = sqlMap.queryForList("getCostListForActivum", activum);
 		for (Cost cost : costs) {
 			decrypt(cost);

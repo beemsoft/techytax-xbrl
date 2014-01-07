@@ -19,7 +19,6 @@
 
 package org.apache.cxf.ws.policy;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -34,7 +33,6 @@ import org.apache.cxf.message.MessageUtils;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.service.model.BindingOperationInfo;
 import org.apache.cxf.service.model.EndpointInfo;
-import org.apache.neethi.Assertion;
 
 /**
  * 

@@ -1,7 +1,6 @@
 package org.techytax.xbrl;
 
 import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.xml.bind.JAXBContext;

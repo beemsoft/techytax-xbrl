@@ -34,7 +34,7 @@ import java.util.TimeZone;
 
 import org.techytax.business.jpa.entities.Customer;
 import org.techytax.business.jpa.entities.Project;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.BusinessCalendarDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
@@ -93,7 +93,7 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
 	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao();
-	private BoekDao boekDao = new BoekDao();
+	private CostDao costDao = new CostDao();
 
 	private ListModel<Project> projectsModel;
 
@@ -292,7 +292,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (maand < 10) {
 				factuurNummerString += "0";
 			}
-			List<Cost> sentAndPaidInvoicesInPeriod = boekDao.getInvoices(DateHelper.getDate(beginDate), DateHelper.getDate(endDate),
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(DateHelper.getDate(beginDate), DateHelper.getDate(endDate),
 					Long.toString(user.getId()));
 			List<Cost> invoices = new ArrayList<Cost>();
 
@@ -361,7 +361,6 @@ public class CalendarController extends SelectorComposer<Component> {
 				}
 
 				private void registerInvoice() throws Exception {
-					BoekDao boekDao = new BoekDao();
 					Cost cost = new Cost();
 					cost.setUserId(user.getId());
 					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
@@ -369,7 +368,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());
 					cost.setCostTypeId(CostConstants.INVOICE_SENT);
-					boekDao.insertKost(cost);
+					costDao.insertKost(cost);
 				}
 			});
 			invoiceWindow.doPopup();

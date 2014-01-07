@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.dao.BoekDao;
 import org.techytax.dao.BookValueDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
@@ -53,6 +53,7 @@ public class ActivaVM {
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
+	private CostDao costDao = new CostDao();
 
 	private User user = UserCredentialManager.getUser();
 
@@ -198,14 +199,12 @@ public class ActivaVM {
 	@GlobalCommand
 	@NotifyChange("activa")
 	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
-		BoekDao boekDao = new BoekDao();
-
 		AuditLogger.log(AuditType.UPDATE_ACTIVUM, user);
 
-		Cost cost = boekDao.getKost(Long.toString(activum.getCostId()), user.getId());
+		Cost cost = costDao.getKost(Long.toString(activum.getCostId()), user.getId());
 		cost.setUserId(user.getId());
 		cost.setDescription(activum.getOmschrijving());
-		boekDao.updateKost(cost);
+		costDao.updateKost(cost);
 
 		Activum originalActivum = fiscalDao.getActivumByCostId(activum);
 		originalActivum.setEndDate(activum.getEndDate());

@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -47,7 +47,7 @@ public class InvoiceVM {
 
 	private ListModelList<InvoiceCheck> invoices;
 	private InvoiceCheck selected;
-	private static BoekDao boekDao = new BoekDao();
+	private CostDao costDao = new CostDao();
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
 	private BigDecimal totalIncome = new BigDecimal(0);
@@ -59,7 +59,7 @@ public class InvoiceVM {
 		if (user != null) {
 			AuditLogger.log(AuditType.INVOICE_OVERVIEW, user);
 			Periode period = DateHelper.getPeriodTillDate(balanceDate);
-			List<Cost> sentAndPaidInvoicesInPeriod = boekDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
 					Long.toString(user.getId()));
 			invoices = new ListModelList<InvoiceCheck>();
 

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -52,11 +52,15 @@ public class CostCache {
 	}
 
 	private void fillCosts() throws Exception {
-		BoekDao boekDao = new BoekDao();
-		costs = boekDao.getKostLijst(beginDatum, eindDatum, "alles", Long.toString(user.getId()));
+		CostDao costDao = new CostDao();
+		costs = costDao.getKostLijst(beginDatum, eindDatum, "alles", Long.toString(user.getId()));
 		for (Cost cost : costs) {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
+	}
+	
+	public void invalidate() {
+		costs = null;
 	}
 
 	public List<DeductableCostGroup> getDeductableCosts() throws Exception {
@@ -127,11 +131,11 @@ public class CostCache {
 	}
 
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
-		BigDecimal costsWithPrivateMoney = new BigDecimal("0");
+		BigDecimal costsWithPrivateMoney = BigDecimal.valueOf(0);
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
 			if (id == CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE || id == CostConstants.EXPENSE_OTHER_ACCOUNT
-					|| id == CostConstants.REISKOST_ANDERE_REKENING_FOUTIEF || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
+					|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
 					|| id == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT || id == CostConstants.BUSINESS_TRAVEL_CREDIT_CARD
 					|| id == CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT || id == CostConstants.INVESTMENT_OTHER_ACCOUNT) {
 
@@ -142,7 +146,7 @@ public class CostCache {
 	}
 
 	public BigDecimal getInterest() throws Exception {
-		BigDecimal interest = new BigDecimal("0");
+		BigDecimal interest = BigDecimal.valueOf(0);
 		for (Cost cost : costs) {
 			if (cost.getCostTypeId() == CostConstants.INTEREST) {
 				interest = interest.add(cost.getAmount());

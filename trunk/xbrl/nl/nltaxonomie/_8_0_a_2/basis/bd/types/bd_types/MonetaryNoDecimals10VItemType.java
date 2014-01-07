@@ -10,8 +10,8 @@ package nl.nltaxonomie._8_0_a_2.basis.bd.types.bd_types;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 import org.xbrl._2003.instance.MonetaryItemType;
 
 

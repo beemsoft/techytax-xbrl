@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.techytax.cache.CostCache;
 import org.techytax.dao.AccountDao;
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balans;
@@ -43,7 +43,6 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
@@ -51,7 +50,7 @@ import org.zkoss.zul.Window;
 public class AccountCheckVM extends CostVM3 {
 
 	private AccountDao accountDao = new AccountDao();
-	private BoekDao boekDao = new BoekDao();
+	private CostDao costDao = new CostDao();
 	private User user = UserCredentialManager.getUser();
 	private BigDecimal businessAccountBalance;
 
@@ -82,19 +81,19 @@ public class AccountCheckVM extends CostVM3 {
 			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()),
 					DateHelper.getDate(periode.getEindDatum()), user.getId());
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-			List<Cost> result2 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
+			List<Cost> result2 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
 					"btwBalans", Long.toString(user.getId()));
 			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
-			List<Cost> result3 = boekDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax",
+			List<Cost> result3 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax",
 					Long.toString(user.getId()));
 			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
-			List<Cost> result4 = boekDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
+			List<Cost> result4 = costDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
 					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
 			BigDecimal interest = costCache.getInterest();
-			BigDecimal costIgnoreBalance = boekDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
+			BigDecimal costIgnoreBalance = costDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
 					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
 			BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
@@ -132,14 +131,14 @@ public class AccountCheckVM extends CostVM3 {
 	@GlobalCommand
 	@NotifyChange({ "costs" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = boekDao.getKost(Long.toString(cost.getId()), user.getId());
+		Cost originalCost = costDao.getKost(Long.toString(cost.getId()), user.getId());
 		if (!cost.equals(originalCost)) {
 			cost.setUserId(user.getId());
-			boekDao.updateKost(cost);
+			costDao.updateKost(cost);
 
 			if (splitCost != null) {
 				splitCost.setUserId(user.getId());
-				boekDao.insertSplitCost(cost, splitCost);
+				costDao.insertSplitCost(cost, splitCost);
 			}
 		}
 	}

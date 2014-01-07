@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
@@ -41,7 +41,7 @@ import org.zkoss.util.resource.Labels;
 
 public class DepreciationHelper {
 
-	private BoekDao boekDao = new BoekDao();
+	private CostDao costDao = new CostDao();
 
 	public void splitCost(Cost cost, boolean isCar, int nofYears, long userId, int remainingValuePercentage) throws Exception {
 		BigDecimal initialNetAmount = cost.getAmount();
@@ -133,7 +133,7 @@ public class DepreciationHelper {
 	public void storeDepreciations(List<Cost> depreciations, long userId) throws Exception {
 		for (Cost depreciation : depreciations) {
 			depreciation.setUserId(userId);
-			boekDao.insertKost(depreciation);
+			costDao.insertKost(depreciation);
 		}
 	}
 

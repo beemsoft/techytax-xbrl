@@ -22,7 +22,7 @@ package org.techytax.helper;
 import java.util.Calendar;
 import java.util.List;
 
-import org.techytax.dao.BoekDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
@@ -72,9 +72,9 @@ public class DutchTaxCodeHelper {
 	public static PrepaidTax findPrepaidTax(int year, String userId) {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
-		BoekDao boekDao = new BoekDao();
+		CostDao costDao = new CostDao();
 		try {
-			List<Cost> taxList = boekDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
+			List<Cost> taxList = costDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
 			int prepaidIncomeTax = 0;
 			int prepaidHealthTax = 0;
 			for (Cost tax : taxList) {
