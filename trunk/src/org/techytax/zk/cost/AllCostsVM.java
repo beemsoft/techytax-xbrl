@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -49,12 +49,17 @@ import org.zkoss.zul.Window;
 
 public class AllCostsVM extends CostVM3 {
 
-	private Periode periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+	private Periode periode;
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
 	private List<Cost> filteredCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;
 	private boolean filterCosts = false;	
 	private String searchString;
+	
+	public AllCostsVM() {
+		super();
+		periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());		
+	}
 
 	@Command
 	public void audit() {
