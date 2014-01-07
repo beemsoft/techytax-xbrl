@@ -33,6 +33,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
+import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.DutchAuditFileHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
@@ -61,6 +62,7 @@ public class AllCostsVM extends CostVM3 {
 		if (user != null) {
 			periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		} else {
+			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 			Executions.sendRedirect("login.zul");
 		}
 	}
