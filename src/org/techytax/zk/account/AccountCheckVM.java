@@ -54,7 +54,7 @@ public class AccountCheckVM extends CostVM3 {
 	private User user = UserCredentialManager.getUser();
 	private BigDecimal businessAccountBalance;
 
-	protected Periode periode = DateHelper.getLatestVatPeriod();
+	protected Periode periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 	private CostCache costCache = new CostCache();
 
 	protected List<Cost> costList;

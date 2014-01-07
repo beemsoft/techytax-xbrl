@@ -43,6 +43,7 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaratio
 import org.techytax.domain.Balans;
 import org.techytax.domain.Periode;
 import org.techytax.domain.VatDeclarationData;
+import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.AmountHelper;
 import org.techytax.util.DateHelper;
 import org.xbrl._2003.instance.Context;
@@ -236,7 +237,7 @@ public class XbrlHelper {
 
 	public static String createTestXbrlInstance() {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		Periode period = DateHelper.getLatestVatPeriod();
+		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
 		vatDeclarationData.setFiscalNumber(TEST_FISCAL_NUMBER);

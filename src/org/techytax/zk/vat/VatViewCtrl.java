@@ -275,7 +275,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private void createVatOverview() throws Exception {
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
-		Periode vatPeriod = DateHelper.getLatestVatPeriod();
+		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		List<Cost> vatCosts = costDao.getKostLijst(
 				DateHelper.getDate(vatPeriod.getBeginDatum()),
 				DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans",
@@ -373,7 +373,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatDeclarationData.setName(user.getFullName());
 		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
-		Periode period = DateHelper.getLatestVatPeriod();
+		Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
 		return vatDeclarationData;

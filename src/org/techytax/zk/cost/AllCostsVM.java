@@ -27,11 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
-import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -52,7 +49,7 @@ import org.zkoss.zul.Window;
 
 public class AllCostsVM extends CostVM3 {
 
-	private Periode periode = DateHelper.getLatestVatPeriod();
+	private Periode periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 	private List<Cost> unhandledCosts = new ArrayList<Cost>();
 	private List<Cost> filteredCosts = new ArrayList<Cost>();
 	private boolean showUnhandledInvestments = false;

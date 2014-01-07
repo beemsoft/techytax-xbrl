@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -50,6 +52,10 @@ public class User implements Serializable {
 	private String username;
 	private String phoneNumber;
 	private String fiscalNumber;
+	
+	@Enumerated(EnumType.ORDINAL)
+	private VatPeriodType vatPeriodType;
+	
 	private String accountNumber;
 
 	public String getPhoneNumber() {
@@ -151,5 +157,13 @@ public class User implements Serializable {
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+	
+	public VatPeriodType getVatPeriodType() {
+		return vatPeriodType;
+	}
 
+	public void setVatPeriodType(VatPeriodType vatPeriodType) {
+		this.vatPeriodType = vatPeriodType;
+	}
+	
 }

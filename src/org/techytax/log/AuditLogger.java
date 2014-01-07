@@ -48,7 +48,7 @@ public class AuditLogger {
 		if (user == null) {
 			throw new IllegalAccessException();
 		}
-		Periode latestVatPeriod = DateHelper.getLatestVatPeriod();
+		Periode latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		Periode latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
 		Query query = JpaUtil.getEntityManager()
 				.createQuery(

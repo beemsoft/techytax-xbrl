@@ -64,7 +64,7 @@ public class CostVM {
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
-				Periode vatPeriod = DateHelper.getLatestVatPeriod();
+				Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 				List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
 						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
 				for (Cost cost : vatCosts) {
