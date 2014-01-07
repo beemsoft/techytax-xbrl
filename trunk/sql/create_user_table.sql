@@ -16,3 +16,7 @@ ALTER TABLE `techytax`.`user` ADD COLUMN `phoneNumber` VARCHAR(20) AFTER `fullNa
 ALTER TABLE `techytax`.`user` ADD COLUMN `fiscalNumber` VARCHAR(20) AFTER `phoneNumber`;
 
 
+ALTER TABLE user ADD COLUMN vatPeriodType smallint(1) default '1' AFTER fiscalNumber;
+
+
+

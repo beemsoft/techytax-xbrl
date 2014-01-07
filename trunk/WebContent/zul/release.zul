@@ -30,6 +30,7 @@ Changes:
 <li>Migrated User DAO to JPA.</li>
 <li>Removed SEPA info from transaction description.</li>
 <li>Added VAT correction for private usage to VAT overview.</li>
+<li>Added option for yearly VAT declaration.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

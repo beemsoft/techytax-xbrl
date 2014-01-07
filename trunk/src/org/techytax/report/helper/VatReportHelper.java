@@ -32,6 +32,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
+import org.techytax.domain.VatPeriodType;
 import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatJournals;
 import org.techytax.report.domain.VatReportData;
@@ -117,7 +118,7 @@ public class VatReportHelper {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Periode period = DateHelper.getLatestVatPeriod();
+		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		CostDao costDao = new CostDao();
 		List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
 				"btwBalans", "");

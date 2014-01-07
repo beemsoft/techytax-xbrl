@@ -23,16 +23,19 @@ import org.techytax.helper.Translator;
 import org.zkoss.util.Locales;
 
 public enum BalanceType {
-	MACHINERY("balance.type.machines"), CAR("balance.type.car"), CURRENT_ASSETS("balance.type.liquid.assets"), NON_CURRENT_ASSETS(
-			"balance.type.equity"), PENSION("balance.type.pension"), STOCK("balance.type.stock"), OFFICE("balance.type.settlement"), VAT_TO_BE_PAID(
-			"balance.type.debt.sales.tax"), INVOICES_TO_BE_PAID("balance.type.loans.customers");
+	MACHINERY("balance.type.machines"), CAR("balance.type.car"), CURRENT_ASSETS(
+			"balance.type.liquid.assets"), NON_CURRENT_ASSETS(
+			"balance.type.equity"), PENSION("balance.type.pension"), STOCK(
+			"balance.type.stock"), OFFICE("balance.type.settlement"), VAT_TO_BE_PAID(
+			"balance.type.debt.sales.tax"), INVOICES_TO_BE_PAID(
+			"balance.type.loans.customers");
 
 	private String key;
 
 	private BalanceType(String key) {
 		this.key = key;
 	}
-	
+
 	public String getKey() {
 		return Translator.translateKey(key, Locales.getCurrent());
 	}
