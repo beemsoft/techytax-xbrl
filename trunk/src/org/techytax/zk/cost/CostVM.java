@@ -99,10 +99,10 @@ public class CostVM {
 		Cost cost = new Cost();
 		cost.setDate(new Date());
 		getCosts().add(cost);
-		selected = cost;// select the new one
+		selected = cost;
 	}
 
-	@NotifyChange("selected")
+	@NotifyChange({ "selected", "costs"})
 	@Command
 	public void saveCost() throws Exception {
 		if (user != null) {
@@ -117,6 +117,7 @@ public class CostVM {
 				AuditLogger.log(AuditType.UPDATE_COST, user);
 				costDao.updateKost(selected);
 			}
+			costCache.invalidate();
 		}
 	}
 

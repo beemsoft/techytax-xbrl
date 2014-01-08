@@ -57,10 +57,11 @@ public class AllCostsVM extends CostVM3 {
 	private boolean filterCosts = false;
 	private String searchString;
 
-	public AllCostsVM() {
+	public AllCostsVM() throws Exception {
 		super();
 		if (user != null) {
 			periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			getCosts();
 		} else {
 			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 			Executions.sendRedirect("login.zul");
@@ -157,7 +158,6 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setBeginDate(Date beginDate) {
-		filterCosts = true;
 		periode.setBeginDatum(beginDate);
 	}
 
@@ -167,7 +167,6 @@ public class AllCostsVM extends CostVM3 {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setEndDate(Date endDate) {
-		filterCosts = true;
 		periode.setEindDatum(endDate);
 	}
 
