@@ -42,7 +42,10 @@ public class User implements Serializable {
 	
 	private String companyName;
 	private String email;
+	
+	@Deprecated
 	private String fullName;
+	
 	private String initials;
 	private String prefix;
 	private String surname;
@@ -87,7 +90,15 @@ public class User implements Serializable {
 	}
 
 	public String getFullName() {
-		return fullName;
+		StringBuffer sb = new StringBuffer();
+		sb.append(initials);
+		if (prefix != null) {
+			sb.append(" ");			
+			sb.append(prefix);
+		}
+		sb.append(" ");		
+		sb.append(surname);
+		return sb.toString();
 	}
 
 	public long getId() {
