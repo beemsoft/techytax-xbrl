@@ -18,5 +18,9 @@ ALTER TABLE `techytax`.`user` ADD COLUMN `fiscalNumber` VARCHAR(20) AFTER `phone
 
 ALTER TABLE user ADD COLUMN vatPeriodType smallint(1) default '1' AFTER fiscalNumber;
 
+ALTER TABLE user ADD COLUMN initials varchar(10) not null AFTER fullName;
+ALTER TABLE user ADD COLUMN prefix varchar(10) null AFTER initials;
+ALTER TABLE user ADD COLUMN surname varchar(100) not null AFTER prefix;
+
 
 
