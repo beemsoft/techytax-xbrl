@@ -43,6 +43,10 @@ public class User implements Serializable {
 	private String companyName;
 	private String email;
 	private String fullName;
+	private String initials;
+	private String prefix;
+	private String surname;
+	
 	@Id
 	private long id;
 	
@@ -164,6 +168,30 @@ public class User implements Serializable {
 
 	public void setVatPeriodType(VatPeriodType vatPeriodType) {
 		this.vatPeriodType = vatPeriodType;
+	}
+
+	public String getInitials() {
+		return initials;
+	}
+
+	public void setInitials(String initials) {
+		this.initials = initials;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 	
 }
