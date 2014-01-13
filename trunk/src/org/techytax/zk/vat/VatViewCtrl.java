@@ -100,7 +100,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Label turnoverNet;
 	@Wire
-	private Label vatCorrection;	
+	private Label vatCorrection;
 	@Wire
 	private Tab matchTab;
 	@Wire
@@ -275,7 +275,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private void createVatOverview() throws Exception {
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
-		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+		Periode vatPeriod = DateHelper.getLatestVatPeriod(user
+				.getVatPeriodType());
 		List<Cost> vatCosts = costDao.getKostLijst(
 				DateHelper.getDate(vatPeriod.getBeginDatum()),
 				DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans",
@@ -289,7 +290,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
 		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData
 				.getValueAddedTaxSuppliesServicesGeneralTariff()));
@@ -302,7 +303,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				.getBrutoOmzet().toBigInteger()));
 		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans
 				.getNettoOmzet().toBigInteger()));
-		vatCorrection.setValue(AmountHelper.formatWithEuroSymbol(balans.getCorrection().toBigInteger()));
+		vatCorrection.setValue(AmountHelper.formatWithEuroSymbol(balans
+				.getCorrection().toBigInteger()));
 		controleTab.setSelected(true);
 	}
 
@@ -347,13 +349,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
 		String xbrlInstance = createXbrlInstanceForEnvironment(
 				vatDeclarationData, digipoortEnvironment);
-		if (!digipoortEnvironment.equals("prod")) {
-			vatDeclarationData
-					.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
-		}
 		DigipoortService digipoortService = new DigipoortServiceImpl();
-		return digipoortService.aanleveren(xbrlInstance,
-				vatDeclarationData.getFiscalNumber());
+		if (digipoortEnvironment.equals("prod")) {
+			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData
+					.getUser().getFiscalNumber());
+		} else {
+			return digipoortService.aanleveren(xbrlInstance,
+					XbrlHelper.getTestFiscalNumber());
+		}
 	}
 
 	private String createXbrlInstanceForEnvironment(
@@ -368,10 +371,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private VatDeclarationData createVatDeclarationData() {
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-		vatDeclarationData.setName(user.getFullName());
-		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
+		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		XbrlHelper.addBalanceData(vatDeclarationData, balans);
 		Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDatum());
@@ -386,10 +386,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
 		String xbrlInstance = createXbrlInstanceForEnvironment(
 				vatDeclarationData, digipoortEnvironment);
-		if (!digipoortEnvironment.equals("prod")) {
-			vatDeclarationData
-					.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
-		}
 		msg.setValue(xbrlInstance);
 		sbrPopup.open(this.getPage().getFirstRoot());
 	}

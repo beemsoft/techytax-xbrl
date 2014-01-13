@@ -228,7 +228,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);
 			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setTijdstempelVanaf(DateHelper.getDateForXml(vatDeclarationData.getStartDate()));
@@ -267,7 +267,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 			GetProcessenRequest request = objectFactory.createGetProcessenRequest();
 			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);
@@ -303,7 +303,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		try {
 			GetBerichtsoortenRequest request = objectFactory.createGetBerichtsoortenRequest();
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);

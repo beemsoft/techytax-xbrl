@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,11 +22,12 @@ package org.techytax.domain;
 import java.math.BigInteger;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+
 public class VatDeclarationData {
 
-	private String name;
-	private String phoneNumber;
-	private String fiscalNumber;
+	private final User user;
 	private Date startDate;
 	private Date endDate;
 
@@ -46,29 +47,14 @@ public class VatDeclarationData {
 
 	// Voorbelasting_1
 	private BigInteger valueAddedTaxOnInput;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getFiscalNumber() {
-		return fiscalNumber;
-	}
-
-	public void setFiscalNumber(String fiscalNumber) {
-		this.fiscalNumber = fiscalNumber;
+	
+	public VatDeclarationData(User user) {
+		Validate.notNull(user);
+		this.user = user;
+		String fiscalNumber = user.getFiscalNumber();
+		if (StringUtils.isEmpty(fiscalNumber)) {
+			throw new RuntimeException("U heeft nog geen fiscaal nummer opgegeven");
+		}
 	}
 
 	public Date getStartDate() {
@@ -133,6 +119,10 @@ public class VatDeclarationData {
 
 	public void setValueAddedTaxOnInput(BigInteger valueAddedTaxOnInput) {
 		this.valueAddedTaxOnInput = valueAddedTaxOnInput;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 }
