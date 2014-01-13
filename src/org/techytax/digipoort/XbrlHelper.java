@@ -42,6 +42,7 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaratio
 
 import org.techytax.domain.Balans;
 import org.techytax.domain.Periode;
+import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.AmountHelper;
@@ -99,7 +100,7 @@ public class XbrlHelper {
 			ContextEntityType contextEntityType = xbrlObjectFactory.createContextEntityType();
 			Identifier identifier = xbrlObjectFactory.createContextEntityTypeIdentifier();
 			identifier.setScheme("www.belastingdienst.nl/omzetbelastingnummer");
-			identifier.setValue(vatDeclarationData.getFiscalNumber());
+			identifier.setValue(vatDeclarationData.getUser().getFiscalNumber());
 			ContextPeriodType period = xbrlObjectFactory.createContextPeriodType();
 			period.setStartDate(DateHelper.getDate(vatDeclarationData.getStartDate()));
 			period.setEndDate(DateHelper.getDate(vatDeclarationData.getEndDate()));
@@ -170,11 +171,11 @@ public class XbrlHelper {
 			nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
 			CorrespondentDeclarant declarant = bdAlgObjectFactory.createCorrespondentDeclarant();
 			Anstring35VItemType name = bdTypeObjectFactory.createAnstring35VItemType();
-			name.setValue(vatDeclarationData.getName());
+			name.setValue(vatDeclarationData.getUser().getFullName());
 			name.setContextRef(context);
 			declarant.setNameContactSupplier(name);
 			Anstring25VItemType phoneNumber = bdTypeObjectFactory.createAnstring25VItemType();
-			phoneNumber.setValue(vatDeclarationData.getPhoneNumber());
+			phoneNumber.setValue(vatDeclarationData.getUser().getPhoneNumber());
 			phoneNumber.setContextRef(context);
 			declarant.setTelephoneNumberContactSupplier(phoneNumber);
 			vatDeclaration.setCorrespondentDeclarant(declarant);
@@ -182,7 +183,7 @@ public class XbrlHelper {
 			ACAPITALstring4FItemType code = bdTypeObjectFactory.createACAPITALstring4FItemType();
 
 			MessageReferenceSupplierVATItemType supplier = new MessageReferenceSupplierVATItemType();
-			supplier.setValue("OB-TXTAX-20");
+			supplier.setValue("OB-TXTAX-21");
 			supplier.setContextRef(context);
 			vatDeclaration.setMessageReferenceSupplierVAT(supplier);
 			code.setValue("TXTX");
@@ -197,7 +198,7 @@ public class XbrlHelper {
 			vatDeclaration.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
 
 			Anstring2FItemType version = bdTypeObjectFactory.createAnstring2FItemType();
-			version.setValue("20");
+			version.setValue("21");
 			version.setContextRef(context);
 			vatDeclaration.setVersionApplication(version);
 
@@ -227,8 +228,12 @@ public class XbrlHelper {
 	}	
 	
 	public static void main(String[] args) {
-//		createTestXbrlInstance();
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		User user = new User();
+		user.setFiscalNumber(TEST_FISCAL_NUMBER);
+		user.setInitials("A.");
+		user.setSurname("Tester");
+		user.setPhoneNumber("12345678");
+		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		vatDeclarationData.setValueAddedTaxOnInput(new BigInteger("600"));
 		vatDeclarationData.setStartDate(new Date());
 		vatDeclarationData.setEndDate(new Date());
@@ -236,13 +241,15 @@ public class XbrlHelper {
 	}
 
 	public static String createTestXbrlInstance() {
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		User user = new User();
+		user.setFiscalNumber(TEST_FISCAL_NUMBER);
+		user.setInitials("A.");
+		user.setSurname("Tester");
+		user.setPhoneNumber("12345678");
+		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
-		vatDeclarationData.setFiscalNumber(TEST_FISCAL_NUMBER);
-		vatDeclarationData.setName("Test");
-		vatDeclarationData.setPhoneNumber("12345678");
 		Balans balans = new Balans();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));

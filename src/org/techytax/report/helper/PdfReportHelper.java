@@ -49,9 +49,12 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class PdfReportHelper {
 
-	private static Font font = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
-	private static Font totalAmountFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
-	private static Font headerFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
+	private static Font font = new Font(Font.FontFamily.HELVETICA, 7,
+			Font.NORMAL);
+	private static Font totalAmountFont = new Font(Font.FontFamily.HELVETICA,
+			8, Font.BOLD);
+	private static Font headerFont = new Font(Font.FontFamily.HELVETICA, 8,
+			Font.BOLD);
 	private static int id = 1;
 
 	private static void addSpace(PdfPTable table) {
@@ -64,16 +67,18 @@ public class PdfReportHelper {
 	public static byte[] createVatReport() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			Periode period = DateHelper.getLatestVatPeriod(user
+					.getVatPeriodType());
 			CostDao costDao = new CostDao();
-			List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
-					"btwBalans", Long.toString(user.getId()));
-			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
-			Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
-			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-			vatDeclarationData.setName(user.getFullName());
-			vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
+			List<Cost> vatCosts = costDao.getKostLijst(
+					DateHelper.getDate(period.getBeginDatum()),
+					DateHelper.getDate(period.getEindDatum()), "btwBalans",
+					Long.toString(user.getId()));
+			VatReportData vatReportData = VatReportHelper
+					.createReportData(vatCosts);
+			Balans balans = BalanceCalculator.calculateBtwBalance(vatCosts,
+					false);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 			vatDeclarationData.setStartDate(period.getBeginDatum());
 			vatDeclarationData.setEndDate(period.getEindDatum());
 			XbrlHelper.addBalanceData(vatDeclarationData, balans);
@@ -98,12 +103,14 @@ public class PdfReportHelper {
 			subTable.addCell(cell);
 			PdfPTable table = new PdfPTable(1);
 			addSpace(table);
-			Paragraph chunk = new Paragraph("btw declaratie aangever gegevens", headerFont);
+			Paragraph chunk = new Paragraph("btw declaratie aangever gegevens",
+					headerFont);
 			cell = new PdfPCell(chunk);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			table.addCell(cell);
 			subTable = new PdfPTable(2);
-			addVatDeclarationData(subTable, vatReportData.getVatDeclarationData());
+			addVatDeclarationData(subTable,
+					vatReportData.getVatDeclarationData());
 			cell = new PdfPCell(subTable);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			table.addCell(cell);
@@ -130,15 +137,18 @@ public class PdfReportHelper {
 		return byteOutputStream.toByteArray();
 	}
 
-	private void addJournalsOut(VatReportData vatReportData, PdfPTable table) throws DocumentException {
+	private void addJournalsOut(VatReportData vatReportData, PdfPTable table)
+			throws DocumentException {
 		PdfPCell cell;
 		Paragraph chunk;
 		PdfPTable subTable;
 		PdfPCell tableCell;
 		Paragraph chunkMoney;
-		for (VatJournal vatJournal : vatReportData.getVatJournalsOut().getVatJournals()) {
+		for (VatJournal vatJournal : vatReportData.getVatJournalsOut()
+				.getVatJournals()) {
 			subTable = new PdfPTable(4);
-			chunk = new Paragraph("btw uit post: " + Labels.getLabel(vatJournal.getCostType()), headerFont);
+			chunk = new Paragraph("btw uit post: "
+					+ Labels.getLabel(vatJournal.getCostType()), headerFont);
 			cell = new PdfPCell(chunk);
 			cell.setColspan(4);
 			subTable.addCell(cell);
@@ -154,7 +164,8 @@ public class PdfReportHelper {
 			cell = new PdfPCell();
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), totalAmountFont);
+			chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal
+					.getTotalAmount()), totalAmountFont);
 			cell = new PdfPCell(chunkMoney);
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			cell.setBorder(PdfPCell.NO_BORDER);
@@ -168,15 +179,18 @@ public class PdfReportHelper {
 		}
 	}
 
-	private void addJournalsIn(VatReportData vatReportData, PdfPTable table) throws DocumentException {
+	private void addJournalsIn(VatReportData vatReportData, PdfPTable table)
+			throws DocumentException {
 		PdfPCell cell;
 		Paragraph chunk;
 		PdfPTable subTable;
 		PdfPCell tableCell;
 		Paragraph chunkMoney;
-		for (VatJournal vatJournal : vatReportData.getVatJournalsIn().getVatJournals()) {
+		for (VatJournal vatJournal : vatReportData.getVatJournalsIn()
+				.getVatJournals()) {
 			subTable = new PdfPTable(4);
-			chunk = new Paragraph("btw in post: " + Labels.getLabel(vatJournal.getCostType()), headerFont);
+			chunk = new Paragraph("btw in post: "
+					+ Labels.getLabel(vatJournal.getCostType()), headerFont);
 			cell = new PdfPCell(chunk);
 			cell.setColspan(4);
 			subTable.addCell(cell);
@@ -192,7 +206,8 @@ public class PdfReportHelper {
 			cell = new PdfPCell();
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), totalAmountFont);
+			chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal
+					.getTotalAmount()), totalAmountFont);
 			cell = new PdfPCell(chunkMoney);
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			cell.setBorder(PdfPCell.NO_BORDER);
@@ -207,18 +222,22 @@ public class PdfReportHelper {
 		}
 	}
 
-	private void addVatData(PdfPTable table, VatDeclarationData vatDeclarationData) {
+	private void addVatData(PdfPTable table,
+			VatDeclarationData vatDeclarationData) {
 		PdfPTable subTable;
 		PdfPCell cell;
 		Paragraph chunk;
 		chunk = new Paragraph("btw declaratie", headerFont);
 		subTable = new PdfPTable(2);
 		addCell(subTable, "btw in");
-		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
+		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData
+				.getValueAddedTaxSuppliesServicesGeneralTariff()));
 		addCell(subTable, "btw uit");
-		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData.getValueAddedTaxOnInput()));
+		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData
+				.getValueAddedTaxOnInput()));
 		addCell(subTable, "btw saldo");
-		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData.getValueAddedTaxOwed()));
+		addAmountCell(subTable, AmountHelper.formatDecimal(vatDeclarationData
+				.getValueAddedTaxOwed()));
 
 		cell = new PdfPCell(chunk);
 		cell.setBorder(PdfPCell.NO_BORDER);
@@ -228,13 +247,14 @@ public class PdfReportHelper {
 		table.addCell(cell);
 	}
 
-	private void addVatDeclarationData(PdfPTable subTable, VatDeclarationData vatDeclarationData) {
+	private void addVatDeclarationData(PdfPTable subTable,
+			VatDeclarationData vatDeclarationData) {
 		addCell(subTable, "Naam");
-		addCell(subTable, vatDeclarationData.getName());
+		addCell(subTable, vatDeclarationData.getUser().getFullName());
 		addCell(subTable, "Fiscaal nummer");
-		addCell(subTable, vatDeclarationData.getFiscalNumber());
+		addCell(subTable, vatDeclarationData.getUser().getFiscalNumber());
 		addCell(subTable, "Telefoonnummer");
-		addCell(subTable, vatDeclarationData.getPhoneNumber());
+		addCell(subTable, vatDeclarationData.getUser().getPhoneNumber());
 		addCell(subTable, "Begindatum");
 		addCell(subTable, DateHelper.getDate(vatDeclarationData.getStartDate()));
 		addCell(subTable, "Einddatum");
@@ -256,7 +276,8 @@ public class PdfReportHelper {
 		subTable.addCell(cell);
 	}
 
-	private void addTotalsIn(VatReportData vatReportData, PdfPTable table) throws DocumentException {
+	private void addTotalsIn(VatReportData vatReportData, PdfPTable table)
+			throws DocumentException {
 		PdfPCell cell;
 
 		PdfPTable subTable = new PdfPTable(2);
@@ -274,10 +295,14 @@ public class PdfReportHelper {
 		cell = new PdfPCell(headerChunk);
 		subTable.addCell(cell);
 		PdfPCell tableCell = new PdfPCell(subTable);
-		for (VatJournal vatJournal : vatReportData.getVatJournalsIn().getVatJournals()) {
-			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal.getCostType()), font));
+		for (VatJournal vatJournal : vatReportData.getVatJournalsIn()
+				.getVatJournals()) {
+			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal
+					.getCostType()), font));
 			subTable.addCell(cell);
-			Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), font);
+			Paragraph chunkMoney = new Paragraph(
+					AmountHelper.formatDecimal(vatJournal.getTotalAmount()),
+					font);
 			cell = new PdfPCell(chunkMoney);
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			subTable.addCell(cell);
@@ -285,8 +310,11 @@ public class PdfReportHelper {
 
 		cell = new PdfPCell(new Paragraph("Totaal in", headerFont));
 		subTable.addCell(cell);
-		Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatReportData.getVatDeclarationData()
-				.getValueAddedTaxSuppliesServicesGeneralTariff()), totalAmountFont);
+		Paragraph chunkMoney = new Paragraph(
+				AmountHelper.formatDecimal(vatReportData
+						.getVatDeclarationData()
+						.getValueAddedTaxSuppliesServicesGeneralTariff()),
+				totalAmountFont);
 		cell = new PdfPCell(chunkMoney);
 		cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 		cell.setBorder(PdfPCell.NO_BORDER);
@@ -295,7 +323,8 @@ public class PdfReportHelper {
 		table.addCell(tableCell);
 	}
 
-	private void addTotalsOut(VatReportData vatReportData, PdfPTable table) throws DocumentException {
+	private void addTotalsOut(VatReportData vatReportData, PdfPTable table)
+			throws DocumentException {
 		PdfPCell cell;
 		Paragraph chunk;
 
@@ -313,10 +342,14 @@ public class PdfReportHelper {
 		cell = new PdfPCell(headerChunk);
 		subTable.addCell(cell);
 		PdfPCell tableCell = new PdfPCell(subTable);
-		for (VatJournal vatJournal : vatReportData.getVatJournalsOut().getVatJournals()) {
-			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal.getCostType()), font));
+		for (VatJournal vatJournal : vatReportData.getVatJournalsOut()
+				.getVatJournals()) {
+			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal
+					.getCostType()), font));
 			subTable.addCell(cell);
-			Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), font);
+			Paragraph chunkMoney = new Paragraph(
+					AmountHelper.formatDecimal(vatJournal.getTotalAmount()),
+					font);
 			cell = new PdfPCell(chunkMoney);
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			subTable.addCell(cell);
@@ -324,7 +357,9 @@ public class PdfReportHelper {
 
 		cell = new PdfPCell(new Paragraph("Totaal uit", headerFont));
 		subTable.addCell(cell);
-		Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatReportData.getVatDeclarationData().getValueAddedTaxOnInput()),
+		Paragraph chunkMoney = new Paragraph(
+				AmountHelper.formatDecimal(vatReportData
+						.getVatDeclarationData().getValueAddedTaxOnInput()),
 				totalAmountFont);
 		cell = new PdfPCell(chunkMoney);
 		cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
@@ -354,12 +389,14 @@ public class PdfReportHelper {
 	private static void createTableRow(Cost cost, Font font, PdfPTable subTable) {
 		PdfPCell cell = new PdfPCell(new Paragraph(Long.toString(id++), font));
 		subTable.addCell(cell);
-		cell = new PdfPCell(new Paragraph(DateHelper.getDate(cost.getDate()), font));
+		cell = new PdfPCell(new Paragraph(DateHelper.getDate(cost.getDate()),
+				font));
 		subTable.addCell(cell);
 		String description = getEditedDescription(cost);
 		cell = new PdfPCell(new Paragraph(description, font));
 		subTable.addCell(cell);
-		cell = new PdfPCell(new Paragraph(AmountHelper.formatDecimal(cost.getVat()), font));
+		cell = new PdfPCell(new Paragraph(AmountHelper.formatDecimal(cost
+				.getVat()), font));
 		cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 		subTable.addCell(cell);
 	}

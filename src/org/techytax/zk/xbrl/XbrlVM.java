@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.DigipoortServiceStub;
-import org.techytax.digipoort.XbrlHelper;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
@@ -125,8 +124,7 @@ public class XbrlVM implements Serializable {
 	@NotifyChange("berichtsoorten")
 	public void berichtsoort() throws FileNotFoundException, IOException, GeneralSecurityException {
 		try {
-			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			setFiscalNumber(vatDeclarationData);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 			GetBerichtsoortenResponse response = digipoortService.getBerichtsoorten(vatDeclarationData);
 			ArrayOfBerichtsoortResultaat resultaat = response.getGetBerichtsoortenReturn();
 			berichtsoorten = resultaat.getBerichtsoort();
@@ -136,23 +134,10 @@ public class XbrlVM implements Serializable {
 		}
 	}
 
-	private void setFiscalNumber(VatDeclarationData vatDeclarationData) {
-		if (!isTestEnvironment) {
-			String fiscalNumber = user.getFiscalNumber();
-			if (StringUtils.isEmpty(fiscalNumber)) {
-				throw new RuntimeException("U heeft nog geen fiscaal nummer opgegeven");
-			}
-			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-		} else {
-			vatDeclarationData.setFiscalNumber(XbrlHelper.getTestFiscalNumber());
-		}
-	}
-
 	@Command
 	@NotifyChange("processen")
 	public void processen() throws FileNotFoundException, IOException, GeneralSecurityException {
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		setFiscalNumber(vatDeclarationData);
+		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		GetProcessenResponse response;
 		try {
 			response = digipoortService.getProcessen(vatDeclarationData);
@@ -168,8 +153,7 @@ public class XbrlVM implements Serializable {
 	@NotifyChange("nieuweStatussen")
 	public void nieuweStatussen() {
 		try {
-			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			setFiscalNumber(vatDeclarationData);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 			setDates(vatDeclarationData);
 			GetNieuweStatussenResponse response = digipoortService.getNieuweStatussen(vatDeclarationData);
 			ArrayOfStatusResultaat resultaat = response.getGetNieuweStatussenReturn();
@@ -187,8 +171,7 @@ public class XbrlVM implements Serializable {
 	@Command
 	public void nieuweStatussenProces() {
 		try {
-			VatDeclarationData vatDeclarationData = new VatDeclarationData();
-			setFiscalNumber(vatDeclarationData);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 			setDates(vatDeclarationData);
 			GetNieuweStatussenProcesResponse response = digipoortService.getNieuweStatussenProces(vatDeclarationData, selectedProces.getKenmerk());
 			ArrayOfStatusResultaat resultaat = response.getGetNieuweStatussenProcesReturn();
@@ -202,8 +185,7 @@ public class XbrlVM implements Serializable {
 	public List<StatusResultaat> getStatussenProces() throws FileNotFoundException, IOException, GeneralSecurityException {
 		if (selectedProces != null) {
 			try {
-				VatDeclarationData vatDeclarationData = new VatDeclarationData();
-				setFiscalNumber(vatDeclarationData);
+				VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 				setDates(vatDeclarationData);
 				GetStatussenProcesResponse response = digipoortService.getStatussenProces(vatDeclarationData, selectedProces.getKenmerk());
 				ArrayOfStatusResultaat resultaat = response.getGetStatussenProcesReturn();
