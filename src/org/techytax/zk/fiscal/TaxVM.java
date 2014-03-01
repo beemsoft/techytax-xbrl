@@ -85,7 +85,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
 			items.add(new ReportTableItem("Overige transportkosten", "", "-" + format(overview.getKostenOverigTransport()), "", ""));
 			items.add(new ReportTableItem("Auto- en transportkosten", "", "", format(overview.getCarAndTransportCosts()), ""));
-			items.add(new ReportTableItem("Overige kosten", "", "", "-" + format(overview.getKostenOverig()), ""));
+			items.add(new ReportTableItem("Andere kosten", "", "", "-" + format(overview.getKostenOverig()), ""));
 			items.add(new ReportTableItem("Huisvestingskosten", "", "", "-" + format(overview.getSettlementCosts()), ""));
 			items.add(new ReportTableItem("Totaal overige bedrijfskosten", "", "", "", format(overview.getOtherCostsTotal())));
 			items.add(new ReportTableItem("Winst", "", "", "", format(overview.getProfit())));
