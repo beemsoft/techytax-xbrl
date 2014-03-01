@@ -7,6 +7,7 @@
  <persistence-unit name="techyTaxPersistenceUnit" transaction-type="RESOURCE_LOCAL">
   <provider>org.hibernate.ejb.HibernatePersistence</provider>
   <class>org.techytax.jpa.entities.LogRecord</class>
+  <class>org.techytax.jpa.entities.VatDeclaration</class>
   <class>org.techytax.domain.UserEntity</class>
   <class>org.techytax.domain.SplitMatch</class>
   <class>org.techytax.business.jpa.entities.Customer</class>
