@@ -104,7 +104,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				kost.setVat(new BigDecimal("0"));
 			} else {
 				kost.setDescription(omschrijving);
-				if (omschrijving.contains("BELASTINGDIENST APELDOORN")) {
+				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
 				costMatch = matchKost(kost, userId);
