@@ -32,7 +32,7 @@ public interface CostConstants {
 	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT = 8;
 	public static final int TRAVEL_WITH_PUBLIC_TRANSPORT = 9;
 	public static final int TO_SAVINGS_ACCOUNT = 10;	
-	public static final int OMZET_BELASTING = 12;
+	public static final int VAT = 12;
 	public static final int BUSINESS_FOOD = 13;
 	public static final int AUTO_VAN_DE_ZAAK = 14;
 	public static final int FROM_SAVINGS_ACCOUNT = 15;
@@ -49,7 +49,7 @@ public interface CostConstants {
 	public static final int INVESTMENT_OTHER_ACCOUNT = 26;
 	public static final int ADVERTENTIE = 27;
 	public static final int ADVERTENTIE_ZONDER_BTW = 28;
-	public static final int INKOMSTEN_BELASTING = 29;
+	public static final int INCOME_TAX = 29;
 	public static final int INKOMSTEN_BELASTING_TERUGGAVE = 30;
 	public static final int WEGEN_BELASTING = 31;
 	public static final int UITGAVE_CREDIT_CARD = 32;
