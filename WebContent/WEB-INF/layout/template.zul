@@ -107,12 +107,15 @@
 				<div>
 					<div style="float:right; padding: 10px">
 						<hbox visible="@load(vm.loggedOn)">
+							<hbox visible="@load(vm.displayVatWarning)">						
+								<label value="Heeft u de omzetbelasting al aangegeven en betaald?" />
+							</hbox>						
 							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" sclass="loggedOnUserButton"/>
-							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" mold="os" />
+							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" />
 						</hbox>
 					</div>				
-					<label sclass="complex-layout-header-label"
-						value="TechyTax" tooltip="notes, x=250,y=50" /><label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
+					<label sclass="complex-layout-header-label" value="TechyTax" tooltip="notes, x=250,y=50" />
+					<label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
 				</div>
 			</north>
 			<!-- Sidebar -->

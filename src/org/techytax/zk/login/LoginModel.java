@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,7 +19,12 @@
  */
 package org.techytax.zk.login;
 
+import java.util.List;
+
+import org.apache.cxf.common.util.CollectionUtils;
 import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.security.AuthenticationException;
@@ -28,7 +33,6 @@ import org.techytax.security.SecurityServiceImpl;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Window;
 
 public class LoginModel {
@@ -45,15 +49,7 @@ public class LoginModel {
 			UserCredentialManager.setUser(user);
 			Executions.sendRedirect("/zul/zk_calendar.zul");
 		} catch (AuthenticationException e) {
-			Messagebox.show(e.getMessage(), null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
-					new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-						public void onEvent(ClickEvent e) {
-							switch (e.getButton()) {
-							case OK:
-							default:
-							}
-						}
-					});
+			Messagebox.show(e.getMessage(), null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION, null);
 		}
 	}
 
@@ -97,6 +93,18 @@ public class LoginModel {
 
 	public boolean getLoggedOn() {
 		return UserCredentialManager.getUser() != null;
+	}
+
+	public boolean getDisplayVatWarning() throws Exception {
+		User user = UserCredentialManager.getUser();
+		if (user != null) {
+			GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<VatDeclaration>(VatDeclaration.class, user);
+			List<VatDeclaration> vatDeclarationsUnpaid = vatDeclarationDao.findByNamedQuery("VatDeclaration.findUnpaid", user);
+			if (!CollectionUtils.isEmpty(vatDeclarationsUnpaid)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public String getLoggedOnText() {
