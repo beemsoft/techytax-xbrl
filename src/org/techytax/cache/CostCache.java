@@ -29,7 +29,9 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
+import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.User;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.util.resource.Labels;
 
@@ -116,10 +118,10 @@ public class CostCache {
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
 			if (id != CostConstants.INKOMST_DEZE_REKENING && id != CostConstants.INLEG && id != CostConstants.OPNAME
-					&& id != CostConstants.TO_SAVINGS_ACCOUNT && id != CostConstants.OMZET_BELASTING && id != CostConstants.AUTO_VAN_DE_ZAAK
+					&& id != CostConstants.TO_SAVINGS_ACCOUNT && id != CostConstants.VAT && id != CostConstants.AUTO_VAN_DE_ZAAK
 					&& id != CostConstants.FROM_SAVINGS_ACCOUNT && id != CostConstants.TO_PRIVATE_ACCOUNT && id != CostConstants.DEPRECIATION_CAR
 					&& id != CostConstants.FISCALE_BIJTELLING_AUTO && id != CostConstants.DEPRECIATION_MACHINE
-					&& id != CostConstants.INKOMSTEN_BELASTING && id != CostConstants.INKOMSTEN_BELASTING_TERUGGAVE && id != CostConstants.INTEREST
+					&& id != CostConstants.INCOME_TAX && id != CostConstants.INKOMSTEN_BELASTING_TERUGGAVE && id != CostConstants.INTEREST
 					&& id != CostConstants.INVOICE_PAID && id != CostConstants.INVOICE_SENT) {
 
 				if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
@@ -164,6 +166,32 @@ public class CostCache {
 			}
 		}
 		return filteredCosts;
+	}
+	
+	public PrepaidTax getPrepaidTax() throws Exception {
+		PrepaidTax prepaidTax = new PrepaidTax();
+		List<Cost> filteredCostList = new ArrayList<Cost>();
+		for (Cost cost : costs) {
+			long id = cost.getCostTypeId();
+			if (id == CostConstants.INCOME_TAX ) {
+				filteredCostList.add(cost);
+			}
+		}
+		int prepaidIncomeTax = 0;
+		int prepaidHealthTax = 0;
+		int year = DateHelper.getYear(DateHelper.stringToDate(beginDatum));
+		for (Cost tax : filteredCostList) {
+			if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
+				prepaidIncomeTax += tax.getAmount().intValue();
+			}
+			if (tax.getDescription()
+					.contains("Zorgverzekeringswet " + year)) {
+				prepaidHealthTax += tax.getAmount().intValue();
+			}
+		}
+		prepaidTax.setPrepaidHealth(prepaidHealthTax);
+		prepaidTax.setPrepaidIncome(prepaidIncomeTax);
+		return prepaidTax;
 	}	
 	
 	public String getBeginDatum() {
