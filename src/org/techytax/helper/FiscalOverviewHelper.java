@@ -233,8 +233,8 @@ public class FiscalOverviewHelper {
 		return privateDeposit;
 	}
 
-	private void handlePrepaidTaxes(long userId, FiscalOverview overview, int bookYear) {
-		PrepaidTax prepaidTax = DutchTaxCodeHelper.findPrepaidTax(bookYear, Long.toString(userId));
+	private void handlePrepaidTaxes(long userId, FiscalOverview overview, int bookYear) throws Exception {
+		PrepaidTax prepaidTax = costCache.getPrepaidTax();
 		overview.setPrepaidTax(prepaidTax);
 	}
 

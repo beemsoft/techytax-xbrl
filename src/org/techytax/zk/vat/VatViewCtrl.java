@@ -43,6 +43,8 @@ import org.techytax.helper.AmountHelper;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.importing.helper.TransactionReader;
 import org.techytax.importing.helper.TransactionReaderFactory;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
@@ -315,9 +317,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				new Messagebox.Button[] { Messagebox.Button.OK,
 						Messagebox.Button.CANCEL }, Messagebox.QUESTION,
 				new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-					public void onEvent(ClickEvent e)
-							throws FileNotFoundException, IOException,
-							GeneralSecurityException {
+					public void onEvent(ClickEvent e) throws Exception {
 						switch (e.getButton()) {
 						case OK:
 							try {
@@ -331,6 +331,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 										null,
 										new Messagebox.Button[] { Messagebox.Button.OK },
 										Messagebox.INFORMATION, null);
+								storeDeclarationFeature(aanleverResponse
+										.getKenmerk());
 							} catch (AanleverServiceFault asf) {
 								Messagebox.show(asf.getFaultInfo()
 										.getFoutbeschrijving(), null, 0,
@@ -341,6 +343,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 						}
 					}
 				});
+	}
+
+	private void storeDeclarationFeature(String declarationFeature)
+			throws Exception {
+		GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<VatDeclaration>(
+				VatDeclaration.class, user);
+		VatDeclaration vatDeclaration = new VatDeclaration();
+		vatDeclaration.setDeclarationFeature(declarationFeature);
+		vatDeclaration.setTimeStampDeclared(new Date());
+		vatDeclarationDao.merge(vatDeclaration);
 	}
 
 	private AanleverResponse doAanleveren() throws FileNotFoundException,

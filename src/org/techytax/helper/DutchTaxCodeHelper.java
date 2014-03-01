@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,82 +20,67 @@
 package org.techytax.helper;
 
 import java.util.Calendar;
-import java.util.List;
 
-import org.techytax.dao.CostDao;
+import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Periode;
-import org.techytax.domain.PrepaidTax;
-import org.techytax.util.DateHelper;
 
 public class DutchTaxCodeHelper {
 
 	public static Cost convertTaxCode(Cost cost) {
 		String description = cost.getDescription();
-		int endIndex = description.indexOf("AC");
+		int endIndex = description.indexOf("IBAN:");
+		if (endIndex == -1) {
+			endIndex = description.indexOf("AC");
+		}
 		if (endIndex != -1) {
-			String taxCode = cost.getDescription().substring(endIndex - 16, endIndex);
-			String convertedTaxCode = DutchTaxCodeConverter.convert(taxCode);
-			String fullDescription = "";
-			String taxType = convertedTaxCode.substring(12, 13);
-			String yearIndicator = convertedTaxCode.substring(14, 15);
-			String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
+			String taxCode = cost.getDescription().substring(endIndex - 16,
+					endIndex);
+			if (StringUtils.isNumeric(taxCode)) {
+				description = description.substring(0, endIndex);
+				String convertedTaxCode = DutchTaxCodeConverter
+						.convertPaymentFeatureToHumanReadableDescription(taxCode);
+				String fullDescription = "";
+				String taxType = convertedTaxCode.substring(12, 13);
+				String yearIndicator = convertedTaxCode.substring(14, 15);
+				String currentYear = Integer.toString(Calendar.getInstance()
+						.get(Calendar.YEAR));
 
-			if (taxType.equals("B")) {
-				cost.setCostTypeId(CostConstants.OMZET_BELASTING);
-				yearIndicator = convertedTaxCode.substring(17, 18);
-				fullDescription = "Omzetbelasting";
-			} else if (taxType.equals("W")) {
-				fullDescription = "Zorgverzekeringswet";
-			} else if (taxType.equals("W")) {
-				fullDescription = "Zorgverzekeringswet";
-			} else if (taxType.equals("M")) {
-				fullDescription = "Motorrijtuigenbelasting";
-				cost.setCostTypeId(CostConstants.WEGEN_BELASTING);
-			} else if (taxType.equals("O")) {
-				fullDescription = "Omzetbelasting teruggaaf";
-			} else if (taxType.equals("H")) {
-				fullDescription = "Inkomstenbelasting";
-			}
+				if (taxType.equals("B")) {
+					cost.setCostTypeId(CostConstants.VAT);
+					yearIndicator = convertedTaxCode.substring(17, 18);
+					fullDescription = "Omzetbelasting";
+				} else if (taxType.equals("W")) {
+					fullDescription = "Zorgverzekeringswet";
+				} else if (taxType.equals("W")) {
+					fullDescription = "Zorgverzekeringswet";
+				} else if (taxType.equals("M")) {
+					fullDescription = "Motorrijtuigenbelasting";
+					cost.setCostTypeId(CostConstants.WEGEN_BELASTING);
+				} else if (taxType.equals("O")) {
+					fullDescription = "Omzetbelasting teruggaaf";
+				} else if (taxType.equals("H")) {
+					fullDescription = "Inkomstenbelasting";
+				} else if (taxType.equals("F")) {
+					fullDescription = "Definitieve IB aanslag";
+				}
 
-			String taxYear = currentYear.substring(0, 3) + yearIndicator;
-			if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
-				taxYear = Integer.toString((Integer.parseInt(taxYear) - 10));
+				String taxYear = currentYear.substring(0, 3) + yearIndicator;
+				if (Integer.parseInt(taxYear) > Integer.parseInt(currentYear)) {
+					taxYear = Integer
+							.toString((Integer.parseInt(taxYear) - 10));
+				}
+				cost.setDescription(description + " " + convertedTaxCode + " "
+						+ fullDescription + " " + taxYear);
 			}
-			cost.setDescription(description + " " + convertedTaxCode + " " + fullDescription + " " + taxYear);
 		}
 		return cost;
 
 	}
 
-	public static PrepaidTax findPrepaidTax(int year, String userId) {
-		PrepaidTax prepaidTax = new PrepaidTax();
-		Periode period = DateHelper.getPeriodPreviousYearThisYear(year);
-		CostDao costDao = new CostDao();
-		try {
-			List<Cost> taxList = costDao.getTaxList(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()), userId);
-			int prepaidIncomeTax = 0;
-			int prepaidHealthTax = 0;
-			for (Cost tax : taxList) {
-				if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
-					prepaidIncomeTax += tax.getAmount().intValue();
-				}
-				if (tax.getDescription().contains("Zorgverzekeringswet " + year)) {
-					prepaidHealthTax += tax.getAmount().intValue();
-				}
-			}
-			prepaidTax.setPrepaidHealth(prepaidHealthTax);
-			prepaidTax.setPrepaidIncome(prepaidIncomeTax);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return prepaidTax;
-	}
-
 	public static void main(String[] args) {
 		Cost cost = new Cost();
-		cost.setDescription("AC");
+		cost.setDescription("taxcode");
 		System.out.println(convertTaxCode(cost).getDescription());
 	}
 
