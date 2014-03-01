@@ -150,16 +150,6 @@ public class CostDao extends BaseDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Cost> getTaxList(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getTaxList", map);
-		for (Cost cost : costs) {
-			decrypt(cost);
-		}
-		return costs;
-	}
-
-	@SuppressWarnings("unchecked")
 	public List<Cost> getAuditList(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		List<Cost> costs = sqlMap.queryForList("getAuditList", map);
