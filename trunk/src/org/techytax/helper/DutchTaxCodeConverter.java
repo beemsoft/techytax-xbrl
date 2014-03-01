@@ -27,7 +27,7 @@ public class DutchTaxCodeConverter {
 	private static String strHuidigJaarFull = "2011";
 	private static String strHuidigJaar = "11";
 
-	public static String convert(String strAlleInput) {
+	public static String convertPaymentFeatureToHumanReadableDescription(String strAlleInput) {
 
 		String bkVeld0 = strAlleInput.substring(0, 4);
 		String bkVeld1 = strAlleInput.substring(4, 8);
@@ -322,6 +322,10 @@ public class DutchTaxCodeConverter {
 
 	private static String stripString(String strWaarde, String strTheStrip) {
 		return strWaarde.replaceFirst("^" + strTheStrip + "(?!$)", "");
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(convertPaymentFeatureToHumanReadableDescription(""));
 	}
 
 }
