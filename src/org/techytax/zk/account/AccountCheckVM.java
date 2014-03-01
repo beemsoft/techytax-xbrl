@@ -35,6 +35,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.cost.CostVM3;
@@ -54,11 +55,20 @@ public class AccountCheckVM extends CostVM3 {
 	private User user = UserCredentialManager.getUser();
 	private BigDecimal businessAccountBalance;
 
-	protected Periode periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+	protected Periode periode;
 	private CostCache costCache = new CostCache();
 
 	protected List<Cost> costList;
 	private AccountCheckData accountCheckData = new AccountCheckData();
+
+	public AccountCheckVM() {
+		if (user != null) {
+			periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+		} else {
+			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
+			Executions.sendRedirect("login.zul");
+		}
+	}
 
 	public ListModelList<Cost> getCosts() throws Exception {
 		User user = UserCredentialManager.getUser();
@@ -70,7 +80,7 @@ public class AccountCheckVM extends CostVM3 {
 			costs = new ListModelList<Cost>(costList);
 			getAccountCheck();
 		} else {
-			Executions.sendRedirect("login.zul");	
+			Executions.sendRedirect("login.zul");
 		}
 		return costs;
 	}
@@ -78,23 +88,18 @@ public class AccountCheckVM extends CostVM3 {
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()),
-					DateHelper.getDate(periode.getEindDatum()), user.getId());
+			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-			List<Cost> result2 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()),
-					"btwBalans", Long.toString(user.getId()));
+			List<Cost> result2 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "btwBalans", Long.toString(user.getId()));
 			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
-			List<Cost> result3 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax",
-					Long.toString(user.getId()));
+			List<Cost> result3 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax", Long.toString(user.getId()));
 			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
-			List<Cost> result4 = costDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()),
-					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
+			List<Cost> result4 = costDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
 			BigDecimal interest = costCache.getInterest();
-			BigDecimal costIgnoreBalance = costDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()),
-					DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
+			BigDecimal costIgnoreBalance = costDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
 			BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
 					.subtract(liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
