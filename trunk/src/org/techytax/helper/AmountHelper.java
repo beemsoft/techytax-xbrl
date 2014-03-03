@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -59,6 +59,14 @@ public class AmountHelper {
 			return null;
 		}
 	}
+	
+	public static BigInteger roundDownToInteger(BigDecimal amount) {
+		if (amount != null) {
+			return amount.setScale(0,RoundingMode.DOWN).toBigInteger();
+		} else {
+			return null;
+		}
+	}	
 	
 	public static String formatDecimal(BigDecimal b) {
 		if (b == null) {

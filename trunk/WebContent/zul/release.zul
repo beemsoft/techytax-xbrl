@@ -31,7 +31,9 @@ Changes:
 <li>Removed SEPA info from transaction description.</li>
 <li>Added VAT correction for private usage to VAT overview.</li>
 <li>Added option for yearly VAT declaration.</li>
-<li>Prepared for new XBRL version (8.0) for VAT declaration.</li>
+<li>Upgraded to latest XBRL version (8.0) for VAT declaration.</li>
+<li>Store the VAT declaration feature.</li>
+<li>Display warning about VAT declaration.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>
