@@ -65,10 +65,10 @@ public class ModelWindowVM {
 	private int depreciationNofYears;
 	private ListModelList<Cost> depreciationList;
 	private List<Integer> depreciationYearsList;
+	private BigDecimal yearlyDepreciation;
 
 	@Init
-	public void init(@ContextParam(ContextType.VIEW) Component view,
-			@ExecutionArgParam("cost") Cost cost) {
+	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("cost") Cost cost) {
 		Selectors.wireComponents(view, this, false);
 		this.cost = cost;
 		if (cost != null) {
@@ -110,6 +110,9 @@ public class ModelWindowVM {
 		if (this.depreciationList != null) {
 			args.put("depreciations", this.depreciationList.getInnerList());
 		}
+		args.put("isCar", this.carDepreciation);
+		args.put("remainingValue", this.deprecationRemainingValue);
+		args.put("yearlyDepreciation", this.yearlyDepreciation);		
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
 		win.detach();
 	}
@@ -184,24 +187,12 @@ public class ModelWindowVM {
 	@NotifyChange("investment")
 	@Command
 	public void checkInvestment() {
-		if (cost.getAmount() != null
-				&& cost.getAmount()
-						.compareTo(
-								new BigDecimal(
-										CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0
-				&& cost.getCostTypeId() != CostConstants.UNDETERMINED
-				&& cost.getCostTypeId() != CostConstants.INVESTMENT
-				&& cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT
-				&& cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE
-				&& cost.getCostTypeId() != CostConstants.FROM_PRIVATE_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.FROM_SAVINGS_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF
-				&& cost.getCostTypeId() != CostConstants.INVOICE_SENT
-				&& cost.getCostTypeId() != CostConstants.INVOICE_PAID) {
+		if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0 && cost.getCostTypeId() != CostConstants.UNDETERMINED
+				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT && cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR
+				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE && cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT
+				&& cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT && cost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE
+				&& cost.getCostTypeId() != CostConstants.FROM_PRIVATE_ACCOUNT && cost.getCostTypeId() != CostConstants.FROM_SAVINGS_ACCOUNT
+				&& cost.getCostTypeId() != CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF && cost.getCostTypeId() != CostConstants.INVOICE_SENT && cost.getCostTypeId() != CostConstants.INVOICE_PAID) {
 			investment = true;
 		} else {
 			investment = false;
@@ -211,18 +202,13 @@ public class ModelWindowVM {
 	@NotifyChange("deprecationList")
 	@Command
 	public void deprecateCost() throws Exception {
-		if (depreciationNofYears > 0
-				&& deprecationRemainingValue != null
-				&& deprecationRemainingValue.compareTo(new BigInteger("0")) >= 0) {
+		if (depreciationNofYears > 0 && deprecationRemainingValue != null && deprecationRemainingValue.compareTo(new BigInteger("0")) >= 0) {
 			BigDecimal initialNetAmount = cost.getAmount();
 			DepreciationHelper depreciationHelper = new DepreciationHelper();
 
-			BigDecimal yearlyDepreciation = depreciationHelper
-					.getYearlyDepreciation(depreciationNofYears,
-							initialNetAmount, deprecationRemainingValue);
+			yearlyDepreciation = depreciationHelper.getYearlyDepreciation(depreciationNofYears, initialNetAmount, deprecationRemainingValue);
 
-			List<Cost> deprecations = depreciationHelper.getDepreciations(cost,
-					carDepreciation, depreciationNofYears, yearlyDepreciation);
+			List<Cost> deprecations = depreciationHelper.getDepreciations(cost, carDepreciation, depreciationNofYears, yearlyDepreciation);
 			depreciationList = new ListModelList<Cost>(deprecations);
 		}
 	}
@@ -268,8 +254,7 @@ public class ModelWindowVM {
 		return deprecationRemainingValue;
 	}
 
-	public void setDeprecationRemainingValue(
-			BigInteger deprecationRemainingValue) {
+	public void setDeprecationRemainingValue(BigInteger deprecationRemainingValue) {
 		this.deprecationRemainingValue = deprecationRemainingValue;
 	}
 
