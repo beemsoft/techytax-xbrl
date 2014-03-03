@@ -19,6 +19,10 @@
  */
 package org.techytax.zk.account;
 
+import static org.techytax.util.DateHelper.getLatestVatPeriod;
+import static org.techytax.util.DateHelper.getPeriodPreviousYear;
+import static org.techytax.util.DateHelper.isTimeForUsingLatestYearPeriod;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +67,11 @@ public class AccountCheckVM extends CostVM3 {
 
 	public AccountCheckVM() {
 		if (user != null) {
-			periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			if (isTimeForUsingLatestYearPeriod()) {
+				periode = getPeriodPreviousYear();
+			} else {
+				periode = getLatestVatPeriod(user.getVatPeriodType());
+			}
 		} else {
 			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 			Executions.sendRedirect("login.zul");
