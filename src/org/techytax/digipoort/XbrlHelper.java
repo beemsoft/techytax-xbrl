@@ -58,6 +58,7 @@ import org.xbrl._2003.instance.Xbrl;
 import org.xbrl._2003.xlink.SimpleType;
 import org.xbrl._2006.xbrldi.ExplicitMember;
 
+@Deprecated
 public class XbrlHelper {
 
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
@@ -233,11 +234,7 @@ public class XbrlHelper {
 		user.setInitials("A.");
 		user.setSurname("Tester");
 		user.setPhoneNumber("12345678");
-		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		vatDeclarationData.setValueAddedTaxOnInput(new BigInteger("600"));
-		vatDeclarationData.setStartDate(new Date());
-		vatDeclarationData.setEndDate(new Date());
-		createXbrlInstance(vatDeclarationData);
+		createTestXbrlInstance();
 	}
 
 	public static String createTestXbrlInstance() {
@@ -247,7 +244,8 @@ public class XbrlHelper {
 		user.setSurname("Tester");
 		user.setPhoneNumber("12345678");
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
+		Periode period = DateHelper
+				.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
 		Balans balans = new Balans();

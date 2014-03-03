@@ -47,7 +47,12 @@ public class VatDeclarationData {
 
 	// Voorbelasting_1
 	private BigInteger valueAddedTaxOnInput;
-	
+
+	// Omzetbelasting_leveringen/diensten_algemeen_tarief moet gelijk zijn aan
+	// Omzet_leveringen/diensten_belast_met_algemeen_tarief maal
+	// Percentage_algemene_tarief_omzetbelasting afgerond naar beneden
+	private BigInteger turnoverSuppliesServicesGenerallTariff;
+
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
 		this.user = user;
@@ -123,6 +128,14 @@ public class VatDeclarationData {
 
 	public User getUser() {
 		return user;
+	}
+
+	public BigInteger getTurnoverSuppliesServicesGenerallTariff() {
+		return turnoverSuppliesServicesGenerallTariff;
+	}
+
+	public void setTurnoverSuppliesServicesGenerallTariff(BigInteger turnoverSuppliesServicesGenerallTariff) {
+		this.turnoverSuppliesServicesGenerallTariff = turnoverSuppliesServicesGenerallTariff;
 	}
 
 }
