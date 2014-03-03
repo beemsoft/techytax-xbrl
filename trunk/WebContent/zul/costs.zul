@@ -26,12 +26,12 @@ arg0="/WEB-INF/layout/template.zul"?>
 ]]></zscript>	
 	<vbox hflex="true">
 		<hbox>
-			<grid width="365px" >
+			<grid width="385px" >
 				<columns>
 					<column width="30px"/>
-					<column width="150px"/>
+					<column width="160px"/>
 					<column width="30px"/>
-					<column width="150px"/>														
+					<column width="160px"/>														
 				</columns>
 				<rows>
 					<row>Van

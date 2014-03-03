@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -63,10 +63,8 @@ public class DateHelper {
 		}
 	}
 
-	public static Date stringToDateForTravelChipCard(String date_str)
-			throws Exception {
-		SimpleDateFormat format = new SimpleDateFormat(
-				datePatternForTravelChipCard);
+	public static Date stringToDateForTravelChipCard(String date_str) throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat(datePatternForTravelChipCard);
 		try {
 			return format.parse(date_str);
 		} catch (ParseException e) {
@@ -92,10 +90,8 @@ public class DateHelper {
 		return timeString;
 	}
 
-	public static XMLGregorianCalendar getDate(String date_str)
-			throws Exception {
-		XMLGregorianCalendar calendar = DatatypeFactory.newInstance()
-				.newXMLGregorianCalendar();
+	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
+		XMLGregorianCalendar calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
 		Date date = stringToDate(date_str);
 		calendar.setDay(getDay(date));
 		calendar.setMonth(getMonth(date) + 1);
@@ -304,24 +300,7 @@ public class DateHelper {
 		return jaar;
 	}
 
-	public static Periode getPeriodPreviousYearThisYear(int thisYear) {
-		Calendar cal = new GregorianCalendar();
-		cal.set(Calendar.YEAR, thisYear - 1);
-		cal.set(Calendar.MONTH, Calendar.JANUARY);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		Date beginDatum = cal.getTime();
-		cal.set(Calendar.YEAR, thisYear);
-		cal.set(Calendar.MONTH, Calendar.DECEMBER);
-		cal.set(Calendar.DAY_OF_MONTH, 31);
-		Date eindDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
-	}
-
-	public static boolean hasOneDayDifference(Date date1, String date2)
-			throws Exception {
+	public static boolean hasOneDayDifference(Date date1, String date2) throws Exception {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date1);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -444,16 +423,28 @@ public class DateHelper {
 		}
 		return yearList;
 	}
+	
+	public static boolean isTimeForUsingLatestYearPeriod() {
+		Date currentDate = new Date();
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(currentDate);
+		cal.set(Calendar.MONTH, Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		Date beginDate = cal.getTime();
+		cal.set(Calendar.MONTH, Calendar.APRIL);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+		Date endDate = cal.getTime();
+		if (currentDate.after(beginDate) && currentDate.before(endDate)) {
+			return true;
+		}
+		return false;
+	}
 
 	public static void main(String[] args) {
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER)
-				.getBeginDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER)
-				.getEindDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR)
-				.getBeginDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR)
-				.getEindDatum());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getBeginDatum());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getEindDatum());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getBeginDatum());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getEindDatum());
 		System.out.println(getDateForXml(new Date()));
 		System.out.println(getNTPDate());
 	}

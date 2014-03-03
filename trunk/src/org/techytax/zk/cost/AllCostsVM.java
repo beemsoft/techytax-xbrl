@@ -19,6 +19,12 @@
  */
 package org.techytax.zk.cost;
 
+import static org.techytax.helper.DutchAuditFileHelper.sendAuditFile;
+import static org.techytax.util.DateHelper.getLatestVatPeriod;
+import static org.techytax.util.DateHelper.getPeriodPreviousYear;
+import static org.techytax.util.DateHelper.isTimeForUsingLatestYearPeriod;
+import static org.zkoss.zk.ui.Executions.sendRedirect;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +40,6 @@ import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.domain.VatPeriodType;
-import org.techytax.helper.DutchAuditFileHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
@@ -60,17 +65,21 @@ public class AllCostsVM extends CostVM3 {
 	public AllCostsVM() throws Exception {
 		super();
 		if (user != null) {
-			periode = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			if (isTimeForUsingLatestYearPeriod()) {
+				periode = getPeriodPreviousYear();
+			} else {
+				periode = getLatestVatPeriod(user.getVatPeriodType());
+			}
 			getCosts();
 		} else {
-			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-			Executions.sendRedirect("login.zul");
+			periode = getLatestVatPeriod(VatPeriodType.PER_QUARTER);
+			sendRedirect("login.zul");
 		}
 	}
 
 	@Command
 	public void audit() {
-		DutchAuditFileHelper.sendAuditFile(user, periode);
+		sendAuditFile(user, periode);
 	}
 
 	public ListModelList<Cost> getCosts() throws Exception {
