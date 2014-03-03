@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
@@ -36,37 +35,17 @@ import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.RemainingValue;
-import org.techytax.util.DateHelper;
 import org.zkoss.util.resource.Labels;
 
 public class DepreciationHelper {
 
-	private CostDao costDao = new CostDao();
-
-	public void splitCost(Cost cost, boolean isCar, int nofYears, long userId, int remainingValuePercentage) throws Exception {
-		BigDecimal initialNetAmount = cost.getAmount();
-		BigInteger remainingValue = null;
-		if (remainingValuePercentage == 0) {
-			remainingValue = new BigInteger("0");
-		} else {
-			remainingValue = initialNetAmount.divide(new BigDecimal(remainingValuePercentage)).toBigInteger();
-		}
-		BigDecimal yearlyDepreciation = getYearlyDepreciation(nofYears, initialNetAmount, remainingValue);
-
-		List<Cost> depreciations = getDepreciations(cost, isCar, nofYears, yearlyDepreciation);
-		storeDepreciations(depreciations, userId);
-		putOnBalance(cost, isCar, userId, remainingValue, yearlyDepreciation, DateHelper.getYear(cost.getDate()));
-	}
-
 	public BigDecimal getYearlyDepreciation(int nofYears, BigDecimal initialNetAmount, BigInteger remainingValue) {
-		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2,
-				RoundingMode.HALF_UP);
+		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2, RoundingMode.HALF_UP);
 		yearlyDepreciation = yearlyDepreciation.setScale(0, BigDecimal.ROUND_UP);
 		return yearlyDepreciation;
 	}
 
-	private void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear)
-			throws Exception {
+	public void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear) throws Exception {
 		Activum activum = new Activum();
 		activum.setUserId(userId);
 		activum.setCostId(cost.getId());
@@ -128,13 +107,6 @@ public class DepreciationHelper {
 			cal.add(Calendar.YEAR, 1);
 		}
 		return depreciations;
-	}
-
-	public void storeDepreciations(List<Cost> depreciations, long userId) throws Exception {
-		for (Cost depreciation : depreciations) {
-			depreciation.setUserId(userId);
-			costDao.insertKost(depreciation);
-		}
 	}
 
 }
