@@ -78,7 +78,7 @@ public class ModelWindowVM {
 		bookValue.setBalanceType(selectedBalanceType);
 		bookValue.setJaar(selectedYear);
 		args.put("returnbookvalue", this.bookValue);
-		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
+		BindUtils.postGlobalCommand("queueName", null, "refreshvalues2", args);
 		win.detach();
 	}
 

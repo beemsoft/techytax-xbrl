@@ -210,5 +210,11 @@ public class ActivaVM {
 		originalActivum.setEndDate(activum.getEndDate());
 		fiscalDao.updateActivum(originalActivum);
 	}
+	
+	@GlobalCommand
+	@NotifyChange("bookValueHistories")
+	public void refreshvalues2(@BindingParam("returnbookvalue") BookValue bookValue) throws Exception {
+		insertOrUpdate(bookValue);
+	}	
 
 }
