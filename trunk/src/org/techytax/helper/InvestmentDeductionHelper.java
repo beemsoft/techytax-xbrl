@@ -31,7 +31,7 @@ import org.techytax.domain.Cost;
 public class InvestmentDeductionHelper {
 
 	public static BigInteger getInvestmentDeduction(List<Cost> costList, long userId) throws Exception {
-		BigDecimal totalInvestment = new BigDecimal("0");
+		BigInteger totalInvestmentDeduction = BigInteger.valueOf(0);
 		FiscalDao fiscaalDao = new FiscalDao();
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
@@ -39,10 +39,10 @@ public class InvestmentDeductionHelper {
 			activum.setCostId(cost.getId());
 			activum = fiscaalDao.getActivumByCostId(activum);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
-				totalInvestment = totalInvestment.add(cost.getAmount());
+				totalInvestmentDeduction = totalInvestmentDeduction.add(calculateInvestmentDeduction(cost.getAmount()));
 			}
 		}
-		return calculateInvestmentDeduction(totalInvestment);
+		return totalInvestmentDeduction;
 	}
 
 	private static BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {

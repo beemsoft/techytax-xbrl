@@ -60,7 +60,7 @@ public class CostCache {
 			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
 		}
 	}
-	
+
 	public void invalidate() {
 		costs = null;
 	}
@@ -101,7 +101,7 @@ public class CostCache {
 		}
 		return groupedDeducatableCostList;
 	}
-	
+
 	public List<Cost> getBusinessAccountCosts() throws Exception {
 		List<Cost> filteredCostList = new ArrayList<Cost>();
 		for (Cost cost : costs) {
@@ -111,19 +111,13 @@ public class CostCache {
 			}
 		}
 		return filteredCostList;
-	}	
+	}
 
 	public List<Cost> getInvestments() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
-			if (id != CostConstants.INKOMST_DEZE_REKENING && id != CostConstants.INLEG && id != CostConstants.OPNAME
-					&& id != CostConstants.TO_SAVINGS_ACCOUNT && id != CostConstants.VAT && id != CostConstants.AUTO_VAN_DE_ZAAK
-					&& id != CostConstants.FROM_SAVINGS_ACCOUNT && id != CostConstants.TO_PRIVATE_ACCOUNT && id != CostConstants.DEPRECIATION_CAR
-					&& id != CostConstants.FISCALE_BIJTELLING_AUTO && id != CostConstants.DEPRECIATION_MACHINE
-					&& id != CostConstants.INCOME_TAX && id != CostConstants.INKOMSTEN_BELASTING_TERUGGAVE && id != CostConstants.INTEREST
-					&& id != CostConstants.INVOICE_PAID && id != CostConstants.INVOICE_SENT) {
-
+			if (id == CostConstants.INVESTMENT) {
 				if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
 					filteredCosts.add(cost);
 				}
@@ -136,9 +130,8 @@ public class CostCache {
 		BigDecimal costsWithPrivateMoney = BigDecimal.valueOf(0);
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
-			if (id == CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE || id == CostConstants.EXPENSE_OTHER_ACCOUNT
-					|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
-					|| id == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT || id == CostConstants.BUSINESS_TRAVEL_CREDIT_CARD
+			if (id == CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
+					|| id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT || id == CostConstants.BUSINESS_TRAVEL_CREDIT_CARD
 					|| id == CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT || id == CostConstants.INVESTMENT_OTHER_ACCOUNT) {
 
 				costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getAmount()).add(cost.getVat());
@@ -156,7 +149,7 @@ public class CostCache {
 		}
 		return interest;
 	}
-	
+
 	@Deprecated
 	public List<Cost> getVatCorrectionDepreciation() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<Cost>();
@@ -167,13 +160,13 @@ public class CostCache {
 		}
 		return filteredCosts;
 	}
-	
+
 	public PrepaidTax getPrepaidTax() throws Exception {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		List<Cost> filteredCostList = new ArrayList<Cost>();
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
-			if (id == CostConstants.INCOME_TAX ) {
+			if (id == CostConstants.INCOME_TAX) {
 				filteredCostList.add(cost);
 			}
 		}
@@ -184,16 +177,15 @@ public class CostCache {
 			if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
 				prepaidIncomeTax += tax.getAmount().intValue();
 			}
-			if (tax.getDescription()
-					.contains("Zorgverzekeringswet " + year)) {
+			if (tax.getDescription().contains("Zorgverzekeringswet " + year)) {
 				prepaidHealthTax += tax.getAmount().intValue();
 			}
 		}
 		prepaidTax.setPrepaidHealth(prepaidHealthTax);
 		prepaidTax.setPrepaidIncome(prepaidIncomeTax);
 		return prepaidTax;
-	}	
-	
+	}
+
 	public String getBeginDatum() {
 		return beginDatum;
 	}
