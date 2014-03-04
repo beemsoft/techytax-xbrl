@@ -370,7 +370,7 @@ public class BalanceCalculator {
 		BigDecimal reiskosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT) {
+			if (aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
 				reiskosten = reiskosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
