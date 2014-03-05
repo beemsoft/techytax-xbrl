@@ -43,9 +43,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
 		List<CostType> kostensoortList2 = costTypeDao.getCostTypesForAccount();
-
 		kostensoortList = kostensoortList2;
-		List<Cost> kostLijst = new ArrayList<Cost>();
 		try {
 			parser = new CSVParser(in);
 			parser.changeDelimiter('\t');
@@ -53,7 +51,6 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			Cost cost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				for (int i=0; i< regel.length; i++) {
