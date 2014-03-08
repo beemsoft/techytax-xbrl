@@ -49,6 +49,8 @@
 								<doublebox id="vbox"
 									value="@bind(vm.cost.vat) @save(vm.cost.vat,before='saveCost')"
 									format="###,##0.00" />
+								<button id="resetVatBtn" label="Reset"
+									onClick="@command('resetVat')" />									
 							</hlayout>
 						</row>
 						<row>
