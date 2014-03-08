@@ -32,26 +32,24 @@ public class VatDeclarationData {
 	private Date endDate;
 
 	// Verschuldigde_omzetbelasting_2
-	private BigInteger valueAddedTaxOwed;
+	private BigInteger valueAddedTaxOwed = BigInteger.valueOf(0);
 
 	// Totaal_te_betalen_/_terug_te_vragen_2
-	private BigInteger valueAddedTaxOwedToBePaidBack;
+	private BigInteger valueAddedTaxOwedToBePaidBack = BigInteger.valueOf(0);
 
 	// Omzetbelasting_over_privegebruik_1
-	private BigInteger valueAddedTaxPrivateUse;
-
-	private BigInteger taxedTurnoverSuppliesServicesGeneralTariff;
-
-	// Omzetbelasting_leveringen/diensten_algemeen_tarief_2
-	private BigInteger valueAddedTaxSuppliesServicesGeneralTariff;
-
-	// Voorbelasting_1
-	private BigInteger valueAddedTaxOnInput;
+	private BigInteger valueAddedTaxPrivateUse = BigInteger.valueOf(0);
 
 	// Omzetbelasting_leveringen/diensten_algemeen_tarief moet gelijk zijn aan
 	// Omzet_leveringen/diensten_belast_met_algemeen_tarief maal
 	// Percentage_algemene_tarief_omzetbelasting afgerond naar beneden
-	private BigInteger turnoverSuppliesServicesGenerallTariff;
+	private BigInteger taxedTurnoverSuppliesServicesGeneralTariff = BigInteger.valueOf(0);
+
+	// Omzetbelasting_leveringen/diensten_algemeen_tarief_2
+	private BigInteger valueAddedTaxSuppliesServicesGeneralTariff = BigInteger.valueOf(0);
+
+	// Voorbelasting_1
+	private BigInteger valueAddedTaxOnInput = BigInteger.valueOf(0);
 
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
@@ -128,14 +126,6 @@ public class VatDeclarationData {
 
 	public User getUser() {
 		return user;
-	}
-
-	public BigInteger getTurnoverSuppliesServicesGenerallTariff() {
-		return turnoverSuppliesServicesGenerallTariff;
-	}
-
-	public void setTurnoverSuppliesServicesGenerallTariff(BigInteger turnoverSuppliesServicesGenerallTariff) {
-		this.turnoverSuppliesServicesGenerallTariff = turnoverSuppliesServicesGenerallTariff;
 	}
 
 }

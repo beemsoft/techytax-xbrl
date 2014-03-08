@@ -22,6 +22,7 @@ package org.techytax.zk.vat;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -277,7 +278,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+		if (balans.getBrutoOmzet().compareTo(BigDecimal.valueOf(0)) == 0) {
+			List<Cost> balanceCosts = costDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
+			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
+			balans.setNettoOmzet(turnover);
+			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
+		} else {
+			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+		}
 		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
 		vatIn.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
 		vatBalance.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
@@ -343,7 +351,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private VatDeclarationData createVatDeclarationData() throws Exception {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+		if (balans.getBrutoOmzet().compareTo(BigDecimal.valueOf(0)) == 0) {
+			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(balans.getNettoOmzet()));
+		} else {
+			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+		}
 		Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
