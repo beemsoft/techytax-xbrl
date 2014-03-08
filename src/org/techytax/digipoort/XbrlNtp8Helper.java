@@ -217,7 +217,7 @@ public class XbrlNtp8Helper {
 			turnoverSuppliesServicesGenerallTariff.setDecimals(DECIMALS_TYPE);
 			turnoverSuppliesServicesGenerallTariff.setContextRef(context);
 			turnoverSuppliesServicesGenerallTariff.setUnitRef(unit);
-			turnoverSuppliesServicesGenerallTariff.setValue(BigInteger.valueOf(191));
+			turnoverSuppliesServicesGenerallTariff.setValue(vatDeclarationData.getTaxedTurnoverSuppliesServicesGeneralTariff());
 			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createTaxedTurnoverSuppliesServicesGeneralTariff(turnoverSuppliesServicesGenerallTariff));
 
 			m.marshal(xbrl, writer);
