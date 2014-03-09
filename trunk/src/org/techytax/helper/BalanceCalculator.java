@@ -19,6 +19,8 @@
  */
 package org.techytax.helper;
 
+import static org.techytax.domain.CostConstants.*;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -57,18 +59,18 @@ public class BalanceCalculator {
 				if (obj != null) {
 
 					long id = obj.getCostTypeId();
-					if (obj.getCostTypeId() == CostConstants.INVOICE_SENT && isForAccountBalance) {
+					if (obj.getCostTypeId() == INVOICE_SENT && isForAccountBalance) {
 						// skip
 					} else {
 						CostType kostensoort = CostTypeCache.getCostType(id);
 						if (kostensoort.isVatDeclarable()) {
-							if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == CostConstants.INVOICE_SENT) {
+							if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == INVOICE_SENT) {
 								totalBtwIn = totalBtwIn.add(obj.getVat());
 								brutoOmzet = brutoOmzet.add(obj.getAmount());
 								nettoOmzet = nettoOmzet.add(obj.getAmount());
 								brutoOmzet = brutoOmzet.add(obj.getVat());
 							} else {
-								if (kostensoort.getKostenSoortId() == CostConstants.VAT_CORRECTION_CAR_PRIVATE) {
+								if (kostensoort.getKostenSoortId() == VAT_CORRECTION_CAR_PRIVATE) {
 									totalBtwCorrection = totalBtwCorrection.add(obj.getVat());
 								} else {
 									totalBtwOut = totalBtwOut.add(obj.getVat());
@@ -133,18 +135,18 @@ public class BalanceCalculator {
 						if (kostensoort.isBijschrijving()) {
 							totalKost = totalKost.add(obj.getAmount());
 							totalKost = totalKost.add(obj.getVat());
-							if (id == CostConstants.FROM_PRIVATE_ACCOUNT || id == CostConstants.INLEG) {
+							if (id == FROM_PRIVATE_ACCOUNT || id == INLEG) {
 								totalInleg = totalInleg.add(obj.getAmount());
 							}
-							if (id == CostConstants.FROM_SAVINGS_ACCOUNT) {
+							if (id == FROM_SAVINGS_ACCOUNT) {
 								totalSparen = totalSparen.subtract(obj.getAmount());
 							}
 						} else {
 							totalKost = totalKost.subtract(obj.getAmount());
 							totalKost = totalKost.subtract(obj.getVat());
-							if (id == CostConstants.TO_SAVINGS_ACCOUNT) {
+							if (id == TO_SAVINGS_ACCOUNT) {
 								totalSparen = totalSparen.add(obj.getAmount());
-							} else if (id == CostConstants.TO_PRIVATE_ACCOUNT || id == CostConstants.OPNAME) {
+							} else if (id == TO_PRIVATE_ACCOUNT || id == OPNAME) {
 								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
@@ -178,17 +180,17 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					if (id == CostConstants.INKOMST_DEZE_REKENING) {
+					if (id == INKOMST_DEZE_REKENING) {
 						totalBaat = totalBaat.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
-					} else if (id == CostConstants.EXPENSE_CURRENT_ACCOUNT || id == CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
-							|| id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
-							|| id == CostConstants.WEGEN_BELASTING || id == CostConstants.UITGAVE_CREDIT_CARD || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.ADVERTENTIE) {
+					} else if (id == EXPENSE_CURRENT_ACCOUNT || id == UITGAVE_DEZE_REKENING_FOUTIEF || id == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
+							|| id == TRAVEL_WITH_PUBLIC_TRANSPORT || id == AUTO_VAN_DE_ZAAK || id == AUTO_VAN_DE_ZAAK_ANDERE_REKENING
+							|| id == WEGEN_BELASTING || id == UITGAVE_CREDIT_CARD || id == EXPENSE_OTHER_ACCOUNT || id == ADVERTENTIE) {
 						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
-					} else if (id == CostConstants.BUSINESS_FOOD || id == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT) {
+					} else if (id == BUSINESS_FOOD || id == BUSINESS_FOOD_OTHER_ACCOUNT) {
 						// Do not apply tax deduction to this cost.
 						totalKost = totalKost.add(obj.getAmount());
 					}
@@ -236,7 +238,7 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					if (id == CostConstants.INVOICE_PAID) {
+					if (id == INVOICE_PAID) {
 						total = total.add(obj.getAmount()).add(obj.getVat());
 					}
 				}
@@ -257,13 +259,13 @@ public class BalanceCalculator {
 				obj = res.get(i);
 				if (obj != null) {
 					long id = obj.getCostTypeId();
-					if (id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
+					if (id == TRAVEL_WITH_PUBLIC_TRANSPORT || id == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
 						totalKostOV = totalKostOV.add(obj.getAmount());
-					} else if (id == CostConstants.AUTO_VAN_DE_ZAAK || id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.WEGEN_BELASTING) {
+					} else if (id == AUTO_VAN_DE_ZAAK || id == AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == WEGEN_BELASTING) {
 						totalKostAuto = totalKostAuto.add(obj.getAmount());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getAmount());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getVat());
-					} else if (id == CostConstants.VAT_CORRECTION_CAR_PRIVATE) {
+					} else if (id == VAT_CORRECTION_CAR_PRIVATE) {
 						totalVatCorrection = totalVatCorrection.add(obj.getVat());
 					}
 				}
@@ -283,7 +285,7 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					if (obj.getCostTypeId() == CostConstants.INKOMSTEN_BELASTING_TERUGGAVE) {
+					if (obj.getCostTypeId() == INKOMSTEN_BELASTING_TERUGGAVE) {
 						total = total.subtract(obj.getAmount());
 					} else {
 						total = total.add(obj.getAmount());
@@ -300,7 +302,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.DEPRECIATION_CAR) {
+			if (aftrekpost.getKostenSoortId() == DEPRECIATION_CAR) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -312,7 +314,7 @@ public class BalanceCalculator {
 		BigDecimal repurchases = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.REPURCHASES) {
+			if (aftrekpost.getKostenSoortId() == REPURCHASES) {
 				repurchases = repurchases.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -323,7 +325,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.DEPRECIATION_MACHINE) {
+			if (aftrekpost.getKostenSoortId() == DEPRECIATION_MACHINE) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -334,7 +336,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.DEPRECIATION_SETTLEMENT) {
+			if (aftrekpost.getKostenSoortId() == DEPRECIATION_SETTLEMENT) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -345,7 +347,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.FISCALE_BIJTELLING_AUTO) {
+			if (aftrekpost.getKostenSoortId() == FISCALE_BIJTELLING_AUTO) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -357,8 +359,8 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.AUTO_VAN_DE_ZAAK || aftrekpost.getKostenSoortId() == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING
-					|| aftrekpost.getKostenSoortId() == CostConstants.WEGEN_BELASTING) {
+			if (aftrekpost.getKostenSoortId() == AUTO_VAN_DE_ZAAK || aftrekpost.getKostenSoortId() == AUTO_VAN_DE_ZAAK_ANDERE_REKENING
+					|| aftrekpost.getKostenSoortId() == WEGEN_BELASTING) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -370,7 +372,7 @@ public class BalanceCalculator {
 		BigDecimal reiskosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT || aftrekpost.getKostenSoortId() == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
+			if (aftrekpost.getKostenSoortId() == TRAVEL_WITH_PUBLIC_TRANSPORT || aftrekpost.getKostenSoortId() == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
 				reiskosten = reiskosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -382,9 +384,9 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT || aftrekpost.getKostenSoortId() == CostConstants.EXPENSE_OTHER_ACCOUNT
-					|| aftrekpost.getKostenSoortId() == CostConstants.UITGAVE_CREDIT_CARD || aftrekpost.getKostenSoortId() == CostConstants.ADVERTENTIE
-					|| aftrekpost.getKostenSoortId() == CostConstants.ADVERTENTIE_ZONDER_BTW) {
+			if (aftrekpost.getKostenSoortId() == EXPENSE_CURRENT_ACCOUNT || aftrekpost.getKostenSoortId() == EXPENSE_OTHER_ACCOUNT
+					|| aftrekpost.getKostenSoortId() == UITGAVE_CREDIT_CARD || aftrekpost.getKostenSoortId() == ADVERTENTIE
+					|| aftrekpost.getKostenSoortId() == ADVERTENTIE_ZONDER_BTW) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -396,11 +398,11 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.BUSINESS_FOOD || aftrekpost.getKostenSoortId() == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT) {
+			if (aftrekpost.getKostenSoortId() == BUSINESS_FOOD || aftrekpost.getKostenSoortId() == BUSINESS_FOOD_OTHER_ACCOUNT) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
-		return kosten.multiply(new BigDecimal(CostConstants.FOOD_TAXFREE_PERCENTAGE));
+		return kosten.multiply(new BigDecimal(FOOD_TAXFREE_PERCENTAGE));
 	}
 
 	public static BigDecimal getSettlementCosts(List<DeductableCostGroup> aftrekpostenLijst) {
@@ -408,10 +410,10 @@ public class BalanceCalculator {
 		BigDecimal kosten = new BigDecimal("0");
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT || aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_INTEREST
-					|| aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_OTHER_ACCOUNT) {
+			if (aftrekpost.getKostenSoortId() == SETTLEMENT || aftrekpost.getKostenSoortId() == SETTLEMENT_INTEREST
+					|| aftrekpost.getKostenSoortId() == SETTLEMENT_OTHER_ACCOUNT) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
-			} else if (aftrekpost.getKostenSoortId() == CostConstants.SETTLEMENT_DISCOUNT) {
+			} else if (aftrekpost.getKostenSoortId() == SETTLEMENT_DISCOUNT) {
 				kosten = kosten.subtract(aftrekpost.getAftrekbaarBedrag());
 			}
 		}

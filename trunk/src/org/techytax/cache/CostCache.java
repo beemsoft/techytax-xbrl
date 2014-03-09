@@ -185,6 +185,17 @@ public class CostCache {
 		prepaidTax.setPrepaidIncome(prepaidIncomeTax);
 		return prepaidTax;
 	}
+	
+	public BigDecimal getRepurchases() throws Exception {
+		BigDecimal repurchases = BigDecimal.valueOf(0);
+		for (Cost cost : costs) {
+			long id = cost.getCostTypeId();
+			if (id == CostConstants.REPURCHASES) {
+				repurchases = repurchases.add(cost.getAmount());
+			}
+		}
+		return repurchases;
+	}	
 
 	public String getBeginDatum() {
 		return beginDatum;

@@ -69,7 +69,6 @@ public class XbrlNtp8Helper {
 	private static final String PACKAGE_NAME = "TechyTax";
 	private static final String BELASTING_PLICHTIGE = "BPL";
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
-	private static int messageReference = 0;
 
 	public static String getTestFiscalNumber() {
 		return TEST_FISCAL_NUMBER;

@@ -30,8 +30,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.techytax.cache.CostCache;
-import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
+import org.techytax.dao.CostDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
@@ -128,12 +128,17 @@ public class FiscalOverviewHelper {
 		overview.setOudedagsReserveMaximaal(maximaleFor);
 	}
 
-	private void handleTurnOver(FiscalOverview overview, Balans btwBalans) throws Exception {
-		overview.setNettoOmzet(btwBalans.getNettoOmzet().intValue());
+	private void handleTurnOver(FiscalOverview overview, Balans vatBalance) throws Exception {
+		if (vatBalance.getBrutoOmzet().compareTo(BigDecimal.valueOf(0)) == 0) {
+			List<Cost> balanceCosts = costCache.getBusinessAccountCosts();
+			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
+			vatBalance.setNettoOmzet(turnover);
+		} 
+		overview.setNettoOmzet(vatBalance.getNettoOmzet().intValue());
 	}
 
-	private void handleRepurchase(FiscalOverview overview) {
-		BigInteger repurchase = new BigInteger("0");
+	private void handleRepurchase(FiscalOverview overview) throws Exception {
+		BigInteger repurchase = AmountHelper.roundToInteger(costCache.getRepurchases());
 		overview.setRepurchase(repurchase);
 	}
 
