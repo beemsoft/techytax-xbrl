@@ -34,6 +34,8 @@ Changes:
 <li>Upgraded to latest XBRL version (8.0) for VAT declaration.</li>
 <li>Store the VAT declaration feature.</li>
 <li>Display warning about VAT declaration.</li>
+<li>Added reset button to edit cost window.</li>
+<li>Added support for VAT-free companies.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>
