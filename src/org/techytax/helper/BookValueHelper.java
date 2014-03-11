@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,17 +23,20 @@ import org.techytax.dao.BookValueDao;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.KeyYear;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
 
 public class BookValueHelper {
 
-	private static BookValueDao boekwaardeDao = new BookValueDao();
+	private User user = UserCredentialManager.getUser();
+	private BookValueDao boekwaardeDao = new BookValueDao();
 	
-	public static BookValue getCurrentBookValue(BalanceType balanceType, KeyYear keyYear) throws Exception {
+	public BookValue getCurrentBookValue(BalanceType balanceType, KeyYear keyYear) throws Exception {
 		BookValue bookValue = new BookValue();
 		bookValue.setJaar(keyYear.getYear());
 		bookValue.setBalanceType(balanceType);
-		bookValue.setUserId(keyYear.getUserId());
-		bookValue = boekwaardeDao.getBookValueThisYear(bookValue);
+		bookValue.setUser(user);
+		bookValue = boekwaardeDao.getBookValue(balanceType, keyYear.getYear());
 		return bookValue;
 	}	
 	

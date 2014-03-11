@@ -127,7 +127,7 @@ public class CostCache {
 	}
 
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
-		BigDecimal costsWithPrivateMoney = BigDecimal.valueOf(0);
+		BigDecimal costsWithPrivateMoney = BigDecimal.ZERO;
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
 			if (id == CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
@@ -141,7 +141,7 @@ public class CostCache {
 	}
 
 	public BigDecimal getInterest() throws Exception {
-		BigDecimal interest = BigDecimal.valueOf(0);
+		BigDecimal interest = BigDecimal.ZERO;
 		for (Cost cost : costs) {
 			if (cost.getCostTypeId() == CostConstants.INTEREST) {
 				interest = interest.add(cost.getAmount());
@@ -187,7 +187,7 @@ public class CostCache {
 	}
 	
 	public BigDecimal getRepurchases() throws Exception {
-		BigDecimal repurchases = BigDecimal.valueOf(0);
+		BigDecimal repurchases = BigDecimal.ZERO;
 		for (Cost cost : costs) {
 			long id = cost.getCostTypeId();
 			if (id == CostConstants.REPURCHASES) {

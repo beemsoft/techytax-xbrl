@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,11 +21,20 @@ package org.techytax.dao;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
+import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.RemainingValue;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class BookValueDao extends BaseDao {
+
+	private final User user = UserCredentialManager.getUser();
 
 	private void encrypt(BookValue boekwaarde) {
 		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));
@@ -47,77 +56,83 @@ public class BookValueDao extends BaseDao {
 		}
 	}	
 
-	public void insertBookValue(BookValue boekwaarde) throws Exception {
-		encrypt(boekwaarde);
-		sqlMap.insert("insertBoekwaarde", boekwaarde);
-	}
-
+	@Deprecated
 	public BookValue getPreviousBookValue(BookValue boekwaarde) throws Exception {
 		BookValue vorigeBoekwaarde = (BookValue) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
 		decrypt(vorigeBoekwaarde);
 		return vorigeBoekwaarde;
 	}
 
+	@Deprecated
 	public BookValue getBookValueThisYear(BookValue boekwaarde) throws Exception {
 		BookValue boekwaardeDitJaar = (BookValue) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
 		decrypt(boekwaardeDitJaar);
 		return boekwaardeDitJaar;
 	}
 
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<BookValue> getAllBoekwaardes() throws Exception {
 		return sqlMap.queryForList("getAllBoekwaardes", null);
 	}
 
-	public void updateBookValue(BookValue boekwaarde) throws Exception {
-		encrypt(boekwaarde);
-		sqlMap.insert("updateBoekwaarde", boekwaarde);
-	}
-
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<RemainingValue> getAllRestwaardes() throws Exception {
 		return sqlMap.queryForList("getAllRestwaardes", null);
 	}
 
+	@Deprecated
 	public void updateRestwaarde(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("updateRestwaarde", restwaarde);
 	}
 	
+	@Deprecated
 	public void updateRemainingValueByActivumId(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("updateRemainingValueByActivumId", restwaarde);
 	}	
 	
+	@Deprecated
 	public void insertRemainingValue(RemainingValue restwaarde) throws Exception {
 		encrypt(restwaarde);
 		sqlMap.insert("insertRestwaarde", restwaarde);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BookValue> getBookValues(KeyId key) throws Exception {
-		List<BookValue> bookValues = sqlMap.queryForList("getBookValues", key);
-		for (BookValue boekwaarde: bookValues) {
-			decrypt(boekwaarde);
+	public List<BookValue> getBookValuesHistory() throws Exception {
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc");
+		query.setParameter("user", user);
+		List<BookValue> result = query.getResultList();
+		return result;
+	}	
+	
+	public BookValue getBookValue(BalanceType balanceType, int year) throws Exception {
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType");
+		query.setParameter("year", year);		
+		query.setParameter("user", user);
+		query.setParameter("balanceType", balanceType);
+		BookValue result = null;
+		try {
+			result = (BookValue) query.getSingleResult();
+		} catch (NoResultException e) {
+			// ok
 		}
-		return bookValues;
+		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<BookValue> getBookValuesHistory(KeyId key) throws Exception {
-		List<BookValue> bookValues = sqlMap.queryForList("getBookValuesHistory", key);
-		for (BookValue boekwaarde: bookValues) {
-			decrypt(boekwaarde);
-		}
-		return bookValues;
+	@Deprecated
+	public BookValue getBookValueForActivum(BookValue bookValue) throws Exception {
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType");
+		query.setParameter("year", bookValue.getJaar());		
+		query.setParameter("user", user);
+		query.setParameter("balanceType", bookValue.getBalanceType());
+		BookValue result = (BookValue) query.getSingleResult();
+		return result;
 	}	
 	
-	public BookValue getBookValue(KeyId key) throws Exception {
-		BookValue bookValue = (BookValue) sqlMap.queryForObject("getBookValue", key);
-		decrypt(bookValue);
-		return bookValue;
-	}	
-	
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<BookValue> getBookValuesForChart(KeyId key) throws Exception {
 		List<BookValue> bookValues = sqlMap.queryForList("getBookValuesForChart", key);
@@ -127,6 +142,7 @@ public class BookValueDao extends BaseDao {
 		return bookValues;
 	}	
 	
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public List<RemainingValue> getRemainingValueForMachines(KeyId key) throws Exception {
 		List<RemainingValue> remainingValues = sqlMap.queryForList("getRemainingValueForMachines", key);
@@ -136,6 +152,7 @@ public class BookValueDao extends BaseDao {
 		return remainingValues;
 	}
 	
+	@Deprecated
 	public void deleteBookValue(KeyId key) throws Exception {
 		sqlMap.delete("deleteBookValue", key);
 	}	

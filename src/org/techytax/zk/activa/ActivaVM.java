@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -34,6 +34,7 @@ import org.techytax.domain.BookValueHistory;
 import org.techytax.domain.Cost;
 import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.zk.login.UserCredentialManager;
@@ -45,24 +46,24 @@ import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Window;
 
 public class ActivaVM {
 
+	private User user = UserCredentialManager.getUser();
 	private List<BookValueHistory> bookValueHistories = new ArrayList<BookValueHistory>();
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
 	private CostDao costDao = new CostDao();
-
-	private User user = UserCredentialManager.getUser();
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
 			bookValueHistories = new ArrayList<BookValueHistory>();
-			KeyId keyId = new KeyId();
-			keyId.setUserId(user.getId());
-			List<BookValue> bookValues = bookValueDao.getBookValuesHistory(keyId);
+			List<BookValue> bookValues = bookValueDao.getBookValuesHistory();
 			BalanceType currentBalanceType = null;
 
 			int firstYear = 0;
@@ -93,7 +94,6 @@ public class ActivaVM {
 						BookValue emptyBookValue = new BookValue();
 						emptyBookValue.setJaar(year);
 						emptyBookValue.setBalanceType(bookValue.getBalanceType());
-						emptyBookValue.setDescription(bookValue.getDescription());
 						bookValuesForBalanceType.add(emptyBookValue);
 						year--;
 					}
@@ -159,20 +159,43 @@ public class ActivaVM {
 	}
 
 	private void insertOrUpdate(BookValue bookValue) throws Exception {
-		KeyId key = new KeyId();
-		key.setId(bookValue.getId());
-		key.setUserId(user.getId());
-		BookValue originalBookValue = bookValueDao.getBookValue(key);
-		bookValue.setUserId(user.getId());
+		BookValue originalBookValue = null;
+		if (!checkFiscalPensionLimit(bookValue)) {
+			return;
+		}
+		if (bookValue.getId() > 0) {
+			originalBookValue = (BookValue) bookValueGenericDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
+		}
 		if (originalBookValue == null && bookValue.getSaldo() != null) {
 			AuditLogger.log(AuditType.ENTER_BOOKVALUE, user);
-			bookValueDao.insertBookValue(bookValue);
+			bookValue.setUser(user);
+			bookValueGenericDao.persistEntity(bookValue);
 		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
 			AuditLogger.log(AuditType.UPDATE_BOOKVALUE, user);
-			bookValueDao.updateBookValue(bookValue);
+			bookValue.setUser(user);
+			bookValueGenericDao.merge(bookValue);
 		} else if (bookValue.getSaldo() == null) {
-			bookValueDao.deleteBookValue(key);
+			bookValueGenericDao.deleteEntity(bookValue);
 		}
+	}
+
+	private boolean checkFiscalPensionLimit(BookValue bookValue) throws Exception {
+		if (bookValue.getBalanceType() == BalanceType.PENSION) {
+			BookValue nonCurrentAssets = bookValueDao.getBookValue(BalanceType.NON_CURRENT_ASSETS, bookValue.getJaar());
+			if (bookValue.getSaldo() != null && bookValue.getSaldo().compareTo(nonCurrentAssets.getSaldo()) > 0) {
+				Messagebox.show("FOR mag niet hoger worden dan eigen vermogen.", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
+						new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
+							public void onEvent(ClickEvent e) {
+								switch (e.getButton()) {
+								case OK:
+								default:
+								}
+							}
+						});
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public ListModelList<Activum> getActiva() throws Exception {
@@ -210,11 +233,11 @@ public class ActivaVM {
 		originalActivum.setEndDate(activum.getEndDate());
 		fiscalDao.updateActivum(originalActivum);
 	}
-	
+
 	@GlobalCommand
 	@NotifyChange("bookValueHistories")
 	public void refreshvalues2(@BindingParam("returnbookvalue") BookValue bookValue) throws Exception {
 		insertOrUpdate(bookValue);
-	}	
+	}
 
 }

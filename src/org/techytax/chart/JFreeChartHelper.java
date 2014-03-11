@@ -49,9 +49,9 @@ import org.techytax.report.domain.ReportBalance;
 
 public class JFreeChartHelper {
 
-	public static JFreeChart createBarChart(List<BookValue> bookValues, String title, String domainAxisLabel, String rangeAxisLabel) {
+	public static JFreeChart createBarChart(List<BookValue> bookValues, String title, String domainAxisLabel, String rangeAxisLabel, Locale locale) {
 
-		CategoryDataset dataset = createDataset(bookValues);
+		CategoryDataset dataset = createDataset(bookValues, locale);
 
 		// create the chart...
 		JFreeChart chart = ChartFactory.createBarChart(title,
@@ -104,7 +104,7 @@ public class JFreeChartHelper {
 
 	}
 
-	private static CategoryDataset createDataset(List<BookValue> bookValues) {
+	private static CategoryDataset createDataset(List<BookValue> bookValues, Locale locale) {
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
