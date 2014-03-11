@@ -47,11 +47,11 @@ public class BalanceCalculator {
 
 	public static Balans calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
-		BigDecimal totalBtwOut = BigDecimal.valueOf(0);
-		BigDecimal totalBtwIn = BigDecimal.valueOf(0);
-		BigDecimal totalBtwCorrection = BigDecimal.valueOf(0);
-		BigDecimal brutoOmzet = BigDecimal.valueOf(0);
-		BigDecimal nettoOmzet = BigDecimal.valueOf(0);
+		BigDecimal totalBtwOut = BigDecimal.ZERO;
+		BigDecimal totalBtwIn = BigDecimal.ZERO;
+		BigDecimal totalBtwCorrection = BigDecimal.ZERO;
+		BigDecimal brutoOmzet = BigDecimal.ZERO;
+		BigDecimal nettoOmzet = BigDecimal.ZERO;
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 				Cost obj = null;
@@ -329,7 +329,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		return BigDecimal.valueOf(0);
+		return BigDecimal.ZERO;
 	}
 
 	public static BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
@@ -340,7 +340,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		return BigDecimal.valueOf(0);
+		return BigDecimal.ZERO;
 	}
 
 	public static BigDecimal getFiscaleBijtelling(List<DeductableCostGroup> aftrekpostenLijst) throws Exception {
@@ -351,7 +351,7 @@ public class BalanceCalculator {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
-		return BigDecimal.valueOf(0);
+		return BigDecimal.ZERO;
 	}
 
 	public static BigDecimal getKostenVoorAuto(List<DeductableCostGroup> aftrekpostenLijst) {

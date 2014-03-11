@@ -46,17 +46,14 @@ public final class ChartFactory {
 		KeyId key = new KeyId();
 		key.setUserId(userId);
 		List<BookValue> bookValues = dao.getBookValuesForChart(key);
-		for (BookValue bookValue : bookValues) {
-			bookValue.setDescription(Translator.translateKey(bookValue.getDescription(), locale));
-		}
 		String title = Translator.translateKey("menu.bookvalues", locale);
 		String domainAxisLabel = Translator.translateKey("label.year", locale);
 		String rangeAxisLabel = Translator.translateKey("label.saldo", locale);		
-		return createBarChart(bookValues, title, domainAxisLabel, rangeAxisLabel);
+		return createBarChart(bookValues, title, domainAxisLabel, rangeAxisLabel, locale);
 	}
 
-	private static BufferedImage createBarChart(List<BookValue> bookValues, String title, String domainAxisLabel, String rangeAxisLabel) {
-		JFreeChart chart = JFreeChartHelper.createBarChart(bookValues, title, domainAxisLabel, rangeAxisLabel);
+	private static BufferedImage createBarChart(List<BookValue> bookValues, String title, String domainAxisLabel, String rangeAxisLabel, Locale locale) {
+		JFreeChart chart = JFreeChartHelper.createBarChart(bookValues, title, domainAxisLabel, rangeAxisLabel, locale);
 		return chart.createBufferedImage(IMAGE_WIDTH, IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB, null);
 	}
 

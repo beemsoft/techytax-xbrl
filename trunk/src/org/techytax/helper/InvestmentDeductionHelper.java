@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,15 +27,19 @@ import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
 
 public class InvestmentDeductionHelper {
+	
+	private User user = UserCredentialManager.getUser();
 
-	public static BigInteger getInvestmentDeduction(List<Cost> costList, long userId) throws Exception {
-		BigInteger totalInvestmentDeduction = BigInteger.valueOf(0);
+	public BigInteger getInvestmentDeduction(List<Cost> costList) throws Exception {
+		BigInteger totalInvestmentDeduction = BigInteger.ZERO;
 		FiscalDao fiscaalDao = new FiscalDao();
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
-			activum.setUserId(userId);
+			activum.setUserId(user.getId());
 			activum.setCostId(cost.getId());
 			activum = fiscaalDao.getActivumByCostId(activum);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {

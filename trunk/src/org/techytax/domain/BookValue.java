@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,14 +21,46 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
-public class BookValue {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-	private BalanceType balanceType;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+import org.techytax.zk.login.UserCredentialManager;
+
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@Entity(name = "org.techytax.domain.BookValue")
+@Table(name = "boekwaarde")
+public class BookValue {
+	
+	@Id
 	private long id = 0;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+	
+	@Column(name = "balans_id")
+	@Enumerated(EnumType.ORDINAL)
+	private BalanceType balanceType;
+	
+	@Column(name = "boekjaar")
 	private int jaar;
+	
+	@Type(type = "encryptedInteger")
 	private BigInteger saldo;
-	private long userId;
-	private String description;
 	
 	public BookValue() {
 	}
@@ -56,8 +88,8 @@ public class BookValue {
 		return saldo;
 	}
 
-	public long getUserId() {
-		return userId;
+	public User getUser() {
+		return user;
 	}
 
 	public void setBalanceType(BalanceType balanceType) {
@@ -76,15 +108,19 @@ public class BookValue {
 		this.saldo = saldo;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
 	}
 
 	public String getDescription() {
-		return description;
+		return balanceType.getKey();
+	}
+	
+	/**
+	 * Required for iBatis.
+	 */
+	public long getUserId() {
+		return UserCredentialManager.getUser().getId();
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
 }

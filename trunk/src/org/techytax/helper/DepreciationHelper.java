@@ -35,9 +35,15 @@ import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.RemainingValue;
+import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.util.resource.Labels;
 
 public class DepreciationHelper {
+	
+	private User user = UserCredentialManager.getUser();
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
 
 	public BigDecimal getYearlyDepreciation(int nofYears, BigDecimal initialNetAmount, BigInteger remainingValue) {
 		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2, RoundingMode.HALF_UP);
@@ -65,22 +71,18 @@ public class DepreciationHelper {
 		boekwaardeDao.insertRemainingValue(remainingValue);
 
 		// Add or update boekwaarde
-		BookValue activumValue = new BookValue();
-		activumValue.setJaar(bookYear);
-		activumValue.setBalanceType(activum.getBalanceType());
-		activumValue.setUserId(userId);
-		activumValue = boekwaardeDao.getPreviousBookValue(activumValue);
+		BookValue activumValue = boekwaardeDao.getBookValue(activum.getBalanceType(), bookYear - 1);
 		if (activumValue != null) {
 			activumValue.setSaldo(activumValue.getSaldo().subtract(yearlyDepreciation.toBigInteger()));
-			boekwaardeDao.updateBookValue(activumValue);
+			bookValueGenericDao.merge(activumValue);
 		} else {
 			activumValue = new BookValue();
 			activumValue.setJaar(bookYear);
 			activumValue.setBalanceType(activum.getBalanceType());
-			activumValue.setUserId(userId);
+			activumValue.setUser(user);
 			BigDecimal initialNetAmount = cost.getAmount().setScale(0, BigDecimal.ROUND_UP);
 			activumValue.setSaldo(initialNetAmount.toBigInteger().subtract(yearlyDepreciation.toBigInteger()));
-			boekwaardeDao.insertBookValue(activumValue);
+			bookValueGenericDao.persistEntity(activumValue);
 		}
 	}
 

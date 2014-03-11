@@ -25,8 +25,6 @@ import java.text.ParseException;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
 import org.techytax.helper.AmountHelper;
-import org.techytax.helper.Translator;
-import org.zkoss.util.Locales;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -53,8 +51,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 		listitem.setValue(data);
 		if (data.getBookValues().size() > 0) {
 			String description = data.getBookValues().get(0).getDescription();
-			String translatedDescription = Translator.translateKey(description, Locales.getCurrent());
-			addLabelCell(listitem, translatedDescription);
+			addLabelCell(listitem, description);
 			for (BookValue bookValue : data.getBookValues()) {
 				if (bookValue.getSaldo() != null) {
 					addIntboxCell(listitem, bookValue.getSaldo().intValue()).addEventListener(Events.ON_CHANGE,

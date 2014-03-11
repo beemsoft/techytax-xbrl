@@ -33,7 +33,6 @@ import java.util.Map;
 import org.techytax.dao.CostDao;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
-import org.techytax.digipoort.XbrlHelper;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
@@ -278,7 +277,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		if (balans.getBrutoOmzet().compareTo(BigDecimal.valueOf(0)) == 0) {
+		if (balans.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
 			List<Cost> balanceCosts = costDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
 			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 			balans.setNettoOmzet(turnover);
@@ -335,7 +334,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		if (digipoortEnvironment.equals("prod")) {
 			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getUser().getFiscalNumber());
 		} else {
-			return digipoortService.aanleveren(xbrlInstance, XbrlHelper.getTestFiscalNumber());
+			return digipoortService.aanleveren(xbrlInstance, XbrlNtp8Helper.getTestFiscalNumber());
 		}
 	}
 
@@ -351,7 +350,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private VatDeclarationData createVatDeclarationData() throws Exception {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		if (balans.getBrutoOmzet().compareTo(BigDecimal.valueOf(0)) == 0) {
+		if (balans.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
 			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(balans.getNettoOmzet()));
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);

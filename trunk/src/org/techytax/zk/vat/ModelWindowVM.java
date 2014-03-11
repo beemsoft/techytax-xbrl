@@ -166,7 +166,7 @@ public class ModelWindowVM {
 	@Command
 	public void resetVat() throws Exception {
 		cost.setAmount(cost.getAmount().add(cost.getVat()));
-		cost.setVat(BigDecimal.valueOf(0));
+		cost.setVat(BigDecimal.ZERO);
 	}	
 
 	@NotifyChange({ "cost", "splitCost" })

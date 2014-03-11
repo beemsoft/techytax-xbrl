@@ -71,6 +71,7 @@ public class GenericDao<T> {
 	}
 
 	public void persistEntity(T entity) {
+		getNewEntityManager();
 		try {
 			entityManager.persist(entity);
 		} catch (EntityExistsException e) {
@@ -89,6 +90,7 @@ public class GenericDao<T> {
 	
 	public Object getEntity(T entity, Long id) {
 		Object retrievedEntity = null;
+		getNewEntityManager();
 		try {
 			retrievedEntity = entityManager.getReference(entity.getClass(), id);
 			return retrievedEntity;

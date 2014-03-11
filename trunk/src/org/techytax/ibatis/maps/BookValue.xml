@@ -1,5 +1,5 @@
 <!--
-Copyright 2013 Hans Beemsterboer
+Copyright 2014 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -70,7 +70,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and user_id = #userId#
 	</update>	
 	<select id="getBookValues" parameterClass="key" resultClass="bookValue">
-		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
+		select bw.id, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
 		and b.balanssoort_id = bs.id 
@@ -78,7 +78,15 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		order by boekjaar desc, balans_id asc
 	</select>
 	<select id="getBookValue" parameterClass="key" resultClass="bookValue">
-		select bw.id, omschrijving as description, bs.id as balanceType, boekjaar as jaar, saldo 
+		select bw.id, bs.id as balanceType, boekjaar as jaar, saldo 
+		from boekwaarde as bw, balanssoort as bs, balans as b 
+		where user_id=#userId# 
+		and b.balanssoort_id = bs.id 
+		and bw.balans_id = b.id 
+		and bw.id = #id#
+	</select>
+	<select id="getBookValueForActivum" parameterClass="key" resultClass="activum">
+		select bw.id, bs.id as balanceType, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
 		and b.balanssoort_id = bs.id 
@@ -86,7 +94,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		and bw.id = #id#
 	</select>			
 	<select id="getBookValuesForChart" parameterClass="key" resultClass="bookValue">
-		select bw.id, omschrijving as description, boekjaar as jaar, saldo 
+		select bw.id, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 
 		where user_id=#userId# 
 		and b.balanssoort_id = bs.id 
@@ -106,7 +114,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	    and restwaarde.user_id = #userId#
 	</select>
 	<select id="getBookValuesHistory" parameterClass="key" resultClass="bookValue">
-		select bw.id, omschrijving as description, balans_id as balanceType, boekjaar as jaar, saldo 
+		select bw.id, balans_id as balanceType, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b
 		where user_id=#userId# 
 		and b.balanssoort_id = bs.id 

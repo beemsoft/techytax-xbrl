@@ -189,7 +189,7 @@ public class CostDao extends BaseDao {
 	
 	@SuppressWarnings("unchecked")
 	public  BigInteger getTotalCostForActivum(Activum activum) throws Exception {
-		BigInteger totalCost = BigInteger.valueOf(0);
+		BigInteger totalCost = BigInteger.ZERO;
 		List<Cost> costs = sqlMap.queryForList("getCostListForActivum", activum);
 		for (Cost cost : costs) {
 			decrypt(cost);

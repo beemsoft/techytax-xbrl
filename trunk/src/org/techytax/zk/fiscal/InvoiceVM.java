@@ -113,11 +113,7 @@ public class InvoiceVM {
 				}
 			}
 			BookValueDao bookValueDao = new BookValueDao();
-			BookValue bookValue = new BookValue();
-			bookValue.setUserId(user.getId());
-			bookValue.setBalanceType(BalanceType.INVOICES_TO_BE_PAID);
-			bookValue.setJaar(currentYear);
-			BookValue bookValuePreviousYear = bookValueDao.getPreviousBookValue(bookValue);
+			BookValue bookValuePreviousYear = bookValueDao.getBookValue(BalanceType.INVOICES_TO_BE_PAID, currentYear - 1);
 			if (bookValuePreviousYear != null) {
 				unpaidInvoicesFromPreviousYear = bookValuePreviousYear.getSaldo();
 			} 

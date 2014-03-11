@@ -23,7 +23,6 @@ import static org.techytax.helper.AmountHelper.format;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Periode;
@@ -48,13 +47,11 @@ public class TaxVM {
 
 	public TaxVM() throws Exception {
 		if (user != null && overview == null) {
-			Locale locale = org.zkoss.util.Locales.getCurrent();
 			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
 			try {
 				FiscalOverviewHelper fiscalOverviewHelper = new FiscalOverviewHelper();
-				overview = fiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()),
-						DateHelper.getDate(previousFiscalPeriod.getEindDatum()), user.getId(), locale);
+				overview = fiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()), DateHelper.getDate(previousFiscalPeriod.getEindDatum()));
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -89,8 +86,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Huisvestingskosten", "", "", "-" + format(overview.getSettlementCosts()), ""));
 			items.add(new ReportTableItem("Totaal overige bedrijfskosten", "", "", "", format(overview.getOtherCostsTotal())));
 			items.add(new ReportTableItem("Winst", "", "", "", format(overview.getProfit())));
-			items.add(new ReportTableItem("Wijzigingen in toelaatbare reserves, toevoeging oudedagsreserve", "", "", "", "("
-					+ format(overview.getOudedagsReserveMaximaal()) + ")"));
+			items.add(new ReportTableItem("Wijzigingen in toelaatbare reserves, toevoeging oudedagsreserve", "", "", "", "(" + format(overview.getOudedagsReserveMaximaal()) + ")"));
 			items.add(new ReportTableItem("Kleinschaligheidsinvesteringsaftrek", "", "", "", "(" + format(overview.getInvestmentDeduction()) + ")"));
 		}
 		return new ListModelList<ReportTableItem>(items);
@@ -102,8 +98,8 @@ public class TaxVM {
 			BalanceReport report = overview.getActivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
 			for (ReportBalance balance : balanceList) {
-				items.add(new ReportTableItem(balance.getOmschrijving(), AmountHelper.formatDecimal(balance.getAanschafKosten()), format(balance
-						.getBookValueBegin()), format(balance.getBookValueEnd()), format(balance.getRestwaarde())));
+				items.add(new ReportTableItem(balance.getOmschrijving(), AmountHelper.formatDecimal(balance.getAanschafKosten()), format(balance.getBookValueBegin()),
+						format(balance.getBookValueEnd()), format(balance.getRestwaarde())));
 			}
 			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
 		}
@@ -116,8 +112,7 @@ public class TaxVM {
 			BalanceReport report = overview.getPassivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
 			for (ReportBalance balance : balanceList) {
-				items.add(new ReportTableItem(balance.getOmschrijving(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()),
-						""));
+				items.add(new ReportTableItem(balance.getOmschrijving(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()), ""));
 			}
 			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
 			items.add(new ReportTableItem("Ondernemingsvermogen", "", "", format(overview.getEnterpriseCapital()), ""));
@@ -129,8 +124,7 @@ public class TaxVM {
 		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Onttrekking in contanten", format(overview.getOnttrekking().getWithdrawalCash())));
-			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking()
-					.getWithdrawalPrivateUsageBusinessCar())));
+			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
 			items.add(new ReportTableItem("Totale onttrekking", format(overview.getOnttrekking().getTotaleOnttrekking())));
 		}
 		return new ListModelList<ReportTableItem>(items);
@@ -147,8 +141,7 @@ public class TaxVM {
 	public ListModelList<ReportTableItem> getPrepaidTaxTableItems() {
 		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
 		if (overview != null) {
-			items.add(new ReportTableItem("Voorlopige aanslag inkomstenbelasting en premie volksverzekeringen", format(overview.getPrepaidTax()
-					.getPrepaidIncome())));
+			items.add(new ReportTableItem("Voorlopige aanslag inkomstenbelasting en premie volksverzekeringen", format(overview.getPrepaidTax().getPrepaidIncome())));
 			items.add(new ReportTableItem("Inkomensafhankelijke bijdrage Zorgverzekeringswet", format(overview.getPrepaidTax().getPrepaidHealth())));
 		}
 		return new ListModelList<ReportTableItem>(items);

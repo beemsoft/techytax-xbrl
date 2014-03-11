@@ -10,6 +10,7 @@
   <class>org.techytax.jpa.entities.VatDeclaration</class>
   <class>org.techytax.domain.UserEntity</class>
   <class>org.techytax.domain.SplitMatch</class>
+  <class>org.techytax.domain.BookValue</class>  
   <class>org.techytax.business.jpa.entities.Customer</class>
   <class>org.techytax.business.jpa.entities.Project</class>
   <class>nl.beemsoft.techytax.log.SaasLogRecord</class>
