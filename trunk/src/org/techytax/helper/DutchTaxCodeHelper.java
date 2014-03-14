@@ -19,11 +19,13 @@
  */
 package org.techytax.helper;
 
+import static org.techytax.domain.CostConstants.VAT;
+import static org.techytax.domain.CostConstants.ROAD_TAX;
+
 import java.util.Calendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 
 public class DutchTaxCodeHelper {
 
@@ -47,7 +49,7 @@ public class DutchTaxCodeHelper {
 						.get(Calendar.YEAR));
 
 				if (taxType.equals("B")) {
-					cost.setCostTypeId(CostConstants.VAT);
+					cost.setCostType(VAT);
 					yearIndicator = convertedTaxCode.substring(17, 18);
 					fullDescription = "Omzetbelasting";
 				} else if (taxType.equals("W")) {
@@ -56,7 +58,7 @@ public class DutchTaxCodeHelper {
 					fullDescription = "Zorgverzekeringswet";
 				} else if (taxType.equals("M")) {
 					fullDescription = "Motorrijtuigenbelasting";
-					cost.setCostTypeId(CostConstants.WEGEN_BELASTING);
+					cost.setCostType(ROAD_TAX);
 				} else if (taxType.equals("O")) {
 					fullDescription = "Omzetbelasting teruggaaf";
 				} else if (taxType.equals("H")) {

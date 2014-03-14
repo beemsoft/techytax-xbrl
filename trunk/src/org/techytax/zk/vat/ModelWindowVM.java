@@ -19,6 +19,20 @@
  */
 package org.techytax.zk.vat;
 
+import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
+import static org.techytax.domain.CostConstants.DEPRECIATION_MACHINE;
+import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.FROM_PRIVATE_ACCOUNT;
+import static org.techytax.domain.CostConstants.FROM_SAVINGS_ACCOUNT;
+import static org.techytax.domain.CostConstants.INVESTMENT;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.INVOICE_PAID;
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.domain.CostConstants.TO_PRIVATE_ACCOUNT;
+import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
+import static org.techytax.domain.CostConstants.UNDETERMINED;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -84,7 +98,7 @@ public class ModelWindowVM {
 			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
 			costTypes = new ListModelList<CostType>(vatCostTypes);
 			for (CostType costType : costTypes) {
-				if (costType.getKostenSoortId() == cost.getCostTypeId()) {
+				if (costType.equals(cost.getCostType())) {
 					selectedCostType = costType;
 				}
 			}
@@ -104,7 +118,7 @@ public class ModelWindowVM {
 	@Command
 	public void save() {
 		Map args = new HashMap();
-		cost.setCostTypeId(selectedCostType.getKostenSoortId());
+		cost.setCostType(selectedCostType);
 		args.put("returncost", this.cost);
 		args.put("splitcost", this.splitCost);
 		if (this.depreciationList != null) {
@@ -112,7 +126,7 @@ public class ModelWindowVM {
 		}
 		args.put("isCar", this.carDepreciation);
 		args.put("remainingValue", this.deprecationRemainingValue);
-		args.put("yearlyDepreciation", this.yearlyDepreciation);		
+		args.put("yearlyDepreciation", this.yearlyDepreciation);
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
 		win.detach();
 	}
@@ -161,13 +175,13 @@ public class ModelWindowVM {
 			cost.setVat(amount.subtract(bd));
 		}
 	}
-	
+
 	@NotifyChange("cost")
 	@Command
 	public void resetVat() throws Exception {
 		cost.setAmount(cost.getAmount().add(cost.getVat()));
 		cost.setVat(BigDecimal.ZERO);
-	}	
+	}
 
 	@NotifyChange({ "cost", "splitCost" })
 	@Command
@@ -194,12 +208,9 @@ public class ModelWindowVM {
 	@NotifyChange("investment")
 	@Command
 	public void checkInvestment() {
-		if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0 && cost.getCostTypeId() != CostConstants.UNDETERMINED
-				&& cost.getCostTypeId() != CostConstants.INVESTMENT && cost.getCostTypeId() != CostConstants.INVESTMENT_OTHER_ACCOUNT && cost.getCostTypeId() != CostConstants.DEPRECIATION_CAR
-				&& cost.getCostTypeId() != CostConstants.DEPRECIATION_MACHINE && cost.getCostTypeId() != CostConstants.DEPRECIATION_SETTLEMENT
-				&& cost.getCostTypeId() != CostConstants.TO_PRIVATE_ACCOUNT && cost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE
-				&& cost.getCostTypeId() != CostConstants.FROM_PRIVATE_ACCOUNT && cost.getCostTypeId() != CostConstants.FROM_SAVINGS_ACCOUNT
-				&& cost.getCostTypeId() != CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF && cost.getCostTypeId() != CostConstants.INVOICE_SENT && cost.getCostTypeId() != CostConstants.INVOICE_PAID) {
+		List<CostType> costTypes = Arrays.asList(UNDETERMINED, INVESTMENT, INVESTMENT_OTHER_ACCOUNT, DEPRECIATION_CAR, DEPRECIATION_MACHINE, DEPRECIATION_SETTLEMENT, TO_PRIVATE_ACCOUNT,
+				EXPENSE_OTHER_ACCOUNT_IGNORE, FROM_PRIVATE_ACCOUNT, FROM_SAVINGS_ACCOUNT, UITGAVE_DEZE_REKENING_FOUTIEF, INVOICE_SENT, INVOICE_PAID);
+		if (cost.getAmount() != null && cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) >= 0 && !costTypes.contains(cost.getCostType())) {
 			investment = true;
 		} else {
 			investment = false;

@@ -19,13 +19,14 @@
  */
 package org.techytax.cache;
 
+import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_DEPRECIATION;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.CostTypeDao;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.zkoss.util.resource.Labels;
 
@@ -50,7 +51,7 @@ public class CostTypeCache {
 		CostTypeDao kostensoortDao = new CostTypeDao();
 		List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
 		for (CostType costType : costTypes) {
-			if (costType.getKostenSoortId() != CostConstants.VAT_CORRECTION_CAR_DEPRECIATION) {
+			if (!costType.equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
 				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 				costTypeMap.put(costType.getKostenSoortId(), costType);
 			}

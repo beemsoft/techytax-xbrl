@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,7 +19,19 @@
  */
 package org.techytax.domain;
 
+import static org.techytax.domain.CostConstants.SETTLEMENT;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity(name = "org.techytax.domain.CostType")
+@Table(name = "kostensoort")
 public class CostType {
+	
+	@Id
+	@Column(name = "id")
 	private long kostenSoortId = 0;
 
 	private String omschrijving;
@@ -33,6 +45,14 @@ public class CostType {
 	private boolean aftrekbaar;
 
 	private boolean investering;
+	
+	public CostType() {
+		// default constructor required by JPA
+	}
+	
+	public CostType(long id) {
+		this.kostenSoortId = id;
+	}
 
 	public boolean isInvestering() {
 		return investering;
@@ -63,7 +83,7 @@ public class CostType {
 	}
 	
 	public boolean isForSettlement() {
-		return kostenSoortId == CostConstants.SETTLEMENT;
+		return this.equals(SETTLEMENT);
 	}
 
 	public void setBijschrijving(boolean bijschrijving) {
@@ -92,5 +112,17 @@ public class CostType {
 
 	public void setOmschrijving(String omschrijving) {
 		this.omschrijving = omschrijving;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof CostType)) {
+			return false;
+		}
+		CostType other = (CostType) object;
+		if (this.getKostenSoortId() != other.getKostenSoortId()) {
+			return false;
+		}
+		return true;
 	}
 }

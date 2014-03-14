@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -86,7 +85,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 			String datum = line[2];
 			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
-			if (bedrag.compareTo(new BigDecimal("0")) == -1) {
+			if (bedrag.compareTo(BigDecimal.ZERO) == -1) {
 				kost.setIncoming(false);
 			} else {
 				kost.setIncoming(true);
@@ -96,9 +95,8 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 			String omschrijving = line[7];
 
 			if (omschrijving.trim().equals("")) {
-				kost.setCostTypeId(CostConstants.UNDETERMINED);
-				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
-				kost.setVat(new BigDecimal("0"));
+				kost.setCostType(CostConstants.UNDETERMINED);
+				kost.setVat(BigDecimal.ZERO);
 			} else {
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST")) {
