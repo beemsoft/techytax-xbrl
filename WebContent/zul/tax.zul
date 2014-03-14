@@ -65,7 +65,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 								</listcell>
 								<listcell style="text-align:right;">
 									<label value="@load(item.value3)"
-										style="font-size: 10px;"
+										style="font-size: 14px; font-weight: bold;"
 										visible="@load(not empty item.value3)" />
 								</listcell>
 								<listcell style="text-align:right;">
@@ -102,7 +102,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 								</listcell>
 								<listcell style="text-align:right;">
 									<label value="@load(item.value3)"
-										style="font-size: 10px;"
+										style="font-size: 14px; font-weight: bold;"
 										visible="@load(not empty item.value3)" />
 								</listcell>
 								<listcell />

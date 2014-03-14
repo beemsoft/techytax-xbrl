@@ -19,6 +19,10 @@
  */
 package org.techytax.zk.activa;
 
+import static org.techytax.log.AuditType.ENTER_BOOKVALUE;
+import static org.techytax.log.AuditType.UPDATE_ACTIVUM;
+import static org.techytax.log.AuditType.UPDATE_BOOKVALUE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +40,6 @@ import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
-import org.techytax.log.AuditType;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -59,6 +62,7 @@ public class ActivaVM {
 	private BookValueDao bookValueDao = new BookValueDao();
 	private CostDao costDao = new CostDao();
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
+	private GenericDao<Cost> costGenericDao = new GenericDao<Cost>(Cost.class, user);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
@@ -128,7 +132,7 @@ public class ActivaVM {
 	@Command
 	public void saveActivum() throws Exception {
 		if (user != null) {
-			selected.setUserId(user.getId());
+			selected.setUser(user);
 			KeyId key = new KeyId();
 			key.setId(selected.getId());
 			key.setUserId(user.getId());
@@ -167,11 +171,11 @@ public class ActivaVM {
 			originalBookValue = (BookValue) bookValueGenericDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
 		}
 		if (originalBookValue == null && bookValue.getSaldo() != null) {
-			AuditLogger.log(AuditType.ENTER_BOOKVALUE, user);
+			AuditLogger.log(ENTER_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueGenericDao.persistEntity(bookValue);
 		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
-			AuditLogger.log(AuditType.UPDATE_BOOKVALUE, user);
+			AuditLogger.log(UPDATE_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueGenericDao.merge(bookValue);
 		} else if (bookValue.getSaldo() == null) {
@@ -222,10 +226,10 @@ public class ActivaVM {
 	@GlobalCommand
 	@NotifyChange("activa")
 	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
-		AuditLogger.log(AuditType.UPDATE_ACTIVUM, user);
+		AuditLogger.log(UPDATE_ACTIVUM, user);
 
-		Cost cost = costDao.getKost(Long.toString(activum.getCostId()), user.getId());
-		cost.setUserId(user.getId());
+		Cost cost = costDao.getKost(activum.getCost());
+		cost.setUser(user);
 		cost.setDescription(activum.getOmschrijving());
 		costDao.updateKost(cost);
 

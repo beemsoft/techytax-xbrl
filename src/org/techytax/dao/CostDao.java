@@ -19,22 +19,36 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INVOICE_PAID;
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
 import org.apache.commons.lang.StringUtils;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
-import org.techytax.domain.KeyId;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class CostDao extends BaseDao {
+	
+	private User user = UserCredentialManager.getUser();
+	private CostCache costCache = new CostCache();
 	
 	public void encrypt(Cost cost) {
 		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
@@ -82,9 +96,9 @@ public class CostDao extends BaseDao {
 		splitCost.setDate(originalCost.getDate());
 		CostType costType = CostTypeCache.getCostType(originalCost.getCostTypeId());
 		if (costType.isBalansMeetellen()) {
-			splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+			splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
 		} else {
-			splitCost.setCostTypeId(CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE);
+			splitCost.setCostType(EXPENSE_OTHER_ACCOUNT_IGNORE);
 		}
 		splitCost.roundValues();
 		encrypt(splitCost);
@@ -92,45 +106,46 @@ public class CostDao extends BaseDao {
 		decrypt(splitCost);
 	}	
 
-	@SuppressWarnings("unchecked")
-	public List<Cost> getKostLijst(String beginDatum, String eindDatum, String balansSoort, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
+	public List<Cost> getKostLijst(Date beginDatum, Date eindDatum, String balansSoort) throws Exception {
 		List<Cost> costs = null;
 		if (balansSoort != null) {
 			if (balansSoort.equals("alles")) {
-				costs = sqlMap.queryForList("getCompleteKostLijst", map);
+				costs = getCostsInPeriod(beginDatum, eindDatum);
 			} else if (balansSoort.equals("btwBalans")) {
-				costs = sqlMap.queryForList("getBtwBalansLijst", map);
+				costs = getVatCostsInPeriod(beginDatum, eindDatum);
 			} else if (balansSoort.equals("rekeningBalans")) {
-				costs = sqlMap.queryForList("getRekeningBalansLijst", map);
+				throw new IllegalStateException("Migrating...");
 			} else if (balansSoort.equals("kostenBalans")) {
-				costs = sqlMap.queryForList("getKostenBalansLijst", map);
-			} else if (balansSoort.equals("tax")) {
-				costs = sqlMap.queryForList("getTaxList", map);
+				throw new IllegalStateException("Migrating...");
 			} else if (balansSoort.equals("audit")) {
-				costs = sqlMap.queryForList("getAuditList", map);
-			}
-		}
-		if (costs != null) {
-			for (Cost cost : costs) {
-				decrypt(cost);
+				throw new IllegalStateException("Migrating...");
 			}
 		}
 		return costs;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Cost> getCostListCurrentAccount(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getKostenBalansCurrentAccountLijst", map);
-		if (costs != null) {
-			for (Cost cost : costs) {
-				decrypt(cost);
+	private List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
+		List<Cost> costs;
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc");
+		query.setParameter("user", user);
+		query.setParameter("beginDate", beginDatum);
+		query.setParameter("endDate", eindDatum);
+		costs = query.getResultList();
+		return costs;
+	}
+	
+	private List<Cost> getVatCostsInPeriod(Date beginDatum, Date eindDatum) {
+		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
+		List<Cost> filteredCosts = new ArrayList<Cost>();
+		for (Cost cost : costs) {
+			if (cost.getCostType().isVatDeclarable()) {
+				filteredCosts.add(cost);
 			}
 		}
-		return costs;
+		return filteredCosts;
 	}	
-
+	
 	public void updateKost(Cost kost) throws Exception {
 		kost.roundValues();	
 		encrypt(kost);
@@ -138,15 +153,17 @@ public class CostDao extends BaseDao {
 		decrypt(kost);
 	}
 	
-	public Cost getKost(String id, long userId) throws Exception {
-		KeyId key = new KeyId();
-		key.setId(Long.parseLong(id));
-		key.setUserId(userId);
-		Cost cost = (Cost) sqlMap.queryForObject("getKost", key);
-		if (cost != null) {
-			decrypt(cost);
+	public Cost getKost(Cost cost) throws Exception {
+		Query query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.id = :id AND c.user = :user");
+		query.setParameter("user", user);
+		query.setParameter("id", cost.getId());
+		Cost result = null;
+		try {
+			result = (Cost) query.getSingleResult();
+		} catch (NoResultException e) {
+			// ok
 		}
-		return cost;
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -198,37 +215,35 @@ public class CostDao extends BaseDao {
 		return totalCost;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public BigDecimal getInvoiceBalance(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getInvoices", map);
-		BigDecimal invoiceBalance = new BigDecimal("0");
+	public BigDecimal getInvoiceBalance(Date beginDatum, Date eindDatum) throws Exception {
+		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
+		BigDecimal invoiceBalance = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			decrypt(cost);
-			if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
+			if (cost.getCostType().equals(INVOICE_SENT)) {
 				invoiceBalance = invoiceBalance.add(cost.getAmount()).add(cost.getVat());	
-			} else if (cost.getCostTypeId() == CostConstants.INVOICE_PAID) {
+			} else if (cost.getCostType().equals(INVOICE_PAID)) {
 				invoiceBalance = invoiceBalance.subtract(cost.getAmount()).subtract(cost.getVat());
 			}			
 		}
 		return invoiceBalance;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Cost> getInvoices(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getInvoices", map);
+	public List<Cost> getInvoices(Date beginDatum, Date eindDatum) throws Exception {
+		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
+		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
-			decrypt(cost);
+			if (cost.getCostType().equals(INVOICE_SENT) || cost.getCostType().equals(INVOICE_PAID)) {
+				filteredCosts.add(cost);
+			}
 		}
-		return costs;
+		return filteredCosts;
 	}	
 	
 	@SuppressWarnings("unchecked")
 	public BigDecimal getVatDebtFromPreviousYear(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
 		List<Cost> costs = sqlMap.queryForList("getVatDebt", map);
-		BigDecimal vatBalance = new BigDecimal("0");
+		BigDecimal vatBalance = BigDecimal.ZERO;
 		for (Cost cost : costs) {
 			decrypt(cost);
 			vatBalance = vatBalance.add(cost.getVat());	

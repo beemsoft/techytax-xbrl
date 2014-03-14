@@ -21,11 +21,32 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@MappedSuperclass
 public class Passivum {
 
 	private String omschrijving;
 	private int boekjaar;
+	
+	@Type(type = "encryptedInteger")
 	private BigInteger saldo;
+	
+	@Column(name = "balans_id")
+	@Enumerated(EnumType.ORDINAL)
 	private BalanceType balanceType;
 
 	public int getBoekjaar() {

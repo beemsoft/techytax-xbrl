@@ -19,6 +19,12 @@
  */
 package org.techytax.importing.helper;
 
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.SETTLEMENT;
+import static org.techytax.domain.CostConstants.SETTLEMENT_DISCOUNT;
+import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,18 +94,17 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		}
 		return "costtype.none";
 	}
-
+	
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = CostConstants.UNDETERMINED;
-		kost.setVat(new BigDecimal("0"));
+		long kostensoortId = CostConstants.UNDETERMINED.getKostenSoortId();
+		kost.setVat(BigDecimal.ZERO);
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kostensoortId = costMatch.getKostenSoortId();
 			CostType costType = CostTypeCache.getCostType(kostensoortId);
 			handleVat(kost, costMatch, costType);
 		}
-		kost.setCostTypeId(kostensoortId);
-		kost.setKostenSoortOmschrijving(getKostOmschrijving(kostensoortId));
+		kost.setCostType(new CostType(kostensoortId));
 		return costMatch;
 	}
 
@@ -122,9 +127,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected void addCostOrHandleAdminstrativeSplitting(String userId, Cost cost, Kostmatch costMatch) throws Exception {
-		if (cost.getCostTypeId() == CostConstants.SETTLEMENT || cost.getCostTypeId() == CostConstants.SETTLEMENT_DISCOUNT) {
+		if (cost.getCostType().equals(SETTLEMENT) || cost.getCostType().equals(SETTLEMENT_DISCOUNT)) {
 			doAdministrativeSplitForSettlement(userId, cost);
-		} else if (cost.getCostTypeId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
+		} else if (cost.getCostType().equals(EXPENSE_CURRENT_ACCOUNT)) {
 			SplitMatchDao splitMatchDao = new SplitMatchDao();
 			SplitMatch splitMatch = splitMatchDao.getSplitMatch(costMatch.getId());
 			if (splitMatch != null) {
@@ -141,10 +146,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		splitCost.setCostType(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
-		splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
 		CostSplitter.applyPercentage(splitCost, privatePercentage);
 		CostSplitter.applyPercentage(cost, 100 - privatePercentage);
 		kostLijst.add(cost);
@@ -156,14 +160,13 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		if (cost.getCostTypeId() == CostConstants.SETTLEMENT) {
-			splitCost.setCostTypeId(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		if (cost.getCostType().equals(SETTLEMENT)) {
+			splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
 		} else {
-			splitCost.setCostTypeId(CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE);
+			splitCost.setCostType(INCOME_CURRENT_ACCOUNT_IGNORE);
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
-		splitCost.setKostenSoortOmschrijving(getKostOmschrijving(splitCost.getCostTypeId()));
 		CostSplitter.applyPercentage(splitCost, (int) (100 - percentage));
 		CostSplitter.applyPercentage(cost, (int) percentage);
 		kostLijst.add(cost);

@@ -72,7 +72,7 @@ public class FiscalOverviewHelper {
 		bookYear = DateHelper.getYear(new Date()) - 1;
 	}
 
-	public FiscalOverview createFiscalOverview(String beginDatum, String eindDatum) throws Exception {
+	public FiscalOverview createFiscalOverview(Date beginDatum, Date eindDatum) throws Exception {
 
 		// Load properties
 		Properties props = PropsFactory.loadProperties();
@@ -86,7 +86,7 @@ public class FiscalOverviewHelper {
 
 		handleProfitAndLoss(privatWithdrawal, btwBalans, deductableCosts);
 
-		ActivaHelper activaHelper = new ActivaHelper(overview);
+		ActivaHelper activaHelper = new ActivaHelper(overview, costCache);
 		List<Activum> activaLijst = activaHelper.handleActiva(props, deductableCosts, costCache.getBusinessAccountCosts());
 
 		List<Passivum> passivaLijst = handlePassiva(activaLijst);
@@ -117,7 +117,7 @@ public class FiscalOverviewHelper {
 
 		calculateProfit();
 
-		handleFiscalPension();
+		setMaximalFiscalPension();
 
 		handleInvestments();
 	}
@@ -127,7 +127,7 @@ public class FiscalOverviewHelper {
 		overview.setInvestmentDeduction(investmentDeductionHelper.getInvestmentDeduction(investmentKostList));
 	}
 
-	private void handleFiscalPension() {
+	private void setMaximalFiscalPension() {
 		int maximaleFor = (int) (overview.getWinst() * FOR_PERCENTAGE);
 		if (maximaleFor > MAXIMALE_FOR) {
 			maximaleFor = MAXIMALE_FOR;
@@ -153,19 +153,8 @@ public class FiscalOverviewHelper {
 	}
 
 	private List<Passivum> handlePassiva(List<Activum> activaLijst) throws Exception {
-
-		// Voer dezelfde FOR op.
-		BigInteger fiscalPension = BigInteger.ZERO;
-		BookValue currentValue = bookValueDao.getBookValue(PENSION, bookYear);
-		if (currentValue == null) {
-			BookValue previousValue = bookValueDao.getBookValue(PENSION, bookYear - 1);
-			if (previousValue != null) {
-				fiscalPension = previousValue.getSaldo();
-				BookValue newValue = new BookValue(0, PENSION, bookYear, fiscalPension);
-				newValue.setUser(user);
-				bookValueGenericDao.persistEntity(newValue);
-			}
-		}
+		BookValue currentValue;
+		BigInteger fiscalPension = handleFiscalPension();
 
 		Periode lastVatPeriod = DateHelper.getLastVatPeriodPreviousYear();
 		BigDecimal vatDebt = costDao.getVatDebtFromPreviousYear(DateHelper.getDate(lastVatPeriod.getBeginDatum()), DateHelper.getDate(lastVatPeriod.getEindDatum()), Long.toString(user.getId()));
@@ -205,6 +194,23 @@ public class FiscalOverviewHelper {
 
 		overview.setPassiva(passivaLijst);
 		return passivaLijst;
+	}
+
+	private BigInteger handleFiscalPension() throws Exception {
+		BigInteger fiscalPension = BigInteger.ZERO;
+		BookValue currentValue = bookValueDao.getBookValue(PENSION, bookYear);
+		if (currentValue == null) {
+			BookValue previousValue = bookValueDao.getBookValue(PENSION, bookYear - 1);
+			if (previousValue != null) {
+				fiscalPension = previousValue.getSaldo();
+				BookValue newValue = new BookValue(0, PENSION, bookYear, fiscalPension);
+				newValue.setUser(user);
+				bookValueGenericDao.persistEntity(newValue);
+			}
+		} else {
+			fiscalPension = currentValue.getSaldo();
+		}
+		return fiscalPension;
 	}
 
 	private BigDecimal handlePrivateDeposits() throws Exception {

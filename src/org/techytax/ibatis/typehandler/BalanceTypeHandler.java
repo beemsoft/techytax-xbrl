@@ -44,7 +44,7 @@ public class BalanceTypeHandler implements TypeHandlerCallback {
 			setter.setNull(Types.INTEGER);
 		} else {
 			BalanceType balanceType = (BalanceType) parameter;
-			setter.setInt(balanceType.ordinal() + 1);
+			setter.setInt(balanceType.ordinal());
 		}
 	}
 

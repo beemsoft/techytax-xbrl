@@ -51,7 +51,7 @@ public class TaxVM {
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
 			try {
 				FiscalOverviewHelper fiscalOverviewHelper = new FiscalOverviewHelper();
-				overview = fiscalOverviewHelper.createFiscalOverview(DateHelper.getDate(previousFiscalPeriod.getBeginDatum()), DateHelper.getDate(previousFiscalPeriod.getEindDatum()));
+				overview = fiscalOverviewHelper.createFiscalOverview(previousFiscalPeriod.getBeginDatum(), previousFiscalPeriod.getEindDatum());
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				e.printStackTrace();

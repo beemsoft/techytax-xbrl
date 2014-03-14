@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -73,8 +73,7 @@ public class DutchAuditFileHelper {
 		try {
 			List<Cost> allCosts = new ArrayList<Cost>();
 			if (periode != null) {
-				allCosts = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "audit",
-						Long.toString(user.getId()));
+				allCosts = costDao.getKostLijst(periode.getBeginDatum(), periode.getEindDatum(), "audit");
 			}
 			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
 			List<Customer> customers = customerDao.findAll();

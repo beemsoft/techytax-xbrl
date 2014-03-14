@@ -19,6 +19,9 @@
  */
 package org.techytax.zk.cost;
 
+import static org.techytax.log.AuditType.ENTER_COST;
+import static org.techytax.log.AuditType.UPDATE_COST;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +34,7 @@ import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
@@ -57,6 +61,7 @@ public class CostVM {
 	protected CostType selectedCostType;
 	
 	protected CostDao costDao = new CostDao();
+	protected GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
 	
 	protected CostCache costCache = new CostCache();
 	
@@ -67,9 +72,6 @@ public class CostVM {
 				Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 				List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
 						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
-				for (Cost cost : vatCosts) {
-					cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-				}
 				costs = new ListModelList<Cost>(vatCosts);
 		}
 		return costs;
@@ -106,16 +108,15 @@ public class CostVM {
 	@Command
 	public void saveCost() throws Exception {
 		if (user != null) {
-			selected.setUserId(user.getId());
-			selected.setCostTypeId(selectedCostType.getKostenSoortId());
-			selected.setKostenSoortOmschrijving(selectedCostType.getOmschrijving());
-			Cost cost = costDao.getKost(Long.toString(selected.getId()), user.getId());
+			selected.setUser(user);
+			selected.setCostType(selectedCostType);
+			Cost cost = costDao.getKost(selected);
 			if (cost == null) {
-				AuditLogger.log(AuditType.ENTER_COST, user);
-				costDao.insertKost(selected);
+				AuditLogger.log(ENTER_COST, user);
+				genericCostDao.persistEntity(selected);
 			} else {
-				AuditLogger.log(AuditType.UPDATE_COST, user);
-				costDao.updateKost(selected);
+				AuditLogger.log(UPDATE_COST, user);
+				genericCostDao.merge(selected);
 			}
 			costCache.invalidate();
 		}
@@ -141,7 +142,7 @@ public class CostVM {
 	public void deleteCost() throws Exception {
 		if (user != null) {
 			AuditLogger.log(AuditType.DELETE_COST, user);
-			selected.setUserId(user.getId());
+			selected.setUser(user);
 			costDao.deleteCost(selected);
 			getCosts().remove(selected);
 			selected = null;

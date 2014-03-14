@@ -81,8 +81,8 @@ public class AccountCheckVM extends CostVM3 {
 	public ListModelList<Cost> getCosts() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			costCache.setBeginDatum(DateHelper.getDate(periode.getBeginDatum()));
-			costCache.setEindDatum(DateHelper.getDate(periode.getEindDatum()));
+			costCache.setBeginDatum(periode.getBeginDatum());
+			costCache.setEindDatum(periode.getEindDatum());
 			costCache.getCosts();
 			costList = costCache.getBusinessAccountCosts();
 			costs = new ListModelList<Cost>(costList);
@@ -98,14 +98,14 @@ public class AccountCheckVM extends CostVM3 {
 		if (user != null) {
 			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-			List<Cost> result2 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "btwBalans", Long.toString(user.getId()));
+			List<Cost> result2 = costDao.getKostLijst(periode.getBeginDatum(), periode.getEindDatum(), "btwBalans");
 			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
-			List<Cost> result3 = costDao.getKostLijst(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), "tax", Long.toString(user.getId()));
-			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(result3).getTotaleKosten();
-			List<Cost> result4 = costDao.getCostListCurrentAccount(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
-			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(result4, true).getTotaleKosten();
+			List<Cost> taxCosts = costCache.getTaxCosts();
+			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(taxCosts).getTotaleKosten();
+			List<Cost> costsOnCurrentAccount = costCache.getCostListCurrentAccount();
+			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(costsOnCurrentAccount, true).getTotaleKosten();
 			BigDecimal interest = costCache.getInterest();
 			BigDecimal costIgnoreBalance = costDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
@@ -144,13 +144,13 @@ public class AccountCheckVM extends CostVM3 {
 	@GlobalCommand
 	@NotifyChange({ "costs" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = costDao.getKost(Long.toString(cost.getId()), user.getId());
+		Cost originalCost = costDao.getKost(cost);
 		if (!cost.equals(originalCost)) {
-			cost.setUserId(user.getId());
+			cost.setUser(user);
 			costDao.updateKost(cost);
 
 			if (splitCost != null) {
-				splitCost.setUserId(user.getId());
+				splitCost.setUser(user);
 				costDao.insertSplitCost(cost, splitCost);
 			}
 		}

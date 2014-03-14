@@ -39,8 +39,8 @@ public class InvestmentDeductionHelper {
 		FiscalDao fiscaalDao = new FiscalDao();
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
-			activum.setUserId(user.getId());
-			activum.setCostId(cost.getId());
+			activum.setUser(user);
+			activum.setCost(cost);
 			activum = fiscaalDao.getActivumByCostId(activum);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
 				totalInvestmentDeduction = totalInvestmentDeduction.add(calculateInvestmentDeduction(cost.getAmount()));

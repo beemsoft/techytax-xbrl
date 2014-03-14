@@ -19,6 +19,9 @@
  */
 package org.techytax.helper;
 
+import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
+import static org.techytax.domain.CostConstants.DEPRECIATION_MACHINE;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -33,12 +36,10 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.RemainingValue;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.util.resource.Labels;
 
 public class DepreciationHelper {
 	
@@ -53,8 +54,8 @@ public class DepreciationHelper {
 
 	public void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear) throws Exception {
 		Activum activum = new Activum();
-		activum.setUserId(userId);
-		activum.setCostId(cost.getId());
+		activum.setUser(user);
+		activum.setCost(cost);
 		BookValueDao boekwaardeDao = new BookValueDao();
 		if (!isCar) {
 			activum.setBalanceType(BalanceType.MACHINERY);
@@ -96,11 +97,9 @@ public class DepreciationHelper {
 			Cost depreciation = new Cost();
 			depreciation.setVat(new BigDecimal(0));
 			if (isCar) {
-				depreciation.setCostTypeId(CostConstants.DEPRECIATION_CAR);
-				depreciation.setKostenSoortOmschrijving(Labels.getLabel("costtype.business.car.depreciation"));
+				depreciation.setCostType(DEPRECIATION_CAR);
 			} else {
-				depreciation.setCostTypeId(CostConstants.DEPRECIATION_MACHINE);
-				depreciation.setKostenSoortOmschrijving(Labels.getLabel("costtype.depreciation"));
+				depreciation.setCostType(DEPRECIATION_MACHINE);
 			}
 			depreciation.setDate(cal.getTime());
 			depreciation.setAmount(yearlyDepreciation.setScale(2));

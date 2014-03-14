@@ -36,10 +36,6 @@ public class BookValueDao extends BaseDao {
 
 	private final User user = UserCredentialManager.getUser();
 
-	private void encrypt(BookValue boekwaarde) {
-		boekwaarde.setSaldo(intEncryptor.encrypt(boekwaarde.getSaldo()));
-	}
-
 	private void encrypt(RemainingValue restwaarde) {
 		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));
 	}
@@ -55,20 +51,6 @@ public class BookValueDao extends BaseDao {
 			remainingValue.setRestwaarde(intEncryptor.decrypt(remainingValue.getRestwaarde()));
 		}
 	}	
-
-	@Deprecated
-	public BookValue getPreviousBookValue(BookValue boekwaarde) throws Exception {
-		BookValue vorigeBoekwaarde = (BookValue) sqlMap.queryForObject("getVorigeBoekwaarde", boekwaarde);
-		decrypt(vorigeBoekwaarde);
-		return vorigeBoekwaarde;
-	}
-
-	@Deprecated
-	public BookValue getBookValueThisYear(BookValue boekwaarde) throws Exception {
-		BookValue boekwaardeDitJaar = (BookValue) sqlMap.queryForObject("getBoekwaardeDitJaar", boekwaarde);
-		decrypt(boekwaardeDitJaar);
-		return boekwaardeDitJaar;
-	}
 
 	@Deprecated
 	@SuppressWarnings("unchecked")
@@ -151,10 +133,5 @@ public class BookValueDao extends BaseDao {
 		}
 		return remainingValues;
 	}
-	
-	@Deprecated
-	public void deleteBookValue(KeyId key) throws Exception {
-		sqlMap.delete("deleteBookValue", key);
-	}	
 	
 }

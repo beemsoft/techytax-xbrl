@@ -53,7 +53,7 @@ public class SettlementVM {
 	
 	@Command
 	public void save() throws Exception {
-		settlement.setUserId(user.getId());
+		settlement.setUser(user);
 		settlement.setStartDate(DateHelper.getDate(startDate));
 		settlementDao.updateSettlement(settlement);
 	}	

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,31 +19,29 @@
  */
 package org.techytax.cache;
 
+import static org.techytax.domain.CostConstants.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.PrepaidTax;
-import org.techytax.domain.User;
 import org.techytax.util.DateHelper;
-import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.util.resource.Labels;
 
 public class CostCache {
 
-	private User user = UserCredentialManager.getUser();
-
 	private List<Cost> costs = null;
 
-	private String beginDatum;
+	private Date beginDatum;
 
-	private String eindDatum;
+	private Date eindDatum;
 
 	public List<Cost> getCosts() throws Exception {
 
@@ -55,10 +53,7 @@ public class CostCache {
 
 	private void fillCosts() throws Exception {
 		CostDao costDao = new CostDao();
-		costs = costDao.getKostLijst(beginDatum, eindDatum, "alles", Long.toString(user.getId()));
-		for (Cost cost : costs) {
-			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-		}
+		costs = costDao.getKostLijst(beginDatum, eindDatum, "alles");
 	}
 
 	public void invalidate() {
@@ -68,35 +63,35 @@ public class CostCache {
 	public List<DeductableCostGroup> getDeductableCosts() throws Exception {
 		List<DeductableCostGroup> deductableCostList = new ArrayList<DeductableCostGroup>();
 		for (Cost cost : costs) {
-			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
+			CostType costType = cost.getCostType();
 			if (costType.isAftrekbaar()) {
 				DeductableCostGroup deductableCostGroup = new DeductableCostGroup();
 				deductableCostGroup.setAftrekbaarBedrag(cost.getAmount());
-				deductableCostGroup.setKostenSoortId(cost.getCostTypeId());
+				deductableCostGroup.setKostenSoort(cost.getCostType());
 				deductableCostList.add(deductableCostGroup);
 			}
 		}
 		Collections.sort(deductableCostList);
-		long latestCostType = 0;
+		CostType latestCostType = UNDETERMINED;
 		DeductableCostGroup groupedCost = null;
-		BigDecimal totalDeductableCost = new BigDecimal("0");
+		BigDecimal totalDeductableCost = BigDecimal.ZERO;
 		List<DeductableCostGroup> groupedDeducatableCostList = new ArrayList<DeductableCostGroup>();
 		for (DeductableCostGroup deductableCost : deductableCostList) {
-			if (deductableCost.getKostenSoortId() != latestCostType) {
+			if (deductableCost.getKostenSoort() != latestCostType) {
 				if (groupedCost != null) {
 					groupedCost.setAftrekbaarBedrag(totalDeductableCost);
-					groupedCost.setKostenSoortId(latestCostType);
+					groupedCost.setKostenSoort(latestCostType);
 					groupedDeducatableCostList.add(groupedCost);
 				}
-				latestCostType = deductableCost.getKostenSoortId();
+				latestCostType = deductableCost.getKostenSoort();
 				groupedCost = new DeductableCostGroup();
-				totalDeductableCost = new BigDecimal("0");
+				totalDeductableCost = BigDecimal.ZERO;
 			}
 			totalDeductableCost = totalDeductableCost.add(deductableCost.getAftrekbaarBedrag());
 		}
 		if (groupedCost != null) {
 			groupedCost.setAftrekbaarBedrag(totalDeductableCost);
-			groupedCost.setKostenSoortId(latestCostType);
+			groupedCost.setKostenSoort(latestCostType);
 			groupedDeducatableCostList.add(groupedCost);
 		}
 		return groupedDeducatableCostList;
@@ -116,9 +111,9 @@ public class CostCache {
 	public List<Cost> getInvestments() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
-			long id = cost.getCostTypeId();
-			if (id == CostConstants.INVESTMENT) {
-				if (cost.getAmount().compareTo(new BigDecimal(CostConstants.INVESTMENT_MINIMUM_AMOUNT)) == 1) {
+			CostType costType = cost.getCostType();
+			if (costType.equals(INVESTMENT)) {
+				if (cost.getAmount().compareTo(BigDecimal.valueOf(INVESTMENT_MINIMUM_AMOUNT)) == 1) {
 					filteredCosts.add(cost);
 				}
 			}
@@ -126,14 +121,36 @@ public class CostCache {
 		return filteredCosts;
 	}
 
+	public List<Cost> getTaxCosts() throws Exception {
+		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<CostType> costTypes = Arrays.asList(VAT, INCOME_TAX, INCOME_TAX_PAID_BACK, ROAD_TAX, VAT_PAID_BACK_ON_OTHER_ACCOUNT);
+		for (Cost cost : costs) {
+			if (costTypes.contains(cost.getCostType())) {
+				filteredCosts.add(cost);
+			}
+		}
+		return filteredCosts;
+	}
+
+	public List<Cost> getCostListCurrentAccount() throws Exception {
+		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, UITGAVE_DEZE_REKENING_FOUTIEF, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTENTIE,
+				ADVERTENTIE_ZONDER_BTW, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST);
+		for (Cost cost : costs) {
+			if (costTypes.contains(cost.getCostType())) {
+				filteredCosts.add(cost);
+			}
+		}
+		return filteredCosts;
+	}
+
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
 		BigDecimal costsWithPrivateMoney = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT_IGNORE, EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT,
+				BUSINESS_FOOD_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT, INVESTMENT_OTHER_ACCOUNT);
 		for (Cost cost : costs) {
-			long id = cost.getCostTypeId();
-			if (id == CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE || id == CostConstants.EXPENSE_OTHER_ACCOUNT || id == CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
-					|| id == CostConstants.AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT || id == CostConstants.BUSINESS_TRAVEL_CREDIT_CARD
-					|| id == CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT || id == CostConstants.INVESTMENT_OTHER_ACCOUNT) {
-
+			CostType costType = cost.getCostType();
+			if (costTypes.contains(costType)) {
 				costsWithPrivateMoney = costsWithPrivateMoney.add(cost.getAmount()).add(cost.getVat());
 			}
 		}
@@ -143,7 +160,7 @@ public class CostCache {
 	public BigDecimal getInterest() throws Exception {
 		BigDecimal interest = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			if (cost.getCostTypeId() == CostConstants.INTEREST) {
+			if (cost.getCostType().equals(INTEREST)) {
 				interest = interest.add(cost.getAmount());
 			}
 		}
@@ -154,7 +171,7 @@ public class CostCache {
 	public List<Cost> getVatCorrectionDepreciation() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
-			if (cost.getCostTypeId() == CostConstants.VAT_CORRECTION_CAR_DEPRECIATION) {
+			if (cost.getCostType().equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
 				filteredCosts.add(cost);
 			}
 		}
@@ -165,14 +182,14 @@ public class CostCache {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		List<Cost> filteredCostList = new ArrayList<Cost>();
 		for (Cost cost : costs) {
-			long id = cost.getCostTypeId();
-			if (id == CostConstants.INCOME_TAX) {
+			CostType costType = cost.getCostType();
+			if (costType.equals(INCOME_TAX)) {
 				filteredCostList.add(cost);
 			}
 		}
 		int prepaidIncomeTax = 0;
 		int prepaidHealthTax = 0;
-		int year = DateHelper.getYear(DateHelper.stringToDate(beginDatum));
+		int year = DateHelper.getYear(beginDatum);
 		for (Cost tax : filteredCostList) {
 			if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
 				prepaidIncomeTax += tax.getAmount().intValue();
@@ -185,34 +202,34 @@ public class CostCache {
 		prepaidTax.setPrepaidIncome(prepaidIncomeTax);
 		return prepaidTax;
 	}
-	
+
 	public BigDecimal getRepurchases() throws Exception {
 		BigDecimal repurchases = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			long id = cost.getCostTypeId();
-			if (id == CostConstants.REPURCHASES) {
+			CostType costType = cost.getCostType();
+			if (costType.equals(REPURCHASES)) {
 				repurchases = repurchases.add(cost.getAmount());
 			}
 		}
 		return repurchases;
-	}	
+	}
 
-	public String getBeginDatum() {
+	public Date getBeginDatum() {
 		return beginDatum;
 	}
 
-	public void setBeginDatum(String beginDatum) {
+	public void setBeginDatum(Date beginDatum) {
 		if (!beginDatum.equals(this.beginDatum)) {
 			costs = null;
 		}
 		this.beginDatum = beginDatum;
 	}
 
-	public String getEindDatum() {
+	public Date getEindDatum() {
 		return eindDatum;
 	}
 
-	public void setEindDatum(String eindDatum) {
+	public void setEindDatum(Date eindDatum) {
 		if (!eindDatum.equals(this.eindDatum)) {
 			costs = null;
 		}

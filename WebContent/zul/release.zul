@@ -27,7 +27,6 @@ Changes:
 <li>Added export button in customer page.</li>
 <li>Added customer list to export file for XAF version 3.1.</li>
 <li>Added postal code checker in customer page.</li>
-<li>Migrated User DAO to JPA.</li>
 <li>Removed SEPA info from transaction description.</li>
 <li>Added VAT correction for private usage to VAT overview.</li>
 <li>Added option for yearly VAT declaration.</li>
@@ -36,6 +35,8 @@ Changes:
 <li>Display warning about VAT declaration.</li>
 <li>Added reset button to edit cost window.</li>
 <li>Added support for VAT-free companies.</li>
+<li>Display warning when fiscal pension gets larger than non current assets.</li>
+<li>Migrating from iBatis to JPA.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

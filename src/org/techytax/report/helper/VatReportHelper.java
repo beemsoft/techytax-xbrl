@@ -19,6 +19,8 @@
  */
 package org.techytax.report.helper;
 
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +31,6 @@ import java.util.Map.Entry;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.domain.VatPeriodType;
@@ -93,7 +94,7 @@ public class VatReportHelper {
 		List<Cost> journalCosts;
 		for (Cost cost : vatCosts) {
 			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
-			if (costType.isBijschrijving() || costType.getKostenSoortId() == CostConstants.INVOICE_SENT) {
+			if (costType.isBijschrijving() || costType.equals(INVOICE_SENT)) {
 				if (journalMapIn.containsKey(cost.getKostenSoortOmschrijving())) {
 					journalCosts = journalMapIn.get(cost.getKostenSoortOmschrijving());
 				} else {
@@ -120,8 +121,7 @@ public class VatReportHelper {
 	public static void main(String[] args) throws Exception {
 		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		CostDao costDao = new CostDao();
-		List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
-				"btwBalans", "");
+		List<Cost> vatCosts = costDao.getKostLijst(period.getBeginDatum(), period.getEindDatum(), "btwBalans");
 		createReportData(vatCosts);
 	}
 }

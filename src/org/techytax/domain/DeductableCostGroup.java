@@ -24,31 +24,31 @@ import java.math.BigDecimal;
 public class DeductableCostGroup implements Comparable<DeductableCostGroup> {
 	private BigDecimal aftrekbaarBedrag;
 
-	private long kostenSoortId;
+	private CostType kostenSoort;
 	
 	public BigDecimal getAftrekbaarBedrag() {
 		return aftrekbaarBedrag;
 	}
 
-	public long getKostenSoortId() {
-		return kostenSoortId;
+	public CostType getKostenSoort() {
+		return kostenSoort;
 	}
 
 	public void setAftrekbaarBedrag(BigDecimal aftrekbaarBedrag) {
 		this.aftrekbaarBedrag = aftrekbaarBedrag;
 	}
 
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
+	public void setKostenSoort(CostType kostenSoort) {
+		this.kostenSoort = kostenSoort;
 	}
 
 	public int compareTo(DeductableCostGroup o) {
-		return (int) (this.kostenSoortId - o.kostenSoortId);
+		return (int) (this.kostenSoort.getKostenSoortId() - o.kostenSoort.getKostenSoortId());
 	}
 	
 	@Override
 	public String toString() {
-		return "type: "+kostenSoortId+", amount: "+aftrekbaarBedrag;
+		return "type: "+kostenSoort.getKostenSoortId()+", amount: "+aftrekbaarBedrag;
 	}
 
 }

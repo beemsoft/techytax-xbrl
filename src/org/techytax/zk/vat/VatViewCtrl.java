@@ -19,6 +19,10 @@
  */
 package org.techytax.zk.vat;
 
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.UNDETERMINED;
+import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +40,6 @@ import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
@@ -56,7 +59,6 @@ import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.GlobalCommandEvent;
 import org.zkoss.util.media.Media;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Page;
@@ -87,6 +89,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private User user = UserCredentialManager.getUser();
 
 	private CostDao costDao = new CostDao();
+	private GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
 
 	@Wire
 	private Grid costGrid;
@@ -126,15 +129,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
-		AuditLogger.log(AuditType.UPLOAD_TRANSACTIONS, user);
+		AuditLogger.log(UPLOAD_TRANSACTIONS, user);
 		try {
 			media = event.getMedia();
 			List<Cost> result = readTransactions();
-
-			for (Cost cost : result) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-			}
-
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
@@ -159,7 +157,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
 		for (Cost cost : result) {
-			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
+			if (cost.getCostType().equals(UNDETERMINED)) {
 				return true;
 			}
 		}
@@ -169,7 +167,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private List<Cost> filterUnmatchedTransactions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<Cost>();
 		for (Cost cost : result) {
-			if (cost.getCostTypeId() == CostConstants.UNDETERMINED) {
+			if (cost.getCostType().equals(UNDETERMINED)) {
 				filteredResult.add(cost);
 			}
 		}
@@ -218,11 +216,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void reload(Event event) {
 		try {
 			List<Cost> result = readTransactions();
-
-			for (Cost cost : result) {
-				cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-			}
-
 			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
@@ -241,10 +234,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 			for (int i = 0; i < result.getSize(); i++) {
 				kost = (Cost) result.getElementAt(i);
-				if (kost.getCostTypeId() != CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE) {
+				if (!kost.getCostType().equals(EXPENSE_OTHER_ACCOUNT_IGNORE)) {
 					kost.setId(0);
-					kost.setUserId(user.getId());
-					costDao.insertKost(kost);
+					kost.setUser(user);
+					genericCostDao.persistEntity(kost);
 				}
 			}
 		}
@@ -267,10 +260,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private void createVatOverview() throws Exception {
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		List<Cost> vatCosts = costDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "btwBalans", Long.toString(user.getId()));
-		for (Cost cost : vatCosts) {
-			cost.setKostenSoortOmschrijving(Labels.getLabel(cost.getKostenSoortOmschrijving()));
-		}
+		List<Cost> vatCosts = costDao.getKostLijst(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum(), "btwBalans");
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
@@ -278,7 +268,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		if (balans.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
-			List<Cost> balanceCosts = costDao.getKostLijst(DateHelper.getDate(vatPeriod.getBeginDatum()), DateHelper.getDate(vatPeriod.getEindDatum()), "rekeningBalans", Long.toString(user.getId()));
+			List<Cost> balanceCosts = costDao.getKostLijst(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum(), "rekeningBalans");
 			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 			balans.setNettoOmzet(turnover);
 			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
@@ -410,14 +400,14 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
 				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = costDao.getKost(Long.toString(updatedCost.getId()), user.getId());
+				Cost originalCost = costDao.getKost(updatedCost);
 				if (!updatedCost.equals(originalCost)) {
-					updatedCost.setUserId(user.getId());
+					updatedCost.setUser(user);
 					costDao.updateKost(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
-						splitCost.setUserId(user.getId());
+						splitCost.setUser(user);
 						costDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();

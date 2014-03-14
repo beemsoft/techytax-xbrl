@@ -19,6 +19,8 @@
  */
 package org.techytax.business.zk.calendar;
 
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +96,7 @@ public class CalendarController extends SelectorComposer<Component> {
 	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
 	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao();
 	private CostDao costDao = new CostDao();
+	private GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
 
 	private ListModel<Project> projectsModel;
 
@@ -292,12 +295,11 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (maand < 10) {
 				factuurNummerString += "0";
 			}
-			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(DateHelper.getDate(beginDate), DateHelper.getDate(endDate),
-					Long.toString(user.getId()));
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(beginDate, endDate);
 			List<Cost> invoices = new ArrayList<Cost>();
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
-				if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
+				if (cost.getCostType().equals(INVOICE_SENT)) {
 					String monthStr = Integer.toString(maand);
 					if (cost.getDescription().charAt(6) == monthStr.charAt(monthStr.length() - 1)) {
 						invoices.add(cost);
@@ -362,13 +364,13 @@ public class CalendarController extends SelectorComposer<Component> {
 
 				private void registerInvoice() throws Exception {
 					Cost cost = new Cost();
-					cost.setUserId(user.getId());
+					cost.setUser(user);
 					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
 					cost.setAmount(invoice.getNetAmount());
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());
-					cost.setCostTypeId(CostConstants.INVOICE_SENT);
-					costDao.insertKost(cost);
+					cost.setCostType(CostConstants.INVOICE_SENT);
+					genericCostDao.persistEntity(cost);
 				}
 			});
 			invoiceWindow.doPopup();

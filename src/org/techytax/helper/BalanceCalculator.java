@@ -19,11 +19,45 @@
  */
 package org.techytax.helper;
 
-import static org.techytax.domain.CostConstants.*;
+import static org.techytax.domain.CostConstants.ADVERTENTIE;
+import static org.techytax.domain.CostConstants.ADVERTENTIE_ZONDER_BTW;
+import static org.techytax.domain.CostConstants.BUSINESS_CAR;
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
+import static org.techytax.domain.CostConstants.DEPRECIATION_MACHINE;
+import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.FISCALE_BIJTELLING_AUTO;
+import static org.techytax.domain.CostConstants.FOOD_TAXFREE_PERCENTAGE;
+import static org.techytax.domain.CostConstants.FROM_PRIVATE_ACCOUNT;
+import static org.techytax.domain.CostConstants.FROM_SAVINGS_ACCOUNT;
+import static org.techytax.domain.CostConstants.INCOME_TAX_PAID_BACK;
+import static org.techytax.domain.CostConstants.INKOMST_DEZE_REKENING;
+import static org.techytax.domain.CostConstants.INLEG;
+import static org.techytax.domain.CostConstants.INVOICE_PAID;
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.domain.CostConstants.OPNAME;
+import static org.techytax.domain.CostConstants.REPURCHASES;
+import static org.techytax.domain.CostConstants.SETTLEMENT;
+import static org.techytax.domain.CostConstants.SETTLEMENT_DISCOUNT;
+import static org.techytax.domain.CostConstants.SETTLEMENT_INTEREST;
+import static org.techytax.domain.CostConstants.SETTLEMENT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.TO_PRIVATE_ACCOUNT;
+import static org.techytax.domain.CostConstants.TO_SAVINGS_ACCOUNT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.UITGAVE_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
+import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_PRIVATE;
+import static org.techytax.domain.CostConstants.ROAD_TAX;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -35,10 +69,9 @@ import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
+import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.CostType;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Reiskosten;
 import org.techytax.util.DateHelper;
@@ -59,18 +92,18 @@ public class BalanceCalculator {
 				if (obj != null) {
 
 					long id = obj.getCostTypeId();
-					if (obj.getCostTypeId() == INVOICE_SENT && isForAccountBalance) {
+					if (obj.getCostType().equals(INVOICE_SENT) && isForAccountBalance) {
 						// skip
 					} else {
 						CostType kostensoort = CostTypeCache.getCostType(id);
 						if (kostensoort.isVatDeclarable()) {
-							if (kostensoort.isBijschrijving() || kostensoort.getKostenSoortId() == INVOICE_SENT) {
+							if (kostensoort.isBijschrijving() || kostensoort.equals(INVOICE_SENT)) {
 								totalBtwIn = totalBtwIn.add(obj.getVat());
 								brutoOmzet = brutoOmzet.add(obj.getAmount());
 								nettoOmzet = nettoOmzet.add(obj.getAmount());
 								brutoOmzet = brutoOmzet.add(obj.getVat());
 							} else {
-								if (kostensoort.getKostenSoortId() == VAT_CORRECTION_CAR_PRIVATE) {
+								if (kostensoort.equals(VAT_CORRECTION_CAR_PRIVATE)) {
 									totalBtwCorrection = totalBtwCorrection.add(obj.getVat());
 								} else {
 									totalBtwOut = totalBtwOut.add(obj.getVat());
@@ -129,24 +162,23 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getCostTypeId();
-					CostType kostensoort = CostTypeCache.getCostType(id);
-					if (kostensoort.isBalansMeetellen()) {
-						if (kostensoort.isBijschrijving()) {
+					CostType costType = obj.getCostType();
+					if (costType.isBalansMeetellen()) {
+						if (costType.isBijschrijving()) {
 							totalKost = totalKost.add(obj.getAmount());
 							totalKost = totalKost.add(obj.getVat());
-							if (id == FROM_PRIVATE_ACCOUNT || id == INLEG) {
+							if (costType.equals(FROM_PRIVATE_ACCOUNT) || costType.equals(INLEG)) {
 								totalInleg = totalInleg.add(obj.getAmount());
 							}
-							if (id == FROM_SAVINGS_ACCOUNT) {
+							if (costType.equals(FROM_SAVINGS_ACCOUNT)) {
 								totalSparen = totalSparen.subtract(obj.getAmount());
 							}
 						} else {
 							totalKost = totalKost.subtract(obj.getAmount());
 							totalKost = totalKost.subtract(obj.getVat());
-							if (id == TO_SAVINGS_ACCOUNT) {
+							if (costType.equals(TO_SAVINGS_ACCOUNT)) {
 								totalSparen = totalSparen.add(obj.getAmount());
-							} else if (id == TO_PRIVATE_ACCOUNT || id == OPNAME) {
+							} else if (costType.equals(TO_PRIVATE_ACCOUNT) || costType.equals(OPNAME)) {
 								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
@@ -179,18 +211,18 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getCostTypeId();
-					if (id == INKOMST_DEZE_REKENING) {
+					CostType costType = obj.getCostType();
+					if (costType.equals(INKOMST_DEZE_REKENING)) {
 						totalBaat = totalBaat.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
-					} else if (id == EXPENSE_CURRENT_ACCOUNT || id == UITGAVE_DEZE_REKENING_FOUTIEF || id == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT
-							|| id == TRAVEL_WITH_PUBLIC_TRANSPORT || id == AUTO_VAN_DE_ZAAK || id == AUTO_VAN_DE_ZAAK_ANDERE_REKENING
-							|| id == WEGEN_BELASTING || id == UITGAVE_CREDIT_CARD || id == EXPENSE_OTHER_ACCOUNT || id == ADVERTENTIE) {
+					} else if (costType.equals(EXPENSE_CURRENT_ACCOUNT) || costType.equals(UITGAVE_DEZE_REKENING_FOUTIEF) || costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT)
+							|| costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT) || costType.equals(BUSINESS_CAR) || costType.equals(BUSINESS_CAR_OTHER_ACCOUNT)
+							|| costType.equals(ROAD_TAX) || costType.equals(UITGAVE_CREDIT_CARD) || costType.equals(EXPENSE_OTHER_ACCOUNT) || costType.equals(ADVERTENTIE)) {
 						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
-					} else if (id == BUSINESS_FOOD || id == BUSINESS_FOOD_OTHER_ACCOUNT) {
+					} else if (costType.equals(BUSINESS_FOOD) || costType.equals(BUSINESS_FOOD_OTHER_ACCOUNT)) {
 						// Do not apply tax deduction to this cost.
 						totalKost = totalKost.add(obj.getAmount());
 					}
@@ -219,7 +251,7 @@ public class BalanceCalculator {
 					} else {
 						totalKost = totalKost.add(obj.getAmount());
 						if (isIncludingVat) {
-							totalKost = totalKost.add(obj.getVat());
+							totalKost = totalKost.add(obj.getVat());	
 						}
 					}
 				}
@@ -237,8 +269,8 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getCostTypeId();
-					if (id == INVOICE_PAID) {
+					CostType costType = obj.getCostType();
+					if (costType.equals(INVOICE_PAID)) {
 						total = total.add(obj.getAmount()).add(obj.getVat());
 					}
 				}
@@ -258,14 +290,14 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					long id = obj.getCostTypeId();
-					if (id == TRAVEL_WITH_PUBLIC_TRANSPORT || id == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
+					CostType costType = obj.getCostType();
+					if (costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT) || costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT)) {
 						totalKostOV = totalKostOV.add(obj.getAmount());
-					} else if (id == AUTO_VAN_DE_ZAAK || id == AUTO_VAN_DE_ZAAK_ANDERE_REKENING || id == WEGEN_BELASTING) {
+					} else if (costType.equals(BUSINESS_CAR) || costType.equals(BUSINESS_CAR_OTHER_ACCOUNT) || costType.equals(ROAD_TAX)) {
 						totalKostAuto = totalKostAuto.add(obj.getAmount());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getAmount());
 						totalKostAutoMetBtw = totalKostAutoMetBtw.add(obj.getVat());
-					} else if (id == VAT_CORRECTION_CAR_PRIVATE) {
+					} else if (costType.equals(VAT_CORRECTION_CAR_PRIVATE)) {
 						totalVatCorrection = totalVatCorrection.add(obj.getVat());
 					}
 				}
@@ -285,7 +317,7 @@ public class BalanceCalculator {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
-					if (obj.getCostTypeId() == INKOMSTEN_BELASTING_TERUGGAVE) {
+					if (obj.getCostType().equals(INCOME_TAX_PAID_BACK)) {
 						total = total.subtract(obj.getAmount());
 					} else {
 						total = total.add(obj.getAmount());
@@ -302,7 +334,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == DEPRECIATION_CAR) {
+			if (aftrekpost.getKostenSoort().equals(DEPRECIATION_CAR)) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -311,10 +343,10 @@ public class BalanceCalculator {
 
 	public static BigInteger getRepurchase(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal repurchases = new BigDecimal("0");
+		BigDecimal repurchases = BigDecimal.ZERO;
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == REPURCHASES) {
+			if (aftrekpost.getKostenSoort().equals(REPURCHASES)) {
 				repurchases = repurchases.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -325,7 +357,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == DEPRECIATION_MACHINE) {
+			if (aftrekpost.getKostenSoort().equals(DEPRECIATION_MACHINE)) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -336,7 +368,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == DEPRECIATION_SETTLEMENT) {
+			if (aftrekpost.getKostenSoort().equals(DEPRECIATION_SETTLEMENT)) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -347,7 +379,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == FISCALE_BIJTELLING_AUTO) {
+			if (aftrekpost.getKostenSoort().equals(FISCALE_BIJTELLING_AUTO)) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}
@@ -356,11 +388,11 @@ public class BalanceCalculator {
 
 	public static BigDecimal getKostenVoorAuto(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal kosten = new BigDecimal("0");
+		BigDecimal kosten = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(BUSINESS_CAR, BUSINESS_CAR_OTHER_ACCOUNT, ROAD_TAX);
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == AUTO_VAN_DE_ZAAK || aftrekpost.getKostenSoortId() == AUTO_VAN_DE_ZAAK_ANDERE_REKENING
-					|| aftrekpost.getKostenSoortId() == WEGEN_BELASTING) {
+			if (costTypes.contains(aftrekpost.getKostenSoort())) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -369,10 +401,11 @@ public class BalanceCalculator {
 
 	public static BigDecimal getReiskosten(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal reiskosten = new BigDecimal("0");
+		BigDecimal reiskosten = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(TRAVEL_WITH_PUBLIC_TRANSPORT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoortId() == TRAVEL_WITH_PUBLIC_TRANSPORT || aftrekpost.getKostenSoortId() == TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) {
+			if (costTypes.contains(aftrekpost.getKostenSoort())) {
 				reiskosten = reiskosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -381,12 +414,11 @@ public class BalanceCalculator {
 
 	public static BigDecimal getAlgemeneKosten(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal kosten = new BigDecimal("0");
+		BigDecimal kosten = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, EXPENSE_OTHER_ACCOUNT, UITGAVE_CREDIT_CARD, ADVERTENTIE, ADVERTENTIE_ZONDER_BTW);
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == EXPENSE_CURRENT_ACCOUNT || aftrekpost.getKostenSoortId() == EXPENSE_OTHER_ACCOUNT
-					|| aftrekpost.getKostenSoortId() == UITGAVE_CREDIT_CARD || aftrekpost.getKostenSoortId() == ADVERTENTIE
-					|| aftrekpost.getKostenSoortId() == ADVERTENTIE_ZONDER_BTW) {
+			if (costTypes.contains(aftrekpost.getKostenSoort())) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
@@ -395,25 +427,26 @@ public class BalanceCalculator {
 
 	public static BigDecimal getFoodCosts(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal kosten = new BigDecimal("0");
+		BigDecimal kosten = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(BUSINESS_FOOD, BUSINESS_FOOD_OTHER_ACCOUNT);
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == BUSINESS_FOOD || aftrekpost.getKostenSoortId() == BUSINESS_FOOD_OTHER_ACCOUNT) {
+			if (costTypes.contains(aftrekpost.getKostenSoort())) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
 			}
 		}
-		return kosten.multiply(new BigDecimal(FOOD_TAXFREE_PERCENTAGE));
+		return kosten.multiply(BigDecimal.valueOf(FOOD_TAXFREE_PERCENTAGE));
 	}
 
 	public static BigDecimal getSettlementCosts(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		BigDecimal kosten = new BigDecimal("0");
+		BigDecimal kosten = BigDecimal.ZERO;
+		List<CostType> costTypes = Arrays.asList(SETTLEMENT, SETTLEMENT_INTEREST, SETTLEMENT_OTHER_ACCOUNT);
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = (DeductableCostGroup) iterator.next();
-			if (aftrekpost.getKostenSoortId() == SETTLEMENT || aftrekpost.getKostenSoortId() == SETTLEMENT_INTEREST
-					|| aftrekpost.getKostenSoortId() == SETTLEMENT_OTHER_ACCOUNT) {
+			if (costTypes.contains(aftrekpost.getKostenSoort())) {
 				kosten = kosten.add(aftrekpost.getAftrekbaarBedrag());
-			} else if (aftrekpost.getKostenSoortId() == SETTLEMENT_DISCOUNT) {
+			} else if (aftrekpost.getKostenSoort().equals(SETTLEMENT_DISCOUNT)) {
 				kosten = kosten.subtract(aftrekpost.getAftrekbaarBedrag());
 			}
 		}

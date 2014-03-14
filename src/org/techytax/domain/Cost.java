@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,20 +23,55 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+import org.zkoss.util.resource.Labels;
+
+@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"), @Parameter(name = "decimalScale", value = "2") })})
+@Entity(name = "org.techytax.domain.Cost")
+@Table(name = "kosten")
 public class Cost implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
+	
+	@Column(name = "bedrag")
+	@Type(type = "encryptedBigDecimal")
 	private BigDecimal amount;
-	private BigDecimal vat = new BigDecimal("0");
+	
+	@Column(name = "btw")
+	@Type(type = "encryptedBigDecimal")
+	private BigDecimal vat = BigDecimal.ZERO;
+	
+	@Column(name = "datum")
 	private Date date;
+	
+	@Id
 	private long id = 0;
-	private boolean isIncoming;
-	private long costTypeId;
-	private String kostenSoortOmschrijving;
+	
+	@ManyToOne
+	@JoinColumn(name = "kostensoort_id")
+	private CostType costType;
+	
+	@Column(name = "omschrijving")
+	@Type(type = "encryptedString")
 	private String description;
-	private long userId;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
 
 	public BigDecimal getAmount() {
 		return amount;
@@ -55,23 +90,20 @@ public class Cost implements Serializable {
 	}
 
 	public long getCostTypeId() {
-		return costTypeId;
+		return costType.getKostenSoortId();
 	}
 
 	public String getKostenSoortOmschrijving() {
-		return kostenSoortOmschrijving;
+		return Labels.getLabel(costType.getOmschrijving());
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public long getUserId() {
-		return userId;
-	}
 
 	public boolean isIncoming() {
-		return isIncoming;
+		return costType.isBijschrijving();
 	}
 
 	public void setAmount(BigDecimal amount) {
@@ -90,26 +122,14 @@ public class Cost implements Serializable {
 		this.id = id;
 	}
 
-	public void setIncoming(boolean isIncoming) {
-		this.isIncoming = isIncoming;
-	}
-
-	public void setCostTypeId(long costTypeId) {
-		this.costTypeId = costTypeId;
-	}
-
-	public void setKostenSoortOmschrijving(String kostenSoortOmschrijving) {
-		this.kostenSoortOmschrijving = kostenSoortOmschrijving;
+	public void setCostType(CostType costType) {
+		this.costType = costType;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-	
 	public void roundValues() {
 		if (amount != null) {
 			amount = amount.setScale(2,BigDecimal.ROUND_HALF_UP);
@@ -131,7 +151,28 @@ public class Cost implements Serializable {
 		equalsBuilder.append(date, other.date);
 		equalsBuilder.append(amount, other.amount);
 		equalsBuilder.append(vat, other.vat);
-		equalsBuilder.append(costTypeId, other.costTypeId);
+		equalsBuilder.append(costType, other.costType);
 		return equalsBuilder.isEquals();
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
+	
+	// For iBatis.
+	public long getUserId() {
+		return user.getId();
+	}
+
+	public CostType getCostType() {
+		return costType;
+	}
+
+	public void setIncoming(boolean b) {
+		// TODO Auto-generated method stub
 	}
 }

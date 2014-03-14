@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,16 +23,43 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@Entity(name = "org.techytax.domain.Activum")
+@Table(name = "activa")
 public class Activum extends Passivum {
 
+	@Id
 	private long id;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+
 	private BigDecimal aanschafKosten;
 	private BigDecimal bedrag;
 	private BigDecimal btw;
 	private BigInteger restwaarde;
-	private long userId;
+
 	private Date endDate;
-	private Long costId;
+
+	@OneToOne
+	@JoinColumn(name = "costId")
+	private Cost cost;
 
 	public BigDecimal getAanschafKosten() {
 		return aanschafKosten;
@@ -66,14 +93,6 @@ public class Activum extends Passivum {
 		this.restwaarde = restwaarde;
 	}
 
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
 	public Date getEndDate() {
 		return endDate;
 	}
@@ -82,20 +101,37 @@ public class Activum extends Passivum {
 		this.endDate = endDate;
 	}
 
-	public Long getCostId() {
-		return costId;
-	}
-
-	public void setCostId(Long costId) {
-		this.costId = costId;
-	}
-
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
+
+	public Cost getCost() {
+		return cost;
+	}
+
+	public void setCost(Cost cost) {
+		this.cost = cost;
+	}
+	
+	// For iBatis.
+	public long getUserId() {
+		return user.getId();
+	}	
+	
+	public long getCostId() {
+		return cost.getId();
 	}
 
 }

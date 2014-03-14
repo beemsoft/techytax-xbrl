@@ -19,6 +19,8 @@
  */
 package org.techytax.importing.helper;
 
+import static org.techytax.domain.CostConstants.UNDETERMINED;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,7 +30,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
@@ -94,9 +95,8 @@ public class IngTransactionReader extends BaseTransactionReader {
 			}
 			String omschrijving = line[1] + " " + line[8];
 			if (omschrijving.trim().equals("")) {
-				kost.setCostTypeId(CostConstants.UNDETERMINED);
-				kost.setKostenSoortOmschrijving(getKostOmschrijving(kost.getCostTypeId()));
-				kost.setVat(new BigDecimal("0"));
+				kost.setCostType(UNDETERMINED);
+				kost.setVat(BigDecimal.ZERO);
 			} else {
 				omschrijving = omschrijving.replace("SEPA Incasso, eersteIBAN:", "");
 				omschrijving = omschrijving.replace("SEPA Incasso, eerste IBAN:", "");

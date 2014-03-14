@@ -19,15 +19,18 @@
  */
 package org.techytax.zk;
 
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.VatMatchDao;
-import org.techytax.domain.CostConstants;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.CostType;
+import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.SplitMatch;
 import org.techytax.domain.User;
@@ -176,12 +179,12 @@ public class CostTypeViewModel {
 
 	public boolean getVatVisible() {
 		return selected.isVatDeclarable()
-				&& selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT
-				&& selected.getKostenSoortId() != CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+				&& !selected.equals(TRAVEL_WITH_PUBLIC_TRANSPORT)
+				&& !selected.equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);
 	}
 
 	public boolean getSplitVisible() {
-		return selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT;
+		return selected.equals(EXPENSE_CURRENT_ACCOUNT);
 	}
 
 	public CostType getSelectedCostType() {
@@ -207,7 +210,7 @@ public class CostTypeViewModel {
 				&& selectedPrivateMatch.getVatType() != null) {
 			setSelectedVatType(selectedPrivateMatch.getVatType().name());
 		}
-		if (selected.getKostenSoortId() == CostConstants.EXPENSE_CURRENT_ACCOUNT) {
+		if (selected.equals(EXPENSE_CURRENT_ACCOUNT)) {
 			SplitMatch splitMatch = splitMatchDao
 					.getSplitMatch(selectedPrivateMatch.getId());
 			if (splitMatch != null) {

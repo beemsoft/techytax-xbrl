@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,6 +19,10 @@
  */
 package org.techytax.zk.fiscal;
 
+import static org.techytax.domain.CostConstants.INVOICE_PAID;
+import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.log.AuditType.INVOICE_OVERVIEW;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -26,17 +30,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.techytax.dao.CostDao;
 import org.techytax.dao.BookValueDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.log.AuditLogger;
-import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -50,24 +52,23 @@ public class InvoiceVM {
 	private CostDao costDao = new CostDao();
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
-	private BigDecimal totalIncome = new BigDecimal(0);
-	private BigInteger unpaidInvoicesFromPreviousYear = new BigInteger("0");
-	private BigDecimal paidInvoicesWithoutMatch = new BigDecimal(0);
-	private BigDecimal unpaidInvoicesFromThisYear = new BigDecimal(0);
+	private BigDecimal totalIncome = BigDecimal.ZERO;
+	private BigInteger unpaidInvoicesFromPreviousYear = BigInteger.ZERO;
+	private BigDecimal paidInvoicesWithoutMatch = BigDecimal.ZERO;
+	private BigDecimal unpaidInvoicesFromThisYear = BigDecimal.ZERO;
 
 	public ListModelList<InvoiceCheck> getInvoices() throws Exception {
 		if (user != null) {
-			AuditLogger.log(AuditType.INVOICE_OVERVIEW, user);
+			AuditLogger.log(INVOICE_OVERVIEW, user);
 			Periode period = DateHelper.getPeriodTillDate(balanceDate);
-			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(DateHelper.getDate(period.getBeginDatum()), DateHelper.getDate(period.getEindDatum()),
-					Long.toString(user.getId()));
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(period.getBeginDatum(), period.getEindDatum());
 			invoices = new ListModelList<InvoiceCheck>();
 
 			int currentYear = DateHelper.getYear(new Date());
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				InvoiceCheck invoiceCheck = new InvoiceCheck();
-				if (cost.getCostTypeId() == CostConstants.INVOICE_SENT) {
+ 				if (cost.getCostType().equals(INVOICE_SENT)) {
 					invoiceCheck.setDateSent(cost.getDate());
 					invoiceCheck.setInvoiceNumber(getInvoiceNumber(cost.getDescription()));
 					invoiceCheck.setNetAmount(cost.getAmount());
@@ -81,7 +82,7 @@ public class InvoiceVM {
 				}
 			}
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
-				if (cost.getCostTypeId() == CostConstants.INVOICE_PAID) {
+				if (cost.getCostType().equals(INVOICE_PAID)) {
 
 					Iterator<InvoiceCheck> sentInvoices = invoices.iterator();
 					boolean hasMatchingInvoice = false;
@@ -116,7 +117,7 @@ public class InvoiceVM {
 			BookValue bookValuePreviousYear = bookValueDao.getBookValue(BalanceType.INVOICES_TO_BE_PAID, currentYear - 1);
 			if (bookValuePreviousYear != null) {
 				unpaidInvoicesFromPreviousYear = bookValuePreviousYear.getSaldo();
-			} 
+			}
 		} else {
 			Executions.sendRedirect("login.zul");
 		}
@@ -143,7 +144,7 @@ public class InvoiceVM {
 		return balanceDate;
 	}
 
-	@NotifyChange( "*" )
+	@NotifyChange("*")
 	public void setBalanceDate(Date balanceDate) {
 		this.balanceDate = balanceDate;
 	}
