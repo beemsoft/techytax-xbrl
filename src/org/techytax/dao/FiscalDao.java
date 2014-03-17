@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,91 +19,103 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.domain.BalanceType.CAR;
+import static org.techytax.domain.BalanceType.CURRENT_ASSETS;
+import static org.techytax.domain.BalanceType.INVOICES_TO_BE_PAID;
+import static org.techytax.domain.BalanceType.MACHINERY;
+import static org.techytax.domain.BalanceType.NON_CURRENT_ASSETS;
+import static org.techytax.domain.BalanceType.OFFICE;
+import static org.techytax.domain.BalanceType.PENSION;
+import static org.techytax.domain.BalanceType.STOCK;
+import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
+
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+
 import org.techytax.domain.Activum;
+import org.techytax.domain.BalanceType;
+import org.techytax.domain.BookValue;
+import org.techytax.domain.Cost;
 import org.techytax.domain.KeyId;
-import org.techytax.domain.KeyYear;
-import org.techytax.domain.Passivum;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class FiscalDao extends BaseDao {
 
-	private void decrypt(Activum activum) {
-		activum.setSaldo(intEncryptor.decrypt(activum.getSaldo()));
-		activum.setRestwaarde(intEncryptor.decrypt(activum.getRestwaarde()));
-		activum.setBedrag(decimalEncryptor.decrypt(activum.getBedrag()));
-		if (activum.getBtw() != null && activum.getBtw().doubleValue() != 0) {
-			activum.setBtw(decimalEncryptor.decrypt(activum.getBtw()));
-		}
-		if (activum.getAanschafKosten() != null && activum.getAanschafKosten().doubleValue() != 0) {
-			activum.setAanschafKosten(decimalEncryptor.decrypt(activum.getAanschafKosten()));
-		}
-	}
-	
-	private void decrypt(Passivum passivum) {
-		passivum.setSaldo(intEncryptor.decrypt(passivum.getSaldo()));
+	private final User user = UserCredentialManager.getUser();
+
+	public List<BookValue> getPassivaList(int year) throws Exception {
+		List<BalanceType> balanceTypes = Arrays.asList(NON_CURRENT_ASSETS, PENSION, VAT_TO_BE_PAID);
+		return getBookValuesForBalanceTypes(year, balanceTypes);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Activum> getActivaLijst(KeyYear key) throws Exception {
-		List<Activum> activumList = sqlMap.queryForList("getActivaLijst", key);
-		for (Activum activum : activumList) {
-			decrypt(activum);
-			if (activum.getBedrag() != null) {
-				activum.setAanschafKosten(activum.getBedrag().add(activum.getBtw()));
-			}
-		}
-		return activumList;
+	private List<BookValue> getBookValuesForBalanceTypes(int year, List<BalanceType> balanceTypes) {
+		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery(
+				"SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user AND bv.jaar = :year AND bv.balanceType IN :balanceTypes ORDER BY bv.balanceType asc", BookValue.class);
+		query.setParameter("user", user);
+		query.setParameter("year", year);
+		query.setParameter("balanceTypes", balanceTypes);
+		List<BookValue> result = query.getResultList();
+		return result;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Passivum> getPassivaLijst(KeyYear key) throws Exception {
-		List<Passivum> passivumList = sqlMap.queryForList("getPassivaLijst", key);
-		for (Passivum passivum : passivumList) {
-			decrypt(passivum);
+	public List<BookValue> getActivaList(int year) throws Exception {
+		List<BalanceType> balanceTypes = Arrays.asList(MACHINERY, CAR, CURRENT_ASSETS, STOCK, OFFICE, INVOICES_TO_BE_PAID);
+		return getBookValuesForBalanceTypes(year, balanceTypes);
+	}
+
+	public Activum getActivumForCost(Cost cost) throws Exception {
+		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery("SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user AND act.cost = :cost", Activum.class);
+		query.setParameter("user", user);
+		query.setParameter("cost", cost);
+		Activum result = null;
+		try {
+			result = query.getSingleResult();
+		} catch (NoResultException e) {
+			// ok
 		}
-		return passivumList;
+		return result;
 	}
-	
-	public Integer insertActivum(Activum activum) throws Exception {
-		return (Integer)sqlMap.insert("insertActivum", activum);
-	}
-	
-	public void updateActivum(Activum activum) throws Exception {
-		sqlMap.insert("updateActivum", activum);
-	}	
-	
-	public Activum getActivumByCostId(Activum activum) throws Exception {
-		activum = (Activum) sqlMap.queryForObject("getActivumByCostId", activum);
-		if (activum != null) {
-			decrypt(activum);
+
+	public Activum getActivum(BalanceType balanceType) throws Exception {
+		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery("SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user AND act.balanceType = :balanceType", Activum.class);
+		query.setParameter("user", user);
+		query.setParameter("balanceType", balanceType);
+		Activum result = null;
+		try {
+			result = query.getSingleResult();
+		} catch (NoResultException e) {
+			// ok
 		}
-		return activum;
+		return result;
 	}
-	
-	public Activum getActivum(KeyId key) throws Exception {
-		Activum activum = (Activum) sqlMap.queryForObject("getActivum", key);
-		if (activum != null) {
-			decrypt(activum);
-		}
-		return activum;
+
+	public List<Activum> getAllActiva() throws Exception {
+		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery("SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user ORDER BY act.cost.date ASC", Activum.class);
+		query.setParameter("user", user);
+		List<Activum> result = query.getResultList();
+		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Activum> getAllActivaForUser(KeyId key) throws Exception {
-		List<Activum> activumList = sqlMap.queryForList("getAllActivaForUser", key);
-		for (Activum activum : activumList) {
-			decrypt(activum);
-			if (activum.getOmschrijving() != null && StringUtils.isNotEmpty(activum.getOmschrijving().trim())) {
-				activum.setOmschrijving(textEncryptor.decrypt(activum.getOmschrijving()));
-			}
-			if (activum.getBedrag() != null) {
-				activum.setAanschafKosten(activum.getBedrag().add(activum.getBtw()));
-			}			
-		}
-		return activumList;
+
+	public List<Activum> getActiveActiva() throws Exception {
+		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery("SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user AND act.endDate = null ORDER BY act.cost.date ASC",
+				Activum.class);
+		query.setParameter("user", user);
+		List<Activum> result = query.getResultList();
+		return result;
 	}
-	
+
+	public List<Activum> getActiveActiva(BalanceType balanceType) throws Exception {
+		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery(
+				"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null ORDER BY act.cost.date ASC", Activum.class);
+		query.setParameter("user", user);
+		query.setParameter("balanceType", balanceType);
+		List<Activum> result = query.getResultList();
+		return result;
+	}
 
 }

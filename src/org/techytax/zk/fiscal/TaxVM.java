@@ -20,6 +20,7 @@
 package org.techytax.zk.fiscal;
 
 import static org.techytax.helper.AmountHelper.format;
+import static org.techytax.helper.AmountHelper.formatDecimal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,6 @@ import java.util.List;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
-import org.techytax.helper.AmountHelper;
 import org.techytax.helper.FiscalOverviewHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
@@ -98,8 +98,8 @@ public class TaxVM {
 			BalanceReport report = overview.getActivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
 			for (ReportBalance balance : balanceList) {
-				items.add(new ReportTableItem(balance.getOmschrijving(), AmountHelper.formatDecimal(balance.getAanschafKosten()), format(balance.getBookValueBegin()),
-						format(balance.getBookValueEnd()), format(balance.getRestwaarde())));
+				items.add(new ReportTableItem(balance.getOmschrijving(), formatDecimal(balance.getAanschafKosten()), format(balance.getBookValueBegin()), format(balance.getBookValueEnd()),
+						format(balance.getRestwaarde())));
 			}
 			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
 		}
@@ -111,11 +111,13 @@ public class TaxVM {
 		if (overview != null) {
 			BalanceReport report = overview.getPassivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
-			for (ReportBalance balance : balanceList) {
-				items.add(new ReportTableItem(balance.getOmschrijving(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()), ""));
+			if (balanceList != null) {
+				for (ReportBalance balance : balanceList) {
+					items.add(new ReportTableItem(balance.getOmschrijving(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()), ""));
+				}
+				items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
+				items.add(new ReportTableItem("Ondernemingsvermogen", "", "", format(overview.getEnterpriseCapital()), ""));
 			}
-			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
-			items.add(new ReportTableItem("Ondernemingsvermogen", "", "", format(overview.getEnterpriseCapital()), ""));
 		}
 		return new ListModelList<ReportTableItem>(items);
 	}

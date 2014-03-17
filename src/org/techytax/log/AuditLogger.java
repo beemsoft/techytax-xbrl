@@ -22,7 +22,7 @@ package org.techytax.log;
 import java.util.Date;
 
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
@@ -50,15 +50,15 @@ public class AuditLogger {
 		}
 		Periode latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		Periode latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
-		Query query = JpaUtil.getEntityManager()
-				.createQuery(
-						"SELECT lr FROM org.techytax.jpa.entities.LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId");
+		TypedQuery<LogRecord> query = JpaUtil.getEntityManager().createQuery(
+				"SELECT lr FROM org.techytax.jpa.entities.LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId",
+				LogRecord.class);
 		query.setParameter("beginTime", latestVatPeriod.getEindDatum());
 		query.setParameter("endTime", latestVatPeriodTillToday.getEindDatum());
 		query.setParameter("userId", user.getId());
 		LogRecord result = null;
 		try {
-			result = (LogRecord) query.getSingleResult();
+			result = query.getSingleResult();
 		} catch (NoResultException nre) {
 			return null;
 		}

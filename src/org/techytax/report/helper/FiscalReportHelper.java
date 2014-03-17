@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,143 +19,90 @@
  */
 package org.techytax.report.helper;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.techytax.dao.FiscalDao;
-import org.techytax.domain.Activum;
-import org.techytax.domain.KeyYear;
-import org.techytax.domain.Passivum;
+import org.techytax.domain.BalanceType;
+import org.techytax.domain.FiscalBalance;
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.domain.ReportBalance;
 
 public class FiscalReportHelper {
 
-	public static BalanceReport getActivaReport(List<Activum> activa) {
+	public static BalanceReport getActivaReport(Map<BalanceType, FiscalBalance> activaMap) {
 		BalanceReport report = new BalanceReport();
-		Activum[] activaArray2 = new Activum[activa.size()];
-		Activum[] activaArray = activa.toArray(activaArray2);
 		List<ReportBalance> reportActiva = new ArrayList<ReportBalance>();
-		BigInteger totalBegin  = new BigInteger("0");
-		BigInteger totalEnd = new BigInteger("0");
-		String description = null;
-		int i = 0;
-		do {
-
+		BigInteger totalBegin = BigInteger.ZERO;
+		BigInteger totalEnd = BigInteger.ZERO;
+		Iterator<Entry<BalanceType, FiscalBalance>> iterator = activaMap.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<BalanceType, FiscalBalance> entry = iterator.next();
 			ReportBalance reportActivum = new ReportBalance();
-			Activum activumBegin = activaArray[i];
-			Activum activumEnd = null;
-
-			while (i < activaArray.length && (description == null || description.equals(activumBegin.getOmschrijving()))) {
-				activumBegin = activaArray[i];
-				description = activumBegin.getOmschrijving();
-				reportActivum.setOmschrijving(description);
-				if (activumBegin.getAanschafKosten() != null) {
-
-					if (reportActivum.getAanschafKosten() == null) {
-						reportActivum.setAanschafKosten(activumBegin.getAanschafKosten());
-					} else {
-						reportActivum.setAanschafKosten(reportActivum.getAanschafKosten().add(activumBegin.getAanschafKosten()));
-					}
-				}
-				if (activumBegin.getRestwaarde() != null) {
-
-					if (reportActivum.getRestwaarde() == null) {
-						reportActivum.setRestwaarde(activumBegin.getRestwaarde());
-					} else {
-						reportActivum.setRestwaarde(reportActivum.getRestwaarde().add(activumBegin.getRestwaarde()));
-					}
-				}
-				reportActivum.setBookValueBegin(activumBegin.getSaldo());
-				if (i+1 < activaArray.length) {
-					activumEnd = activaArray[i+1];
-				}
-				if (i + 1 < activaArray.length && activumEnd.getOmschrijving().equals(description)) {
-					reportActivum.setBookValueEnd(activumEnd.getSaldo());
-					i += 2;
-					if (i < activaArray.length) {
-						activumBegin = activaArray[i];
-					}
+			BalanceType activum = entry.getKey();
+			reportActivum.setOmschrijving(activum.getKey());
+			FiscalBalance fiscalBalance = entry.getValue();
+			reportActivum.setBookValueBegin(fiscalBalance.getBeginSaldo());
+			reportActivum.setBookValueEnd(fiscalBalance.getEndSaldo());
+			BigDecimal totalPurchaseCost = fiscalBalance.getTotalPurchaseCost();
+			if (totalPurchaseCost != null) {
+				if (reportActivum.getAanschafKosten() == null) {
+					reportActivum.setAanschafKosten(totalPurchaseCost);
 				} else {
-					activumEnd = activumBegin;
-					reportActivum.setBookValueBegin(new BigInteger("0"));
-					reportActivum.setBookValueEnd(activumEnd.getSaldo());
-					i++;
-					break;
+					reportActivum.setAanschafKosten(reportActivum.getAanschafKosten().add(totalPurchaseCost));
 				}
 			}
-			totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
+			BigInteger totalRemainingValue = fiscalBalance.getTotalRemainingValue();
+			if (totalRemainingValue != null) {
+				reportActivum.setRestwaarde(totalRemainingValue);
+			}
+			if (reportActivum.getBookValueBegin() != null) {
+				totalBegin = totalBegin.add(reportActivum.getBookValueBegin());
+			}
 			if (reportActivum.getBookValueEnd() != null) {
 				totalEnd = totalEnd.add(reportActivum.getBookValueEnd());
 			}
 			reportActiva.add(reportActivum);
-			description = null;
-
-		} while (i < activaArray.length);
+		}
 		report.setActiva(reportActiva);
 		report.setTotalBeginValue(totalBegin);
 		report.setTotalEndValue(totalEnd);
 		return report;
 	}
-	
-	public static BalanceReport getPassivaReport(List<Passivum> passiva) {
+
+	public static BalanceReport getPassivaReport(Map<BalanceType, FiscalBalance> passivaMap) {
 		BalanceReport report = new BalanceReport();
-		Passivum[] passivaArray2 = new Passivum[passiva.size()];
-		Passivum[] passivaArray = passiva.toArray(passivaArray2);
 		List<ReportBalance> reportBalance = new ArrayList<ReportBalance>();
-		BigInteger totalBegin  = new BigInteger("0");
-		BigInteger totalEnd = new BigInteger("0");
-		int i = 0;
-		do {
+		BigInteger totalBegin = BigInteger.ZERO;
+		BigInteger totalEnd = BigInteger.ZERO;
 
-			ReportBalance reportPassivum = new ReportBalance();
-			Passivum passivumBegin = passivaArray[i];
-			reportPassivum.setBookValueBegin(passivumBegin.getSaldo());
-			reportPassivum.setOmschrijving(passivumBegin.getOmschrijving());
-			Passivum passivumEnd = null;
-			if (i+1 < passivaArray.length) {
-				passivumEnd = passivaArray[i+1];
+		if (passivaMap != null) {
+			Iterator<Entry<BalanceType, FiscalBalance>> iterator = passivaMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<BalanceType, FiscalBalance> entry = iterator.next();
+				ReportBalance reportPassivum = new ReportBalance();
+				FiscalBalance fiscalBalance = entry.getValue();
+				BalanceType passivum = entry.getKey();
+				reportPassivum.setOmschrijving(passivum.getKey());
+				reportPassivum.setBookValueBegin(fiscalBalance.getBeginSaldo());
+				reportPassivum.setBookValueEnd(fiscalBalance.getEndSaldo());
+				if (reportPassivum.getBookValueBegin() != null) {
+					totalBegin = totalBegin.add(reportPassivum.getBookValueBegin());
+				}
+				if (reportPassivum.getBookValueEnd() != null) {
+					totalEnd = totalEnd.add(reportPassivum.getBookValueEnd());
+				}
+				reportBalance.add(reportPassivum);
 			}
-			if (i+1 < passivaArray.length && passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving())) {
-				reportPassivum.setBookValueEnd(passivumEnd.getSaldo());
-			} else {
-				passivumEnd = passivumBegin;
-				reportPassivum.setBookValueBegin(new BigInteger("0"));
-				reportPassivum.setBookValueEnd(passivumEnd.getSaldo());
-			}
-			
-
-			totalBegin = totalBegin.add(reportPassivum.getBookValueBegin());
-			if (reportPassivum.getBookValueEnd() != null) {
-				totalEnd = totalEnd.add(reportPassivum.getBookValueEnd());
-			}
-			reportBalance.add(reportPassivum);
-			if (passivumEnd.getOmschrijving().equals(passivumBegin.getOmschrijving()) && passivumBegin.getBoekjaar() == passivumEnd.getBoekjaar()) {
-				i+=1;
-			} else {
-				i+=2;
-			}
-		} while (i < passivaArray.length);
-		report.setActiva(reportBalance);
-		report.setTotalBeginValue(totalBegin);
-		report.setTotalEndValue(totalEnd);
-		return report;
-	}	
-
-	public static void main(String[] args) {
-		FiscalDao fiscalDao = new FiscalDao();
-		KeyYear key = new KeyYear(14, 2011);
-		try {
-//			List<Activum> activa = fiscalDao.getActivaLijst(key);
-//			BalanceReport report = getActivaReport(activa);
-			List<Passivum> passiva = fiscalDao.getPassivaLijst(key);
-			BalanceReport report = getPassivaReport(passiva);
-			System.out.println("Test");
-		} catch (Exception e) {
-			e.printStackTrace();
+			report.setActiva(reportBalance);
+			report.setTotalBeginValue(totalBegin);
+			report.setTotalEndValue(totalEnd);
 		}
-
+		return report;
 	}
 
 }

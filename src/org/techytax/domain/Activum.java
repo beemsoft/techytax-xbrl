@@ -20,9 +20,9 @@
 package org.techytax.domain;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -33,12 +33,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({
-	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"), @Parameter(name = "decimalScale", value = "2") })})
 @Entity(name = "org.techytax.domain.Activum")
 @Table(name = "activa")
 public class Activum extends Passivum {
@@ -50,46 +49,21 @@ public class Activum extends Passivum {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
-	private BigDecimal aanschafKosten;
-	private BigDecimal bedrag;
-	private BigDecimal btw;
-	private BigInteger restwaarde;
+	@OneToOne(mappedBy = "activum")
+	private RemainingValue restwaarde;
 
+	@Column(name = "einddatum")
 	private Date endDate;
 
 	@OneToOne
-	@JoinColumn(name = "costId")
+	@JoinColumn(name = "kost_id")
 	private Cost cost;
 
-	public BigDecimal getAanschafKosten() {
-		return aanschafKosten;
-	}
-
-	public BigDecimal getBedrag() {
-		return bedrag;
-	}
-
-	public BigDecimal getBtw() {
-		return btw;
-	}
-
-	public BigInteger getRestwaarde() {
+	public RemainingValue getRestwaarde() {
 		return restwaarde;
 	}
 
-	public void setAanschafKosten(BigDecimal aanschafKosten) {
-		this.aanschafKosten = aanschafKosten;
-	}
-
-	public void setBedrag(BigDecimal bedrag) {
-		this.bedrag = bedrag;
-	}
-
-	public void setBtw(BigDecimal btw) {
-		this.btw = btw;
-	}
-
-	public void setRestwaarde(BigInteger restwaarde) {
+	public void setRestwaarde(RemainingValue restwaarde) {
 		this.restwaarde = restwaarde;
 	}
 
@@ -132,6 +106,14 @@ public class Activum extends Passivum {
 	
 	public long getCostId() {
 		return cost.getId();
+	}
+
+	public BigDecimal getAanschafKosten() {
+		if (cost != null) {
+			return cost.getAmount().add(cost.getVat());
+		} else {
+			return null;
+		}
 	}
 
 }

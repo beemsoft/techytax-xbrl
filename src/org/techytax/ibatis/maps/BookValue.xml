@@ -46,14 +46,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		where activa_id = #activaId#
 		and user_id = #userId#
 	</update>	
-	<select id="getBookValueForActivum" parameterClass="key" resultClass="activum">
-		select bw.id, bs.id as balanceType, boekjaar as jaar, saldo 
-		from boekwaarde as bw, balanssoort as bs, balans as b 
-		where user_id=#userId# 
-		and b.balanssoort_id = bs.id 
-		and bw.balans_id = b.id 
-		and bw.id = #id#
-	</select>			
 	<select id="getBookValuesForChart" parameterClass="key" resultClass="bookValue">
 		select bw.id, boekjaar as jaar, saldo 
 		from boekwaarde as bw, balanssoort as bs, balans as b 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,12 +21,39 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+
+@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@Entity(name = "org.techytax.domain.RemainingValue")
+@Table(name = "restwaarde")
 public class RemainingValue {
 
+	@Id
 	private long id = 0;
+
+	@Type(type = "encryptedInteger")
 	private BigInteger restwaarde;
-	private long userId;
-	private long activaId;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+
+	@OneToOne
+	@JoinColumn(name = "activa_id")
+	private Activum activum;
 
 	public long getId() {
 		return id;
@@ -44,20 +71,29 @@ public class RemainingValue {
 		this.id = id;
 	}
 
-	public long getUserId() {
-		return userId;
+	public UserEntity getUser() {
+		return user;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
+
+	// For iBatis.
+	public long getUserId() {
+		return user.getId();
 	}
 
 	public long getActivaId() {
-		return activaId;
+		return activum.getId();
 	}
 
-	public void setActivaId(long activaId) {
-		this.activaId = activaId;
+	public Activum getActivum() {
+		return activum;
+	}
+
+	public void setActivum(Activum activum) {
+		this.activum = activum;
 	}
 
 }
