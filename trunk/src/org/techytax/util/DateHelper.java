@@ -150,9 +150,8 @@ public class DateHelper {
 		cal.set(Calendar.MONTH, Calendar.OCTOBER);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		Date beginDatum = cal.getTime();
-		cal.add(Calendar.YEAR, 1);
-		cal.set(Calendar.MONTH, Calendar.JANUARY);
-		cal.set(Calendar.DAY_OF_MONTH, 15);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
 		Date eindDatum = cal.getTime();
 		Periode periode = new Periode();
 		periode.setBeginDatum(beginDatum);

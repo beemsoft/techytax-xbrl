@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,21 +23,28 @@ import org.techytax.helper.Translator;
 import org.zkoss.util.Locales;
 
 public enum BalanceType {
-	NONE("balance.type.none"), MACHINERY("balance.type.machines"), CAR("balance.type.car"), CURRENT_ASSETS(
-			"balance.type.liquid.assets"), NON_CURRENT_ASSETS(
-			"balance.type.equity"), PENSION("balance.type.pension"), STOCK(
-			"balance.type.stock"), OFFICE("balance.type.settlement"), VAT_TO_BE_PAID(
-			"balance.type.debt.sales.tax"), INVOICES_TO_BE_PAID(
-			"balance.type.loans.customers");
+	NONE("balance.type.none", null), MACHINERY("balance.type.machines", true), CAR("balance.type.car", true), CURRENT_ASSETS(
+			"balance.type.liquid.assets", true), NON_CURRENT_ASSETS(
+			"balance.type.equity", false), PENSION("balance.type.pension", false), STOCK(
+			"balance.type.stock", true), OFFICE("balance.type.settlement", true), VAT_TO_BE_PAID(
+			"balance.type.debt.sales.tax", false), INVOICES_TO_BE_PAID(
+			"balance.type.loans.customers", true);
 
 	private String key;
+	
+	private Boolean isActivum;
 
-	private BalanceType(String key) {
+	private BalanceType(String key, Boolean isActivum) {
 		this.key = key;
+		this.isActivum = isActivum;
 	}
 
 	public String getKey() {
 		return Translator.translateKey(key, Locales.getCurrent());
+	}
+	
+	public Boolean isActivum() {
+		return isActivum;
 	}
 
 	public static BalanceType getInstance(int type) {

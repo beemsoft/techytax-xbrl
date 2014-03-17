@@ -26,22 +26,23 @@ arg0="/WEB-INF/layout/template.zul"?>
 						</auxheader>
 					</auxhead>
 					<listhead>
-						<listheader label="Einddatum" align="center"
-							width="100px" />
-						<listheader label="Aanschaf" align="right"
-							width="90px" />
+						<listheader label="Begindatum" align="center" width="100px" />					
+						<listheader label="Einddatum" align="center" width="100px" />
+						<listheader label="Aanschaf" align="right" width="90px" />
+						<listheader label="Kost" align="right" width="90px" />
 						<listheader label="Omschrijving" width="500px" />
+						<listheader label="Type" width="100px" />
 						<listheader label="Restwaarde" align="right" width="90px" />
 					</listhead>
 					<template name="model" var="item">
-						<listitem
-							onDoubleClick="@command('onDoubleClicked')">
-							<listcell
-								label="@load(item.endDate) @converter('formatedDate', format='yyyy/MM/dd')" />
-							<listcell
-								label="@load(item.aanschafKosten) @converter('formatedNumber', format='###,##0.00')" />
+						<listitem onDoubleClick="@command('onDoubleClicked')">
+							<listcell label="@load(item.cost.date) @converter('formatedDate', format='yyyy/MM/dd')" />
+							<listcell label="@load(item.endDate) @converter('formatedDate', format='yyyy/MM/dd')" />
+							<listcell label="@load(item.aanschafKosten) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.cost.amount) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.cost.description)" />
 							<listcell label="@load(item.omschrijving)" />
-							<listcell label="@load(item.restwaarde) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.restwaarde.restwaarde) @converter('formatedNumber', format='###,##0.00')" />
 						</listitem>
 					</template>
 				</listbox>

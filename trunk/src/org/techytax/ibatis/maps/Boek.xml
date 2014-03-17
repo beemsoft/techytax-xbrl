@@ -39,29 +39,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		AND user_id = ?
 		ORDER BY datum asc
 	</select>	
-	<select id="getBtwBalansLijst" parameterMap="periodeMap"
-		resultClass="cost">
-		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
-		FROM kosten k, kostensoort ks 
-		WHERE k.kostensoort_id = ks.id 
-		AND	datum &gt;= ? 
-		AND datum &lt;= ? 
-		AND ks.id IN (select id from kostensoort where btwVerrekenbaar = 1)
-		AND btw != 0
-		AND user_id = ?
-		ORDER BY datum asc
-	</select>
-	<select id="getRekeningBalansLijst" parameterMap="periodeMap"
-		resultClass="cost">
-		SELECT k.id, bedrag, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 
-		FROM kosten k, kostensoort ks 
-		WHERE k.kostensoort_id = ks.id 
-		AND	datum &gt;= ? 
-		AND datum &lt;= ? 
-		AND ks.id IN (select id from kostensoort where balansmeetellen = 1) 
-		AND user_id = ?
-		ORDER BY datum asc
-	</select>
 	<select id="getKostenBalansLijst" parameterMap="periodeMap"
 		resultClass="cost">
 		SELECT k.id, bedrag as amount, datum as date, btw as vat, k.omschrijving as description, ks.id as costTypeId, ks.omschrijving as kostenSoortOmschrijving 

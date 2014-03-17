@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,14 +21,16 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Map;
 
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.helper.FiscalReportHelper;
 
 public class FiscalOverview {
 
-	private List<Activum> activa;
+	private Map<BalanceType,FiscalBalance> activaMap;
+	private Map<BalanceType,FiscalBalance> passivaMap;
+	
 	private int afschrijvingAuto;
 
 	@Deprecated
@@ -54,7 +56,7 @@ public class FiscalOverview {
 	private int nettoOmzet;
 	private PrivatWithdrawal onttrekking;
 	private int oudedagsReserveMaximaal;
-	private List<Passivum> passiva;
+
 	private PrepaidTax prepaidTax;
 	private BigInteger privateDeposit;
 	private int profit;
@@ -63,12 +65,8 @@ public class FiscalOverview {
 	private int settlementDepreciation;
 	private BigDecimal turnOverUnpaid;
 
-	public List<Activum> getActiva() {
-		return activa;
-	}
-
 	public BalanceReport getActivaReport() {
-		return FiscalReportHelper.getActivaReport(activa);
+		return FiscalReportHelper.getActivaReport(activaMap);
 	}
 
 	public int getAfschrijvingAuto() {
@@ -158,12 +156,8 @@ public class FiscalOverview {
 		return oudedagsReserveMaximaal;
 	}
 
-	public List<Passivum> getPassiva() {
-		return passiva;
-	}
-
 	public BalanceReport getPassivaReport() {
-		return FiscalReportHelper.getPassivaReport(passiva);
+		return FiscalReportHelper.getPassivaReport(passivaMap);
 	}
 
 	public PrepaidTax getPrepaidTax() {
@@ -196,10 +190,6 @@ public class FiscalOverview {
 
 	public int getWinst() {
 		return profit;
-	}
-
-	public void setActiva(List<Activum> activa) {
-		this.activa = activa;
 	}
 
 	public void setAfschrijvingAuto(int afschrijvingAuto) {
@@ -280,10 +270,6 @@ public class FiscalOverview {
 		this.oudedagsReserveMaximaal = oudedagsReserveMaximaal;
 	}
 
-	public void setPassiva(List<Passivum> passiva) {
-		this.passiva = passiva;
-	}
-
 	public void setPrepaidTax(PrepaidTax prepaidTax) {
 		this.prepaidTax = prepaidTax;
 	}
@@ -310,6 +296,22 @@ public class FiscalOverview {
 
 	public void setTurnOverUnpaid(BigDecimal turnOverUnpaid) {
 		this.turnOverUnpaid = turnOverUnpaid;
+	}
+
+	public void setActivaMap(Map<BalanceType, FiscalBalance> activaMap) {
+		this.activaMap = activaMap;
+	}
+
+	public Map<BalanceType, FiscalBalance> getPassivaMap() {
+		return passivaMap;
+	}
+
+	public void setPassivaMap(Map<BalanceType, FiscalBalance> passivaMap) {
+		this.passivaMap = passivaMap;
+	}
+
+	public Map<BalanceType, FiscalBalance> getActivaMap() {
+		return activaMap;
 	}
 
 }

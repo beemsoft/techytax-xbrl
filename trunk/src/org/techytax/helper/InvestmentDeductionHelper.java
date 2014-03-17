@@ -41,7 +41,7 @@ public class InvestmentDeductionHelper {
 			Activum activum = new Activum();
 			activum.setUser(user);
 			activum.setCost(cost);
-			activum = fiscaalDao.getActivumByCostId(activum);
+			activum = fiscaalDao.getActivumForCost(cost);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
 				totalInvestmentDeduction = totalInvestmentDeduction.add(calculateInvestmentDeduction(cost.getAmount()));
 			}
@@ -52,7 +52,7 @@ public class InvestmentDeductionHelper {
 	private static BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {
 		BigInteger totalInvestmentRounded = totalInvestment.setScale(0, BigDecimal.ROUND_UP).toBigInteger();
 		if (totalInvestmentRounded.compareTo(new BigInteger("2300")) == -1 || totalInvestmentRounded.compareTo(new BigInteger("306931")) == 1) {
-			return new BigInteger("0");
+			return BigInteger.ZERO;
 		}
 		if (totalInvestmentRounded.compareTo(new BigInteger("2301")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("55248")) == -1) {
 			return new BigDecimal(totalInvestmentRounded).multiply(new BigDecimal(".28")).setScale(0, BigDecimal.ROUND_UP).toBigInteger();

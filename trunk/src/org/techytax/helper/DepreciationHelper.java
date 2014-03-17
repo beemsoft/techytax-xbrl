@@ -31,7 +31,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -45,6 +44,7 @@ public class DepreciationHelper {
 	
 	private User user = UserCredentialManager.getUser();
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
+	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
 
 	public BigDecimal getYearlyDepreciation(int nofYears, BigDecimal initialNetAmount, BigInteger remainingValue) {
 		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2, RoundingMode.HALF_UP);
@@ -62,12 +62,10 @@ public class DepreciationHelper {
 		} else {
 			activum.setBalanceType(BalanceType.CAR);
 		}
-		FiscalDao fiscaalDao = new FiscalDao();
-		Integer activumId = fiscaalDao.insertActivum(activum);
+		activumGenericDao.persistEntity(activum);
 		// Add remaining value
 		RemainingValue remainingValue = new RemainingValue();
-		remainingValue.setUserId(userId);
-		remainingValue.setActivaId(activumId);
+		remainingValue.setActivum(activum);
 		remainingValue.setRestwaarde(restWaarde);
 		boekwaardeDao.insertRemainingValue(remainingValue);
 

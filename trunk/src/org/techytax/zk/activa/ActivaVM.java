@@ -36,7 +36,6 @@ import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
@@ -62,7 +61,7 @@ public class ActivaVM {
 	private BookValueDao bookValueDao = new BookValueDao();
 	private CostDao costDao = new CostDao();
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
-	private GenericDao<Cost> costGenericDao = new GenericDao<Cost>(Cost.class, user);
+	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
@@ -132,15 +131,11 @@ public class ActivaVM {
 	@Command
 	public void saveActivum() throws Exception {
 		if (user != null) {
-			selected.setUser(user);
-			KeyId key = new KeyId();
-			key.setId(selected.getId());
-			key.setUserId(user.getId());
-			Activum activum = fiscalDao.getActivum(key);
+			Activum activum = (Activum) activumGenericDao.getEntity(selected, selected.getId());
 			if (activum == null) {
-				fiscalDao.insertActivum(selected);
+				activumGenericDao.persistEntity(selected);
 			} else {
-				fiscalDao.updateActivum(selected);
+				activumGenericDao.merge(selected);
 			}
 		}
 	}
@@ -204,9 +199,7 @@ public class ActivaVM {
 
 	public ListModelList<Activum> getActiva() throws Exception {
 		if (user != null) {
-			KeyId key = new KeyId();
-			key.setUserId(user.getId());
-			List<Activum> activaList = fiscalDao.getAllActivaForUser(key);
+			List<Activum> activaList = fiscalDao.getAllActiva();
 			return new ListModelList<Activum>(activaList);
 		} else {
 			Executions.sendRedirect("login.zul");
@@ -233,9 +226,8 @@ public class ActivaVM {
 		cost.setDescription(activum.getOmschrijving());
 		costDao.updateKost(cost);
 
-		Activum originalActivum = fiscalDao.getActivumByCostId(activum);
+		Activum originalActivum = fiscalDao.getActivumForCost(cost);
 		originalActivum.setEndDate(activum.getEndDate());
-		fiscalDao.updateActivum(originalActivum);
 	}
 
 	@GlobalCommand
