@@ -39,7 +39,6 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;

@@ -22,6 +22,7 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -49,13 +50,13 @@ public class Activum extends Passivum {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 
-	@OneToOne(mappedBy = "activum")
+	@OneToOne(mappedBy = "activum", cascade=CascadeType.ALL)
 	private RemainingValue restwaarde;
 
 	@Column(name = "einddatum")
 	private Date endDate;
 
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "kost_id")
 	private Cost cost;
 

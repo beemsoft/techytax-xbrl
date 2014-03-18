@@ -29,13 +29,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.CostDao;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
-import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
@@ -59,7 +57,6 @@ public class ActivaVM {
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
-	private CostDao costDao = new CostDao();
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
 	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
 
@@ -220,14 +217,7 @@ public class ActivaVM {
 	@NotifyChange("activa")
 	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
 		AuditLogger.log(UPDATE_ACTIVUM, user);
-
-		Cost cost = costDao.getKost(activum.getCost());
-		cost.setUser(user);
-		cost.setDescription(activum.getOmschrijving());
-		costDao.updateKost(cost);
-
-		Activum originalActivum = fiscalDao.getActivumForCost(cost);
-		originalActivum.setEndDate(activum.getEndDate());
+		activumGenericDao.merge(activum);
 	}
 
 	@GlobalCommand
