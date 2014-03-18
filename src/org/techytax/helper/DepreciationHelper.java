@@ -62,26 +62,19 @@ public class DepreciationHelper {
 		} else {
 			activum.setBalanceType(BalanceType.CAR);
 		}
-		activumGenericDao.persistEntity(activum);
-		// Add remaining value
 		RemainingValue remainingValue = new RemainingValue();
 		remainingValue.setActivum(activum);
 		remainingValue.setRestwaarde(restWaarde);
-		boekwaardeDao.insertRemainingValue(remainingValue);
+		activumGenericDao.persistEntity(activum);
 
-		// Add or update boekwaarde
-		BookValue activumValue = boekwaardeDao.getBookValue(activum.getBalanceType(), bookYear - 1);
-		if (activumValue != null) {
-			activumValue.setSaldo(activumValue.getSaldo().subtract(yearlyDepreciation.toBigInteger()));
-			bookValueGenericDao.merge(activumValue);
+		BookValue previousBookValue = boekwaardeDao.getBookValue(activum.getBalanceType(), bookYear - 1);
+		if (previousBookValue != null) {
+			previousBookValue.setSaldo(previousBookValue.getSaldo().subtract(yearlyDepreciation.toBigInteger()));
 		} else {
-			activumValue = new BookValue();
-			activumValue.setJaar(bookYear);
-			activumValue.setBalanceType(activum.getBalanceType());
-			activumValue.setUser(user);
 			BigDecimal initialNetAmount = cost.getAmount().setScale(0, BigDecimal.ROUND_UP);
-			activumValue.setSaldo(initialNetAmount.toBigInteger().subtract(yearlyDepreciation.toBigInteger()));
-			bookValueGenericDao.persistEntity(activumValue);
+			BookValue newBookValue = new BookValue(0, activum.getBalanceType(), bookYear, initialNetAmount.toBigInteger().subtract(yearlyDepreciation.toBigInteger()));
+			newBookValue.setUser(user);
+			bookValueGenericDao.persistEntity(newBookValue);
 		}
 	}
 

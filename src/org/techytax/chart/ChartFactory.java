@@ -24,12 +24,12 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jfree.chart.JFreeChart;
-import org.techytax.dao.BookValueDao;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.KeyId;
 import org.techytax.helper.Translator;
 
+@Deprecated
 public final class ChartFactory {
 
 	public static final int IMAGE_WIDTH = 704;
@@ -42,10 +42,9 @@ public final class ChartFactory {
 	};
 
 	public static BufferedImage createBookValueGraph(long userId, Locale locale) throws Exception {
-		BookValueDao dao = new BookValueDao();
 		KeyId key = new KeyId();
 		key.setUserId(userId);
-		List<BookValue> bookValues = dao.getBookValuesForChart(key);
+		List<BookValue> bookValues = null;
 		String title = Translator.translateKey("menu.bookvalues", locale);
 		String domainAxisLabel = Translator.translateKey("label.year", locale);
 		String rangeAxisLabel = Translator.translateKey("label.saldo", locale);		

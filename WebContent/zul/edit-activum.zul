@@ -1,5 +1,5 @@
 <window id="resultWin" title="Activum bewerken" width="450px"
-	height="250px" border="normal" apply="org.zkoss.bind.BindComposer"
+	height="300px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.fiscal.EditActivumVM')">
 
@@ -25,10 +25,18 @@
 							Omschrijving
 							<hlayout>
 								<textbox id="tbx" constraint="no empty"
-									value="@bind(vm.activum.omschrijving)"
+									value="@bind(vm.activum.cost.description)"
 									width="250px" height="60px" rows="4" />
 							</hlayout>
 						</row>
+						<row>
+							Restwaarde
+							<hlayout>
+								<intbox constraint="no empty"
+									value="@bind(vm.activum.restwaarde.restwaarde)"
+									width="250px" />
+							</hlayout>
+						</row>						
 					</rows>
 				</grid>
 			</vbox>

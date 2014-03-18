@@ -27,8 +27,6 @@ import javax.persistence.TypedQuery;
 
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
-import org.techytax.domain.KeyId;
-import org.techytax.domain.RemainingValue;
 import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
@@ -36,52 +34,6 @@ import org.zkoss.zkplus.jpa.JpaUtil;
 public class BookValueDao extends BaseDao {
 
 	private final User user = UserCredentialManager.getUser();
-
-	private void encrypt(RemainingValue restwaarde) {
-		restwaarde.setRestwaarde(intEncryptor.encrypt(restwaarde.getRestwaarde()));
-	}
-
-	private void decrypt(BookValue boekwaarde) {
-		if (boekwaarde != null) {
-			boekwaarde.setSaldo(intEncryptor.decrypt(boekwaarde.getSaldo()));
-		}
-	}
-
-	private void decrypt(RemainingValue remainingValue) {
-		if (remainingValue != null) {
-			remainingValue.setRestwaarde(intEncryptor.decrypt(remainingValue.getRestwaarde()));
-		}
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public List<BookValue> getAllBoekwaardes() throws Exception {
-		return sqlMap.queryForList("getAllBoekwaardes", null);
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public List<RemainingValue> getAllRestwaardes() throws Exception {
-		return sqlMap.queryForList("getAllRestwaardes", null);
-	}
-
-	@Deprecated
-	public void updateRestwaarde(RemainingValue restwaarde) throws Exception {
-		encrypt(restwaarde);
-		sqlMap.insert("updateRestwaarde", restwaarde);
-	}
-
-	@Deprecated
-	public void updateRemainingValueByActivumId(RemainingValue restwaarde) throws Exception {
-		encrypt(restwaarde);
-		sqlMap.insert("updateRemainingValueByActivumId", restwaarde);
-	}
-
-	@Deprecated
-	public void insertRemainingValue(RemainingValue restwaarde) throws Exception {
-		encrypt(restwaarde);
-		sqlMap.insert("insertRestwaarde", restwaarde);
-	}
 
 	@SuppressWarnings("unchecked")
 	public List<BookValue> getBookValuesHistory() throws Exception {
@@ -124,16 +76,6 @@ public class BookValueDao extends BaseDao {
 		query.setParameter("balanceType", bookValue.getBalanceType());
 		BookValue result = query.getSingleResult();
 		return result;
-	}
-
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public List<BookValue> getBookValuesForChart(KeyId key) throws Exception {
-		List<BookValue> bookValues = sqlMap.queryForList("getBookValuesForChart", key);
-		for (BookValue boekwaarde : bookValues) {
-			decrypt(boekwaarde);
-		}
-		return bookValues;
 	}
 
 }
