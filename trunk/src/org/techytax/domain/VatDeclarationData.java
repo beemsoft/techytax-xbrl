@@ -22,7 +22,6 @@ package org.techytax.domain;
 import java.math.BigInteger;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 public class VatDeclarationData {
@@ -54,10 +53,6 @@ public class VatDeclarationData {
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
 		this.user = user;
-		String fiscalNumber = user.getFiscalNumber();
-		if (StringUtils.isEmpty(fiscalNumber)) {
-			throw new RuntimeException("U heeft nog geen fiscaal nummer opgegeven");
-		}
 	}
 
 	public Date getStartDate() {
