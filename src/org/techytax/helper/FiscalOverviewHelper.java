@@ -98,7 +98,7 @@ public class FiscalOverviewHelper {
 
 		List<BookValue> passivaList = fiscalDao.getPassivaList(bookYear);
 
-		BigInteger enterpriseCapital = getEnterpriseCapital(passivaList, bookYear);
+		BigInteger enterpriseCapital = getEnterpriseCapital(passivaList);
 		overview.setEnterpriseCapital(enterpriseCapital);
 
 		BigDecimal privateDeposit = handlePrivateDeposits();
@@ -257,8 +257,9 @@ public class FiscalOverviewHelper {
 		overview.setPrepaidTax(prepaidTax);
 	}
 
-	private void handlePrivateWithdrawals(PrivatWithdrawal privatWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) {
-		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaLijst, bookYear - 1);
+	private void handlePrivateWithdrawals(PrivatWithdrawal privatWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
+		List<BookValue> passivaListPreviousYear = fiscalDao.getPassivaList(bookYear - 1);
+		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaListPreviousYear);
 		int totalWithdrawal = overview.getProfit() - (enterpriseCapital.intValue() - enterpriseCapitalPreviousYear.intValue()) + privateDeposit.intValue();
 		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		int withdrawalCash = totalWithdrawal - privatWithdrawal.getWithdrawalPrivateUsageBusinessCar();
@@ -344,7 +345,7 @@ public class FiscalOverviewHelper {
 		overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 	}
 
-	private BigInteger getEnterpriseCapital(List<BookValue> passiva, int bookYear) {
+	private BigInteger getEnterpriseCapital(List<BookValue> passiva) {
 		BigInteger enterpriseCapital = BigInteger.ZERO;
 		for (BookValue passivum : passiva) {
 			if (passivum.getBalanceType() != VAT_TO_BE_PAID) {

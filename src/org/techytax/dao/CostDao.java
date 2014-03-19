@@ -125,10 +125,9 @@ public class CostDao extends BaseDao {
 		return costs;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs;
-		Query query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc");
+		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc", Cost.class);
 		query.setParameter("user", user);
 		query.setParameter("beginDate", beginDatum);
 		query.setParameter("endDate", eindDatum);

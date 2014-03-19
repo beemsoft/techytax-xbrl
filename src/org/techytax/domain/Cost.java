@@ -39,36 +39,38 @@ import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 import org.zkoss.util.resource.Labels;
 
-@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"), @Parameter(name = "decimalScale", value = "2") })})
+@TypeDefs({
+		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+		@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
+				@Parameter(name = "decimalScale", value = "2") }) })
 @Entity(name = "org.techytax.domain.Cost")
 @Table(name = "kosten")
 public class Cost implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
-	
+
 	@Column(name = "bedrag")
 	@Type(type = "encryptedBigDecimal")
 	private BigDecimal amount;
-	
+
 	@Column(name = "btw")
 	@Type(type = "encryptedBigDecimal")
 	private BigDecimal vat = BigDecimal.ZERO;
-	
+
 	@Column(name = "datum")
 	private Date date;
-	
+
 	@Id
 	private long id = 0;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "kostensoort_id")
 	private CostType costType;
-	
+
 	@Column(name = "omschrijving")
 	@Type(type = "encryptedString")
 	private String description;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
@@ -101,7 +103,6 @@ public class Cost implements Serializable {
 		return description;
 	}
 
-
 	public boolean isIncoming() {
 		return costType.isBijschrijving();
 	}
@@ -132,13 +133,13 @@ public class Cost implements Serializable {
 
 	public void roundValues() {
 		if (amount != null) {
-			amount = amount.setScale(2,BigDecimal.ROUND_HALF_UP);
+			amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP);
 		}
-		if (vat != null) {		
-			vat = vat.setScale(2,BigDecimal.ROUND_HALF_UP);
-		}		
+		if (vat != null) {
+			vat = vat.setScale(2, BigDecimal.ROUND_HALF_UP);
+		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Cost)) {
@@ -162,7 +163,7 @@ public class Cost implements Serializable {
 	public void setUser(User user) {
 		this.user = new UserEntity(user);
 	}
-	
+
 	// For iBatis.
 	public long getUserId() {
 		return user.getId();
