@@ -313,7 +313,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		VatDeclaration vatDeclaration = new VatDeclaration();
 		vatDeclaration.setDeclarationFeature(declarationFeature);
 		vatDeclaration.setTimeStampDeclared(new Date());
-		vatDeclarationDao.merge(vatDeclaration);
+		vatDeclaration.setUser(user);
+		vatDeclarationDao.persistEntity(vatDeclaration);
 	}
 
 	private AanleverResponse doAanleveren() throws Exception {
