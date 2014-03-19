@@ -72,8 +72,8 @@ public class VatDeclaration {
 		return user;
 	}
 
-	public void setUser(UserEntity user) {
-		this.user = user;
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
 	}
 
 	public String getDeclarationNumber() {

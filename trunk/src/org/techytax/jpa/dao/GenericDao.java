@@ -83,7 +83,6 @@ public class GenericDao<T> {
 		try {
 			EntityManager em = JpaUtil.getEntityManager();
 			em.merge(entity);
-			em.flush();
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}
