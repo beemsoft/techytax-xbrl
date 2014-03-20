@@ -54,6 +54,7 @@ import org.xbrl._2003.instance.Context;
 import org.xbrl._2003.instance.ContextEntityType;
 import org.xbrl._2003.instance.ContextEntityType.Identifier;
 import org.xbrl._2003.instance.ContextPeriodType;
+import org.xbrl._2003.instance.ContextScenarioType;
 import org.xbrl._2003.instance.ObjectFactory;
 import org.xbrl._2003.instance.Unit;
 import org.xbrl._2003.instance.Xbrl;
