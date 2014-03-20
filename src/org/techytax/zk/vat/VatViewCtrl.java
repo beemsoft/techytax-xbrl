@@ -21,6 +21,7 @@ package org.techytax.zk.vat;
 
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
+import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
 
 import java.io.BufferedReader;
@@ -37,6 +38,7 @@ import java.util.Map;
 import org.techytax.dao.CostDao;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
+import org.techytax.digipoort.XbrlHelper;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
@@ -292,12 +294,16 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 						switch (e.getButton()) {
 						case OK:
 							try {
-								AuditLogger.log(AuditType.SEND_VAT_DECLARATION, user);
+								AuditLogger.log(SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								digipoortBtn.setDisabled(true);
-								Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, new Messagebox.Button[] { Messagebox.Button.OK },
-										Messagebox.INFORMATION, null);
-								storeDeclarationFeature(aanleverResponse.getKenmerk());
+								if (aanleverResponse != null) {
+									Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, new Messagebox.Button[] { Messagebox.Button.OK },
+											Messagebox.INFORMATION, null);
+									storeDeclarationFeature(aanleverResponse.getKenmerk());
+								} else {
+									Messagebox.show("Aanlevering is mislukt!", null, 0, Messagebox.ERROR);
+								}
 							} catch (AanleverServiceFault asf) {
 								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
 							}
@@ -332,7 +338,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) throws Exception {
 		String xbrlInstance = null;
 		if (digipoort.equals("prod")) {
-			xbrlInstance = XbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
+			if (DateHelper.isBefore2014(vatDeclarationData.getEndDate())) {
+				xbrlInstance = XbrlHelper.createXbrlInstance(vatDeclarationData);
+			} else {
+				xbrlInstance = XbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
+			}
 		} else {
 			xbrlInstance = XbrlNtp8Helper.createTestXbrlInstance();
 		}

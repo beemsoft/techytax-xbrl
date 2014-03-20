@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -58,7 +58,6 @@ import org.xbrl._2003.instance.Xbrl;
 import org.xbrl._2003.xlink.SimpleType;
 import org.xbrl._2006.xbrldi.ExplicitMember;
 
-@Deprecated
 public class XbrlHelper {
 
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
@@ -197,6 +196,13 @@ public class XbrlHelper {
 			valueAddedTaxSuppliesServicesGeneralTariff.setUnitRef(unit);
 			valueAddedTaxSuppliesServicesGeneralTariff.setValue(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff());
 			vatDeclaration.setValueAddedTaxSuppliesServicesGeneralTariff(valueAddedTaxSuppliesServicesGeneralTariff);
+			
+			MonetaryNoDecimals10VItemType taxedTurnoverSuppliesServicesGeneralTariff = bdTypeObjectFactory.createMonetaryNoDecimals10VItemType();
+			taxedTurnoverSuppliesServicesGeneralTariff.setDecimals("INF");
+			taxedTurnoverSuppliesServicesGeneralTariff.setContextRef(context);
+			taxedTurnoverSuppliesServicesGeneralTariff.setUnitRef(unit);
+			taxedTurnoverSuppliesServicesGeneralTariff.setValue(vatDeclarationData.getTaxedTurnoverSuppliesServicesGeneralTariff());
+			vatDeclaration.setTaxedTurnoverSuppliesServicesGeneralTariff(taxedTurnoverSuppliesServicesGeneralTariff);			
 
 			Anstring2FItemType version = bdTypeObjectFactory.createAnstring2FItemType();
 			version.setValue("21");
