@@ -176,4 +176,12 @@ public class Cost implements Serializable {
 	public void setIncoming(boolean b) {
 		// TODO Auto-generated method stub
 	}
+	
+	public String getStyle() {
+		if (costType.isBijschrijving()) {
+			return "z-listitem-positive-amount";
+		} else {
+			return "z-listitem-negative-amount";
+		}
+	}
 }

@@ -156,7 +156,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	private void doAdministrativeSplitForSettlement(String userId, Cost cost) throws Exception {
-		long percentage = settlementDao.getPercentage(Long.parseLong(userId));
+		long percentage = settlementDao.getPercentage();
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());

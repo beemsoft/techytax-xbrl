@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,41 +19,32 @@
  */
 package org.techytax.dao;
 
-import org.apache.commons.lang.StringUtils;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+
 import org.techytax.domain.Settlement;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class SettlementDao extends BaseDao {
 
-	private void encrypt(Settlement settlement) {
-		settlement.setDescription(textEncryptor.encrypt(settlement.getDescription()));
-	}
-
-	private void decrypt(Settlement settlement) {
-		if (settlement != null) {
-			if (StringUtils.isNotEmpty(settlement.getDescription())) {
-				settlement.setDescription(textEncryptor.decrypt(settlement.getDescription()));
-			}
-		}
-	}
-
-	public void insertSettlement(Settlement settlement) throws Exception {
-		encrypt(settlement);
-		sqlMap.insert("insertSettlement", settlement);
-	}
-
-	public void updateSettlement(Settlement settlement) throws Exception {
-		encrypt(settlement);
-		sqlMap.insert("updateSettlement", settlement);
-	}
-
-	public Settlement getSettlement(long userId) throws Exception {
-		Settlement settlement = (Settlement) sqlMap.queryForObject("getSettlement", userId);
-		decrypt(settlement);
-		return settlement;
-	}
+	private User user = UserCredentialManager.getUser();
 	
-	public long getPercentage(long userId) throws Exception {
-		Settlement settlement = getSettlement(userId);
+	public Settlement getSettlement() throws Exception {
+		TypedQuery<Settlement> query = JpaUtil.getEntityManager().createQuery("SELECT s FROM org.techytax.domain.Settlement s WHERE s.user = :user", Settlement.class);
+		query.setParameter("user", user);
+		Settlement result = null;
+		try {
+			result = query.getSingleResult();
+		} catch (NoResultException e) {
+			// ok
+		}
+		return result;
+	}	
+	
+	public long getPercentage() throws Exception {
+		Settlement settlement = getSettlement();
 		long percentage = 0;
 		if (settlement != null && settlement.getNofSquareMetersPrivate() != 0) {
 			percentage = Math.round((double)settlement.getNofSquareMetersBusiness()/settlement.getNofSquareMetersPrivate() * 100);

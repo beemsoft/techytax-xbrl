@@ -26,23 +26,27 @@ arg0="/WEB-INF/layout/template.zul"?>
 						</auxheader>
 					</auxhead>
 					<listhead>
-						<listheader label="Begindatum" align="center" width="100px" />					
+						<listheader label="Aanschafdatum" align="center" width="120px" />
+						<listheader label="Aanschafkosten" align="right" width="120px" />
+						<listheader label="Begindatum" align="center" width="100px" />
 						<listheader label="Einddatum" align="center" width="100px" />
-						<listheader label="Aanschaf" align="right" width="90px" />
-						<listheader label="Kost" align="right" width="90px" />
 						<listheader label="Omschrijving" width="500px" />
 						<listheader label="Type" width="100px" />
+						<listheader label="Jaren" align="right" width="90px" />
+						<listheader label="Afschrijving" align="right" width="90px" />
 						<listheader label="Restwaarde" align="right" width="90px" />
 					</listhead>
 					<template name="model" var="item">
 						<listitem onDoubleClick="@command('onDoubleClicked')">
 							<listcell label="@load(item.cost.date) @converter('formatedDate', format='yyyy/MM/dd')" />
-							<listcell label="@load(item.endDate) @converter('formatedDate', format='yyyy/MM/dd')" />
-							<listcell label="@load(item.aanschafKosten) @converter('formatedNumber', format='###,##0.00')" />
 							<listcell label="@load(item.cost.amount) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.startDate) @converter('formatedDate', format='yyyy/MM/dd')" />														
+							<listcell label="@load(item.endDate) @converter('formatedDate', format='yyyy/MM/dd')" />
 							<listcell label="@load(item.cost.description)" />
 							<listcell label="@load(item.omschrijving)" />
-							<listcell label="@load(item.restwaarde.restwaarde) @converter('formatedNumber', format='###,##0.00')" />
+							<listcell label="@load(item.nofYearsForDepreciation)" />
+							<listcell label="@load(item.depreciation) @converter('formatedNumber', format='###,##0')" />
+							<listcell label="@load(item.remainingValue) @converter('formatedNumber', format='###,##0')" />
 						</listitem>
 					</template>
 				</listbox>

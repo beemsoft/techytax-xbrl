@@ -40,6 +40,7 @@ import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
@@ -110,9 +111,10 @@ public class FiscalDao extends BaseDao {
 
 	public List<Activum> getActiveActiva(BalanceType balanceType) throws Exception {
 		TypedQuery<Activum> query = JpaUtil.getEntityManager().createQuery(
-				"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null ORDER BY act.cost.date ASC", Activum.class);
+				"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null AND (act.startDate = null OR act.startDate <= :startDate) ORDER BY act.cost.date ASC", Activum.class);
 		query.setParameter("user", user);
 		query.setParameter("balanceType", balanceType);
+		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear());
 		List<Activum> result = query.getResultList();
 		return result;
 	}

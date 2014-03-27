@@ -31,25 +31,23 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang.StringUtils;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
-import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.User;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class CostDao extends BaseDao {
 
 	private User user = UserCredentialManager.getUser();
-	private CostCache costCache = new CostCache();
 
 	public void encrypt(Cost cost) {
 		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
@@ -219,11 +217,12 @@ public class CostDao extends BaseDao {
 		TypedQuery<Activum> query = JpaUtil
 				.getEntityManager()
 				.createQuery(
-						"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND act.endDate = null AND act.user = :user",
+						"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND (act.startDate = null OR act.startDate <= :startDate) AND act.endDate = null AND act.user = :user",
 						Activum.class);
 		query.setParameter("user", user);
 		query.setParameter("beginDate", beginDate);
 		query.setParameter("endDate", endDate);
+		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear());
 		query.setParameter("balanceType", balanceType);
 		List<Activum> result = query.getResultList();
 		return result;

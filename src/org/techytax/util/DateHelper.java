@@ -298,6 +298,19 @@ public class DateHelper {
 		int jaar = cal.get(Calendar.YEAR);
 		return jaar;
 	}
+	
+	public static int getFiscalYear() {
+		return getYear(new Date()) - 1;
+	}
+	
+	public static Date getLastDayOfFiscalYear() {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.add(Calendar.YEAR, -1);
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+		return cal.getTime();
+	}
 
 	public static boolean hasOneDayDifference(Date date1, String date2) throws Exception {
 		Calendar cal = new GregorianCalendar();

@@ -19,6 +19,7 @@
  */
 package org.techytax.helper;
 
+import static org.techytax.domain.BalanceType.MACHINERY;
 import static org.techytax.domain.BalanceType.NON_CURRENT_ASSETS;
 import static org.techytax.domain.BalanceType.PENSION;
 import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
@@ -38,6 +39,7 @@ import org.techytax.cache.CostCache;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.CostDao;
 import org.techytax.dao.FiscalDao;
+import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Balans;
 import org.techytax.domain.BookValue;
@@ -68,7 +70,7 @@ public class FiscalOverviewHelper {
 	private Map<BalanceType, FiscalBalance> passivaMap = new HashMap<BalanceType, FiscalBalance>();
 
 	public FiscalOverviewHelper() throws Exception {
-		bookYear = DateHelper.getYear(new Date()) - 1;
+		bookYear = DateHelper.getFiscalYear();
 	}
 
 	public FiscalOverview createFiscalOverview(Date beginDatum, Date eindDatum) throws Exception {
@@ -272,11 +274,14 @@ public class FiscalOverviewHelper {
 		overview.setInterestFromBusinessSavings(interest);
 	}
 
-	private void handleDepreciations(List<DeductableCostGroup> deductableCosts) {
-		BigDecimal depreciationMachines = BalanceCalculator.getOverigeAfschrijvingen(deductableCosts);
-		if (depreciationMachines != null) {
-			overview.setAfschrijvingOverig(depreciationMachines.intValue());
+	private void handleDepreciations(List<DeductableCostGroup> deductableCosts) throws Exception {
+		List<Activum> allActiva = fiscalDao.getActiveActiva(MACHINERY);
+		BigInteger totalDeprecation = BigInteger.ZERO;
+		for (Activum activum : allActiva) {
+			totalDeprecation = totalDeprecation.add(activum.getDepreciation());
 		}
+		overview.setAfschrijvingOverig(totalDeprecation.intValue());
+		
 		BigDecimal depreciationSettlement = BalanceCalculator.getDepreciationSettlement(deductableCosts);
 		if (depreciationSettlement != null) {
 			overview.setSettlementDepreciation(depreciationSettlement.intValue());

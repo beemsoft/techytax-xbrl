@@ -66,7 +66,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<listheader label="Type" width="400px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
 			</listhead>
 			<template name="model" var="item">
-				<listitem onDoubleClick="@command('onDoubleClicked')">
+				<listitem onDoubleClick="@command('onDoubleClicked')" sclass="@load(item.style)">
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
 					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
 					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')"/>
