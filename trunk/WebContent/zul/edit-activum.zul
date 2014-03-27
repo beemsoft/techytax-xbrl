@@ -1,5 +1,5 @@
 <window id="resultWin" title="Activum bewerken" width="450px"
-	height="300px" border="normal" apply="org.zkoss.bind.BindComposer"
+	height="400px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.fiscal.EditActivumVM')">
 
@@ -14,6 +14,12 @@
 						<column width="300px" />
 					</columns>
 					<rows>
+						<row>
+							Begindatum
+							<hlayout>
+								<datebox value="@bind(vm.activum.startDate)" />
+							</hlayout>
+						</row>					
 						<row>
 							Einddatum
 							<hlayout>
@@ -30,13 +36,27 @@
 							</hlayout>
 						</row>
 						<row>
+							Afschrijfjaren
+							<hlayout>
+								<intbox constraint="no empty"
+									value="@bind(vm.activum.nofYearsForDepreciation)"
+									width="250px" />
+							</hlayout>
+						</row>
+						<row>
+							Afschrijving
+							<hlayout style="text-align: right; width: 250px">
+								<label value="@load(vm.activum.depreciation)" />
+							</hlayout>
+						</row>												
+						<row>
 							Restwaarde
 							<hlayout>
 								<intbox constraint="no empty"
-									value="@bind(vm.activum.restwaarde.restwaarde)"
+									value="@bind(vm.activum.remainingValue)"
 									width="250px" />
 							</hlayout>
-						</row>						
+						</row>
 					</rows>
 				</grid>
 			</vbox>

@@ -22,21 +22,53 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
+import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
+			@Parameter(name = "decimalScale", value = "2") }),
+			@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }),			
+	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
+@Entity
+@Table(name = "settlement")
+@DiscriminatorValue("S")
 public class Settlement extends Activum {
 
-	private String address;
+	@Type(type = "encryptedString")
 	private String description;
-	private String startDate;
-	private Integer purchasePrice;
+	
+	private BigInteger purchasePrice;
+	
 	private BigDecimal startupCosts;
+	
 	private int nofSquareMetersBusiness;
 	private int nofSquareMetersPrivate;
+	
 	private BigInteger wozValue;
+	
 	private BigInteger terrainValue;
-	private int nofYearsForDepreciation;
-	private BigInteger eigenWoningForfaitBusiness;
-	private BigInteger eigenWoningForfaitPrivate;
-	private BigInteger fictiefRendement;
+	
+//	@Type(type = "encryptedInteger")
+//	private BigInteger eigenWoningForfaitBusiness;
+//	
+//	@Type(type = "encryptedInteger")
+//	private BigInteger eigenWoningForfaitPrivate;
+//	
+//	@Type(type = "encryptedInteger")
+//	private BigInteger fictiefRendement;
 
 	public int getNofSquareMetersBusiness() {
 		return nofSquareMetersBusiness;
@@ -62,14 +94,6 @@ public class Settlement extends Activum {
 		this.wozValue = wozValue;
 	}
 
-	public int getNofYearsForDepreciation() {
-		return nofYearsForDepreciation;
-	}
-
-	public void setNofYearsForDepreciation(int nofYearsForDepreciation) {
-		this.nofYearsForDepreciation = nofYearsForDepreciation;
-	}
-
 	public BigInteger getTerrainValue() {
 		return terrainValue;
 	}
@@ -78,37 +102,29 @@ public class Settlement extends Activum {
 		this.terrainValue = terrainValue;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public BigInteger getFictiefRendement() {
-		return fictiefRendement;
-	}
-
-	public void setFictiefRendement(BigInteger fictiefRendement) {
-		this.fictiefRendement = fictiefRendement;
-	}
-
-	public BigInteger getEigenWoningForfaitBusiness() {
-		return eigenWoningForfaitBusiness;
-	}
-
-	public void setEigenWoningForfaitBusiness(BigInteger eigenWoningForfaitBusiness) {
-		this.eigenWoningForfaitBusiness = eigenWoningForfaitBusiness;
-	}
-
-	public BigInteger getEigenWoningForfaitPrivate() {
-		return eigenWoningForfaitPrivate;
-	}
-
-	public void setEigenWoningForfaitPrivate(BigInteger eigenWoningForfaitPrivate) {
-		this.eigenWoningForfaitPrivate = eigenWoningForfaitPrivate;
-	}
+//	public BigInteger getFictiefRendement() {
+//		return fictiefRendement;
+//	}
+//
+//	public void setFictiefRendement(BigInteger fictiefRendement) {
+//		this.fictiefRendement = fictiefRendement;
+//	}
+//
+//	public BigInteger getEigenWoningForfaitBusiness() {
+//		return eigenWoningForfaitBusiness;
+//	}
+//
+//	public void setEigenWoningForfaitBusiness(BigInteger eigenWoningForfaitBusiness) {
+//		this.eigenWoningForfaitBusiness = eigenWoningForfaitBusiness;
+//	}
+//
+//	public BigInteger getEigenWoningForfaitPrivate() {
+//		return eigenWoningForfaitPrivate;
+//	}
+//
+//	public void setEigenWoningForfaitPrivate(BigInteger eigenWoningForfaitPrivate) {
+//		this.eigenWoningForfaitPrivate = eigenWoningForfaitPrivate;
+//	}
 
 	public String getDescription() {
 		return description;
@@ -116,14 +132,6 @@ public class Settlement extends Activum {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
 	}
 
 	public BigDecimal getStartupCosts() {
@@ -134,11 +142,11 @@ public class Settlement extends Activum {
 		this.startupCosts = startupCosts;
 	}
 
-	public Integer getPurchasePrice() {
+	public BigInteger getPurchasePrice() {
 		return purchasePrice;
 	}
 
-	public void setPurchasePrice(Integer purchasePrice) {
+	public void setPurchasePrice(BigInteger purchasePrice) {
 		this.purchasePrice = purchasePrice;
 	}
 

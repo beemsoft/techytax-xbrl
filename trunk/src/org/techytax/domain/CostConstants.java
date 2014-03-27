@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -42,10 +42,17 @@ public interface CostConstants {
 	public static final CostType BUSINESS_CAR_OTHER_ACCOUNT = new CostType(19);	
 	public static final CostType BUSINESS_FOOD_OTHER_ACCOUNT = new CostType(20);
 	public static final CostType BUSINESS_TRAVEL_CREDIT_CARD = new CostType(21);
-	public static final CostType BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = new CostType(22);	
+	public static final CostType BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = new CostType(22);
+	
+	@Deprecated
 	public static final CostType DEPRECIATION_CAR = new CostType(23);
+	
+	@Deprecated
 	public static final CostType FISCALE_BIJTELLING_AUTO = new CostType(24);
+	
+	@Deprecated
 	public static final CostType DEPRECIATION_MACHINE = new CostType(25);
+	
 	public static final CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
 	public static final CostType ADVERTENTIE = new CostType(27);
 	public static final CostType ADVERTENTIE_ZONDER_BTW = new CostType(28);
@@ -55,14 +62,20 @@ public interface CostConstants {
 	public static final CostType UITGAVE_CREDIT_CARD = new CostType(32);
 	public static final CostType INTEREST = new CostType(33);
 	public static final CostType VAT_PAID_BACK_ON_OTHER_ACCOUNT = new CostType(34);	
-	public static final CostType VAT_CORRECTION_CAR_DEPRECIATION = new CostType(35);	
+	
+	@Deprecated
+	public static final CostType VAT_CORRECTION_CAR_DEPRECIATION = new CostType(35);
+	
 	public static final CostType VAT_CORRECTION_CAR_PRIVATE = new CostType(36);
 	public static final CostType INVOICE_PAID = new CostType(38);	
 	public static final CostType INVOICE_SENT = new CostType(39);
 	public static final CostType REPURCHASES = new CostType(40);
 	public static final CostType SETTLEMENT = new CostType(41);
 	public static final CostType SETTLEMENT_INTEREST = new CostType(42);
+	
+	@Deprecated
 	public static final CostType DEPRECIATION_SETTLEMENT = new CostType(43);
+	
 	public static final CostType SETTLEMENT_OTHER_ACCOUNT = new CostType(44);
 	public static final CostType SETTLEMENT_DISCOUNT = new CostType(45);
 	public static final CostType INCOME_CURRENT_ACCOUNT_IGNORE = new CostType(46);

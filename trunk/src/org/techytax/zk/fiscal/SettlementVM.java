@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,12 +19,16 @@
  */
 package org.techytax.zk.fiscal;
 
+import static org.techytax.domain.BalanceType.OFFICE;
+
 import java.util.Date;
 
 import org.techytax.dao.SettlementDao;
+import org.techytax.domain.Activum;
+import org.techytax.domain.BalanceType;
 import org.techytax.domain.Settlement;
 import org.techytax.domain.User;
-import org.techytax.util.DateHelper;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -34,15 +38,16 @@ public class SettlementVM {
 
 	private User user = UserCredentialManager.getUser();
 	private SettlementDao settlementDao = new SettlementDao();
+	private GenericDao<Settlement> genericSettlementDao = new GenericDao<Settlement>(Settlement.class, user);
 	private Settlement settlement = new Settlement();
 	private Date startDate;
 	
 	@Init
 	public void init() throws Exception {
 		if (user != null) {
-			settlement = settlementDao.getSettlement(user.getId());
+			settlement = settlementDao.getSettlement();
 			if (settlement != null) {
-				startDate = DateHelper.stringToDate(settlement.getStartDate());
+				startDate = settlement.getStartDate();
 			} else {
 				startDate = new Date();
 			}
@@ -53,9 +58,9 @@ public class SettlementVM {
 	
 	@Command
 	public void save() throws Exception {
-		settlement.setUser(user);
-		settlement.setStartDate(DateHelper.getDate(startDate));
-		settlementDao.updateSettlement(settlement);
+		settlement.setStartDate(startDate);
+		settlement.setBalanceType(OFFICE);
+		genericSettlementDao.merge(settlement);
 	}	
 	
 	public String getAddress() {
@@ -67,7 +72,7 @@ public class SettlementVM {
 		}
 	}
 
-	public Settlement getSettlement() {
+	public Activum getSettlement() {
 		return settlement;
 	}
 

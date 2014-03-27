@@ -39,6 +39,7 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity(name = "org.techytax.domain.RemainingValue")
 @Table(name = "restwaarde")
+@Deprecated
 public class RemainingValue {
 
 	@Id

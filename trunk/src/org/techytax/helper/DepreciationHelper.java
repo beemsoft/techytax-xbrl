@@ -19,16 +19,10 @@
  */
 package org.techytax.helper;
 
-import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
-import static org.techytax.domain.CostConstants.DEPRECIATION_MACHINE;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.Date;
 
 import org.techytax.dao.BookValueDao;
 import org.techytax.domain.Activum;
@@ -38,18 +32,46 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.RemainingValue;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
+import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 
 public class DepreciationHelper {
-	
+
 	private User user = UserCredentialManager.getUser();
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
 	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
 
-	public BigDecimal getYearlyDepreciation(int nofYears, BigDecimal initialNetAmount, BigInteger remainingValue) {
-		BigDecimal yearlyDepreciation = (initialNetAmount.subtract(new BigDecimal(remainingValue))).divide(new BigDecimal(nofYears), 2, RoundingMode.HALF_UP);
-		yearlyDepreciation = yearlyDepreciation.setScale(0, BigDecimal.ROUND_UP);
-		return yearlyDepreciation;
+	public BigInteger getDepreciation(Activum activum) {
+		BigDecimal yearlyDepreciation = BigDecimal.ZERO;
+		int fiscalYear = DateHelper.getFiscalYear();
+		int years = activum.getNofYearsForDepreciation();
+		if ((years > 0 && activum.getEndDate() == null && (isYearForDeprecation(activum.getStartDate(), years)))) {
+			BigDecimal maximumYearlyDepreciation = activum.getCost().getAmount().subtract(BigDecimal.valueOf(activum.getRemainingValue().intValue())).divide(BigDecimal.valueOf(5), 2,
+					RoundingMode.HALF_UP);			
+			yearlyDepreciation = activum.getCost().getAmount().subtract(BigDecimal.valueOf(activum.getRemainingValue().intValue())).divide(BigDecimal.valueOf(years), 2,
+					RoundingMode.HALF_UP);
+			double proportion = 1.0d;
+			if (fiscalYear == years + DateHelper.getYear(activum.getStartDate())) {
+				proportion = DateHelper.getMonth(activum.getStartDate()) / 12.0d;	
+			} else if (fiscalYear == DateHelper.getYear(activum.getStartDate())) {
+				proportion = 1.0d - DateHelper.getMonth(activum.getStartDate()) / 12.0d;	
+			} 
+			yearlyDepreciation = yearlyDepreciation.multiply(BigDecimal.valueOf(proportion));
+			if (yearlyDepreciation.compareTo(maximumYearlyDepreciation) == 1) {
+				yearlyDepreciation = maximumYearlyDepreciation;
+			}
+		}
+		return AmountHelper.roundToInteger(yearlyDepreciation);
+	}
+
+	private boolean isYearForDeprecation(Date startDate, int years) {
+		if (DateHelper.getMonth(startDate) > 0) {
+			years++;
+		}
+		if (DateHelper.getFiscalYear() >= DateHelper.getYear(startDate) || DateHelper.getFiscalYear() > years + DateHelper.getYear(startDate)) {
+			return true;
+		}
+		return false;
 	}
 
 	public void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear) throws Exception {
@@ -76,29 +98,6 @@ public class DepreciationHelper {
 			newBookValue.setUser(user);
 			bookValueGenericDao.persistEntity(newBookValue);
 		}
-	}
-
-	public List<Cost> getDepreciations(Cost cost, boolean isCar, int nofYears, BigDecimal yearlyDepreciation) throws Exception {
-		List<Cost> depreciations = new ArrayList<Cost>();
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(cost.getDate());
-		cal.set(Calendar.MONTH, Calendar.DECEMBER);
-		cal.set(Calendar.DAY_OF_MONTH, 31);
-		for (int i = 0; i < nofYears; i++) {
-			Cost depreciation = new Cost();
-			depreciation.setVat(new BigDecimal(0));
-			if (isCar) {
-				depreciation.setCostType(DEPRECIATION_CAR);
-			} else {
-				depreciation.setCostType(DEPRECIATION_MACHINE);
-			}
-			depreciation.setDate(cal.getTime());
-			depreciation.setAmount(yearlyDepreciation.setScale(2));
-			depreciation.setDescription("Afschrijving " + (i + 1) + ", " + cost.getDescription());
-			depreciations.add(depreciation);
-			cal.add(Calendar.YEAR, 1);
-		}
-		return depreciations;
 	}
 
 }

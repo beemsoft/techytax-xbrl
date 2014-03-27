@@ -67,6 +67,14 @@
 		background-color: #ffff99;
 	}
 	
+	.z-listitem-positive-amount .z-listcell-content {
+		background-color: lightgreen;
+	}
+	
+	.z-listitem-negative-amount .z-listcell-content {
+		background-color: lightblue;
+	}		
+	
 	.z-listitem-selected .z-listcell  {
 		background-color: #ffff99;
 	}	

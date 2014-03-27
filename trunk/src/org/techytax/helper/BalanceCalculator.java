@@ -353,17 +353,6 @@ public class BalanceCalculator {
 		return repurchases.toBigInteger();
 	}
 
-	public static BigDecimal getOverigeAfschrijvingen(List<DeductableCostGroup> aftrekpostenLijst) {
-		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		while (iterator.hasNext()) {
-			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoort().equals(DEPRECIATION_MACHINE)) {
-				return aftrekpost.getAftrekbaarBedrag();
-			}
-		}
-		return BigDecimal.ZERO;
-	}
-
 	public static BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
