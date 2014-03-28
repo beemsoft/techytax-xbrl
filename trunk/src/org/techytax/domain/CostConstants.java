@@ -50,9 +50,6 @@ public interface CostConstants {
 	@Deprecated
 	public static final CostType FISCALE_BIJTELLING_AUTO = new CostType(24);
 	
-	@Deprecated
-	public static final CostType DEPRECIATION_MACHINE = new CostType(25);
-	
 	public static final CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
 	public static final CostType ADVERTENTIE = new CostType(27);
 	public static final CostType ADVERTENTIE_ZONDER_BTW = new CostType(28);
