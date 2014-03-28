@@ -37,6 +37,7 @@ Changes:
 <li>Added support for VAT-free companies.</li>
 <li>Display warning when fiscal pension gets larger than non current assets.</li>
 <li>Migrating from iBatis to JPA.</li>
+<li>Improved deprecation of machines.</li>
 </ul>
 <h4>2.0 (2013-10-23)</h4>
 <p>

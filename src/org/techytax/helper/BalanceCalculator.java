@@ -26,7 +26,6 @@ import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
-import static org.techytax.domain.CostConstants.DEPRECIATION_MACHINE;
 import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
@@ -41,6 +40,7 @@ import static org.techytax.domain.CostConstants.INVOICE_PAID;
 import static org.techytax.domain.CostConstants.INVOICE_SENT;
 import static org.techytax.domain.CostConstants.OPNAME;
 import static org.techytax.domain.CostConstants.REPURCHASES;
+import static org.techytax.domain.CostConstants.ROAD_TAX;
 import static org.techytax.domain.CostConstants.SETTLEMENT;
 import static org.techytax.domain.CostConstants.SETTLEMENT_DISCOUNT;
 import static org.techytax.domain.CostConstants.SETTLEMENT_INTEREST;
@@ -52,7 +52,6 @@ import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTH
 import static org.techytax.domain.CostConstants.UITGAVE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
 import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_PRIVATE;
-import static org.techytax.domain.CostConstants.ROAD_TAX;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
