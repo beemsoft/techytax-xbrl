@@ -35,9 +35,17 @@ import org.techytax.domain.VatType;
 public class AmountHelper {
 
 	public static void applyHighVat(Cost cost) throws Exception {
+		applyVat(cost, VatType.HIGH);
+	}
+
+	public static void applyLowVat(Cost cost) throws Exception {
+		applyVat(cost, VatType.LOW);
+	}
+
+	private static void applyVat(Cost cost, VatType vatType) throws Exception {
 		BigDecimal amount = cost.getAmount();
 		if (amount != null) {
-			BigDecimal bd = new BigDecimal(amount.doubleValue()/(1 + VatType.HIGH.getValue(cost.getDate())));
+			BigDecimal bd = new BigDecimal(amount.doubleValue()/(1 + vatType.getValue(cost.getDate())));
 			bd = round(bd);
 			cost.setAmount(bd);
 			cost.setVat(amount.subtract(bd));
