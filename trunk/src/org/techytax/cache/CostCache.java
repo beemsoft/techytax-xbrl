@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.PrepaidTax;
@@ -53,7 +54,7 @@ public class CostCache {
 
 	private void fillCosts() throws Exception {
 		CostDao costDao = new CostDao();
-		costs = costDao.getKostLijst(beginDatum, eindDatum, "alles");
+		costs = costDao.getCostsInPeriod(beginDatum, eindDatum);
 	}
 
 	public void invalidate() {
@@ -213,6 +214,17 @@ public class CostCache {
 		}
 		return repurchases;
 	}
+	
+	public BigDecimal getCostCurrentAccountIgnore() throws Exception {
+		BigDecimal totalCost = BigDecimal.ZERO;
+		for (Cost cost : costs) {
+			CostType costType = cost.getCostType();
+			if (costType.equals(INCOME_CURRENT_ACCOUNT_IGNORE)) {
+				totalCost = totalCost.add(cost.getAmount()).add(cost.getVat());
+			}
+		}
+		return totalCost;
+	}	
 
 	public Date getBeginDatum() {
 		return beginDatum;

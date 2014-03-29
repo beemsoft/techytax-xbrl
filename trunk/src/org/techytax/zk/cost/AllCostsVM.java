@@ -146,7 +146,7 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
 		if (user != null && costs == null) {
-			List<Cost> vatCosts = costDao.getKostLijst(periode.getBeginDatum(), periode.getEindDatum(), "rekeningBalans");
+			List<Cost> vatCosts = costDao.getCostsOnBusinessAccountInPeriod(periode.getBeginDatum(), periode.getEindDatum());
 			costs = new ListModelList<Cost>(vatCosts);
 		}
 		return costs;

@@ -19,6 +19,7 @@
  */
 package org.techytax.zk.cost;
 
+import static org.techytax.log.AuditType.DELETE_COST;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
 
@@ -97,7 +98,7 @@ public class CostVM {
 	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void newCost() throws Exception {
-		AuditLogger.log(AuditType.ENTER_COST, user);
+		AuditLogger.log(ENTER_COST, user);
 		Cost cost = new Cost();
 		cost.setDate(new Date());
 		getCosts().add(cost);
@@ -135,15 +136,13 @@ public class CostVM {
 		this.selectedCostType = selected;
 	}
 
-	// action command
-
 	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void deleteCost() throws Exception {
 		if (user != null) {
-			AuditLogger.log(AuditType.DELETE_COST, user);
+			AuditLogger.log(DELETE_COST, user);
 			selected.setUser(user);
-			costDao.deleteCost(selected);
+			genericCostDao.deleteEntity(selected);
 			getCosts().remove(selected);
 			selected = null;
 			costCache.invalidate();
@@ -159,13 +158,7 @@ public class CostVM {
 	@NotifyChange("selected")
 	@Command
 	public void lowVat() throws Exception {
-		BigDecimal amount = selected.getAmount();
-		if (amount != null) {
-			BigDecimal bd = new BigDecimal(amount.doubleValue() / 1.06d);
-			bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-			selected.setAmount(bd);
-			selected.setVat(amount.subtract(bd));
-		}
+		AmountHelper.applyLowVat(selected);
 	}
 
 	public Validator getPriceValidator() {

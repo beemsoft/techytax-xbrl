@@ -84,13 +84,6 @@ public class CostDao extends BaseDao {
 		}
 	}
 
-	public void insertKost(Cost kost) throws Exception {
-		kost.roundValues();
-		encrypt(kost);
-		sqlMap.insert("insertKost", kost);
-		decrypt(kost);
-	}
-
 	public void insertSplitCost(Cost originalCost, Cost splitCost) throws Exception {
 		splitCost.setDate(originalCost.getDate());
 		CostType costType = CostTypeCache.getCostType(originalCost.getCostTypeId());
@@ -105,25 +98,7 @@ public class CostDao extends BaseDao {
 		decrypt(splitCost);
 	}
 
-	public List<Cost> getKostLijst(Date beginDatum, Date eindDatum, String balansSoort) throws Exception {
-		List<Cost> costs = null;
-		if (balansSoort != null) {
-			if (balansSoort.equals("alles")) {
-				costs = getCostsInPeriod(beginDatum, eindDatum);
-			} else if (balansSoort.equals("btwBalans")) {
-				costs = getVatCostsInPeriod(beginDatum, eindDatum);
-			} else if (balansSoort.equals("rekeningBalans")) {
-				costs = getCostsOnBusinessAccountInPeriod(beginDatum, eindDatum);
-			} else if (balansSoort.equals("kostenBalans")) {
-				throw new IllegalStateException("Migrating...");
-			} else if (balansSoort.equals("audit")) {
-				throw new IllegalStateException("Migrating...");
-			}
-		}
-		return costs;
-	}
-
-	private List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
+	public List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs;
 		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc", Cost.class);
 		query.setParameter("user", user);
@@ -133,7 +108,7 @@ public class CostDao extends BaseDao {
 		return costs;
 	}
 
-	private List<Cost> getVatCostsInPeriod(Date beginDatum, Date eindDatum) {
+	public List<Cost> getVatCostsInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
@@ -144,7 +119,7 @@ public class CostDao extends BaseDao {
 		return filteredCosts;
 	}
 
-	private List<Cost> getCostsOnBusinessAccountInPeriod(Date beginDatum, Date eindDatum) {
+	public List<Cost> getCostsOnBusinessAccountInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
 		List<Cost> filteredCosts = new ArrayList<Cost>();
 		for (Cost cost : costs) {
@@ -173,16 +148,6 @@ public class CostDao extends BaseDao {
 			// ok
 		}
 		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cost> getAuditList(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getAuditList", map);
-		for (Cost cost : costs) {
-			decrypt(cost);
-		}
-		return costs;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -264,10 +229,6 @@ public class CostDao extends BaseDao {
 		return vatBalance;
 	}
 
-	public void deleteCost(Cost cost) throws Exception {
-		sqlMap.delete("deleteCost", cost);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<Cost> getVatCostsWithPrivateMoney(String beginDatum, String eindDatum, String userId) throws Exception {
 		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
@@ -276,18 +237,6 @@ public class CostDao extends BaseDao {
 			decrypt(cost);
 		}
 		return costs;
-	}
-
-	@SuppressWarnings("unchecked")
-	public BigDecimal getCostsCurrentAccountIgnore(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		BigDecimal costsIgnoreBalance = new BigDecimal("0");
-		List<Cost> costs = sqlMap.queryForList("getCostsCurrentAccountIgnore", map);
-		for (Cost cost : costs) {
-			decrypt(cost);
-			costsIgnoreBalance = costsIgnoreBalance.add(cost.getAmount()).add(cost.getVat());
-		}
-		return costsIgnoreBalance;
 	}
 
 }

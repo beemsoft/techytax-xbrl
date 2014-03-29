@@ -262,7 +262,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private void createVatOverview() throws Exception {
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		List<Cost> vatCosts = costDao.getKostLijst(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum(), "btwBalans");
+		List<Cost> vatCosts = costDao.getVatCostsInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
 		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
@@ -270,7 +270,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		if (balans.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
-			List<Cost> balanceCosts = costDao.getKostLijst(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum(), "rekeningBalans");
+			List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
 			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 			balans.setNettoOmzet(turnover);
 			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));

@@ -19,14 +19,14 @@
  */
 package org.techytax.helper;
 
+import static org.techytax.log.AuditType.SEND_AUDIT_FILE;
+
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -60,7 +60,6 @@ import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
-import org.techytax.log.AuditType;
 import org.techytax.mail.MailHelper;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
@@ -69,11 +68,12 @@ public class DutchAuditFileHelper {
 
 	public static void sendAuditFile(User user, Periode periode) {
 		CostDao costDao = new CostDao();
-		AuditLogger.log(AuditType.SEND_AUDIT_FILE, user);
+		AuditLogger.log(SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<Cost>();
 			if (periode != null) {
-				allCosts = costDao.getKostLijst(periode.getBeginDatum(), periode.getEindDatum(), "audit");
+				allCosts = costDao.getCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
+				// TODO: sort costs
 			}
 			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
 			List<Customer> customers = customerDao.findAll();
@@ -195,7 +195,6 @@ public class DutchAuditFileHelper {
 			String currentKostenSoortOmschrijving = null;
 			Journal journal = null;
 
-			ResourceBundle resource = ResourceBundle.getBundle("properties/messages", new Locale("NL"));
 			for (Cost cost : costList) {
 				String kostenSoortOmschrijving = cost.getKostenSoortOmschrijving();
 				Transaction transaction = createTransaction(cost);
@@ -207,7 +206,7 @@ public class DutchAuditFileHelper {
 					}
 					// Start a new journal
 					journal = objectFactory.createAuditfileCompanyTransactionsJournal();
-					journal.setDesc(resource.getString(cost.getKostenSoortOmschrijving()).trim());
+					journal.setDesc(cost.getKostenSoortOmschrijving().trim());
 				}
 				journal.getTransaction().add(transaction);
 			}

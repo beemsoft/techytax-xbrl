@@ -98,7 +98,7 @@ public class AccountCheckVM extends CostVM3 {
 		if (user != null) {
 			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-			List<Cost> result2 = costDao.getKostLijst(periode.getBeginDatum(), periode.getEindDatum(), "btwBalans");
+			List<Cost> result2 = costDao.getVatCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
 			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
@@ -107,7 +107,7 @@ public class AccountCheckVM extends CostVM3 {
 			List<Cost> costsOnCurrentAccount = costCache.getCostListCurrentAccount();
 			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(costsOnCurrentAccount, true).getTotaleKosten();
 			BigDecimal interest = costCache.getInterest();
-			BigDecimal costIgnoreBalance = costDao.getCostsCurrentAccountIgnore(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), Long.toString(user.getId()));
+			BigDecimal costIgnoreBalance = costCache.getCostCurrentAccountIgnore();
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
 			BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
 					.subtract(liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
