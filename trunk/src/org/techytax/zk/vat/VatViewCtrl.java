@@ -21,6 +21,7 @@ package org.techytax.zk.vat;
 
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
+import static org.techytax.log.AuditType.IMPORT_TRANSACTIONS;
 import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
 
@@ -229,7 +230,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onClick=#importBtn")
 	public void importTransactions(Event event) throws Exception {
-		AuditLogger.log(AuditType.IMPORT_TRANSACTIONS, user);
+		AuditLogger.log(IMPORT_TRANSACTIONS, user);
 		ListModel<Cost> result = costGrid.getModel();
 		if (result != null) {
 			Cost kost = null;
