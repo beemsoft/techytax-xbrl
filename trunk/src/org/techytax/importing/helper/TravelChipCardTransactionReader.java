@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
@@ -95,7 +96,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	}
 
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		CostType kostensoort = TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+		CostType kostensoort = CostTypeCache.getCostType(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT.getKostenSoortId());
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kost.setDescription(kost.getDescription());
