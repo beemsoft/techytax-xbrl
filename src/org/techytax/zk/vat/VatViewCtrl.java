@@ -160,7 +160,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private boolean listContainsUnmatchedTransactions(List<Cost> result) {
 		for (Cost cost : result) {
-			if (cost.getCostType().equals(UNDETERMINED)) {
+			if (cost.getCostType() == null || cost.getCostType().equals(UNDETERMINED)) {
 				return true;
 			}
 		}
@@ -170,7 +170,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private List<Cost> filterUnmatchedTransactions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<Cost>();
 		for (Cost cost : result) {
-			if (cost.getCostType().equals(UNDETERMINED)) {
+			if (cost.getCostType() == null || cost.getCostType().equals(UNDETERMINED)) {
 				filteredResult.add(cost);
 			}
 		}

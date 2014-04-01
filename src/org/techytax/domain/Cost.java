@@ -96,7 +96,11 @@ public class Cost implements Serializable {
 	}
 
 	public String getKostenSoortOmschrijving() {
-		return Labels.getLabel(costType.getOmschrijving());
+		if (costType != null && costType.getOmschrijving() != null) {
+			return Labels.getLabel(costType.getOmschrijving());
+		} else {
+			return "Onbekend";
+		}
 	}
 
 	public String getDescription() {
