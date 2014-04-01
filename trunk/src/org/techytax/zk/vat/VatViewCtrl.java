@@ -238,7 +238,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			for (int i = 0; i < result.getSize(); i++) {
 				kost = (Cost) result.getElementAt(i);
 				if (!kost.getCostType().equals(EXPENSE_OTHER_ACCOUNT_IGNORE)) {
-					kost.setId(0);
 					kost.setUser(user);
 					genericCostDao.persistEntity(kost);
 				}

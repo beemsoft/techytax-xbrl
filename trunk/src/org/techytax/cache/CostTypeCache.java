@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.CostType;
-import org.zkoss.util.resource.Labels;
 
 public class CostTypeCache {
 
@@ -52,7 +51,6 @@ public class CostTypeCache {
 		List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
 		for (CostType costType : costTypes) {
 			if (!costType.equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
 				costTypeMap.put(costType.getKostenSoortId(), costType);
 			}
 		}
