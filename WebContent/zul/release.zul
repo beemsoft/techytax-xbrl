@@ -5,7 +5,14 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>2.1 (upcoming)</h4>
+<h4>2.2 (Upcoming)</h4>
+<p>
+Changes:
+</p>
+<ul>
+<li>Fixed display of costtype description after importing transactions.</li>
+</ul>
+<h4>2.1 (2014-03-29)</h4>
 <p>
 Changes:
 </p>

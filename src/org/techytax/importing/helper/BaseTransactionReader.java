@@ -84,15 +84,15 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return null;
 	}
 
-	protected static String getKostOmschrijving(long kostensoortId) {
+	protected static CostType getCostType(long kostensoortId) {
 		Iterator<CostType> iter = kostensoortList.iterator();
 		while (iter.hasNext()) {
 			CostType kostensoort = iter.next();
 			if (kostensoort.getKostenSoortId() == kostensoortId) {
-				return kostensoort.getOmschrijving();
+				return kostensoort;
 			}
 		}
-		return "costtype.none";
+		return null;
 	}
 	
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
@@ -104,7 +104,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 			CostType costType = CostTypeCache.getCostType(kostensoortId);
 			handleVat(kost, costMatch, costType);
 		}
-		kost.setCostType(new CostType(kostensoortId));
+		kost.setCostType(getCostType(kostensoortId));
 		return costMatch;
 	}
 
@@ -146,7 +146,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		splitCost.setCostType(CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF);
+		splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
 		CostSplitter.applyPercentage(splitCost, privatePercentage);

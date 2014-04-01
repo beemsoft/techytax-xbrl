@@ -20,6 +20,7 @@
 package org.techytax.business.zk.calendar;
 
 import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.log.AuditType.SEND_INVOICE;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import org.techytax.dao.BusinessCalendarDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.User;
+import org.techytax.helper.AmountHelper;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
@@ -324,15 +326,13 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setRate(selectedProject.getRate());
 
 			BigDecimal bd = new BigDecimal(invoice.getUnitsOfWork() * invoice.getRate().floatValue());
-			int decimalPlace = 2;
-
-			bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+			bd = AmountHelper.round(bd);
 
 			BigDecimal btwBedrag = new BigDecimal(bd.doubleValue() * invoice.getVat() / 100.0d);
 
-			btwBedrag = btwBedrag.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+			btwBedrag = AmountHelper.round(btwBedrag);
 			BigDecimal totaalBedrag = bd.add(btwBedrag);
-			totaalBedrag = totaalBedrag.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+			totaalBedrag = AmountHelper.round(totaalBedrag);
 
 			invoice.setNetAmount(bd);
 			invoice.setVatAmount(btwBedrag);
@@ -358,7 +358,7 @@ public class CalendarController extends SelectorComposer<Component> {
 				private void sendInvoice() throws Exception {
 					MailHelper.sendInvoice(invoice, invoiceBuf, user);
 					registerInvoice();
-					AuditLogger.log(AuditType.SEND_INVOICE, user);
+					AuditLogger.log(SEND_INVOICE, user);
 					alert("De factuur is de deur uit.");
 				}
 
@@ -369,7 +369,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					cost.setAmount(invoice.getNetAmount());
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());
-					cost.setCostType(CostConstants.INVOICE_SENT);
+					cost.setCostType(INVOICE_SENT);
 					genericCostDao.persistEntity(cost);
 				}
 			});
