@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
@@ -43,8 +42,6 @@ public class IngTransactionReader extends BaseTransactionReader {
 	private static LabeledCSVParser parser = null;
 	
 	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
-		List<CostType> kostensoortList2 = costTypeDao.getCostTypesForAccount();
-		kostensoortList = kostensoortList2;
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);

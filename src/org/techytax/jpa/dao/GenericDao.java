@@ -34,7 +34,7 @@ import org.techytax.jpa.entities.EntityManagerHelper;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class GenericDao<T> {
-	
+
 	private EntityManager entityManager;
 	private final Class<T> persistentClass;
 	private final User user;
@@ -45,14 +45,14 @@ public class GenericDao<T> {
 		this.persistentClass = persistentClass;
 		this.user = user;
 	}
-	
+
 	public GenericDao(final EntityManager entityManager, final Class<T> persistentClass, final User user) {
 		this.entityManager = entityManager;
 		this.persistentClass = persistentClass;
 		this.user = user;
 		isForTesting = true;
 	}
-	
+
 	private void getNewEntityManager() {
 		if (isForTesting) {
 			entityManager = EntityManagerHelper.getEntityManager();
@@ -60,8 +60,9 @@ public class GenericDao<T> {
 			entityManager = JpaUtil.getEntityManager();
 		}
 	}
-	
+
 	public void deleteEntity(T entity) {
+		getNewEntityManager();
 		try {
 			entityManager.remove(entityManager.merge(entity));
 			entityManager.flush();
@@ -74,11 +75,13 @@ public class GenericDao<T> {
 		getNewEntityManager();
 		try {
 			entityManager.persist(entity);
+			entityManager.flush();
+			entityManager.clear();
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void merge(T entity) {
 		try {
 			EntityManager em = JpaUtil.getEntityManager();
@@ -86,8 +89,8 @@ public class GenericDao<T> {
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}
-	}	
-	
+	}
+
 	public Object getEntity(T entity, Long id) {
 		Object retrievedEntity = null;
 		getNewEntityManager();
@@ -99,11 +102,10 @@ public class GenericDao<T> {
 		}
 		return retrievedEntity;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<T> findByNamedQuery(final String name, Object... params) {
-		Query query = entityManager.createNamedQuery(
-				name);
+		Query query = entityManager.createNamedQuery(name);
 
 		for (int i = 0; i < params.length; i++) {
 			query.setParameter(i + 1, params[i]);
@@ -111,24 +113,23 @@ public class GenericDao<T> {
 
 		final List<T> result = (List<T>) query.getResultList();
 		return result;
-	}	
-	
+	}
+
 	public List<T> findAll() throws IllegalAccessException {
 		return findByCriteria();
 	}
-	
+
 	protected List<T> findByCriteria(final Criterion... criterion) throws IllegalAccessException {
 		return findByCriteria(-1, -1, criterion);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	protected List<T> findByCriteria(final int firstResult,
-			final int maxResults, final Criterion... criterion) throws IllegalAccessException {
-//		EntityManager em = JpaUtil.getEntityManager();
+	protected List<T> findByCriteria(final int firstResult, final int maxResults, final Criterion... criterion) throws IllegalAccessException {
+		// EntityManager em = JpaUtil.getEntityManager();
 		getNewEntityManager();
 		Session session = (Session) entityManager.getDelegate();
 		Criteria crit = session.createCriteria(persistentClass);
-		
+
 		if (user != null) {
 			crit.add(Restrictions.eq("user", user));
 		} else {
@@ -149,6 +150,6 @@ public class GenericDao<T> {
 
 		final List<T> result = crit.list();
 		return result;
-	}	
+	}
 
 }

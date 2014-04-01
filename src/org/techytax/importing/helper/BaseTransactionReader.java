@@ -51,7 +51,6 @@ import org.techytax.jpa.dao.SplitMatchDao;
 public abstract class BaseTransactionReader implements TransactionReader {
 
 	protected static Vector<String[]> regels = null;
-	protected static List<CostType> kostensoortList = null;
 	protected CostTypeDao costTypeDao = new CostTypeDao();
 	protected SettlementDao settlementDao = new SettlementDao();
 	protected List<Cost> kostLijst = new ArrayList<Cost>();
@@ -84,17 +83,6 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return null;
 	}
 
-	protected static CostType getCostType(long kostensoortId) {
-		Iterator<CostType> iter = kostensoortList.iterator();
-		while (iter.hasNext()) {
-			CostType kostensoort = iter.next();
-			if (kostensoort.getKostenSoortId() == kostensoortId) {
-				return kostensoort;
-			}
-		}
-		return null;
-	}
-	
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
 		long kostensoortId = CostConstants.UNDETERMINED.getKostenSoortId();
 		kost.setVat(BigDecimal.ZERO);
@@ -104,7 +92,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 			CostType costType = CostTypeCache.getCostType(kostensoortId);
 			handleVat(kost, costMatch, costType);
 		}
-		kost.setCostType(getCostType(kostensoortId));
+		kost.setCostType(CostTypeCache.getCostType(kostensoortId));
 		return costMatch;
 	}
 
@@ -146,7 +134,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
+		splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getKostenSoortId()));
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
 		CostSplitter.applyPercentage(splitCost, privatePercentage);
@@ -161,9 +149,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
 		if (cost.getCostType().equals(SETTLEMENT)) {
-			splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
+			splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getKostenSoortId()));
 		} else {
-			splitCost.setCostType(INCOME_CURRENT_ACCOUNT_IGNORE);
+			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getKostenSoortId()));
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
