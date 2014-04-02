@@ -95,6 +95,7 @@ public class Cost implements Serializable {
 		return costType.getKostenSoortId();
 	}
 
+	@Deprecated
 	public String getKostenSoortOmschrijving() {
 		if (costType != null && costType.getOmschrijving() != null) {
 			return Labels.getLabel(costType.getOmschrijving());

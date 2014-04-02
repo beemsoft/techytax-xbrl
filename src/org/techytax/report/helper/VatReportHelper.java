@@ -61,7 +61,7 @@ public class VatReportHelper {
 
 	private static void convertGroupsToVatJournals(VatJournals vatJournals, Map<String, List<Cost>> journalMap) {
 		Iterator<Entry<String, List<Cost>>> iterator = journalMap.entrySet().iterator();
-		BigDecimal totalJournalsAmount = new BigDecimal("0");
+		BigDecimal totalJournalsAmount = BigDecimal.ZERO;
 		while (iterator.hasNext()) {
 			Entry<String, List<Cost>> entry = iterator.next();
 			VatJournal vatJournal = createVatJournal(entry);
@@ -82,7 +82,7 @@ public class VatReportHelper {
 	}
 
 	private static BigDecimal calculateTotalJournalAmount(Iterator<Cost> costIterator) {
-		BigDecimal totalJournalAmount = new BigDecimal("0");
+		BigDecimal totalJournalAmount = BigDecimal.ZERO;
 		while (costIterator.hasNext()) {
 			Cost cost = costIterator.next();
 			totalJournalAmount = totalJournalAmount.add(cost.getVat());
@@ -95,23 +95,23 @@ public class VatReportHelper {
 		for (Cost cost : vatCosts) {
 			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
 			if (costType.isBijschrijving() || costType.equals(INVOICE_SENT)) {
-				if (journalMapIn.containsKey(cost.getKostenSoortOmschrijving())) {
-					journalCosts = journalMapIn.get(cost.getKostenSoortOmschrijving());
+				if (journalMapIn.containsKey(cost.getCostType().getOmschrijving())) {
+					journalCosts = journalMapIn.get(cost.getCostType().getOmschrijving());
 				} else {
 					journalCosts = new ArrayList<Cost>();
 				}
 				journalCosts.add(cost);
-				journalMapIn.put(cost.getKostenSoortOmschrijving(), journalCosts);
+				journalMapIn.put(cost.getCostType().getOmschrijving(), journalCosts);
 
 			} else {
 
-				if (journalMapOut.containsKey(cost.getKostenSoortOmschrijving())) {
-					journalCosts = journalMapOut.get(cost.getKostenSoortOmschrijving());
+				if (journalMapOut.containsKey(cost.getCostType().getOmschrijving())) {
+					journalCosts = journalMapOut.get(cost.getCostType().getOmschrijving());
 				} else {
 					journalCosts = new ArrayList<Cost>();
 				}
 				journalCosts.add(cost);
-				journalMapOut.put(cost.getKostenSoortOmschrijving(), journalCosts);
+				journalMapOut.put(cost.getCostType().getOmschrijving(), journalCosts);
 
 			}
 
