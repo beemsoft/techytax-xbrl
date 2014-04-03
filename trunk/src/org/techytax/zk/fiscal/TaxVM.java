@@ -77,7 +77,6 @@ public class TaxVM {
 			items.add(new ReportTableItem("Afschrijving bedrijfsruimte", "", "", "-" + format(overview.getSettlementDepreciation()), ""));
 			items.add(new ReportTableItem("Totale afschrijving", "", "", "", "-" + format(overview.getAfschrijvingTotaal())));
 			items.add(new ReportTableItem("Bijtelling privégebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
-			items.add(new ReportTableItem("Afschrijving auto", "-" + format(overview.getAfschrijvingAuto()), "", "", ""));
 			items.add(new ReportTableItem("Autokosten", "-" + format(overview.getKostenAuto()), "", "", ""));
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
 			items.add(new ReportTableItem("Overige transportkosten", "", "-" + format(overview.getKostenOverigTransport()), "", ""));
