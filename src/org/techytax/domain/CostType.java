@@ -26,6 +26,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.zkoss.util.resource.Labels;
+
 @Entity(name = "org.techytax.domain.CostType")
 @Table(name = "kostensoort")
 public class CostType {
@@ -107,7 +109,11 @@ public class CostType {
 	}
 
 	public String getOmschrijving() {
-		return omschrijving;
+		if (omschrijving != null) {
+			return Labels.getLabel(omschrijving);
+		} else {
+			return "Onbekend";
+		}
 	}
 
 	public void setOmschrijving(String omschrijving) {

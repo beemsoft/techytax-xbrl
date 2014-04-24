@@ -11,6 +11,7 @@ Changes:
 </p>
 <ul>
 <li>Fixed display of costtype description after importing transactions.</li>
+<li>Fixed display of costtype description in cost page.</li>
 <li>Added caching for RSS feeds.</li>
 </ul>
 <h4>2.1 (2014-03-29)</h4>
