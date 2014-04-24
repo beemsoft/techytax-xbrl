@@ -32,23 +32,23 @@ public class RssFeedCache {
 	private static Map<String, RssFeed> rssFeedCache;
 	
 	static {
-		rssFeedCache = new HashMap<String, RssFeed>();
+		rssFeedCache = new HashMap<>();
 		Timer feedCheckerTimer = new Timer(true);
 		feedCheckerTimer.scheduleAtFixedRate(
 		    new TimerTask() {
 		      public void run() { updateCache(); }
-		    }, 0, 60 * 1000 * 24);
+		    }, 0, 60 * 60 * 1000 * 24);
 		
 	}
 	
 	static void updateCache() {
 		for (String feedUrl : rssFeedCache.keySet() ) {
-			getFeed(feedUrl);
+//			getFeed(feedUrl);
 		}
 	}
 	
 	static RssFeed getFeed(String feedUrl) {
-		
+		System.out.println("Get feed: " + feedUrl);
 		RssFeed rssFeed = rssFeedCache.get(feedUrl);
 		if (rssFeed != null) {
 			return rssFeed;

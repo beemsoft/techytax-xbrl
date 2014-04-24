@@ -38,7 +38,7 @@ public class EntityManagerHelper {
 			Properties properties = new Properties();
 			try {
 				properties.load(EntityManagerHelper.class.getResourceAsStream("/hibernate.properties"));
-				Map<String, String> propMap = new HashMap<String, String>((Map) properties);
+				Map<String, String> propMap = new HashMap<>((Map) properties);
 				emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
 			} catch (Exception e) {
 				e.printStackTrace();

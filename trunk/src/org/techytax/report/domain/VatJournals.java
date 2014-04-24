@@ -26,7 +26,7 @@ import java.util.List;
 public class VatJournals {
 
 	private BigDecimal vatJournalsTotal;
-	private List<VatJournal> vatJournals = new ArrayList<VatJournal>();
+	private List<VatJournal> vatJournals = new ArrayList<>();
 
 	public BigDecimal getVatJournalsTotal() {
 		return vatJournalsTotal;

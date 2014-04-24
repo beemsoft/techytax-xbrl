@@ -67,7 +67,7 @@ public class FiscalOverviewHelper {
 	private FiscalOverview overview = new FiscalOverview();
 	private InvestmentDeductionHelper investmentDeductionHelper = new InvestmentDeductionHelper();
 	private int bookYear;
-	private Map<BalanceType, FiscalBalance> passivaMap = new HashMap<BalanceType, FiscalBalance>();
+	private Map<BalanceType, FiscalBalance> passivaMap = new HashMap<>();
 
 	public FiscalOverviewHelper() throws Exception {
 		bookYear = DateHelper.getFiscalYear();

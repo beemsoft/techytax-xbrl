@@ -30,7 +30,7 @@ public class LogDaoTest {
 		Properties properties = new Properties();
 		try {
 			properties.load(LogDaoTest.class.getResourceAsStream("/hibernate-test.properties"));
-			Map<String, String> propMap = new HashMap<String, String>((Map) properties);
+			Map<String, String> propMap = new HashMap<>((Map) properties);
 			emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
 			EntityManagerHelper.setEntityManagerFactory(emf);
 		} catch (Exception e) {

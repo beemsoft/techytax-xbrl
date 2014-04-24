@@ -62,7 +62,7 @@ public class ActivaHelper {
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
 	private int bookYear;
-	private Map<BalanceType, FiscalBalance> activaMap = new HashMap<BalanceType, FiscalBalance>();
+	private Map<BalanceType, FiscalBalance> activaMap = new HashMap<>();
 
 	public ActivaHelper(FiscalOverview fiscalOverview, CostCache costCache) {
 		this.fiscalOverview = fiscalOverview;

@@ -46,7 +46,7 @@ public class CostTypeCache {
 	}
 
 	private static void fill() throws Exception {
-		costTypeMap = new HashMap<Long, CostType>();
+		costTypeMap = new HashMap<>();
 		CostTypeDao kostensoortDao = new CostTypeDao();
 		List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
 		for (CostType costType : costTypes) {

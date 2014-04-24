@@ -176,7 +176,7 @@ public class DynamicWsaSignaturePartsInterceptor extends
             message.put(WSHandlerConstants.SIGNATURE_PARTS, signatureParts);
         }
         else {
-            Map<String, Object> properties = new HashMap<String, Object>(
+            Map<String, Object> properties = new HashMap<>(
                     interceptor.getProperties());
             properties.put(WSHandlerConstants.SIGNATURE_PARTS, signatureParts);
             

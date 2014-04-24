@@ -110,7 +110,7 @@ public class CostDao extends BaseDao {
 
 	public List<Cost> getVatCostsInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			if (cost.getCostType().isVatDeclarable()) {
 				filteredCosts.add(cost);
@@ -121,7 +121,7 @@ public class CostDao extends BaseDao {
 
 	public List<Cost> getCostsOnBusinessAccountInPeriod(Date beginDatum, Date eindDatum) {
 		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			if (cost.getCostType().isBalansMeetellen()) {
 				filteredCosts.add(cost);
@@ -158,7 +158,7 @@ public class CostDao extends BaseDao {
 	@SuppressWarnings("unchecked")
 	public List<Cost> searchCosts(String searchTerm, String userId) throws Exception {
 		List<Cost> costs = sqlMap.queryForList("getAllCostsForUser", userId);
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			decrypt(cost);
 			if (cost.getDescription().toUpperCase().contains(searchTerm.toUpperCase())) {
@@ -208,7 +208,7 @@ public class CostDao extends BaseDao {
 
 	public List<Cost> getInvoices(Date beginDatum, Date eindDatum) throws Exception {
 		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			if (cost.getCostType().equals(INVOICE_SENT) || cost.getCostType().equals(INVOICE_PAID)) {
 				filteredCosts.add(cost);

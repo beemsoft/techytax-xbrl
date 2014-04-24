@@ -425,7 +425,7 @@ public class DateHelper {
 	}
 
 	public static List<Integer> getLatestSevenYears() {
-		List<Integer> yearList = new ArrayList<Integer>();
+		List<Integer> yearList = new ArrayList<>();
 		int yearInt = getCurrentYear();
 		Integer year = new Integer(yearInt);
 		for (int i = 0; i < 7; i++) {

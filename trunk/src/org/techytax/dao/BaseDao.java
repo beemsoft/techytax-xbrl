@@ -53,7 +53,7 @@ public class BaseDao {
 
 	protected Map<String, String> createMap(String beginDatum,
 			String eindDatum, String userId) {
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new HashMap<>();
 		map.put("beginDatum", beginDatum);
 		map.put("eindDatum", eindDatum);
 		map.put("userId", userId);

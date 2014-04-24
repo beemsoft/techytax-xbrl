@@ -298,7 +298,7 @@ public class CalendarController extends SelectorComposer<Component> {
 				factuurNummerString += "0";
 			}
 			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(beginDate, endDate);
-			List<Cost> invoices = new ArrayList<Cost>();
+			List<Cost> invoices = new ArrayList<>();
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostType().equals(INVOICE_SENT)) {

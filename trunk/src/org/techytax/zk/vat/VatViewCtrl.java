@@ -168,7 +168,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private List<Cost> filterUnmatchedTransactions(List<Cost> result) {
-		List<Cost> filteredResult = new ArrayList<Cost>();
+		List<Cost> filteredResult = new ArrayList<>();
 		for (Cost cost : result) {
 			if (cost.getCostType() == null || cost.getCostType().equals(UNDETERMINED)) {
 				filteredResult.add(cost);
@@ -178,7 +178,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private List<Cost> filterLongDescriptions(List<Cost> result) {
-		List<Cost> filteredResult = new ArrayList<Cost>();
+		List<Cost> filteredResult = new ArrayList<>();
 		for (Cost cost : result) {
 			costDao.encrypt(cost);
 			if (cost.getDescription().length() > 400) {

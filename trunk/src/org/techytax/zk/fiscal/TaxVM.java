@@ -67,7 +67,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getProfitAndLossTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Netto omzet", "", "", "", format(overview.getNettoOmzet())));
 			items.add(new ReportTableItem("Renteopbrengsten van banktegoeden", "", "", "", "+" + format(overview.getInterestFromBusinessSavings())));
@@ -92,7 +92,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getActivaTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			BalanceReport report = overview.getActivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
@@ -106,7 +106,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getPassivaTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			BalanceReport report = overview.getPassivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
@@ -122,7 +122,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getPrivatWithDrawalTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Onttrekking in contanten", format(overview.getOnttrekking().getWithdrawalCash())));
 			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
@@ -132,7 +132,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getPrivatDepositTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Privéstortingen", format(overview.getPrivateDeposit())));
 		}
@@ -140,7 +140,7 @@ public class TaxVM {
 	}
 
 	public ListModelList<ReportTableItem> getPrepaidTaxTableItems() {
-		List<ReportTableItem> items = new ArrayList<ReportTableItem>();
+		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Voorlopige aanslag inkomstenbelasting en premie volksverzekeringen", format(overview.getPrepaidTax().getPrepaidIncome())));
 			items.add(new ReportTableItem("Inkomensafhankelijke bijdrage Zorgverzekeringswet", format(overview.getPrepaidTax().getPrepaidHealth())));
