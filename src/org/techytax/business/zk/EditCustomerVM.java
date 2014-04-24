@@ -91,7 +91,7 @@ public class EditCustomerVM {
 		JSONArray array = (JSONArray) map3.get("ROWS");
 		if (array != null && array.size() > 0) {
 			List<Customer> customers = getCustomers(array);
-			Map<String, Object> arguments = new HashMap<String, Object>();
+			Map<String, Object> arguments = new HashMap<>();
 			arguments.put("customers", customers);
 			String template = "select-customer.zul";
 			Window window = (Window) Executions.createComponents(template, null, arguments);
@@ -127,7 +127,7 @@ public class EditCustomerVM {
 	}
 
 	private List<Customer> getCustomers(JSONArray rowsArray) {
-		List<Customer> customers = new ArrayList<Customer>();
+		List<Customer> customers = new ArrayList<>();
 		Iterator<Object> iterator = rowsArray.iterator();
 		while (iterator.hasNext()) {
 			JSONArray customerArray = (JSONArray) iterator.next();

@@ -62,7 +62,7 @@ public class CostCache {
 	}
 
 	public List<DeductableCostGroup> getDeductableCosts() throws Exception {
-		List<DeductableCostGroup> deductableCostList = new ArrayList<DeductableCostGroup>();
+		List<DeductableCostGroup> deductableCostList = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
 			if (costType.isAftrekbaar()) {
@@ -76,7 +76,7 @@ public class CostCache {
 		CostType latestCostType = UNDETERMINED;
 		DeductableCostGroup groupedCost = null;
 		BigDecimal totalDeductableCost = BigDecimal.ZERO;
-		List<DeductableCostGroup> groupedDeducatableCostList = new ArrayList<DeductableCostGroup>();
+		List<DeductableCostGroup> groupedDeducatableCostList = new ArrayList<>();
 		for (DeductableCostGroup deductableCost : deductableCostList) {
 			if (deductableCost.getKostenSoort() != latestCostType) {
 				if (groupedCost != null) {
@@ -99,7 +99,7 @@ public class CostCache {
 	}
 
 	public List<Cost> getBusinessAccountCosts() throws Exception {
-		List<Cost> filteredCostList = new ArrayList<Cost>();
+		List<Cost> filteredCostList = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
 			if (costType.isBalansMeetellen()) {
@@ -110,7 +110,7 @@ public class CostCache {
 	}
 
 	public List<Cost> getInvestments() throws Exception {
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
 			if (costType.equals(INVESTMENT)) {
@@ -123,7 +123,7 @@ public class CostCache {
 	}
 
 	public List<Cost> getTaxCosts() throws Exception {
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		List<CostType> costTypes = Arrays.asList(VAT, INCOME_TAX, INCOME_TAX_PAID_BACK, ROAD_TAX, VAT_PAID_BACK_ON_OTHER_ACCOUNT);
 		for (Cost cost : costs) {
 			if (costTypes.contains(cost.getCostType())) {
@@ -134,7 +134,7 @@ public class CostCache {
 	}
 
 	public List<Cost> getCostListCurrentAccount() throws Exception {
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, UITGAVE_DEZE_REKENING_FOUTIEF, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTENTIE,
 				ADVERTENTIE_ZONDER_BTW, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST);
 		for (Cost cost : costs) {
@@ -170,7 +170,7 @@ public class CostCache {
 
 	@Deprecated
 	public List<Cost> getVatCorrectionDepreciation() throws Exception {
-		List<Cost> filteredCosts = new ArrayList<Cost>();
+		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			if (cost.getCostType().equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
 				filteredCosts.add(cost);
@@ -181,7 +181,7 @@ public class CostCache {
 
 	public PrepaidTax getPrepaidTax() throws Exception {
 		PrepaidTax prepaidTax = new PrepaidTax();
-		List<Cost> filteredCostList = new ArrayList<Cost>();
+		List<Cost> filteredCostList = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
 			if (costType.equals(INCOME_TAX)) {

@@ -45,7 +45,7 @@ public class CostRowRenderer implements RowRenderer<Cost> {
 		row.appendChild(new Label(cost.getKostenSoortOmschrijving().toString()));
 		row.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 			public void onEvent(Event event) throws Exception {
-				Map<String, Object> arguments = new HashMap<String, Object>();
+				Map<String, Object> arguments = new HashMap<>();
 				arguments.put("cost", cost);
 				String template = "edit-cost.zul";
 				Window window = (Window) Executions.createComponents(template, null, arguments);

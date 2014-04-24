@@ -98,7 +98,7 @@ public class VatReportHelper {
 				if (journalMapIn.containsKey(cost.getCostType().getOmschrijving())) {
 					journalCosts = journalMapIn.get(cost.getCostType().getOmschrijving());
 				} else {
-					journalCosts = new ArrayList<Cost>();
+					journalCosts = new ArrayList<>();
 				}
 				journalCosts.add(cost);
 				journalMapIn.put(cost.getCostType().getOmschrijving(), journalCosts);
@@ -108,7 +108,7 @@ public class VatReportHelper {
 				if (journalMapOut.containsKey(cost.getCostType().getOmschrijving())) {
 					journalCosts = journalMapOut.get(cost.getCostType().getOmschrijving());
 				} else {
-					journalCosts = new ArrayList<Cost>();
+					journalCosts = new ArrayList<>();
 				}
 				journalCosts.add(cost);
 				journalMapOut.put(cost.getCostType().getOmschrijving(), journalCosts);

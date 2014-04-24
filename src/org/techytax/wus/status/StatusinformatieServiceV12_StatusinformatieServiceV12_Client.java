@@ -69,7 +69,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 		cxfEndpoint.getInInterceptors().add(new LoggingInInterceptor());
 		cxfEndpoint.getOutInterceptors().add(new LoggingOutInterceptor());
 
-		Map<String, Object> outProps = new HashMap<String, Object>();
+		Map<String, Object> outProps = new HashMap<>();
 		// how to configure the properties is outlined below;
 
 		outProps.put(WSHandlerConstants.USER,
@@ -86,7 +86,7 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
 
 		outProps.put(WSHandlerConstants.SIG_PROP_FILE, "client_sign.properties");
 
-		Map<String, Object> inProps = new HashMap<String, Object>();
+		Map<String, Object> inProps = new HashMap<>();
 		inProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.TIMESTAMP
 				+ " " + WSHandlerConstants.SIGNATURE);
 		inProps.put(WSHandlerConstants.SIG_PROP_FILE,

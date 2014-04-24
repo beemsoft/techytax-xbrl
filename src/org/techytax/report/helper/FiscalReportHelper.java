@@ -36,7 +36,7 @@ public class FiscalReportHelper {
 
 	public static BalanceReport getActivaReport(Map<BalanceType, FiscalBalance> activaMap) {
 		BalanceReport report = new BalanceReport();
-		List<ReportBalance> reportActiva = new ArrayList<ReportBalance>();
+		List<ReportBalance> reportActiva = new ArrayList<>();
 		BigInteger totalBegin = BigInteger.ZERO;
 		BigInteger totalEnd = BigInteger.ZERO;
 		Iterator<Entry<BalanceType, FiscalBalance>> iterator = activaMap.entrySet().iterator();
@@ -76,7 +76,7 @@ public class FiscalReportHelper {
 
 	public static BalanceReport getPassivaReport(Map<BalanceType, FiscalBalance> passivaMap) {
 		BalanceReport report = new BalanceReport();
-		List<ReportBalance> reportBalance = new ArrayList<ReportBalance>();
+		List<ReportBalance> reportBalance = new ArrayList<>();
 		BigInteger totalBegin = BigInteger.ZERO;
 		BigInteger totalEnd = BigInteger.ZERO;
 

@@ -64,8 +64,8 @@ import org.zkoss.zul.Window;
 public class AllCostsVM extends CostVM3 {
 
 	private Periode periode;
-	private List<Cost> unhandledCosts = new ArrayList<Cost>();
-	private List<Cost> filteredCosts = new ArrayList<Cost>();
+	private List<Cost> unhandledCosts = new ArrayList<>();
+	private List<Cost> filteredCosts = new ArrayList<>();
 	private boolean showUnhandledInvestments = false;
 	private boolean filterCosts = false;
 	private String searchString;
@@ -95,8 +95,8 @@ public class AllCostsVM extends CostVM3 {
 			costCache.setBeginDatum(periode.getBeginDatum());
 			costCache.setEindDatum(periode.getEindDatum());
 			List<Cost> allCosts = costCache.getCosts();
-			unhandledCosts = new ArrayList<Cost>();
-			filteredCosts = new ArrayList<Cost>();
+			unhandledCosts = new ArrayList<>();
+			filteredCosts = new ArrayList<>();
 			for (Cost cost : allCosts) {
 				if (filterCosts && StringUtils.isNotEmpty(searchString)) {
 					if (cost.getDescription().toLowerCase().contains(searchString.toLowerCase())) {
@@ -183,7 +183,7 @@ public class AllCostsVM extends CostVM3 {
 	public void newCost() {
 		Cost newCost = new Cost();
 		newCost.setDate(new Date());
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("cost", newCost);
 		String template = "edit-cost.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
@@ -192,7 +192,7 @@ public class AllCostsVM extends CostVM3 {
 
 	@Command
 	public void onDoubleClicked() {
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("cost", selected);
 		String template = "edit-cost.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);

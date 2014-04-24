@@ -35,7 +35,7 @@ public class RssReader implements Serializable {
 	protected void init() {
 		try {
 			selected = RssFeedCache.getFeed(feedUrl);
-			if (selected.getFeedEntries().size() > 0) {
+			if (selected != null && selected.getFeedEntries().size() > 0) {
 				selectEntry = selected.getFeedEntries().get(0);
 			}
 		} catch (Exception e) {

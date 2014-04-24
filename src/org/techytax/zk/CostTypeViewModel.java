@@ -53,9 +53,9 @@ public class CostTypeViewModel {
 	private String selectedVatType;
 	private int selectedPercentage;
 
-	private List<CostType> costTypes = new ArrayList<CostType>();
-	private List<Kostmatch> publicMatches = new ArrayList<Kostmatch>();
-	private List<Kostmatch> privateMatches = new ArrayList<Kostmatch>();
+	private List<CostType> costTypes = new ArrayList<>();
+	private List<Kostmatch> publicMatches = new ArrayList<>();
+	private List<Kostmatch> privateMatches = new ArrayList<>();
 	private KostmatchDao kostmatchDao = new KostmatchDao();
 	private CostTypeDao kostensoortDao = new CostTypeDao();
 	private VatMatchDao vatMatchDao = new VatMatchDao();

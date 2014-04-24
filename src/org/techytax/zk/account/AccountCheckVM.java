@@ -134,7 +134,7 @@ public class AccountCheckVM extends CostVM3 {
 
 	@Command
 	public void onDoubleClicked() {
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("cost", selected);
 		String template = "edit-cost.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);

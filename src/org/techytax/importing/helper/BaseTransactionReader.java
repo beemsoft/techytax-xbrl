@@ -53,7 +53,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	protected static Vector<String[]> regels = null;
 	protected CostTypeDao costTypeDao = new CostTypeDao();
 	protected SettlementDao settlementDao = new SettlementDao();
-	protected List<Cost> kostLijst = new ArrayList<Cost>();
+	protected List<Cost> kostLijst = new ArrayList<>();
 
 	public AccountType getAccountType(String fileName, long userId) throws Exception {
 		int index = fileName.indexOf("_");

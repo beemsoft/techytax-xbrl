@@ -31,7 +31,7 @@ public class RssReaderTechyTax extends RssReader {
 	public void init() {
 		feedUrl = "http://sourceforge.net/p/techytax/code/feed";
 		imageLink = "/images/sf-footer-logo.png";
-		super.init();
+//		super.init();
 	}
 
 	public String getImageLink() {

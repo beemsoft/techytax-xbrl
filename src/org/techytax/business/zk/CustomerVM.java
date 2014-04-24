@@ -83,7 +83,7 @@ public class CustomerVM {
 	@Command
 	public void newCustomer() {
 		Customer newCustomer = new Customer();
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("customer", newCustomer);
 		String template = "edit-customer.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
@@ -92,7 +92,7 @@ public class CustomerVM {
 
 	@Command
 	public void onDoubleClicked() {
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("customer", selected);
 		String template = "edit-customer.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);

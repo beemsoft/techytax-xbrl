@@ -53,16 +53,16 @@ import org.zkoss.zul.Window;
 public class ActivaVM {
 
 	private User user = UserCredentialManager.getUser();
-	private List<BookValueHistory> bookValueHistories = new ArrayList<BookValueHistory>();
+	private List<BookValueHistory> bookValueHistories = new ArrayList<>();
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
-	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class, user);
+	private GenericDao<Activum> activumGenericDao = new GenericDao<>(Activum.class, user);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
-			bookValueHistories = new ArrayList<BookValueHistory>();
+			bookValueHistories = new ArrayList<>();
 			List<BookValue> bookValues = bookValueDao.getBookValuesHistory();
 			BalanceType currentBalanceType = null;
 
@@ -86,7 +86,7 @@ public class ActivaVM {
 						BookValueHistory bookValueHistory = new BookValueHistory(bookValuesForBalanceType);
 						bookValueHistories.add(bookValueHistory);
 					}
-					bookValuesForBalanceType = new ArrayList<BookValue>();
+					bookValuesForBalanceType = new ArrayList<>();
 
 					int bookYear = bookValue.getJaar();
 					int year = firstYear;
@@ -140,7 +140,7 @@ public class ActivaVM {
 	@Command
 	public void addNew() {
 		BookValue newBookValue = new BookValue();
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("bookValue", newBookValue);
 		String template = "~./bookvalue/edit-bookvalue.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
@@ -197,7 +197,7 @@ public class ActivaVM {
 	public ListModelList<Activum> getActiva() throws Exception {
 		if (user != null) {
 			List<Activum> activaList = fiscalDao.getAllActiva();
-			return new ListModelList<Activum>(activaList);
+			return new ListModelList<>(activaList);
 		} else {
 			Executions.sendRedirect("login.zul");
 		}
@@ -206,7 +206,7 @@ public class ActivaVM {
 
 	@Command
 	public void onDoubleClicked() {
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("activum", selected);
 		String template = "edit-activum.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);

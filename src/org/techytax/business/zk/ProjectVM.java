@@ -82,7 +82,7 @@ public class ProjectVM {
 	@Command
 	public void newProject() {
 		Project newProject = new Project();
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("project", newProject);
 		String template = "edit-project.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
@@ -91,7 +91,7 @@ public class ProjectVM {
 
 	@Command
 	public void onDoubleClicked() {
-		Map<String, Object> arguments = new HashMap<String, Object>();
+		Map<String, Object> arguments = new HashMap<>();
 		arguments.put("project", selected);
 		String template = "edit-project.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);

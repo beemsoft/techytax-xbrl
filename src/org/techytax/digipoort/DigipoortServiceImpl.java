@@ -178,7 +178,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	private void addSignatureProperties(org.apache.cxf.endpoint.Endpoint cxfEndpoint) {
-		Map<String, Object> outProps = new HashMap<String, Object>();
+		Map<String, Object> outProps = new HashMap<>();
 		String keyStoreAlias = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.alias");
 		outProps.put(WSHandlerConstants.USER, WSHandlerConstants.USE_REQ_SIG_CERT);
 		outProps.put(WSHandlerConstants.SIG_KEY_ID, "DirectReference");
@@ -189,7 +189,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 				"{Content}{http://schemas.xmlsoap.org/soap/envelope/}Body;{Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp");
 		outProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
 		outProps.put(WSHandlerConstants.SIG_PROP_FILE, "client_sign.properties");
-		Map<String, Object> inProps = new HashMap<String, Object>();
+		Map<String, Object> inProps = new HashMap<>();
 		inProps.put(WSHandlerConstants.ACTION, WSHandlerConstants.TIMESTAMP + " " + WSHandlerConstants.SIGNATURE);
 		inProps.put(WSHandlerConstants.SIG_PROP_FILE, "client_verify.properties");
 		WSS4JInInterceptor wssIn = new WSS4JInInterceptor(inProps);
