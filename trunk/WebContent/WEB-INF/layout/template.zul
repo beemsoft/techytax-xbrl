@@ -63,10 +63,6 @@
 	   padding: 0px;
 	}
 	
-	.z-listitem-selected .z-listcell-content {
-		background-color: #ffff99;
-	}
-	
 	.z-listitem-positive-amount .z-listcell-content {
 		background-color: lightgreen;
 	}
@@ -207,7 +203,7 @@
 					<separator orient="vertical" bar="true" />
 					<include src="release.zul"/>
 					<separator orient="vertical" bar="true" />
-					<toolbarbutton label="Powered by ZK ${desktop.webApp.version}" href="http://www.zkoss.org" target="_other" />					
+					<toolbarbutton label="Gebouwd met ZK ${desktop.webApp.version}" href="http://www.zkoss.org" target="_other" />					
 				</toolbar>
 			</south>
 		</borderlayout>
