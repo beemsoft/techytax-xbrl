@@ -35,7 +35,6 @@ import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatReportData;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.util.resource.Labels;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -134,7 +133,7 @@ public class PdfReportHelper {
 		Paragraph chunkMoney;
 		for (VatJournal vatJournal : vatReportData.getVatJournalsOut().getVatJournals()) {
 			subTable = new PdfPTable(4);
-			chunk = new Paragraph("btw uit post: " + Labels.getLabel(vatJournal.getCostType()), headerFont);
+			chunk = new Paragraph("btw uit post: " + vatJournal.getCostType(), headerFont);
 			cell = new PdfPCell(chunk);
 			cell.setColspan(4);
 			subTable.addCell(cell);
@@ -172,7 +171,7 @@ public class PdfReportHelper {
 		Paragraph chunkMoney;
 		for (VatJournal vatJournal : vatReportData.getVatJournalsIn().getVatJournals()) {
 			subTable = new PdfPTable(4);
-			chunk = new Paragraph("btw in post: " + Labels.getLabel(vatJournal.getCostType()), headerFont);
+			chunk = new Paragraph("btw in post: " + vatJournal.getCostType(), headerFont);
 			cell = new PdfPCell(chunk);
 			cell.setColspan(4);
 			subTable.addCell(cell);
@@ -271,7 +270,7 @@ public class PdfReportHelper {
 		subTable.addCell(cell);
 		PdfPCell tableCell = new PdfPCell(subTable);
 		for (VatJournal vatJournal : vatReportData.getVatJournalsIn().getVatJournals()) {
-			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal.getCostType()), font));
+			cell = new PdfPCell(new Paragraph(vatJournal.getCostType(), font));
 			subTable.addCell(cell);
 			Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), font);
 			cell = new PdfPCell(chunkMoney);
@@ -309,7 +308,7 @@ public class PdfReportHelper {
 		subTable.addCell(cell);
 		PdfPCell tableCell = new PdfPCell(subTable);
 		for (VatJournal vatJournal : vatReportData.getVatJournalsOut().getVatJournals()) {
-			cell = new PdfPCell(new Paragraph(Labels.getLabel(vatJournal.getCostType()), font));
+			cell = new PdfPCell(new Paragraph(vatJournal.getCostType(), font));
 			subTable.addCell(cell);
 			Paragraph chunkMoney = new Paragraph(AmountHelper.formatDecimal(vatJournal.getTotalAmount()), font);
 			cell = new PdfPCell(chunkMoney);

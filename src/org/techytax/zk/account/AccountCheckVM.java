@@ -44,9 +44,7 @@ import org.techytax.helper.BalanceCalculator;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.cost.CostVM3;
 import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
@@ -85,7 +83,7 @@ public class AccountCheckVM extends CostVM3 {
 			costCache.setEindDatum(periode.getEindDatum());
 			costCache.getCosts();
 			costList = costCache.getBusinessAccountCosts();
-			costs = new ListModelList<Cost>(costList);
+			costs = new ListModelList<>(costList);
 			getAccountCheck();
 		} else {
 			Executions.sendRedirect("login.zul");
@@ -139,21 +137,6 @@ public class AccountCheckVM extends CostVM3 {
 		String template = "edit-cost.zul";
 		Window window = (Window) Executions.createComponents(template, null, arguments);
 		window.doModal();
-	}
-
-	@GlobalCommand
-	@NotifyChange({ "costs" })
-	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = costDao.getKost(cost);
-		if (!cost.equals(originalCost)) {
-			cost.setUser(user);
-			costDao.updateKost(cost);
-
-			if (splitCost != null) {
-				splitCost.setUser(user);
-				costDao.insertSplitCost(cost, splitCost);
-			}
-		}
 	}
 
 	@NotifyChange({ "costs", "accountCheck", "accountCheckData" })

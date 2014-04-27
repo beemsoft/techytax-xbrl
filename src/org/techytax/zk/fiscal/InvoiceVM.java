@@ -62,7 +62,7 @@ public class InvoiceVM {
 			AuditLogger.log(INVOICE_OVERVIEW, user);
 			Periode period = DateHelper.getPeriodTillDate(balanceDate);
 			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(period.getBeginDatum(), period.getEindDatum());
-			invoices = new ListModelList<InvoiceCheck>();
+			invoices = new ListModelList<>();
 
 			int currentYear = DateHelper.getYear(new Date());
 

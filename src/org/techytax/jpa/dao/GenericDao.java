@@ -37,19 +37,16 @@ public class GenericDao<T> {
 
 	private EntityManager entityManager;
 	private final Class<T> persistentClass;
-	private final User user;
 	private boolean isForTesting = false;
 
-	public GenericDao(final Class<T> persistentClass, final User user) {
+	public GenericDao(final Class<T> persistentClass) {
 		entityManager = JpaUtil.getEntityManager();
 		this.persistentClass = persistentClass;
-		this.user = user;
 	}
 
-	public GenericDao(final EntityManager entityManager, final Class<T> persistentClass, final User user) {
+	public GenericDao(final EntityManager entityManager, final Class<T> persistentClass) {
 		this.entityManager = entityManager;
 		this.persistentClass = persistentClass;
-		this.user = user;
 		isForTesting = true;
 	}
 
@@ -115,16 +112,16 @@ public class GenericDao<T> {
 		return result;
 	}
 
-	public List<T> findAll() throws IllegalAccessException {
-		return findByCriteria();
+	public List<T> findAll(User user) throws IllegalAccessException {
+		return findByCriteria(user);
 	}
 
-	protected List<T> findByCriteria(final Criterion... criterion) throws IllegalAccessException {
-		return findByCriteria(-1, -1, criterion);
+	protected List<T> findByCriteria(final User user, final Criterion... criterion) throws IllegalAccessException {
+		return findByCriteria(-1, -1, user, criterion);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected List<T> findByCriteria(final int firstResult, final int maxResults, final Criterion... criterion) throws IllegalAccessException {
+	protected List<T> findByCriteria(final int firstResult, final int maxResults, final User user, final Criterion... criterion) throws IllegalAccessException {
 		// EntityManager em = JpaUtil.getEntityManager();
 		getNewEntityManager();
 		Session session = (Session) entityManager.getDelegate();

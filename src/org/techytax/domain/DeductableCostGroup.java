@@ -43,12 +43,12 @@ public class DeductableCostGroup implements Comparable<DeductableCostGroup> {
 	}
 
 	public int compareTo(DeductableCostGroup o) {
-		return (int) (this.kostenSoort.getKostenSoortId() - o.kostenSoort.getKostenSoortId());
+		return (int) (this.kostenSoort.getId() - o.kostenSoort.getId());
 	}
 	
 	@Override
 	public String toString() {
-		return "type: "+kostenSoort.getKostenSoortId()+", amount: "+aftrekbaarBedrag;
+		return "type: "+kostenSoort.getId()+", amount: "+aftrekbaarBedrag;
 	}
 
 }

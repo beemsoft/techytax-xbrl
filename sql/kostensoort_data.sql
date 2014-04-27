@@ -68,7 +68,7 @@ INSERT INTO `kostensoort` VALUES
 (22,'costtype.business.literature.credit.card.no.vat',0,0,0,1,0),
 (23,'costtype.business.car.depreciation',0,0,0,1,0),
 (24,'costtype.business.car.fiscal.income',0,0,0,1,0),
--- (25,'costtype.depreciation',0,0,0,1,0),
+(25,'costtype.depreciation',0,0,0,1,0),
 (26,'costtype.investment.depreciate.other.account',0,1,0,0,1),
 (27,'costtype.advertorial',0,1,1,1,0),
 (28,'costtype.advertorial.no.vat',0,0,1,1,0),

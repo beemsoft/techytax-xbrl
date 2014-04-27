@@ -47,7 +47,7 @@ public class SelectCustomerVM {
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("customers") List<Customer> customers) {
 		Selectors.wireComponents(view, this, false);
-		this.customersModel = new ListModelList<Customer>(customers);
+		this.customersModel = new ListModelList<>(customers);
 	}
 	
 	@Command

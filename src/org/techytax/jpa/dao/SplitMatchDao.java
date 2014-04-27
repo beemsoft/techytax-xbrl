@@ -30,7 +30,7 @@ public class SplitMatchDao {
 
 	public void insertOrUpdate(SplitMatch splitMatch) {
 		List<SplitMatch> result = getMatch(splitMatch);
-		GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(SplitMatch.class, null);
+		GenericDao<SplitMatch> genericDao = new GenericDao<>(SplitMatch.class);
 		if (result.size() == 0) {
 			genericDao.persistEntity(splitMatch);
 		} else {
@@ -64,7 +64,7 @@ public class SplitMatchDao {
 		splitMatch.setKostmatchId(costMatchId);
 		List<SplitMatch> result = getMatch(splitMatch);
 		if (result.size() == 1) {
-			GenericDao<SplitMatch> genericDao = new GenericDao<SplitMatch>(SplitMatch.class, null);
+			GenericDao<SplitMatch> genericDao = new GenericDao<>(SplitMatch.class);
 			genericDao.deleteEntity(result.get(0));
 		}
 	}

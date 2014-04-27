@@ -23,7 +23,6 @@ import static org.techytax.log.AuditType.DELETE_COST;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +36,6 @@ import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
-import org.techytax.log.AuditType;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.ValidationContext;
@@ -45,7 +43,6 @@ import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 
@@ -60,20 +57,19 @@ public class CostVM {
 	protected Cost selected;
 
 	protected CostType selectedCostType;
-	
+
 	protected CostDao costDao = new CostDao();
-	protected GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
-	
+	protected GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
+
 	protected CostCache costCache = new CostCache();
-	
+
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
-				Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-				List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(DateHelper.getDate(vatPeriod.getBeginDatum()),
-						DateHelper.getDate(vatPeriod.getEindDatum()), Long.toString(user.getId()));
-				costs = new ListModelList<Cost>(vatCosts);
+			Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
+			costs = new ListModelList<>(vatCosts);
 		}
 		return costs;
 	}
@@ -82,10 +78,7 @@ public class CostVM {
 		if (costTypes == null) {
 			CostTypeDao kostensoortDao = new CostTypeDao();
 			List<CostType> vatCostTypes = kostensoortDao.getCostTypesForVatCostsWithPrivateMoney();
-			costTypes = new ListModelList<CostType>(vatCostTypes);
-			for (CostType costType : costTypes) {
-				costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-			}
+			costTypes = new ListModelList<>(vatCostTypes);
 			selectedCostType = costTypes.get(0);
 		}
 		return costTypes;
@@ -105,13 +98,14 @@ public class CostVM {
 		selected = cost;
 	}
 
-	@NotifyChange({ "selected", "costs"})
+	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void saveCost() throws Exception {
 		if (user != null) {
 			selected.setUser(user);
 			selected.setCostType(selectedCostType);
 			Cost cost = costDao.getKost(selected);
+			selected.roundValues();
 			if (cost == null) {
 				AuditLogger.log(ENTER_COST, user);
 				genericCostDao.persistEntity(selected);

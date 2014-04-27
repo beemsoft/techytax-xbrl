@@ -36,14 +36,14 @@ public class LogDaoTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logDao = new GenericDao<LogRecord>(EntityManagerHelper.getEntityManager(), LogRecord.class, null);
-		userDao = new GenericDao<User>(EntityManagerHelper.getEntityManager(), User.class, null);
+		logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
+		userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), User.class);
 	}
 
 	@Test
 	public void testStoreAndGetLogRecord() throws IllegalAccessException {
 		addLogRecord();
-		Collection<LogRecord> logRecords = logDao.findAll();
+		Collection<LogRecord> logRecords = logDao.findAll(null);
 		assertEquals(1, logRecords.size());
 	}
 

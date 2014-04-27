@@ -23,6 +23,7 @@ import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
 import static org.techytax.log.AuditType.IMPORT_TRANSACTIONS;
 import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
+import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
 
 import java.io.BufferedReader;
@@ -92,7 +93,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private User user = UserCredentialManager.getUser();
 
 	private CostDao costDao = new CostDao();
-	private GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
+	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
 
 	@Wire
 	private Grid costGrid;
@@ -136,7 +137,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		try {
 			media = event.getMedia();
 			List<Cost> result = readTransactions();
-			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
+			ListModelList<Cost> costModel = new ListModelList<>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
 			reloadBtn.setDisabled(false);
@@ -148,12 +149,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private boolean listContainsLongDescriptions(List<Cost> result) {
 		for (Cost cost : result) {
-			costDao.encrypt(cost);
-			if (cost.getDescription().length() > 400) {
-				costDao.decrypt(cost);
+			if (cost.getDescription().length() > 200) {
 				return true;
 			}
-			costDao.decrypt(cost);
 		}
 		return false;
 	}
@@ -180,9 +178,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private List<Cost> filterLongDescriptions(List<Cost> result) {
 		List<Cost> filteredResult = new ArrayList<>();
 		for (Cost cost : result) {
-			costDao.encrypt(cost);
-			if (cost.getDescription().length() > 400) {
-				costDao.decrypt(cost);
+			if (cost.getDescription().length() > 200) {
 				filteredResult.add(cost);
 			}
 		}
@@ -219,7 +215,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public void reload(Event event) {
 		try {
 			List<Cost> result = readTransactions();
-			ListModelList<Cost> costModel = new ListModelList<Cost>(result);
+			ListModelList<Cost> costModel = new ListModelList<>(result);
 			costGrid.setModel(costModel);
 			matchTab.setSelected(true);
 		} catch (Exception e) {
@@ -248,7 +244,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void clearMatchListAfterImporting() {
-		ListModelList<Cost> costModel = new ListModelList<Cost>();
+		ListModelList<Cost> costModel = new ListModelList<>();
 		if (costGrid != null) {
 			costGrid.setModel(costModel);
 		}
@@ -263,7 +259,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		List<Cost> vatCosts = costDao.getVatCostsInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
-		ListModelList<Cost> costModel = new ListModelList<Cost>(vatCosts);
+		ListModelList<Cost> costModel = new ListModelList<>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
@@ -315,7 +311,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void storeDeclarationFeature(String declarationFeature) throws Exception {
-		GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<VatDeclaration>(VatDeclaration.class, user);
+		GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<>(VatDeclaration.class);
 		VatDeclaration vatDeclaration = new VatDeclaration();
 		vatDeclaration.setDeclarationFeature(declarationFeature);
 		vatDeclaration.setTimeStampDeclared(new Date());
@@ -414,7 +410,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				Cost originalCost = costDao.getKost(updatedCost);
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUser(user);
-					costDao.updateKost(updatedCost);
+					AuditLogger.log(UPDATE_COST, user);
+					genericCostDao.merge(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {

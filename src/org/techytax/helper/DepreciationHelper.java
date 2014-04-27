@@ -24,22 +24,10 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Date;
 
-import org.techytax.dao.BookValueDao;
 import org.techytax.domain.Activum;
-import org.techytax.domain.BalanceType;
-import org.techytax.domain.BookValue;
-import org.techytax.domain.Cost;
-import org.techytax.domain.RemainingValue;
-import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
-import org.techytax.zk.login.UserCredentialManager;
 
 public class DepreciationHelper {
-
-	private User user = UserCredentialManager.getUser();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
-	private GenericDao<Activum> activumGenericDao = new GenericDao<Activum>(Activum.class, user);
 
 	public BigInteger getDepreciation(Activum activum) {
 		BigDecimal yearlyDepreciation = BigDecimal.ZERO;
@@ -72,32 +60,6 @@ public class DepreciationHelper {
 			return true;
 		}
 		return false;
-	}
-
-	public void putOnBalance(Cost cost, boolean isCar, long userId, BigInteger restWaarde, BigDecimal yearlyDepreciation, int bookYear) throws Exception {
-		Activum activum = new Activum();
-		activum.setUser(user);
-		activum.setCost(cost);
-		BookValueDao boekwaardeDao = new BookValueDao();
-		if (!isCar) {
-			activum.setBalanceType(BalanceType.MACHINERY);
-		} else {
-			activum.setBalanceType(BalanceType.CAR);
-		}
-		RemainingValue remainingValue = new RemainingValue();
-		remainingValue.setActivum(activum);
-		remainingValue.setRestwaarde(restWaarde);
-		activumGenericDao.persistEntity(activum);
-
-		BookValue previousBookValue = boekwaardeDao.getBookValue(activum.getBalanceType(), bookYear - 1);
-		if (previousBookValue != null) {
-			previousBookValue.setSaldo(previousBookValue.getSaldo().subtract(yearlyDepreciation.toBigInteger()));
-		} else {
-			BigDecimal initialNetAmount = cost.getAmount().setScale(0, BigDecimal.ROUND_UP);
-			BookValue newBookValue = new BookValue(0, activum.getBalanceType(), bookYear, initialNetAmount.toBigInteger().subtract(yearlyDepreciation.toBigInteger()));
-			newBookValue.setUser(user);
-			bookValueGenericDao.persistEntity(newBookValue);
-		}
 	}
 
 }

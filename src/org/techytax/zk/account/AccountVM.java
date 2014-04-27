@@ -50,7 +50,7 @@ public class AccountVM {
 				KeyId key = new KeyId();
 				key.setUserId(user.getId());
 				List<Account> accounts2 = accountDao.getAccounts(key);
-				accounts = new ListModelList<Account>(accounts2);
+				accounts = new ListModelList<>(accounts2);
 			} else {
 				Executions.sendRedirect("login.zul");
 			}
@@ -64,7 +64,7 @@ public class AccountVM {
 			key.setUserId(user.getId());
 			key.setId(selected.getId());
 			List<AccountBalance> accountBalances2 = accountDao.getAccountBalances(key);
-			accountBalances = new ListModelList<AccountBalance>(accountBalances2);
+			accountBalances = new ListModelList<>(accountBalances2);
 		}
 		return accountBalances;
 	}	
@@ -72,7 +72,7 @@ public class AccountVM {
 	public ListModelList<AccountType> getAccountTypes() throws Exception {
 		if (accountTypes == null) {
 			AccountType[] accountTypeValues = AccountType.values();
-			accountTypes = new ListModelList<AccountType>(accountTypeValues);
+			accountTypes = new ListModelList<>(accountTypeValues);
 			selectedAccountType = accountTypes.get(0); 			
 		}
 		return accountTypes;

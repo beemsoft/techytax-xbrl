@@ -58,7 +58,7 @@ public class ModelWindowVM {
 	public ListModelList<BalanceType> getBalanceTypes() throws Exception {
 		if (balanceTypes == null) {
 			BalanceType[] balanceTypeArray = BalanceType.values();
-			return new ListModelList<BalanceType>(balanceTypeArray);
+			return new ListModelList<>(balanceTypeArray);
 		}
 		return null;
 	}

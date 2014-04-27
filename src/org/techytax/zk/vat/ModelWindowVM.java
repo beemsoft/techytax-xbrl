@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,11 +20,9 @@
 package org.techytax.zk.vat;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.techytax.cache.CostTypeCache;
@@ -56,11 +54,6 @@ public class ModelWindowVM {
 	private Cost originalCost;
 	private ListModelList<CostType> costTypes;
 	private CostType selectedCostType;
-	private boolean carDepreciation;
-	private BigInteger deprecationRemainingValue;
-	private int depreciationNofYears;
-	private List<Integer> depreciationYearsList;
-	private BigDecimal yearlyDepreciation;
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("cost") Cost cost) {
@@ -74,7 +67,7 @@ public class ModelWindowVM {
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (cost != null && costTypes == null) {
 			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
-			costTypes = new ListModelList<CostType>(vatCostTypes);
+			costTypes = new ListModelList<>(vatCostTypes);
 			for (CostType costType : costTypes) {
 				if (costType.equals(cost.getCostType())) {
 					selectedCostType = costType;
@@ -99,9 +92,6 @@ public class ModelWindowVM {
 		cost.setCostType(selectedCostType);
 		args.put("returncost", this.cost);
 		args.put("splitcost", this.splitCost);
-		args.put("isCar", this.carDepreciation);
-		args.put("remainingValue", this.deprecationRemainingValue);
-		args.put("yearlyDepreciation", this.yearlyDepreciation);
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues", args);
 		win.detach();
 	}
@@ -201,35 +191,4 @@ public class ModelWindowVM {
 		this.splitCost = splitCost;
 	}
 
-	public boolean isCarDepreciation() {
-		return carDepreciation;
-	}
-
-	public void setCarDepreciation(boolean carDepreciation) {
-		this.carDepreciation = carDepreciation;
-	}
-
-	public BigInteger getDeprecationRemainingValue() {
-		return deprecationRemainingValue;
-	}
-
-	public void setDeprecationRemainingValue(BigInteger deprecationRemainingValue) {
-		this.deprecationRemainingValue = deprecationRemainingValue;
-	}
-
-	public int getDepreciationNofYears() {
-		return depreciationNofYears;
-	}
-
-	public void setDepreciationNofYears(int depreciationNofYears) {
-		this.depreciationNofYears = depreciationNofYears;
-	}
-
-	public List<Integer> getDepreciationYearsList() {
-		return depreciationYearsList;
-	}
-
-	public void setDepreciationYearsList(List<Integer> depreciationYearsList) {
-		this.depreciationYearsList = depreciationYearsList;
-	}
 }

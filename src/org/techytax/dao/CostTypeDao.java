@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,25 +19,46 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.UITGAVE_CREDIT_CARD;
+
+import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.TypedQuery;
+
 import org.techytax.domain.CostType;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class CostTypeDao extends BaseDao {
 
-	@SuppressWarnings("unchecked")
 	public List<CostType> getKostensoortLijst() throws Exception {
-		return sqlMap.queryForList("getKostensoortLijst", null);
+		TypedQuery<CostType> query = JpaUtil.getEntityManager().createQuery("SELECT ct FROM org.techytax.domain.CostType ct", CostType.class);
+		List<CostType> result = query.getResultList();
+		return result;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CostType> getCostTypesForAccount() throws Exception {
-		return sqlMap.queryForList("getCostTypesForAccount", null);
-	}	
 
-	@SuppressWarnings("unchecked")
+	public List<CostType> getCostTypesForAccount() throws Exception {
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT_IGNORE, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);
+		TypedQuery<CostType> query = JpaUtil.getEntityManager().createQuery("SELECT ct FROM org.techytax.domain.CostType ct WHERE ct.balansMeetellen = true OR ct IN :costTypes", CostType.class);
+		query.setParameter("costTypes", costTypes);
+		List<CostType> result = query.getResultList();
+		return result;
+	}
+
 	public List<CostType> getCostTypesForVatCostsWithPrivateMoney() throws Exception {
-		return sqlMap.queryForList("getCostTypesForVatCostsWithPrivateMoney", null);
-	}	
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT,
+				UITGAVE_CREDIT_CARD);
+		TypedQuery<CostType> query = JpaUtil.getEntityManager().createQuery("SELECT ct FROM org.techytax.domain.CostType ct WHERE ct IN :costTypes", CostType.class);
+		query.setParameter("costTypes", costTypes);
+		List<CostType> result = query.getResultList();
+		return result;
+	}
 
 }

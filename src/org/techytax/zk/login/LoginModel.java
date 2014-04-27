@@ -98,7 +98,7 @@ public class LoginModel {
 	public boolean getDisplayVatWarning() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<VatDeclaration>(VatDeclaration.class, user);
+			GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<>(VatDeclaration.class);
 			List<VatDeclaration> vatDeclarationsUnpaid = vatDeclarationDao.findByNamedQuery("VatDeclaration.findUnpaid", user);
 			if (!CollectionUtils.isEmpty(vatDeclarationsUnpaid)) {
 				return true;

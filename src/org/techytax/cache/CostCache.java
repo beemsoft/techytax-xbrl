@@ -19,7 +19,35 @@
  */
 package org.techytax.cache;
 
-import static org.techytax.domain.CostConstants.*;
+import static org.techytax.domain.CostConstants.ADVERTENTIE;
+import static org.techytax.domain.CostConstants.ADVERTENTIE_ZONDER_BTW;
+import static org.techytax.domain.CostConstants.BUSINESS_CAR;
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT;
+import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INCOME_TAX;
+import static org.techytax.domain.CostConstants.INCOME_TAX_PAID_BACK;
+import static org.techytax.domain.CostConstants.INTEREST;
+import static org.techytax.domain.CostConstants.INVESTMENT;
+import static org.techytax.domain.CostConstants.INVESTMENT_MINIMUM_AMOUNT;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.REPURCHASES;
+import static org.techytax.domain.CostConstants.ROAD_TAX;
+import static org.techytax.domain.CostConstants.SETTLEMENT;
+import static org.techytax.domain.CostConstants.SETTLEMENT_INTEREST;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
+import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
+import static org.techytax.domain.CostConstants.UNDETERMINED;
+import static org.techytax.domain.CostConstants.VAT;
+import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_DEPRECIATION;
+import static org.techytax.domain.CostConstants.VAT_PAID_BACK_ON_OTHER_ACCOUNT;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,7 +58,6 @@ import java.util.List;
 
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.PrepaidTax;

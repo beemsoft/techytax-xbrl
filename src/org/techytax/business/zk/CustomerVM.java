@@ -39,7 +39,7 @@ import org.zkoss.zul.Window;
 public class CustomerVM {
 
 	private User user = UserCredentialManager.getUser();
-	private GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
+	private GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
 
 	protected ListModelList<Customer> customers;
 
@@ -73,7 +73,7 @@ public class CustomerVM {
 
 	public ListModelList<Customer> getCustomers() throws Exception {
 		try {
-			customers = new ListModelList<Customer>(customerDao.findAll());
+			customers = new ListModelList<>(customerDao.findAll(user));
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}

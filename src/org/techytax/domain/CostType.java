@@ -21,24 +21,24 @@ package org.techytax.domain;
 
 import static org.techytax.domain.CostConstants.SETTLEMENT;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Immutable;
 import org.zkoss.util.resource.Labels;
 
+@Immutable
 @Entity(name = "org.techytax.domain.CostType")
 @Table(name = "kostensoort")
 public class CostType {
 	
 	@Id
-	@Column(name = "id")
-	private long kostenSoortId = 0;
+	private long id = 0;
 
 	private String omschrijving;
 
-	private boolean bijschrijving;
+	private boolean bijschrijving ;
 
 	private boolean btwVerrekenbaar;
 
@@ -53,31 +53,19 @@ public class CostType {
 	}
 	
 	public CostType(long id) {
-		this.kostenSoortId = id;
+		this.id = id;
 	}
 
 	public boolean isInvestering() {
 		return investering;
 	}
 
-	public void setInvestering(boolean investering) {
-		this.investering = investering;
-	}
-
 	public boolean isAftrekbaar() {
 		return aftrekbaar;
 	}
 
-	public void setAftrekbaar(boolean aftrekbaar) {
-		this.aftrekbaar = aftrekbaar;
-	}
-
 	public boolean isBalansMeetellen() {
 		return balansMeetellen;
-	}
-
-	public void setBalansMeetellen(boolean balansMeetellen) {
-		this.balansMeetellen = balansMeetellen;
 	}
 
 	public boolean isBijschrijving() {
@@ -88,24 +76,16 @@ public class CostType {
 		return this.equals(SETTLEMENT);
 	}
 
-	public void setBijschrijving(boolean bijschrijving) {
-		this.bijschrijving = bijschrijving;
-	}
-
 	public boolean isVatDeclarable() {
 		return btwVerrekenbaar;
 	}
 
-	public void setBtwVerrekenbaar(boolean btwVerrekenbaar) {
-		this.btwVerrekenbaar = btwVerrekenbaar;
+	public long getId() {
+		return id;
 	}
 
-	public long getKostenSoortId() {
-		return kostenSoortId;
-	}
-
-	public void setKostenSoortId(long kostenSoortId) {
-		this.kostenSoortId = kostenSoortId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getOmschrijving() {
@@ -116,17 +96,13 @@ public class CostType {
 		}
 	}
 
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
-	}
-	
 	@Override
 	public boolean equals(Object object) {
 		if (!(object instanceof CostType)) {
 			return false;
 		}
 		CostType other = (CostType) object;
-		if (this.getKostenSoortId() != other.getKostenSoortId()) {
+		if (this.getId() != other.getId()) {
 			return false;
 		}
 		return true;

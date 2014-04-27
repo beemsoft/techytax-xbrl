@@ -24,7 +24,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<listcell label="@load(item.amount)"/>
 					<listcell label="@load(item.vat)"/>
 					<listcell label="@load(item.description)"/>
-					<listcell label="@load(item.kostenSoortOmschrijving)"/>					
+					<listcell label="@load(item.costType.omschrijving)"/>					
 				</listitem>
 			</template>
 		</listbox>

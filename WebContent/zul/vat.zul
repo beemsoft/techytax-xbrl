@@ -91,7 +91,7 @@
 										<label value="${c:formatDate(each.date, 'MMM dd, yyyy')}" />
 										<label value="${each.amount}" />
 										<label value="${each.vat}" />
-										<label value="${each.kostenSoortOmschrijving}" />
+										<label value="${each.costType.omschrijving}" />
 									</row>
 								</template>
 							</grid>

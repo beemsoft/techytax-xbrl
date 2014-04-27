@@ -88,7 +88,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Wijzigingen in toelaatbare reserves, toevoeging oudedagsreserve", "", "", "", "(" + format(overview.getOudedagsReserveMaximaal()) + ")"));
 			items.add(new ReportTableItem("Kleinschaligheidsinvesteringsaftrek", "", "", "", "(" + format(overview.getInvestmentDeduction()) + ")"));
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 	public ListModelList<ReportTableItem> getActivaTableItems() {
@@ -102,7 +102,7 @@ public class TaxVM {
 			}
 			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 	public ListModelList<ReportTableItem> getPassivaTableItems() {
@@ -118,7 +118,7 @@ public class TaxVM {
 				items.add(new ReportTableItem("Ondernemingsvermogen", "", "", format(overview.getEnterpriseCapital()), ""));
 			}
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 	public ListModelList<ReportTableItem> getPrivatWithDrawalTableItems() {
@@ -128,7 +128,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
 			items.add(new ReportTableItem("Totale onttrekking", format(overview.getOnttrekking().getTotaleOnttrekking())));
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 	public ListModelList<ReportTableItem> getPrivatDepositTableItems() {
@@ -136,7 +136,7 @@ public class TaxVM {
 		if (overview != null) {
 			items.add(new ReportTableItem("Privéstortingen", format(overview.getPrivateDeposit())));
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 	public ListModelList<ReportTableItem> getPrepaidTaxTableItems() {
@@ -145,7 +145,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Voorlopige aanslag inkomstenbelasting en premie volksverzekeringen", format(overview.getPrepaidTax().getPrepaidIncome())));
 			items.add(new ReportTableItem("Inkomensafhankelijke bijdrage Zorgverzekeringswet", format(overview.getPrepaidTax().getPrepaidHealth())));
 		}
-		return new ListModelList<ReportTableItem>(items);
+		return new ListModelList<>(items);
 	}
 
 }

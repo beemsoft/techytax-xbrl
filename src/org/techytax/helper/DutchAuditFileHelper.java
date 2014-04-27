@@ -75,8 +75,8 @@ public class DutchAuditFileHelper {
 				allCosts = costDao.getCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
 				// TODO: sort costs
 			}
-			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
-			List<Customer> customers = customerDao.findAll();
+			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
+			List<Customer> customers = customerDao.findAll(user);
 			String message = DutchAuditFileHelper.createAuditFile(allCosts, customers, user);
 			MailHelper.sendAuditReport(message, user.getEmail());
 		} catch (Exception e) {
@@ -196,7 +196,7 @@ public class DutchAuditFileHelper {
 			Journal journal = null;
 
 			for (Cost cost : costList) {
-				String kostenSoortOmschrijving = cost.getKostenSoortOmschrijving();
+				String kostenSoortOmschrijving = cost.getCostType().getOmschrijving();
 				Transaction transaction = createTransaction(cost);
 				if (!kostenSoortOmschrijving.equals(currentKostenSoortOmschrijving)) {
 					currentKostenSoortOmschrijving = kostenSoortOmschrijving;
@@ -206,7 +206,7 @@ public class DutchAuditFileHelper {
 					}
 					// Start a new journal
 					journal = objectFactory.createAuditfileCompanyTransactionsJournal();
-					journal.setDesc(cost.getKostenSoortOmschrijving().trim());
+					journal.setDesc(cost.getCostType().getOmschrijving().trim());
 				}
 				journal.getTransaction().add(transaction);
 			}

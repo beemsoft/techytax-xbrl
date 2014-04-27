@@ -35,7 +35,7 @@ import org.zkoss.zkplus.jpa.JpaUtil;
 public class AuditLogger {
 
 	public static void log(AuditType auditType, User user) {
-		GenericDao<LogRecord> logDao = new GenericDao<LogRecord>(LogRecord.class, null);
+		GenericDao<LogRecord> logDao = new GenericDao<>(LogRecord.class);
 		LogRecord logRecord = new LogRecord();
 		UserEntity userEntity = new UserEntity(user);
 		logRecord.setUser(userEntity);
