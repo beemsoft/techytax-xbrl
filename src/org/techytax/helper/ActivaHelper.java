@@ -58,7 +58,7 @@ public class ActivaHelper {
 	private BookValueDao bookValueDao = new BookValueDao();
 	private CostDao costDao = new CostDao();
 	private User user = UserCredentialManager.getUser();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
 	private int bookYear;
