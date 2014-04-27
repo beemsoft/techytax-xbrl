@@ -84,7 +84,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = CostConstants.UNDETERMINED.getKostenSoortId();
+		long kostensoortId = CostConstants.UNDETERMINED.getId();
 		kost.setVat(BigDecimal.ZERO);
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
@@ -134,7 +134,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getKostenSoortId()));
+		splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getId()));
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
 		CostSplitter.applyPercentage(splitCost, privatePercentage);
@@ -149,9 +149,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
 		if (cost.getCostType().equals(SETTLEMENT)) {
-			splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getKostenSoortId()));
+			splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getId()));
 		} else {
-			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getKostenSoortId()));
+			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getId()));
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());

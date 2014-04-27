@@ -38,7 +38,7 @@ import org.zkoss.zul.Window;
 public class ProjectVM {
 
 	private User user = UserCredentialManager.getUser();
-	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
+	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
 
 	protected ListModelList<Project> projects;
 
@@ -72,7 +72,7 @@ public class ProjectVM {
 
 	public ListModelList<Project> getProjects() throws Exception {
 		try {
-			projects = new ListModelList<Project>(projectDao.findAll());
+			projects = new ListModelList<>(projectDao.findAll(user));
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}

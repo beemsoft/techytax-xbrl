@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import org.techytax.domain.Activum;
@@ -114,7 +115,7 @@ public class FiscalDao extends BaseDao {
 				"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null AND (act.startDate = null OR act.startDate <= :startDate) ORDER BY act.cost.date ASC", Activum.class);
 		query.setParameter("user", user);
 		query.setParameter("balanceType", balanceType);
-		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear());
+		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear(), TemporalType.DATE);
 		List<Activum> result = query.getResultList();
 		return result;
 	}

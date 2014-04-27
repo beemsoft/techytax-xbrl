@@ -19,28 +19,33 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.INVOICE_PAID;
 import static org.techytax.domain.CostConstants.INVOICE_SENT;
+import static org.techytax.domain.CostConstants.UITGAVE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
-import org.apache.commons.lang.StringUtils;
-import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
@@ -48,41 +53,8 @@ import org.zkoss.zkplus.jpa.JpaUtil;
 public class CostDao extends BaseDao {
 
 	private User user = UserCredentialManager.getUser();
-
-	public void encrypt(Cost cost) {
-		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
-			cost.setAmount(decimalEncryptor.encrypt(cost.getAmount()));
-		}
-		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
-			cost.setVat(decimalEncryptor.encrypt(cost.getVat()));
-		}
-		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
-			cost.setDescription(textEncryptor.encrypt(cost.getDescription()));
-		}
-	}
-
-	public void decrypt(Cost cost) {
-		if (cost.getDescription() != null && StringUtils.isNotEmpty(cost.getDescription().trim())) {
-			cost.setDescription(textEncryptor.decrypt(cost.getDescription()));
-		}
-		if (cost.getAmount() != null && cost.getAmount().doubleValue() != 0) {
-			try {
-				cost.setAmount(decimalEncryptor.decrypt(cost.getAmount()));
-			} catch (EncryptionOperationNotPossibleException e) {
-				e.printStackTrace();
-				System.out.println("Could not decrypt: " + cost.getDescription());
-				throw e;
-			}
-		}
-		if (cost.getVat() != null && cost.getVat().doubleValue() != 0) {
-			try {
-				cost.setVat(decimalEncryptor.decrypt(cost.getVat()));
-			} catch (EncryptionOperationNotPossibleException e) {
-				System.out.println("Could not decrypt: " + cost.getDescription());
-				throw e;
-			}
-		}
-	}
+	
+	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
 
 	public void insertSplitCost(Cost originalCost, Cost splitCost) throws Exception {
 		splitCost.setDate(originalCost.getDate());
@@ -93,18 +65,15 @@ public class CostDao extends BaseDao {
 			splitCost.setCostType(EXPENSE_OTHER_ACCOUNT_IGNORE);
 		}
 		splitCost.roundValues();
-		encrypt(splitCost);
-		sqlMap.insert("insertKost", splitCost);
-		decrypt(splitCost);
+		genericCostDao.persistEntity(splitCost);
 	}
 
 	public List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
-		List<Cost> costs;
 		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc", Cost.class);
 		query.setParameter("user", user);
-		query.setParameter("beginDate", beginDatum);
-		query.setParameter("endDate", eindDatum);
-		costs = query.getResultList();
+		query.setParameter("beginDate", beginDatum, TemporalType.DATE);
+		query.setParameter("endDate", eindDatum, TemporalType.DATE);
+		List<Cost> costs = query.getResultList();
 		return costs;
 	}
 
@@ -130,13 +99,6 @@ public class CostDao extends BaseDao {
 		return filteredCosts;
 	}
 
-	public void updateKost(Cost kost) throws Exception {
-		kost.roundValues();
-		encrypt(kost);
-		sqlMap.insert("updateKost", kost);
-		decrypt(kost);
-	}
-
 	public Cost getKost(Cost cost) throws Exception {
 		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.id = :id AND c.user = :user", Cost.class);
 		query.setParameter("user", user);
@@ -150,34 +112,6 @@ public class CostDao extends BaseDao {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Cost> getAllCosts() throws Exception {
-		return sqlMap.queryForList("getAllCosts", null);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cost> searchCosts(String searchTerm, String userId) throws Exception {
-		List<Cost> costs = sqlMap.queryForList("getAllCostsForUser", userId);
-		List<Cost> filteredCosts = new ArrayList<>();
-		for (Cost cost : costs) {
-			decrypt(cost);
-			if (cost.getDescription().toUpperCase().contains(searchTerm.toUpperCase())) {
-				filteredCosts.add(cost);
-			}
-		}
-		return filteredCosts;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cost> getRepurchases(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getRepurchases", map);
-		for (Cost cost : costs) {
-			decrypt(cost);
-		}
-		return costs;
-	}
-
 	public List<Activum> getNewActiva(BalanceType balanceType, Date beginDate, Date endDate) {
 		TypedQuery<Activum> query = JpaUtil
 				.getEntityManager()
@@ -185,9 +119,9 @@ public class CostDao extends BaseDao {
 						"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND (act.startDate = null OR act.startDate <= :startDate) AND act.endDate = null AND act.user = :user",
 						Activum.class);
 		query.setParameter("user", user);
-		query.setParameter("beginDate", beginDate);
-		query.setParameter("endDate", endDate);
-		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear());
+		query.setParameter("beginDate", beginDate, TemporalType.DATE);
+		query.setParameter("endDate", endDate, TemporalType.DATE);
+		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear(), TemporalType.DATE);
 		query.setParameter("balanceType", balanceType);
 		List<Activum> result = query.getResultList();
 		return result;
@@ -217,26 +151,30 @@ public class CostDao extends BaseDao {
 		return filteredCosts;
 	}
 
-	@SuppressWarnings("unchecked")
-	public BigDecimal getVatDebtFromPreviousYear(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getVatDebt", map);
+	public BigDecimal getVatDebtFromPreviousYear(Date beginDate, Date endDate) {
+		List<Cost> costs = getCostsInPeriod(beginDate, endDate);
 		BigDecimal vatBalance = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			decrypt(cost);
-			vatBalance = vatBalance.add(cost.getVat());
+			if (cost.getCostType().equals(INVOICE_SENT)) {
+				vatBalance = vatBalance.add(cost.getVat());
+			}
 		}
 		return vatBalance;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Cost> getVatCostsWithPrivateMoney(String beginDatum, String eindDatum, String userId) throws Exception {
-		Map<String, String> map = createMap(beginDatum, eindDatum, userId);
-		List<Cost> costs = sqlMap.queryForList("getVatCostsWithPrivateMoney", map);
-		for (Cost cost : costs) {
-			decrypt(cost);
-		}
-		return costs;
+	public List<Cost> getVatCostsWithPrivateMoney(Date beginDate, Date endDate) throws Exception {
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT, UITGAVE_CREDIT_CARD);
+		TypedQuery<Cost> query = JpaUtil
+				.getEntityManager()
+				.createQuery(
+						"SELECT c FROM org.techytax.domain.Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType IN :costTypes AND c.user = :user",
+						Cost.class);
+		query.setParameter("user", user);
+		query.setParameter("beginDate", beginDate, TemporalType.DATE);
+		query.setParameter("endDate", endDate, TemporalType.DATE);
+		query.setParameter("costTypes", costTypes);
+		List<Cost> result = query.getResultList();
+		return result;
 	}
 
 }

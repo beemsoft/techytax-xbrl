@@ -42,7 +42,7 @@ public class CostRowRenderer implements RowRenderer<Cost> {
 		row.appendChild(new Label(DateHelper.getDate(cost.getDate())));
 		row.appendChild(new Label(AmountHelper.formatDecimal(cost.getAmount())));
 		row.appendChild(new Label(AmountHelper.formatDecimal(cost.getVat())));
-		row.appendChild(new Label(cost.getKostenSoortOmschrijving().toString()));
+		row.appendChild(new Label(cost.getCostType().getOmschrijving()));
 		row.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
 			public void onEvent(Event event) throws Exception {
 				Map<String, Object> arguments = new HashMap<>();

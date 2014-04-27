@@ -57,7 +57,7 @@ public class CostComparator implements Comparator<Object>, Serializable {
 		case 4: // Compare Description
 			return cost1.getDescription().compareTo(cost2.getDescription()) * (asc ? 1 : -1);
 		case 5: // Compare Type
-			return cost1.getKostenSoortOmschrijving().compareTo(cost2.getKostenSoortOmschrijving()) * (asc ? 1 : -1);
+			return cost1.getCostType().getOmschrijving().compareTo(cost2.getCostType().getOmschrijving()) * (asc ? 1 : -1);
 		default:
 			return 0;
 		}

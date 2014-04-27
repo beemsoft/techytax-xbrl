@@ -95,10 +95,10 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	private User user = UserCredentialManager.getUser();
 
-	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
+	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
 	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao();
 	private CostDao costDao = new CostDao();
-	private GenericDao<Cost> genericCostDao = new GenericDao<Cost>(Cost.class, user);
+	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
 
 	private ListModel<Project> projectsModel;
 
@@ -254,7 +254,7 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	public ListModel<Project> getProjectsModel() throws IllegalAccessException {
 		if (user != null) {
-			projectsModel = new ListModelList<Project>(projectDao.findAll());
+			projectsModel = new ListModelList<>(projectDao.findAll(user));
 		}
 		return projectsModel;
 	}

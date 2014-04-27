@@ -34,7 +34,7 @@
 								<doublebox id="pbox"
 									value="@bind(vm.cost.amount) @save(vm.cost.amount,before='saveCost') 
 							@validator(vm.priceValidator)"
-									format="###,##0.00" onChange="@command('checkInvestment')" />
+									format="###,##0.00" />
 								<label value="@load(vmsgs[pbox])"
 									sclass="red" />
 								<button id="vatHighBtn" label="btw hoog"

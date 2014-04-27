@@ -22,7 +22,6 @@ package org.techytax.dao;
 import java.util.List;
 
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.techytax.domain.BalanceType;
@@ -35,17 +34,15 @@ public class BookValueDao extends BaseDao {
 
 	private final User user = UserCredentialManager.getUser();
 
-	@SuppressWarnings("unchecked")
 	public List<BookValue> getBookValuesHistory() throws Exception {
-		Query query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc");
+		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc", BookValue.class);
 		query.setParameter("user", user);
 		List<BookValue> result = query.getResultList();
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<BookValue> getBookValuesForYear(int year) throws Exception {
-		Query query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user AND bv.jaar = :year order by bv.balanceType asc");
+		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user AND bv.jaar = :year order by bv.balanceType asc", BookValue.class);
 		query.setParameter("user", user);
 		query.setParameter("year", year);
 		List<BookValue> result = query.getResultList();

@@ -60,8 +60,8 @@ public class EditProjectVM {
 
 	public ListModelList<Customer> getCustomers() throws IllegalAccessException {
 		try {
-			GenericDao<Customer> customerDao = new GenericDao<Customer>(Customer.class, user);
-			customers = new ListModelList<Customer>(customerDao.findAll());
+			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
+			customers = new ListModelList<>(customerDao.findAll(user));
 			for (Customer customer: customers) {
 				if (customer.getId() == project.getCustomer().getId()) {
 					selectedCustomer = customer;

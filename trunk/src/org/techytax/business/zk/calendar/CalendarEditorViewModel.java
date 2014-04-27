@@ -46,7 +46,7 @@ public class CalendarEditorViewModel {
 
 	private User user = UserCredentialManager.getUser();
 
-	private GenericDao<Project> projectDao = new GenericDao<Project>(Project.class, user);
+	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
 
 	private Project selectedProject;
 
@@ -58,13 +58,13 @@ public class CalendarEditorViewModel {
 
 	public ListModelList<Project> getProjects() {
 		try {
-			List<Project> projects = projectDao.findAll();
+			List<Project> projects = projectDao.findAll(user);
 			for (Project project : projects) {
 				if (project.getId() == calendarEventData.getProjectId()) {
 					selectedProject = project;
 				}
 			}
-			return new ListModelList<Project>(projects);
+			return new ListModelList<>(projects);
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}

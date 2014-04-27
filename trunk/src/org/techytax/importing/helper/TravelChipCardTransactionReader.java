@@ -96,7 +96,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	}
 
 	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		CostType kostensoort = CostTypeCache.getCostType(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT.getKostenSoortId());
+		CostType kostensoort = CostTypeCache.getCostType(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT.getId());
 		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
 		if (costMatch != null) {
 			kost.setDescription(kost.getDescription());

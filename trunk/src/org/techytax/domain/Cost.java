@@ -37,7 +37,6 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
-import org.zkoss.util.resource.Labels;
 
 @TypeDefs({
 		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
@@ -64,7 +63,7 @@ public class Cost implements Serializable {
 	private long id = 0;
 
 	@ManyToOne
-	@JoinColumn(name = "kostensoort_id")
+	@JoinColumn(name="kostensoort_id")
 	private CostType costType;
 
 	@Column(name = "omschrijving")
@@ -92,15 +91,7 @@ public class Cost implements Serializable {
 	}
 
 	public long getCostTypeId() {
-		return costType.getKostenSoortId();
-	}
-
-	@Deprecated
-	public String getKostenSoortOmschrijving() {
-		if (costType != null) {
-			return costType.getOmschrijving();
-		}
-		return "Onbekend";
+		return costType.getId();
 	}
 
 	public String getDescription() {

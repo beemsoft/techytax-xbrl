@@ -1,6 +1,14 @@
 package org.techytax.zk.cost;
 
+import static org.techytax.log.AuditType.ENTER_COST;
+import static org.techytax.log.AuditType.SPLIT_COST;
+import static org.techytax.log.AuditType.UPDATE_COST;
+
+import org.techytax.domain.Cost;
+import org.techytax.log.AuditLogger;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 
 public class CostVM3 extends CostVM2{
@@ -30,5 +38,27 @@ public class CostVM3 extends CostVM2{
 	public void cancelDelete(){
 		deleteMessage = null;
 	}
+	
+	@GlobalCommand
+	@NotifyChange({ "costs", "selected" })
+	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
+		Cost originalCost = costDao.getKost(cost);
+		cost.setUser(user);
+		if (originalCost == null) {
+			AuditLogger.log(ENTER_COST, user);
+			cost.roundValues();
+			genericCostDao.persistEntity(cost);
+			this.selected = cost;
+		} else if (!cost.equals(originalCost)) {
+			AuditLogger.log(UPDATE_COST, user);
+			cost.roundValues();
+			genericCostDao.merge(cost);
+		}
+		if (splitCost != null) {
+			AuditLogger.log(SPLIT_COST, user);
+			splitCost.setUser(user);
+			costDao.insertSplitCost(cost, splitCost);
+		}
+	}	
 	
 }

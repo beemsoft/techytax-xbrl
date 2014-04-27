@@ -23,7 +23,6 @@ import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_DEPRECIATION;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.CostTypeDao;
@@ -32,7 +31,7 @@ import org.techytax.domain.CostType;
 public class CostTypeCache {
 
 	private static Map<Long, CostType> costTypeMap = null;
-
+	
 	private CostTypeCache() {
 		//
 	}
@@ -47,11 +46,11 @@ public class CostTypeCache {
 
 	private static void fill() throws Exception {
 		costTypeMap = new HashMap<>();
-		CostTypeDao kostensoortDao = new CostTypeDao();
-		List<CostType> costTypes = kostensoortDao.getKostensoortLijst();
-		for (CostType costType : costTypes) {
+		CostTypeDao costTypeDao = new CostTypeDao();
+		for (CostType costType : costTypeDao.getKostensoortLijst()) {
 			if (!costType.equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
-				costTypeMap.put(costType.getKostenSoortId(), costType);
+				costTypeMap.put(costType.getId(), costType);
+				System.out.println("Cache costtype: " + costType.getOmschrijving());
 			}
 		}
 	}

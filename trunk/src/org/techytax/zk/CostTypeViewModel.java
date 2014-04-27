@@ -43,7 +43,6 @@ import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 
 public class CostTypeViewModel {
 
@@ -64,10 +63,6 @@ public class CostTypeViewModel {
 	@Init
 	public void init() throws Exception {
 		costTypes = kostensoortDao.getCostTypesForAccount();
-		for (CostType costType : costTypes) {
-			costType.setOmschrijving(Labels.getLabel(costType.getOmschrijving()));
-		}
-
 		selected = costTypes.get(0); // Selected First One
 		setPrivateMatches(selected);
 	}
@@ -79,7 +74,7 @@ public class CostTypeViewModel {
 	private void setPrivateMatches(CostType costType) throws Exception {
 		if (user != null) {
 			KeyId key = new KeyId();
-			key.setId(selected.getKostenSoortId());
+			key.setId(selected.getId());
 			key.setUserId(user.getId());
 			privateMatches = kostmatchDao.getCostMatchPrivateListForId(key);
 		}
@@ -95,7 +90,7 @@ public class CostTypeViewModel {
 	}
 
 	private void setPublicMatches(CostType selected) throws Exception {
-		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getKostenSoortId()));
+		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getId()));
 	}
 
 	@NotifyChange
@@ -121,7 +116,7 @@ public class CostTypeViewModel {
 		if (user != null) {
 			AuditLogger.log(MATCH_TRANSACTION, user);
 			selectedPrivateMatch.setUserId(user.getId());
-			selectedPrivateMatch.setKostenSoortId(selected.getKostenSoortId());
+			selectedPrivateMatch.setKostenSoortId(selected.getId());
 
 			// Check create or update
 			KeyId key = new KeyId();

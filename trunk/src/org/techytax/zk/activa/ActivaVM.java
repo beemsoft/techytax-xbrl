@@ -57,8 +57,8 @@ public class ActivaVM {
 	private Activum selected;
 	private FiscalDao fiscalDao = new FiscalDao();
 	private BookValueDao bookValueDao = new BookValueDao();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class, user);
-	private GenericDao<Activum> activumGenericDao = new GenericDao<>(Activum.class, user);
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
+	private GenericDao<Activum> activumGenericDao = new GenericDao<>(Activum.class);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
@@ -112,7 +112,7 @@ public class ActivaVM {
 		} else {
 			Executions.sendRedirect("login.zul");
 		}
-		return new ListModelList<BookValueHistory>(bookValueHistories);
+		return new ListModelList<>(bookValueHistories);
 	}
 
 	public Activum getSelected() {

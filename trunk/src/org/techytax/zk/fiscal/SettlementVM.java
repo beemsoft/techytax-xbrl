@@ -25,7 +25,6 @@ import java.util.Date;
 
 import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Activum;
-import org.techytax.domain.BalanceType;
 import org.techytax.domain.Settlement;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
@@ -38,7 +37,7 @@ public class SettlementVM {
 
 	private User user = UserCredentialManager.getUser();
 	private SettlementDao settlementDao = new SettlementDao();
-	private GenericDao<Settlement> genericSettlementDao = new GenericDao<Settlement>(Settlement.class, user);
+	private GenericDao<Settlement> genericSettlementDao = new GenericDao<>(Settlement.class);
 	private Settlement settlement = new Settlement();
 	private Date startDate;
 	

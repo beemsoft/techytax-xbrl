@@ -40,8 +40,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	public User authenticate(String username, String password) throws Exception {
 
-		GenericDao<UserEntity> userDao = new GenericDao<UserEntity>(
-				UserEntity.class, null);
+		GenericDao<UserEntity> userDao = new GenericDao<>(UserEntity.class);
 		List<UserEntity> users = null;
 		try {
 			users = userDao.findByNamedQuery("UserEntity.findByName", username);
@@ -77,8 +76,7 @@ public class SecurityServiceImpl implements SecurityService {
 		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
 
 		try {
-			String encryptionPassword = PropsFactory
-					.getProperty("security.password");
+			String encryptionPassword = PropsFactory.getProperty("security.password");
 			strongEncryptor.setPassword(encryptionPassword);
 			bigDecimalEncryptor.setPassword(encryptionPassword);
 			bigIntegerEncryptor.setPassword(encryptionPassword);
@@ -87,13 +85,9 @@ public class SecurityServiceImpl implements SecurityService {
 			throw new RuntimeException("TechyTax properties not found!");
 		}
 
-		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry
-				.getInstance();
-		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor",
-				strongEncryptor);
-		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor",
-				bigDecimalEncryptor);
-		registry.registerPBEBigIntegerEncryptor("integerEncryptor",
-				bigIntegerEncryptor);
+		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry.getInstance();
+		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor", strongEncryptor);
+		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor", bigDecimalEncryptor);
+		registry.registerPBEBigIntegerEncryptor("integerEncryptor", bigIntegerEncryptor);
 	}
 }

@@ -60,7 +60,7 @@ public class FiscalOverviewHelper {
 
 	private User user = UserCredentialManager.getUser();
 	private FiscalDao fiscalDao = new FiscalDao();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<BookValue>(BookValue.class, user);
+	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
 	private BookValueDao bookValueDao = new BookValueDao();
 	private CostCache costCache = new CostCache();
 	private CostDao costDao = new CostDao();
@@ -204,7 +204,7 @@ public class FiscalOverviewHelper {
 		BookValue currentBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear - 1);
 		Periode lastVatPeriod = DateHelper.getLastVatPeriodPreviousYear();
-		BigDecimal vatDebt = costDao.getVatDebtFromPreviousYear(DateHelper.getDate(lastVatPeriod.getBeginDatum()), DateHelper.getDate(lastVatPeriod.getEindDatum()), Long.toString(user.getId()));
+		BigDecimal vatDebt = costDao.getVatDebtFromPreviousYear(lastVatPeriod.getBeginDatum(), lastVatPeriod.getEindDatum());
 
 		if (vatDebt != null && vatDebt.compareTo(BigDecimal.ZERO) == 1) {
 

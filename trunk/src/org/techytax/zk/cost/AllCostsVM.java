@@ -25,17 +25,12 @@ import static org.techytax.domain.CostConstants.INVESTMENT;
 import static org.techytax.domain.CostConstants.INVESTMENT_MINIMUM_AMOUNT;
 import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.helper.DutchAuditFileHelper.sendAuditFile;
-import static org.techytax.log.AuditType.DEPRECIATE_COST;
-import static org.techytax.log.AuditType.ENTER_COST;
-import static org.techytax.log.AuditType.SPLIT_COST;
-import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.util.DateHelper.getLatestVatPeriod;
 import static org.techytax.util.DateHelper.getPeriodPreviousYear;
 import static org.techytax.util.DateHelper.isTimeForUsingLatestYearPeriod;
 import static org.zkoss.zk.ui.Executions.sendRedirect;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -49,13 +44,8 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Periode;
 import org.techytax.domain.VatPeriodType;
-import org.techytax.helper.DepreciationHelper;
-import org.techytax.log.AuditLogger;
-import org.techytax.util.DateHelper;
 import org.zkoss.bind.BindUtils;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
@@ -107,12 +97,12 @@ public class AllCostsVM extends CostVM3 {
 				}
 			}
 			if (!showUnhandledInvestments && !filterCosts) {
-				costs = new ListModelList<Cost>(allCosts);
+				costs = new ListModelList<>(allCosts);
 			} else if (showUnhandledInvestments) {
-				costs = new ListModelList<Cost>(unhandledCosts);
+				costs = new ListModelList<>(unhandledCosts);
 				showUnhandledInvestments = false;
 			} else if (filterCosts) {
-				costs = new ListModelList<Cost>(filteredCosts);
+				costs = new ListModelList<>(filteredCosts);
 				filterCosts = false;
 			}
 		} else {
@@ -147,7 +137,7 @@ public class AllCostsVM extends CostVM3 {
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
 		if (user != null && costs == null) {
 			List<Cost> vatCosts = costDao.getCostsOnBusinessAccountInPeriod(periode.getBeginDatum(), periode.getEindDatum());
-			costs = new ListModelList<Cost>(vatCosts);
+			costs = new ListModelList<>(vatCosts);
 		}
 		return costs;
 	}
@@ -155,7 +145,7 @@ public class AllCostsVM extends CostVM3 {
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
 			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
-			costTypes = new ListModelList<CostType>(vatCostTypes);
+			costTypes = new ListModelList<>(vatCostTypes);
 			selectedCostType = costTypes.get(0);
 		}
 		return costTypes;
@@ -202,42 +192,6 @@ public class AllCostsVM extends CostVM3 {
 	@Command
 	public void filterCosts() {
 		doFilter(searchString);
-	}
-
-	@GlobalCommand
-	@NotifyChange({ "costs", "selected" })
-	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost, @BindingParam("depreciations") List<Cost> depreciations,
-			@BindingParam("isCar") boolean isCar, @BindingParam("remainingValue") BigInteger remainingValue, @BindingParam("yearlyDepreciation") BigDecimal yearlyDepreciation) throws Exception {
-		if (depreciations != null && depreciations.size() > 0) {
-			AuditLogger.log(DEPRECIATE_COST, user);
-			for (Cost depreciation : depreciations) {
-				depreciation.setUser(user);
-				genericCostDao.persistEntity(depreciation);
-			}
-			if (cost.getCostType().equals(EXPENSE_CURRENT_ACCOUNT)) {
-				cost.setCostType(INVESTMENT);
-			} else if (cost.getCostType().equals(EXPENSE_OTHER_ACCOUNT)) {
-				cost.setCostType(INVESTMENT_OTHER_ACCOUNT);
-			}
-			DepreciationHelper depreciationHelper = new DepreciationHelper();
-			depreciationHelper.putOnBalance(cost, isCar, user.getId(), remainingValue, yearlyDepreciation, DateHelper.getYear(cost.getDate()));
-		}
-
-		Cost originalCost = costDao.getKost(cost);
-		cost.setUser(user);
-		if (originalCost == null) {
-			AuditLogger.log(ENTER_COST, user);
-			genericCostDao.persistEntity(cost);
-			this.selected = cost;
-		} else if (!cost.equals(originalCost)) {
-			AuditLogger.log(UPDATE_COST, user);
-			genericCostDao.merge(cost);
-		}
-		if (splitCost != null) {
-			AuditLogger.log(SPLIT_COST, user);
-			splitCost.setUser(user);
-			costDao.insertSplitCost(cost, splitCost);
-		}
 	}
 
 	public String getSearchString() {
