@@ -21,10 +21,13 @@ package org.techytax.zk.vat;
 
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
+import static org.techytax.helper.AmountHelper.formatWithEuroSymbol;
+import static org.techytax.helper.AmountHelper.roundDownToInteger;
 import static org.techytax.log.AuditType.IMPORT_TRANSACTIONS;
 import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
 import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
+import static org.techytax.log.AuditType.VAT_OVERVIEW;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -256,7 +259,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void createVatOverview() throws Exception {
-		AuditLogger.log(AuditType.VAT_OVERVIEW, user);
+		AuditLogger.log(VAT_OVERVIEW, user);
 		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		List<Cost> vatCosts = costDao.getVatCostsInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
 		ListModelList<Cost> costModel = new ListModelList<>(vatCosts);
@@ -273,12 +276,12 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
 		}
-		vatOut.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
-		vatIn.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
-		vatBalance.setValue(AmountHelper.formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
-		turnoverGross.setValue(AmountHelper.formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
-		turnoverNet.setValue(AmountHelper.formatWithEuroSymbol(balans.getNettoOmzet().toBigInteger()));
-		vatCorrection.setValue(AmountHelper.formatWithEuroSymbol(balans.getCorrection().toBigInteger()));
+		vatOut.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
+		vatIn.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
+		vatBalance.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
+		turnoverGross.setValue(formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
+		turnoverNet.setValue(formatWithEuroSymbol(roundDownToInteger(balans.getNettoOmzet())));
+		vatCorrection.setValue(formatWithEuroSymbol(balans.getCorrection().toBigInteger()));
 		controleTab.setSelected(true);
 	}
 
@@ -348,7 +351,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private VatDeclarationData createVatDeclarationData() throws Exception {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		if (balans.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
-			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(balans.getNettoOmzet()));
+			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(roundDownToInteger(balans.getNettoOmzet()));
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
 		}

@@ -54,7 +54,6 @@ import org.xbrl._2003.instance.Context;
 import org.xbrl._2003.instance.ContextEntityType;
 import org.xbrl._2003.instance.ContextEntityType.Identifier;
 import org.xbrl._2003.instance.ContextPeriodType;
-import org.xbrl._2003.instance.ContextScenarioType;
 import org.xbrl._2003.instance.ObjectFactory;
 import org.xbrl._2003.instance.Unit;
 import org.xbrl._2003.instance.Xbrl;
@@ -66,7 +65,7 @@ public class XbrlNtp8Helper {
 	private static final String ISO_EURO = "iso4217:EUR";
 	private static final String UNIT_ID = "u0";
 	private static final String DECIMALS_TYPE = "INF";
-	private static final String PACKAGE_VERSION = "2.1";
+	private static final String PACKAGE_VERSION = "2.2";
 	private static final String PACKAGE_NAME = "TechyTax";
 	private static final String BELASTING_PLICHTIGE = "BPL";
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
@@ -158,7 +157,7 @@ public class XbrlNtp8Helper {
 			xbrl.getItemOrTupleOrContext().add(bdAlgemeenObjectFactory.createDateTimeCreation(dateTime));
 
 			MessageReferenceSupplierVATItemType supplier = bdTypeObjectFactory.createMessageReferenceSupplierVATItemType();
-			supplier.setValue("OB-TXTAX-00");
+			supplier.setValue("OB-TXTAX-01");
 			supplier.setContextRef(context);
 			xbrl.getItemOrTupleOrContext().add(bdAlgemeenObjectFactory.createMessageReferenceSupplierVAT(supplier));
 
@@ -233,7 +232,7 @@ public class XbrlNtp8Helper {
 	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balans balans) throws Exception {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
-		BigDecimal turnover = AmountHelper.round(balans.getNettoOmzet());
+		BigDecimal turnover = AmountHelper.roundDown(balans.getNettoOmzet());
 		BigInteger totaleBaten = AmountHelper.roundDownToInteger(turnover.multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
 		BigInteger owed = totaleBaten.add(correction);
 		BigInteger owedToBePaidBack = owed.subtract(totaleKosten);
