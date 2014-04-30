@@ -74,6 +74,14 @@ public class AmountHelper {
 		} else {
 			return null;
 		}
+	}
+	
+	public static BigDecimal roundDown(BigDecimal amount) {
+		if (amount != null) {
+			return amount.setScale(0,RoundingMode.DOWN);
+		} else {
+			return null;
+		}
 	}	
 	
 	public static String formatDecimal(BigDecimal b) {

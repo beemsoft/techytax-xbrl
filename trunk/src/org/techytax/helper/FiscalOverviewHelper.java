@@ -162,7 +162,7 @@ public class FiscalOverviewHelper {
 			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 			vatBalance.setNettoOmzet(turnover);
 		}
-		overview.setNettoOmzet(vatBalance.getNettoOmzet().intValue());
+		overview.setNettoOmzet(AmountHelper.roundDownToInteger(vatBalance.getNettoOmzet()).intValue());
 	}
 
 	private void handleRepurchase() throws Exception {
