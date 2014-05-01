@@ -82,11 +82,6 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 			String datum = line[2];
 			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
-			if (bedrag.compareTo(BigDecimal.ZERO) == -1) {
-				kost.setIncoming(false);
-			} else {
-				kost.setIncoming(true);
-			}
 			bedrag = bedrag.abs();
 			kost.setAmount(bedrag);
 			String omschrijving = line[7];

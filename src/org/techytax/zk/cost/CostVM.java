@@ -104,7 +104,7 @@ public class CostVM {
 		if (user != null) {
 			selected.setUser(user);
 			selected.setCostType(selectedCostType);
-			Cost cost = costDao.getKost(selected);
+			Cost cost = (Cost) genericCostDao.getEntity(selected, Long.valueOf(selected.getId()));
 			selected.roundValues();
 			if (cost == null) {
 				AuditLogger.log(ENTER_COST, user);

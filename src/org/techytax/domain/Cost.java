@@ -159,19 +159,10 @@ public class Cost implements Serializable {
 		this.user = new UserEntity(user);
 	}
 
-	// For iBatis.
-	public long getUserId() {
-		return user.getId();
-	}
-
 	public CostType getCostType() {
 		return costType;
 	}
 
-	public void setIncoming(boolean b) {
-		// TODO Auto-generated method stub
-	}
-	
 	public String getStyle() {
 		if (costType.isBijschrijving()) {
 			return "z-listitem-positive-amount";

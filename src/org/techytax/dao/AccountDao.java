@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,70 +19,30 @@
  */
 package org.techytax.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import javax.persistence.TypedQuery;
+
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.KeyId;
+import org.techytax.domain.User;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class AccountDao extends BaseDao {
 	
-	private void decrypt(Account account) {
-		String name = account.getName();
-		if (StringUtils.isNotEmpty(name)) {
-			account.setName(textEncryptor.decrypt(name));
-		}
-		String number = account.getNumber();
-		if (StringUtils.isNotEmpty(number)) {
-			account.setNumber(textEncryptor.decrypt(number));
-		}
-		String description = account.getDescription();
-		if (StringUtils.isNotEmpty(description)) {
-			account.setDescription(textEncryptor.decrypt(description));
-		}
-	}
+	private User user = UserCredentialManager.getUser();
 	
-	private void encrypt(Account account) {
-		account.setName(textEncryptor.encrypt(account.getName()));
-		account.setNumber(textEncryptor.encrypt(account.getNumber()));
-		account.setDescription(textEncryptor.encrypt(account.getDescription()));		
-	}
-	
-	private void encrypt(AccountBalance accountBalance) {
-		BigDecimal balance = accountBalance.getBalance();
-		if (balance != null && balance.doubleValue() != 0) {
-			accountBalance.setBalance(decimalEncryptor.encrypt(balance));
-		}
-	}	
-	
-	private void decrypt(AccountBalance accountBalance) {
-		BigDecimal balance = accountBalance.getBalance();
-		if (balance != null && balance.doubleValue() != 0) {
-			accountBalance.setBalance(decimalEncryptor.decrypt(balance));
-		}
-	}	
-	
-	public void insertAccount(Account account) throws Exception {
-		encrypt(account);
-		sqlMap.insert("insertAccount", account);
-	}	
-
-	@SuppressWarnings("unchecked")
-	public List<Account> getAccounts(KeyId key) throws Exception {
-		List<Account> accounts = sqlMap.queryForList("getAccounts", key);
-		for (Account account : accounts) {
-			decrypt(account);
-		}
+	public List<Account> getAccounts() throws Exception {
+		TypedQuery<Account> query = JpaUtil.getEntityManager().createQuery("SELECT a FROM org.techytax.domain.Account a WHERE a.user = :user", Account.class);
+		query.setParameter("user", user);
+		List<Account> accounts = query.getResultList();
 		return accounts;
 	}
 	
-	public AccountType getAccountType(String accountNumber, long userId) throws Exception {
-		KeyId key = new KeyId();
-		key.setUserId(userId);
-		List<Account> accounts = getAccounts(key);
+	public AccountType getAccountType(String accountNumber) throws Exception {
+		List<Account> accounts = getAccounts();
 		for (Account account: accounts) {
 			if (account.getNumber().equals(accountNumber)) {
 				return account.getType();
@@ -91,10 +51,8 @@ public class AccountDao extends BaseDao {
 		return null;
 	}
 	
-	public Account getBusinessAccount(long userId) throws Exception {
-		KeyId key = new KeyId();
-		key.setUserId(userId);
-		List<Account> accounts = getAccounts(key);
+	public Account getBusinessAccount() throws Exception {
+		List<Account> accounts = getAccounts();
 		for (Account account: accounts) {
 			if (account.getType() == AccountType.BUSINESS) {
 				return account;
@@ -103,58 +61,12 @@ public class AccountDao extends BaseDao {
 		return null;
 	}	
 	
-	@SuppressWarnings("unchecked")
-	public List<Account> getAllAccounts() throws Exception {
-		return sqlMap.queryForList("getAllAccounts", null);
-	}	
-
-	public void updateAccount(Account account) throws Exception {
-		encrypt(account);
-		sqlMap.insert("updateAccount", account);
-		decrypt(account);
+	public List<AccountBalance> getAccountBalances(Account account) throws Exception {
+		TypedQuery<AccountBalance> query = JpaUtil.getEntityManager().createQuery("SELECT ab FROM org.techytax.domain.AccountBalance ab WHERE ab.account = :account AND ab.user = :user", AccountBalance.class);
+		query.setParameter("user", user);
+		query.setParameter("account", account);
+		List<AccountBalance> accountBalances = query.getResultList();
+		return accountBalances;
 	}
 	
-	public Account getAccount(KeyId key) throws Exception {
-		Account account = (Account) sqlMap.queryForObject("getAccount", key);
-		decrypt(account);
-		return account;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<AccountBalance> getAccountBalances(KeyId key) throws Exception {
-		List<AccountBalance> balances = sqlMap.queryForList("getAccountBalances", key);
-		for (AccountBalance balance : balances) {
-			decrypt(balance);
-		}
-		return balances;
-	}
-	
-	public AccountBalance getAccountBalance(KeyId key) throws Exception {
-		AccountBalance balance = (AccountBalance) sqlMap.queryForObject("getAccountBalance", key);
-		if (balance != null) {
-			decrypt(balance);
-		}
-		return balance;
-	}	
-
-	public void insertAccountBalance(AccountBalance accountBalance)
-			throws Exception {
-		accountBalance.setBalance(BigDecimal.valueOf(accountBalance.getBalance().doubleValue()).setScale(2));
-		encrypt(accountBalance);
-		sqlMap.insert("insertAccountBalance", accountBalance);
-		decrypt(accountBalance);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<AccountBalance> getAllAccountBalances() throws Exception {
-		return sqlMap.queryForList("getAllAccountBalances", null);
-	}	
-	
-	public void updateAccountBalance(AccountBalance accountBalance) throws Exception {
-		accountBalance.setBalance(BigDecimal.valueOf(accountBalance.getBalance().doubleValue()).setScale(2));
-		encrypt(accountBalance);
-		sqlMap.insert("updateAccountBalance", accountBalance);
-		decrypt(accountBalance);		
-	}	
-
 }

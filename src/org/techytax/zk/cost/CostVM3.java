@@ -42,7 +42,7 @@ public class CostVM3 extends CostVM2{
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = costDao.getKost(cost);
+		Cost originalCost = (Cost) genericCostDao.getEntity(cost, Long.valueOf(cost.getId()));
 		cost.setUser(user);
 		if (originalCost == null) {
 			AuditLogger.log(ENTER_COST, user);

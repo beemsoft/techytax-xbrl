@@ -410,7 +410,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
 				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = costDao.getKost(updatedCost);
+				Cost originalCost = (Cost) genericCostDao.getEntity(updatedCost, Long.valueOf(updatedCost.getId()));
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUser(user);
 					AuditLogger.log(UPDATE_COST, user);

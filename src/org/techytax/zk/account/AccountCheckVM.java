@@ -41,6 +41,7 @@ import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.cost.CostVM3;
 import org.techytax.zk.login.UserCredentialManager;
@@ -62,6 +63,7 @@ public class AccountCheckVM extends CostVM3 {
 
 	protected List<Cost> costList;
 	private AccountCheckData accountCheckData = new AccountCheckData();
+	private GenericDao<AccountBalance> genericAccountBalanceDao = new GenericDao<>(AccountBalance.class);
 
 	public AccountCheckVM() {
 		if (user != null) {
@@ -94,7 +96,7 @@ public class AccountCheckVM extends CostVM3 {
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()), user.getId());
+			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()));
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
 			List<Cost> result2 = costDao.getVatCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
 			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
@@ -172,12 +174,11 @@ public class AccountCheckVM extends CostVM3 {
 	public void saveAccountBalance() throws Exception {
 		if (user != null) {
 			AccountBalance accountBalance = new AccountBalance();
-			accountBalance.setUserId(user.getId());
 			accountBalance.setBalance(businessAccountBalance);
 			accountBalance.setDatum(periode.getEindDatum());
-			Account businessAccount = accountDao.getBusinessAccount(user.getId());
-			accountBalance.setAccountId(businessAccount.getId());
-			accountDao.insertAccountBalance(accountBalance);
+			Account businessAccount = accountDao.getBusinessAccount();
+			accountBalance.setAccount(businessAccount);
+			genericAccountBalanceDao.persistEntity(accountBalance);
 			getCosts();
 		}
 	}

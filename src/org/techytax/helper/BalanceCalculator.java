@@ -70,7 +70,6 @@ import org.techytax.domain.Balans;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Reiskosten;
 import org.techytax.util.DateHelper;
@@ -122,14 +121,11 @@ public class BalanceCalculator {
 		return balans;
 	}
 
-	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum, long userId) throws Exception {
+	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum) throws Exception {
 		AccountDao accountDao = new AccountDao();
-		Account businessAccount = accountDao.getBusinessAccount(userId);
+		Account businessAccount = accountDao.getBusinessAccount();
 		if (businessAccount != null) {
-			KeyId key = new KeyId();
-			key.setUserId(userId);
-			key.setId(businessAccount.getId());
-			List<AccountBalance> accountBalances = accountDao.getAccountBalances(key);
+			List<AccountBalance> accountBalances = accountDao.getAccountBalances(businessAccount);
 			Collections.sort(accountBalances);
 			BigDecimal beginAmount = null;
 			BigDecimal endAmount = null;
@@ -216,8 +212,8 @@ public class BalanceCalculator {
 						// BTW niet meenemen
 						// totalBaat = totalBaat.add(obj.getBtw());
 					} else if (costType.equals(EXPENSE_CURRENT_ACCOUNT) || costType.equals(UITGAVE_DEZE_REKENING_FOUTIEF) || costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT)
-							|| costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT) || costType.equals(BUSINESS_CAR) || costType.equals(BUSINESS_CAR_OTHER_ACCOUNT)
-							|| costType.equals(ROAD_TAX) || costType.equals(UITGAVE_CREDIT_CARD) || costType.equals(EXPENSE_OTHER_ACCOUNT) || costType.equals(ADVERTENTIE)) {
+							|| costType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT) || costType.equals(BUSINESS_CAR) || costType.equals(BUSINESS_CAR_OTHER_ACCOUNT) || costType.equals(ROAD_TAX)
+							|| costType.equals(UITGAVE_CREDIT_CARD) || costType.equals(EXPENSE_OTHER_ACCOUNT) || costType.equals(ADVERTENTIE)) {
 						totalKost = totalKost.add(obj.getAmount());
 						// BTW niet meenemen
 						// totalKost = totalKost.add(obj.getBtw());
@@ -250,7 +246,7 @@ public class BalanceCalculator {
 					} else {
 						totalKost = totalKost.add(obj.getAmount());
 						if (isIncludingVat) {
-							totalKost = totalKost.add(obj.getVat());	
+							totalKost = totalKost.add(obj.getVat());
 						}
 					}
 				}

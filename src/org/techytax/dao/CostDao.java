@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.NoResultException;
 import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
@@ -97,19 +96,6 @@ public class CostDao extends BaseDao {
 			}
 		}
 		return filteredCosts;
-	}
-
-	public Cost getKost(Cost cost) throws Exception {
-		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.id = :id AND c.user = :user", Cost.class);
-		query.setParameter("user", user);
-		query.setParameter("id", cost.getId());
-		Cost result = null;
-		try {
-			result = query.getSingleResult();
-		} catch (NoResultException e) {
-			// ok
-		}
-		return result;
 	}
 
 	public List<Activum> getNewActiva(BalanceType balanceType, Date beginDate, Date endDate) {
