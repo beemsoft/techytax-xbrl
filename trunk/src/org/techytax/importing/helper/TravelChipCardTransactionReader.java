@@ -115,7 +115,6 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			kost.setDate(DateHelper.stringToDateForTravelChipCard(datum));
 			BigDecimal bedrag = new BigDecimal(line[5].replace(',', '.'));
 			kost.setAmount(bedrag);
-			kost.setIncoming(false);
 			String omschrijving = "Van " + line[2] + " naar " + line[4] + " (" + line[3] + ") " + line[6] + " " + line[7] + " " + line[8];
 
 			kost.setDescription(omschrijving);

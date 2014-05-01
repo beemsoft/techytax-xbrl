@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,14 +21,50 @@ package org.techytax.domain;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
+			@Parameter(name = "decimalScale", value = "2") }) })
+@Entity(name = "org.techytax.domain.Account")
+@Table(name = "accounts")
 public class Account {
-	private Date dateClosed;
-	private Date dateOpened;
-	private String description;
+
+	@Id
 	private long id = 0;
+
+	@Column(name = "date_closed")
+	private Date dateClosed;
+	
+	@Column(name = "date_opened")
+	private Date dateOpened;
+	
+	@Type(type = "encryptedString")
+	private String description;
+	
+	@Type(type = "encryptedString")
 	private String name;
+	
+	@Type(type = "encryptedString")
 	private String number;
-	private long userId;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+
 	private AccountType type;
 
 	public Date getDateClosed() {
@@ -55,8 +91,12 @@ public class Account {
 		return number;
 	}
 
-	public long getUserId() {
-		return userId;
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
 	}
 
 	public void setDateClosed(Date dateClosed) {
@@ -81,10 +121,6 @@ public class Account {
 
 	public void setNumber(String number) {
 		this.number = number;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
 	}
 
 	public AccountType getType() {

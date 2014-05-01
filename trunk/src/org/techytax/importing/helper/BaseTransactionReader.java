@@ -55,11 +55,11 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	protected SettlementDao settlementDao = new SettlementDao();
 	protected List<Cost> kostLijst = new ArrayList<>();
 
-	public AccountType getAccountType(String fileName, long userId) throws Exception {
+	public AccountType getAccountType(String fileName) throws Exception {
 		int index = fileName.indexOf("_");
 		String accountNumber = fileName.substring(0, index);
 		AccountDao accountDao = new AccountDao();
-		return accountDao.getAccountType(accountNumber, userId);
+		return accountDao.getAccountType(accountNumber);
 	}
 
 	protected Kostmatch findCostMatch(String omschrijving, String userId) throws Exception {

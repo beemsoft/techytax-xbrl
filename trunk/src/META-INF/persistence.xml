@@ -15,7 +15,9 @@
   <class>org.techytax.domain.Settlement</class>  
   <class>org.techytax.domain.RemainingValue</class>  
   <class>org.techytax.domain.Cost</class>
-  <class>org.techytax.domain.CostType</class>        
+  <class>org.techytax.domain.CostType</class>
+  <class>org.techytax.domain.Account</class>
+  <class>org.techytax.domain.AccountBalance</class>        
   <class>org.techytax.business.jpa.entities.Customer</class>
   <class>org.techytax.business.jpa.entities.Project</class>
   <class>nl.beemsoft.techytax.log.SaasLogRecord</class>

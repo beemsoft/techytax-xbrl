@@ -85,11 +85,6 @@ public class IngTransactionReader extends BaseTransactionReader {
 			}
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			kost.setAmount(bedrag);
-			if (line[5].equals("Af")) {
-				kost.setIncoming(false);
-			} else {
-				kost.setIncoming(true);
-			}
 			String omschrijving = line[1] + " " + line[8];
 			if (omschrijving.trim().equals("")) {
 				kost.setCostType(UNDETERMINED);
