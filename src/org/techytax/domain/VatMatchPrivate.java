@@ -24,19 +24,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@Entity(name = "org.techytax.domain.VatMatch")
-@Table(name = "btwmatch")
-public class VatMatch extends VatMatchParent {
+@Entity(name = "org.techytax.domain.VatMatchPrivate")
+@Table(name = "btwmatch_private")
+public class VatMatchPrivate extends VatMatchParent {
 	
 	@OneToOne
 	@JoinColumn(name = "kostmatch_id")
-	private Kostmatch publicCostMatch;
+	private PrivateCostMatch privateCostMatch;
 
-	public Kostmatch getPublicCostMatch() {
-		return publicCostMatch;
+	public PrivateCostMatch getPrivateCostMatch() {
+		return privateCostMatch;
 	}
-	public void setPublicCostMatch(Kostmatch costMatch) {
-		this.publicCostMatch = costMatch;
+
+	public void setPrivateCostMatch(PrivateCostMatch privateCostMatch) {
+		this.privateCostMatch = privateCostMatch;
 	}
-	
+
 }

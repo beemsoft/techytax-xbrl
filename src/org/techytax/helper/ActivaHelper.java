@@ -45,7 +45,6 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.FiscalBalance;
 import org.techytax.domain.FiscalOverview;
-import org.techytax.domain.KeyYear;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
@@ -72,8 +71,7 @@ public class ActivaHelper {
 
 	public Map<BalanceType, FiscalBalance> handleActiva(Properties props, List<DeductableCostGroup> deductableCosts, List<Cost> rekeningLijst) throws Exception {
 
-		KeyYear keyYear = new KeyYear(user.getId(), bookYear);
-		handleCurrentAssets(props, keyYear, rekeningLijst);
+		handleCurrentAssets(props, rekeningLijst);
 
 		handleMachinery();
 
@@ -89,7 +87,7 @@ public class ActivaHelper {
 
 	}
 
-	public List<Activum> getActivaForYear(KeyYear keyYear) throws Exception {
+	public List<Activum> getActiveActiva() throws Exception {
 		List<Activum> activaLijst = fiscalDao.getActiveActiva();
 		return activaLijst;
 	}
@@ -296,7 +294,7 @@ public class ActivaHelper {
 
 	}
 
-	private void handleCurrentAssets(Properties props, KeyYear keyYear, List<Cost> rekeningLijst) throws Exception {
+	private void handleCurrentAssets(Properties props, List<Cost> rekeningLijst) throws Exception {
 		Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
 		BookValue previousBookValue = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear - 1);
 		BookValue currentBookValue = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear);

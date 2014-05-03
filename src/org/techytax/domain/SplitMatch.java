@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,9 +19,10 @@
  */
 package org.techytax.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -31,8 +32,9 @@ public class SplitMatch {
 	@Id
 	private long id;
 
-	@Column(name = "kostmatch_id")
-	private long kostmatchId;
+	@OneToOne
+	@JoinColumn(name = "kostmatch_id")
+	private PrivateCostMatch privateCostMatch;
 
 	private int percentage;
 
@@ -44,20 +46,20 @@ public class SplitMatch {
 		this.id = id;
 	}
 
-	public long getKostmatchId() {
-		return kostmatchId;
-	}
-
-	public void setKostmatchId(long kostmatchId) {
-		this.kostmatchId = kostmatchId;
-	}
-
 	public int getPercentage() {
 		return percentage;
 	}
 
 	public void setPercentage(int percentage) {
 		this.percentage = percentage;
+	}
+
+	public PrivateCostMatch getPrivateCostMatch() {
+		return privateCostMatch;
+	}
+
+	public void setPrivateCostMatch(PrivateCostMatch privateCostMatch) {
+		this.privateCostMatch = privateCostMatch;
 	}
 
 

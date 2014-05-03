@@ -19,11 +19,16 @@
  */
 package org.techytax.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
@@ -33,20 +38,58 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
-@Entity(name = "org.techytax.domain.KostMatch")
-@Table(name = "kostmatch")
-public class Kostmatch extends CostMatchParent {
+@Entity(name = "org.techytax.domain.PrivateCostMatch")
+@Table(name = "kostmatch_private")
+public class PrivateCostMatch extends CostMatchParent {
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+	
+	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL)
+	private VatMatchPrivate vatMatchPrivate;
+
+	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL)
+	private SplitMatch splitMatch;
 	
 	@Column(name = "match_text")
+	@Type(type = "encryptedString")	
 	protected String matchText;
-
-	public void setMatchText(String matchText) {
-		this.matchText = matchText;
-	}	
-
+	
 	public String getMatchText() {
 		return matchText;
 	}
-	
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
+
+	public void setMatchText(String matchText) {
+		this.matchText = matchText;
+	}
+
+	public VatMatchPrivate getVatMatchPrivate() {
+		return vatMatchPrivate;
+	}
+
+	public void setVatMatchPrivate(VatMatchPrivate vatMatchPrivate) {
+		this.vatMatchPrivate = vatMatchPrivate;
+	}
+
+	public SplitMatch getSplitMatch() {
+		return splitMatch;
+	}
+
+	public void setSplitMatch(SplitMatch splitMatch) {
+		this.splitMatch = splitMatch;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
 
 }

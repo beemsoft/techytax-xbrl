@@ -26,7 +26,6 @@ import java.util.Locale;
 import org.jfree.chart.JFreeChart;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.FiscalOverview;
-import org.techytax.domain.KeyId;
 import org.techytax.helper.Translator;
 
 @Deprecated
@@ -42,8 +41,6 @@ public final class ChartFactory {
 	};
 
 	public static BufferedImage createBookValueGraph(long userId, Locale locale) throws Exception {
-		KeyId key = new KeyId();
-		key.setUserId(userId);
 		List<BookValue> bookValues = null;
 		String title = Translator.translateKey("menu.bookvalues", locale);
 		String domainAxisLabel = Translator.translateKey("label.year", locale);

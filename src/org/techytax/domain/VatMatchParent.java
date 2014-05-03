@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,29 +19,35 @@
  */
 package org.techytax.domain;
 
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
-public class KeyYear {
-	private long userId;
-	private int year;
+@MappedSuperclass
+public class VatMatchParent {
 	
-	public KeyYear(long userId, int year) {
-		this.userId = userId;
-		this.year = year;
+	@Id
+	private long id;
+
+	@Column(name = "btw_type")
+	@Enumerated(EnumType.ORDINAL)	
+	private VatType vatType;
+
+	public long getId() {
+		return id;
 	}
-	
-	public long getUserId() {
-		return userId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public int getYear() {
-		return year;
+	public VatType getVatType() {
+		return vatType;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setVatType(VatType vatType) {
+		this.vatType = vatType;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
-	}
 }

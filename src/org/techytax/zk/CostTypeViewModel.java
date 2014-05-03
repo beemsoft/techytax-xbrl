@@ -29,15 +29,12 @@ import java.util.List;
 
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
-import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.CostType;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.Kostmatch;
-import org.techytax.domain.SplitMatch;
+import org.techytax.domain.PrivateCostMatch;
 import org.techytax.domain.User;
-import org.techytax.domain.VatMatch;
+import org.techytax.domain.VatMatchPrivate;
 import org.techytax.domain.VatType;
-import org.techytax.jpa.dao.SplitMatchDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
@@ -48,17 +45,15 @@ public class CostTypeViewModel {
 
 	private User user = UserCredentialManager.getUser();
 	private CostType selected;
-	private Kostmatch selectedPrivateMatch;
+	private PrivateCostMatch selectedPrivateMatch;
 	private String selectedVatType;
 	private int selectedPercentage;
 
 	private List<CostType> costTypes = new ArrayList<>();
 	private List<Kostmatch> publicMatches = new ArrayList<>();
-	private List<Kostmatch> privateMatches = new ArrayList<>();
+	private List<PrivateCostMatch> privateMatches = new ArrayList<>();
 	private KostmatchDao kostmatchDao = new KostmatchDao();
 	private CostTypeDao kostensoortDao = new CostTypeDao();
-	private VatMatchDao vatMatchDao = new VatMatchDao();
-	private SplitMatchDao splitMatchDao = new SplitMatchDao();
 
 	@Init
 	public void init() throws Exception {
@@ -73,10 +68,7 @@ public class CostTypeViewModel {
 
 	private void setPrivateMatches(CostType costType) throws Exception {
 		if (user != null) {
-			KeyId key = new KeyId();
-			key.setId(selected.getId());
-			key.setUserId(user.getId());
-			privateMatches = kostmatchDao.getCostMatchPrivateListForId(key);
+			privateMatches = kostmatchDao.getCostMatchPrivateListForCostType(costType);
 		}
 
 	}
@@ -90,7 +82,7 @@ public class CostTypeViewModel {
 	}
 
 	private void setPublicMatches(CostType selected) throws Exception {
-		this.publicMatches = kostmatchDao.getKostmatchLijstForId(Long.toString(selected.getId()));
+		this.publicMatches = kostmatchDao.getKostmatchLijstForCostType(selected);
 	}
 
 	@NotifyChange
@@ -105,7 +97,7 @@ public class CostTypeViewModel {
 	@NotifyChange({ "selectedPrivateMatch", "privateMatchesList" })
 	@Command
 	public void newMatch() {
-		Kostmatch kostMatch = new Kostmatch();
+		PrivateCostMatch kostMatch = new PrivateCostMatch();
 		privateMatches.add(kostMatch);
 		selectedPrivateMatch = kostMatch;
 	}
@@ -115,40 +107,21 @@ public class CostTypeViewModel {
 	public void saveMatch() throws Exception {
 		if (user != null) {
 			AuditLogger.log(MATCH_TRANSACTION, user);
-			selectedPrivateMatch.setUserId(user.getId());
-			selectedPrivateMatch.setKostenSoortId(selected.getId());
-
-			// Check create or update
-			KeyId key = new KeyId();
-			key.setId(selectedPrivateMatch.getId());
-			key.setUserId(user.getId());
-			Kostmatch costMatch = kostmatchDao.getCostMatchPrivate(key);
+			selectedPrivateMatch.setCostType(selected);
+			if (selected.isVatDeclarable()) {
+				VatMatchPrivate vatMatchPrivate = new VatMatchPrivate();
+				if (selectedVatType == null) {
+					vatMatchPrivate.setVatType(VatType.NONE);
+				} else {
+					vatMatchPrivate.setVatType(VatType.valueOf(selectedVatType));
+				}
+				selectedPrivateMatch.setVatMatchPrivate(vatMatchPrivate);
+			}
+			PrivateCostMatch costMatch = kostmatchDao.getCostMatchPrivate(selectedPrivateMatch);
 			if (costMatch == null) {
 				kostmatchDao.insertCostMatchPrivate(selectedPrivateMatch);
 			} else {
 				kostmatchDao.updateCostMatchPrivate(selectedPrivateMatch);
-			}
-
-			if (selected.isVatDeclarable()) {
-				if (selectedVatType == null) {
-					selectedPrivateMatch.setVatType(VatType.NONE);
-				} else {
-					selectedPrivateMatch.setVatType(VatType.valueOf(selectedVatType));
-				}
-				VatMatch vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(selectedPrivateMatch.getId()));
-				if (vatMatch == null) {
-					vatMatchDao.insertVatMatchPrivateComplete(selectedPrivateMatch);
-				} else {
-					vatMatchDao.updateVatMatchPrivate(selectedPrivateMatch);
-				}
-			}
-			SplitMatch splitMatch = new SplitMatch();
-			splitMatch.setKostmatchId(selectedPrivateMatch.getId());
-			if (selectedPrivateMatch.getPercentage() > 0) {
-				splitMatch.setPercentage(selectedPrivateMatch.getPercentage());
-				splitMatchDao.insertOrUpdate(splitMatch);
-			} else {
-				splitMatchDao.delete(selectedPrivateMatch.getId());
 			}
 		}
 	}
@@ -157,9 +130,6 @@ public class CostTypeViewModel {
 	@Command
 	public void deleteMatch() throws Exception {
 		if (user != null) {
-			selectedPrivateMatch.setUserId(user.getId());
-			vatMatchDao.deleteVatMatchPrivate(Long.toString(selectedPrivateMatch.getId()));
-			splitMatchDao.delete(selectedPrivateMatch.getId());
 			kostmatchDao.deleteCostMatchPrivate(selectedPrivateMatch);
 		}
 		privateMatches.remove(selectedPrivateMatch);
@@ -182,25 +152,19 @@ public class CostTypeViewModel {
 		return publicMatches;
 	}
 
-	public List<Kostmatch> getPrivateMatchesList() {
+	public List<PrivateCostMatch> getPrivateMatchesList() {
 		return privateMatches;
 	}
 
-	public Kostmatch getSelectedPrivateMatch() {
+	public PrivateCostMatch getSelectedPrivateMatch() {
 		return selectedPrivateMatch;
 	}
 
 	@NotifyChange({ "selectedPrivateMatch", "selectedVatType" })
-	public void setSelectedPrivateMatch(Kostmatch selectedPrivateMatch) {
+	public void setSelectedPrivateMatch(PrivateCostMatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;
-		if (selected.isVatDeclarable() && selectedPrivateMatch.getVatType() != null) {
-			setSelectedVatType(selectedPrivateMatch.getVatType().name());
-		}
-		if (selected.equals(EXPENSE_CURRENT_ACCOUNT)) {
-			SplitMatch splitMatch = splitMatchDao.getSplitMatch(selectedPrivateMatch.getId());
-			if (splitMatch != null) {
-				this.selectedPrivateMatch.setPercentage(splitMatch.getPercentage());
-			}
+		if (selected.isVatDeclarable() && selectedPrivateMatch.getVatMatchPrivate() != null) {
+			setSelectedVatType(selectedPrivateMatch.getVatMatchPrivate().getVatType().name());
 		}
 	}
 
