@@ -52,7 +52,5 @@ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
 		</dataSource>
 	</transactionManager>
 	
-	<sqlMap resource="org/techytax/ibatis/maps/Kostmatch.xml" />
-	<sqlMap resource="org/techytax/ibatis/maps/VatMatch.xml" />		
 	<sqlMap resource="org/techytax/ibatis/maps/BusinessCalendar.xml" />
 </sqlMapConfig>

@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
-import org.techytax.domain.Kostmatch;
+import org.techytax.domain.CostMatchParent;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -39,7 +39,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 
 	private static CSVParser parser = null;
 
-	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
 		try {
 			parser = new CSVParser(in);
 			parser.changeDelimiter('\t');
@@ -52,7 +52,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				for (int i=0; i< regel.length; i++) {
 					System.out.print(regel[i]+" ");
 				}
-				processLine(regel, regelNummer, userId);
+				processLine(regel, regelNummer);
 			}
 
 		} catch (IOException e) {
@@ -75,9 +75,9 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	private void processLine(String[] line, int lineNumber, String userId) {
+	private void processLine(String[] line, int lineNumber) {
 		Cost kost = new Cost();
-		Kostmatch costMatch = null;
+		CostMatchParent costMatch = null;
 		try {
 			String datum = line[2];
 			kost.setDate(DateHelper.stringToDate(datum.substring(0, 4) + "-" + datum.substring(4, 6) + "-" + datum.substring(6, 8)));
@@ -94,9 +94,9 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
-				costMatch = matchKost(kost, userId);
+				costMatch = matchKost(kost);
 			}
-			addCostOrHandleAdminstrativeSplitting(userId, kost, costMatch);
+			addCostOrHandleAdminstrativeSplitting(kost, costMatch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,7 +105,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.bat");
 		AbnAmroTransactionReader rekeningFileAbnAmroHelper = new AbnAmroTransactionReader();
-		List<Cost> result = rekeningFileAbnAmroHelper.readFile(new BufferedReader(new InputStreamReader(fis)), "1");
+		List<Cost> result = rekeningFileAbnAmroHelper.readFile(new BufferedReader(new InputStreamReader(fis)));
 	}
 
 }

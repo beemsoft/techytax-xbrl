@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,86 +21,66 @@ package org.techytax.dao;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.techytax.domain.KeyId;
+import javax.persistence.TypedQuery;
+
+import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.PrivateCostMatch;
+import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class KostmatchDao extends BaseDao {
+	
+	private User user = UserCredentialManager.getUser();
+	
+	private GenericDao<PrivateCostMatch> genericPrivateCostMatchDao = new GenericDao<>(PrivateCostMatch.class);
 
-	private void decrypt(Kostmatch costMatch) {
-		String matchText = costMatch.getMatchText();
-		if (StringUtils.isNotEmpty(matchText)) {
-			costMatch.setMatchText(textEncryptor.decrypt(matchText));
-		}
+	public void insertCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		costMatch.setUser(user);
+		genericPrivateCostMatchDao.persistEntity(costMatch);
 	}
 
-	private void encrypt(Kostmatch costMatch) {
-		costMatch.setMatchText(textEncryptor.encrypt(costMatch.getMatchText()));
+	public void deleteCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		genericPrivateCostMatchDao.deleteEntity(costMatch);
 	}
 
-	public void insertKostmatch(Kostmatch kostmatch) throws Exception {
-		sqlMap.insert("insertKostmatch", kostmatch);
-	}
-
-	public Integer insertCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		encrypt(costMatch);
-		Integer insertedId = (Integer) sqlMap.insert("insertCostMatchPrivate", costMatch);
-		decrypt(costMatch);
-		return insertedId;
-	}
-
-	public void deleteCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		sqlMap.delete("deleteCostMatchPrivate", costMatch);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getKostmatchLijstForId(String kostenSoortId) throws Exception {
-		return sqlMap.queryForList("getKostmatchLijstForId", kostenSoortId);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getCostMatchPrivateListForId(KeyId key) throws Exception {
-		List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateListForId", key);
-		for (Kostmatch costMatch : costMatches) {
-			decrypt(costMatch);
-		}
+	public List<Kostmatch> getKostmatchLijstForCostType(CostType costType) throws Exception {
+		TypedQuery<Kostmatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.Kostmatch cm WHERE cm.costType = :costType", Kostmatch.class);
+		query.setParameter("costType", costType);
+		List<Kostmatch> costMatches = query.getResultList();
 		return costMatches;
 	}
 
-	@SuppressWarnings("unchecked")
+	public List<PrivateCostMatch> getCostMatchPrivateListForCostType(CostType costType) throws Exception {
+		TypedQuery<PrivateCostMatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.PrivateCostMatch cm WHERE cm.user = :user AND cm.costType = :costType", PrivateCostMatch.class);
+		query.setParameter("costType", costType);
+		query.setParameter("user", user);
+		List<PrivateCostMatch> costMatches = query.getResultList();
+		return costMatches;
+	}
+
 	public List<Kostmatch> getKostmatchLijst() throws Exception {
-		return sqlMap.queryForList("getKostmatchLijst", null);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Kostmatch> getCostMatchPrivateList(String userId) throws Exception {
-		List<Kostmatch> costMatches = sqlMap.queryForList("getCostMatchPrivateList", userId);
-		for (Kostmatch costMatch : costMatches) {
-			decrypt(costMatch);
-		}
+		TypedQuery<Kostmatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.Kostmatch cm", Kostmatch.class);
+		List<Kostmatch> costMatches = query.getResultList();
 		return costMatches;
 	}
 
-	public void updateKostmatch(Kostmatch kostmatch) throws Exception {
-		sqlMap.insert("updateKostmatch", kostmatch);
+	public List<PrivateCostMatch> getCostMatchPrivateList() throws Exception {
+		TypedQuery<PrivateCostMatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.PrivateCostMatch cm WHERE cm.user = :user", PrivateCostMatch.class);
+		query.setParameter("user", user);
+		List<PrivateCostMatch> result = query.getResultList();
+		return result ;
 	}
 
-	public void updateCostMatchPrivate(Kostmatch costMatch) throws Exception {
-		encrypt(costMatch);
-		sqlMap.insert("updateCostMatchPrivate", costMatch);
-		decrypt(costMatch);
+	public void updateCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		genericPrivateCostMatchDao.merge(costMatch);
 	}
 
-	public Kostmatch getKostmatch(String id) throws Exception {
-		return (Kostmatch) sqlMap.queryForObject("getKostmatch", id);
-	}
-
-	public Kostmatch getCostMatchPrivate(KeyId key) throws Exception {
-		Kostmatch costMatch = (Kostmatch) sqlMap.queryForObject("getCostMatchPrivate", key);
-		if (costMatch != null) {
-			decrypt(costMatch);
-		}
-		return costMatch;
+	public PrivateCostMatch getCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		PrivateCostMatch result = (PrivateCostMatch) genericPrivateCostMatchDao.getEntity(costMatch, costMatch.getId());
+		return result;
 	}
 
 }

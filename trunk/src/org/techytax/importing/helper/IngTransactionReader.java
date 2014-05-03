@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.techytax.domain.Cost;
-import org.techytax.domain.Kostmatch;
+import org.techytax.domain.CostMatchParent;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -41,7 +41,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 
 	private static LabeledCSVParser parser = null;
 	
-	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);
@@ -50,7 +50,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 			Vector<String[]> data = getRegels();
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				processLine(regel, regelNummer, userId);
+				processLine(regel, regelNummer);
 			}
 
 		} catch (IOException e) {
@@ -73,9 +73,9 @@ public class IngTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	private void processLine(String[] line, int lineNumber, String userId) {
+	private void processLine(String[] line, int lineNumber) {
 		Cost kost = new Cost();
-		Kostmatch costMatch = null;
+		CostMatchParent costMatch = null;
 		try {
 			String datum = line[0];
 			if (datum.contains("-")) {
@@ -102,9 +102,9 @@ public class IngTransactionReader extends BaseTransactionReader {
 				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
-				costMatch = matchKost(kost, userId);
+				costMatch = matchKost(kost);
 			}
-			addCostOrHandleAdminstrativeSplitting(userId, kost, costMatch);
+			addCostOrHandleAdminstrativeSplitting(kost, costMatch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,7 +114,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.bat");
 		BaseTransactionReader rekeningFileHelper = new IngTransactionReader();
-		List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(fis)),  "1");
+		List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(fis)));
 	}
 
 }

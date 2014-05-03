@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,24 +19,48 @@
  */
 package org.techytax.domain;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 
-public class KeyId {
-	private long id = 0;
-	private long userId;
+@MappedSuperclass
+public class CostMatchParent {
 	
+	@Id
+	private long id = 0;
+
+	@ManyToOne
+	@JoinColumn(name="kostensoort_id")
+	protected CostType costType;
+
+	@OneToOne(mappedBy = "publicCostMatch", cascade = CascadeType.ALL)
+	private VatMatch vatMatch;
+
 	public long getId() {
 		return id;
 	}
+	
+	public VatMatch getVatMatch() {
+		return vatMatch;
+	}
 
-	public long getUserId() {
-		return userId;
+	public void setVatMatch(VatMatch vatMatch) {
+		this.vatMatch = vatMatch;
+	}	
+
+	public CostType getKostenSoort() {
+		return costType;
+	}
+	
+	public void setCostType(CostType costType) {
+		this.costType = costType;
 	}
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
 }

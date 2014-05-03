@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -36,17 +36,17 @@ import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.SettlementDao;
-import org.techytax.dao.VatMatchDao;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
+import org.techytax.domain.CostMatchParent;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.PrivateCostMatch;
 import org.techytax.domain.SplitMatch;
-import org.techytax.domain.VatMatch;
+import org.techytax.domain.VatMatchParent;
 import org.techytax.domain.VatType;
 import org.techytax.helper.CostSplitter;
-import org.techytax.jpa.dao.SplitMatchDao;
 
 public abstract class BaseTransactionReader implements TransactionReader {
 
@@ -62,20 +62,20 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return accountDao.getAccountType(accountNumber);
 	}
 
-	protected Kostmatch findCostMatch(String omschrijving, String userId) throws Exception {
+	protected CostMatchParent findCostMatch(String omschrijving) throws Exception {
 		KostmatchDao kostmatchDao = new KostmatchDao();
-		List<Kostmatch> kostmatchList = kostmatchDao.getCostMatchPrivateList(userId);
-		Iterator<Kostmatch> iterator = kostmatchList.iterator();
+		List<PrivateCostMatch> privateCostMatchList = kostmatchDao.getCostMatchPrivateList();
+		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
 		while (iterator.hasNext()) {
-			Kostmatch kostmatch = iterator.next();
+			PrivateCostMatch kostmatch = iterator.next();
 			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
 				return kostmatch;
 			}
 		}
-		kostmatchList = kostmatchDao.getKostmatchLijst();
-		iterator = kostmatchList.iterator();
-		while (iterator.hasNext()) {
-			Kostmatch kostmatch = iterator.next();
+		List<Kostmatch> kostmatchList = kostmatchDao.getKostmatchLijst();
+		Iterator<Kostmatch> iterator2 = kostmatchList.iterator();
+		while (iterator2.hasNext()) {
+			Kostmatch kostmatch = iterator2.next();
 			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
 				return kostmatch;
 			}
@@ -83,43 +83,45 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return null;
 	}
 
-	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
-		long kostensoortId = CostConstants.UNDETERMINED.getId();
+	protected CostMatchParent matchKost(Cost kost) throws Exception {
+		CostType kostensoort = CostConstants.UNDETERMINED;
 		kost.setVat(BigDecimal.ZERO);
-		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
+		CostMatchParent costMatch = findCostMatch(kost.getDescription());
 		if (costMatch != null) {
-			kostensoortId = costMatch.getKostenSoortId();
-			CostType costType = CostTypeCache.getCostType(kostensoortId);
-			handleVat(kost, costMatch, costType);
+			kostensoort = costMatch.getKostenSoort();
+			handleVat(kost, costMatch, kostensoort);
 		}
-		kost.setCostType(CostTypeCache.getCostType(kostensoortId));
+		kost.setCostType(kostensoort);
 		return costMatch;
 	}
 
-	private void handleVat(Cost kost, Kostmatch costMatch, CostType costType) throws Exception {
+	private void handleVat(Cost kost, CostMatchParent costMatch, CostType costType) throws Exception {
 		if (costType.isVatDeclarable()) {
-			VatMatchDao vatMatchDao = new VatMatchDao();
-			VatMatch vatMatch = vatMatchDao.getVatMatch(Long.toString(costMatch.getId()));
-			if (vatMatch == null) {
-				vatMatch = vatMatchDao.getVatMatchPrivate(Long.toString(costMatch.getId()));
+			VatMatchParent vatMatch = costMatch.getVatMatch();
+			if (vatMatch == null && costMatch instanceof PrivateCostMatch) {
+				PrivateCostMatch privateCostMatch = (PrivateCostMatch)costMatch;
+				vatMatch = privateCostMatch.getVatMatchPrivate();
 			}
 			if (vatMatch != null) {
 				if (vatMatch.getVatType() == VatType.HIGH) {
 					CostSplitter.splitPercentagFromAmount(kost, VatType.HIGH.getValueAsInteger(kost.getDate()));
 				}
 				if (vatMatch.getVatType() == VatType.LOW) {
-					CostSplitter.splitPercentagFromAmount(kost, 6);
+					CostSplitter.splitPercentagFromAmount(kost, VatType.LOW.getValueAsInteger(kost.getDate()));
 				}
 			}
 		}
 	}
 
-	protected void addCostOrHandleAdminstrativeSplitting(String userId, Cost cost, Kostmatch costMatch) throws Exception {
+	protected void addCostOrHandleAdminstrativeSplitting(Cost cost, CostMatchParent costMatch) throws Exception {
 		if (cost.getCostType().equals(SETTLEMENT) || cost.getCostType().equals(SETTLEMENT_DISCOUNT)) {
-			doAdministrativeSplitForSettlement(userId, cost);
+			doAdministrativeSplitForSettlement(cost);
 		} else if (cost.getCostType().equals(EXPENSE_CURRENT_ACCOUNT)) {
-			SplitMatchDao splitMatchDao = new SplitMatchDao();
-			SplitMatch splitMatch = splitMatchDao.getSplitMatch(costMatch.getId());
+			SplitMatch splitMatch = null;
+			if (costMatch instanceof PrivateCostMatch) {
+				PrivateCostMatch privateCostMatch = (PrivateCostMatch)costMatch;
+				splitMatch = privateCostMatch.getSplitMatch();
+			}
 			if (splitMatch != null) {
 				doAdministrativeSplitForExpense(cost, splitMatch.getPercentage());
 			} else {
@@ -143,7 +145,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		kostLijst.add(splitCost);
 	}
 
-	private void doAdministrativeSplitForSettlement(String userId, Cost cost) throws Exception {
+	private void doAdministrativeSplitForSettlement(Cost cost) throws Exception {
 		long percentage = settlementDao.getPercentage();
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());

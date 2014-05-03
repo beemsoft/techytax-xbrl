@@ -26,6 +26,6 @@ import org.techytax.domain.Cost;
 
 public interface TransactionReader {
 
-	public abstract List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception;
+	public abstract List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception;
 
 }

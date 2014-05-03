@@ -22,10 +22,8 @@ package org.techytax.domain;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;

@@ -192,7 +192,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		String firstLine = getFirstLine();
 		reader = new BufferedReader(media.getReaderData());
 		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
-		List<Cost> result = importTransactions.readFile(reader, Long.toString(user.getId()));
+		List<Cost> result = importTransactions.readFile(reader);
 		boolean unmatchedTransactions = listContainsUnmatchedTransactions(result);
 		boolean longDescriptions = listContainsLongDescriptions(result);
 		if (!unmatchedTransactions && !longDescriptions) {

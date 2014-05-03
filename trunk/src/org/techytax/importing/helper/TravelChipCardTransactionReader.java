@@ -35,6 +35,7 @@ import org.techytax.dao.KostmatchDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
+import org.techytax.domain.PrivateCostMatch;
 import org.techytax.helper.CostSplitter;
 import org.techytax.util.DateHelper;
 
@@ -45,7 +46,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 
 	private LabeledCSVParser parser = null;
 
-	public List<Cost> readFile(BufferedReader in, String userId) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			parser.changeDelimiter(';');
@@ -56,7 +57,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			Cost cost = null;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
-				cost = processLine(regel, regelNummer, userId);
+				cost = processLine(regel, regelNummer);
 				if (cost != null) {
 					kostLijst.add(cost);
 				}
@@ -82,22 +83,22 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	protected Kostmatch findCostMatch(String omschrijving, String userId) throws Exception {
+	protected Kostmatch findCostMatch(String omschrijving) throws Exception {
 		KostmatchDao kostmatchDao = new KostmatchDao();
-		List<Kostmatch> kostmatchList = kostmatchDao.getCostMatchPrivateList(userId);
-		Iterator<Kostmatch> iterator = kostmatchList.iterator();
+		List<PrivateCostMatch> kostmatchList = kostmatchDao.getCostMatchPrivateList();
+		Iterator<PrivateCostMatch> iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {
-			Kostmatch kostmatch = iterator.next();
-			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-				return kostmatch;
-			}
+//			Kostmatch kostmatch = iterator.next();
+//			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
+//				return kostmatch;
+//			}
 		}
 		return null;
 	}
 
-	protected Kostmatch matchKost(Cost kost, String userId) throws Exception {
+	protected Kostmatch matchKost(Cost kost) throws Exception {
 		CostType kostensoort = CostTypeCache.getCostType(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT.getId());
-		Kostmatch costMatch = findCostMatch(kost.getDescription(), userId);
+		Kostmatch costMatch = findCostMatch(kost.getDescription());
 		if (costMatch != null) {
 			kost.setDescription(kost.getDescription());
 			kost.setCostType(kostensoort);
@@ -107,7 +108,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		return null;
 	}
 
-	private Cost processLine(String[] line, int lineNumber, String userId) {
+	private Cost processLine(String[] line, int lineNumber) {
 		Cost kost = new Cost();
 		try {
 			String datum = line[0];
@@ -118,7 +119,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			String omschrijving = "Van " + line[2] + " naar " + line[4] + " (" + line[3] + ") " + line[6] + " " + line[7] + " " + line[8];
 
 			kost.setDescription(omschrijving);
-			matchKost(kost, userId);
+			matchKost(kost);
 			return kost;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,7 +131,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.csv");
 		TravelChipCardTransactionReader helper = new TravelChipCardTransactionReader();
-		List<Cost> result = helper.readFile(new BufferedReader(new InputStreamReader(fis)), "1");
+		List<Cost> result = helper.readFile(new BufferedReader(new InputStreamReader(fis)));
 		System.out.println("Ok");
 	}
 

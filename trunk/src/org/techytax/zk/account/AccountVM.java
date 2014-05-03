@@ -25,7 +25,6 @@ import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.KeyId;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
@@ -141,9 +140,6 @@ public class AccountVM {
 	public void saveAccountBalance() throws Exception{
 		if (user != null) {
 			selectedAccountBalance.setAccount(selected);
-			KeyId key = new KeyId();
-			key.setId(selectedAccountBalance.getId());
-			key.setUserId(user.getId());
 			AccountBalance accountBalance = (AccountBalance) genericAccountBalanceDao.getEntity(selectedAccountBalance, Long.valueOf(selectedAccountBalance.getId()));
 			if (accountBalance == null) {
 				genericAccountBalanceDao.persistEntity(selectedAccountBalance);
