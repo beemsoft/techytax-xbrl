@@ -79,6 +79,9 @@ public class KostmatchDao extends BaseDao {
 	}
 
 	public PrivateCostMatch getCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		if (costMatch.getId() == null) {
+			return null;
+		}
 		PrivateCostMatch result = (PrivateCostMatch) genericPrivateCostMatchDao.getEntity(costMatch, costMatch.getId());
 		return result;
 	}

@@ -136,11 +136,6 @@ public class Activum {
 		this.cost = cost;
 	}
 
-	// For iBatis.
-	public long getUserId() {
-		return user.getId();
-	}
-
 	public long getCostId() {
 		return cost.getId();
 	}

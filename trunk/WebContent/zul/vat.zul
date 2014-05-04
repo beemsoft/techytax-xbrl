@@ -157,7 +157,7 @@
 													<label
 														value="Match tekst:" />
 													<textbox
-														value="@load(vm.selectedPrivateMatch.matchText)" />
+														value="@bind(vm.selectedPrivateMatch.matchText)" />
 												</row>	
 											</rows>
 										</grid>
@@ -191,7 +191,7 @@
 													<label
 														value="Prive percentage:" />
 													<textbox
-														value="@load(vm.selectedPrivateMatch.splitMatch.percentage)" />
+														value="@bind(vm.selectedPercentage)" />
 												</row>	
 											</rows>
 										</grid>										

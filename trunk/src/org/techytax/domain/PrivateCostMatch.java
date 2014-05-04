@@ -46,10 +46,10 @@ public class PrivateCostMatch extends CostMatchParent {
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
 	
-	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private VatMatchPrivate vatMatchPrivate;
 
-	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private SplitMatch splitMatch;
 	
 	@Column(name = "match_text")
