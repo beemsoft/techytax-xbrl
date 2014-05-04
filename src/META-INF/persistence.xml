@@ -21,7 +21,8 @@
   <class>org.techytax.domain.Kostmatch</class>
   <class>org.techytax.domain.PrivateCostMatch</class>
   <class>org.techytax.domain.VatMatch</class>
-  <class>org.techytax.domain.VatMatchPrivate</class>  
+  <class>org.techytax.domain.VatMatchPrivate</class>
+  <class>org.techytax.business.zk.calendar.BusinessCalendarEvent</class>
   <class>org.techytax.business.jpa.entities.Customer</class>
   <class>org.techytax.business.jpa.entities.Project</class>
   <class>nl.beemsoft.techytax.log.SaasLogRecord</class>
