@@ -43,7 +43,7 @@ public class RssFeedCache {
 	
 	static void updateCache() {
 		for (String feedUrl : rssFeedCache.keySet() ) {
-//			getFeed(feedUrl);
+			getFeed(feedUrl);
 		}
 	}
 	
