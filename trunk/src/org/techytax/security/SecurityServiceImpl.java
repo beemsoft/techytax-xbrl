@@ -48,15 +48,15 @@ public class SecurityServiceImpl implements SecurityService {
 			return null;
 		}
 		if (CollectionUtils.isEmpty(users)) {
-			throw new AuthenticationException("Unknown user");
+			throw new AuthenticationException("Onbekende gebruiker");
 		}
 		UserEntity user = users.get(0);
 		boolean passwordIsValid = user.passwordMatch(password);
 		if (!passwordIsValid) {
-			throw new AuthenticationException("Invalid password");
+			throw new AuthenticationException("Ongeldig wachtwoord");
 		}
 		if (user.isBlocked()) {
-			throw new AuthenticationException("User blocked");
+			throw new AuthenticationException("Deze gebruiker is geblokkeerd");
 		}
 		Date currentDate = new Date();
 		try {
