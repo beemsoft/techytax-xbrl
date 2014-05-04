@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,45 +19,7 @@
  */
 package org.techytax.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jasypt.util.numeric.BasicDecimalNumberEncryptor;
-import org.jasypt.util.numeric.BasicIntegerNumberEncryptor;
-import org.jasypt.util.text.BasicTextEncryptor;
-import org.techytax.props.PropsFactory;
-import org.techytax.util.IbatisUtil;
-
-import com.ibatis.sqlmap.client.SqlMapClient;
 
 public class BaseDao {
-
-	protected SqlMapClient sqlMap;
-
-	protected BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
-	protected BasicDecimalNumberEncryptor decimalEncryptor = new BasicDecimalNumberEncryptor();
-	protected BasicIntegerNumberEncryptor intEncryptor = new BasicIntegerNumberEncryptor();
-
-	public BaseDao() {
-		sqlMap = IbatisUtil.getSqlMapInstance();
-		try {
-			String password = PropsFactory.getProperty("security.password");
-			textEncryptor.setPassword(password);
-			decimalEncryptor.setPassword(password);
-			intEncryptor.setPassword(password);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("TechyTax properties not found!");
-		}
-	}
-
-	protected Map<String, String> createMap(String beginDatum,
-			String eindDatum, String userId) {
-		Map<String, String> map = new HashMap<>();
-		map.put("beginDatum", beginDatum);
-		map.put("eindDatum", eindDatum);
-		map.put("userId", userId);
-		return map;
-	}
 
 }

@@ -19,89 +19,43 @@
  */
 package org.techytax.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
-import org.techytax.business.zk.calendar.BusinessCalendarEvent;
+import javax.persistence.TypedQuery;
 
+import org.techytax.business.zk.calendar.BusinessCalendarEvent;
+import org.techytax.domain.User;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class BusinessCalendarDao extends BaseDao {
 
-	private void encrypt(BusinessCalendarEvent event) {
-		BigDecimal travelingByCarCostDeclaration = event.getTravelingByCarCostDeclaration();
-		if (travelingByCarCostDeclaration != null && travelingByCarCostDeclaration.doubleValue() != 0) {
-			event.setTravelingByCarCostDeclaration(decimalEncryptor.encrypt(travelingByCarCostDeclaration));
-		}
-		BigDecimal otherCostDeclaration = event.getOtherCostDeclaration();
-		if (otherCostDeclaration != null && otherCostDeclaration.doubleValue() != 0) {
-			event.setOtherCostDeclaration(decimalEncryptor.encrypt(otherCostDeclaration));
-		}
-		String title = event.getTitle();
-		if (title != null && StringUtils.isNotEmpty(title.trim())) {
-			event.setTitle(textEncryptor.encrypt(title));
-		}
-		String content = event.getContent();
-		if (content != null && StringUtils.isNotEmpty(content.trim())) {
-			event.setContent(textEncryptor.encrypt(content));
-		}
-	}
+	private User user = UserCredentialManager.getUser();
 
-	public void decrypt(BusinessCalendarEvent event) {
-		BigDecimal travelingByCarCostDeclaration = event.getTravelingByCarCostDeclaration();
-		if (travelingByCarCostDeclaration != null && travelingByCarCostDeclaration.doubleValue() != 0) {
-			try {
-				event.setTravelingByCarCostDeclaration(decimalEncryptor.decrypt(travelingByCarCostDeclaration));
-			} catch (EncryptionOperationNotPossibleException e) {
-				e.printStackTrace();
-				System.out.println("Could not decrypt: " + event.getTravelingByCarCostDeclaration());
-			}
-		}
-		BigDecimal otherCostDeclaration = event.getOtherCostDeclaration();
-		if (otherCostDeclaration != null && otherCostDeclaration.doubleValue() != 0) {
-			try {
-				event.setOtherCostDeclaration(decimalEncryptor.decrypt(otherCostDeclaration));
-			} catch (EncryptionOperationNotPossibleException e) {
-				e.printStackTrace();
-				System.out.println("Could not decrypt: " + event.getOtherCostDeclaration());
-			}
-		}
-		String title = event.getTitle();
-		if (title != null && StringUtils.isNotEmpty(title.trim())) {
-			event.setTitle(textEncryptor.decrypt(title));
-		}
-		String content = event.getContent();
-		if (content != null && StringUtils.isNotEmpty(content.trim())) {
-			event.setContent(textEncryptor.decrypt(content));
-		}
-	}
+	private GenericDao<BusinessCalendarEvent> genericBusinessCalendarEventDao = new GenericDao<>(BusinessCalendarEvent.class);
 
 	public void insertBusinessCalendarEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
-		encrypt(event);
-		sqlMap.insert("insertEvent", event);
-		decrypt(event);
+		event.setUser(user);
+		genericBusinessCalendarEventDao.persistEntity(event);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<BusinessCalendarEvent> getEvents(String userId) throws Exception {
-		List<BusinessCalendarEvent> events = sqlMap.queryForList("getEvents", userId);
-		for (BusinessCalendarEvent event : events) {
-			decrypt(event);
-		}
-		return events;
+	public List<BusinessCalendarEvent> getEvents() throws Exception {
+		TypedQuery<BusinessCalendarEvent> query = JpaUtil.getEntityManager().createQuery("SELECT e FROM org.techytax.business.zk.calendar.BusinessCalendarEvent e WHERE e.user = :user",
+				BusinessCalendarEvent.class);
+		query.setParameter("user", user);
+		List<BusinessCalendarEvent> result = query.getResultList();
+		return result;
 	}
 
 	public void updateEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
-		encrypt(event);
-		sqlMap.insert("updateEvent", event);
-		decrypt(event);
+		genericBusinessCalendarEventDao.merge(event);
 	}
-	
+
 	public void deleteEvent(BusinessCalendarEvent event) throws Exception {
-		sqlMap.delete("deleteEvent", event);
-	}	
+		genericBusinessCalendarEventDao.deleteEntity(event);
+	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -37,15 +37,13 @@ import java.util.TimeZone;
 
 import org.techytax.business.jpa.entities.Customer;
 import org.techytax.business.jpa.entities.Project;
-import org.techytax.dao.CostDao;
 import org.techytax.dao.BusinessCalendarDao;
+import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
-import org.techytax.log.AuditType;
 import org.techytax.mail.MailHelper;
 import org.techytax.report.helper.Invoice;
 import org.techytax.util.DateHelper;
@@ -121,7 +119,7 @@ public class CalendarController extends SelectorComposer<Component> {
 		super.doAfterCompose(comp);
 
 		if (user != null) {
-			List<BusinessCalendarEvent> calendarEvents = businessCalendarDao.getEvents(Long.toString(user.getId()));
+			List<BusinessCalendarEvent> calendarEvents = businessCalendarDao.getEvents();
 			calendarModel = new BusinessCalendarModel(calendarEvents);
 			calendars.setModel(this.calendarModel);
 			invoiceButton.setDisabled(true);
@@ -217,7 +215,6 @@ public class CalendarController extends SelectorComposer<Component> {
 		data.setBeginDate(event.getBeginDate());
 		data.setEndDate(event.getEndDate());
 		calendarModel.update(data);
-		data.setUserId(user.getId());
 		businessCalendarDao.updateEvent(data);
 	}
 
@@ -229,14 +226,12 @@ public class CalendarController extends SelectorComposer<Component> {
 		switch (message.getType()) {
 		case DELETE:
 			calendarModel.remove((BusinessCalendarEvent) message.getData());
-			calendarEvent.setUserId(user.getId());
 			businessCalendarDao.deleteEvent(calendarEvent);
 			// clear the shadow of the event after editingMaak een PDF factuur.
 			calendarsEvent.clearGhost();
 			calendarsEvent = null;
 			break;
 		case OK:
-			calendarEvent.setUserId(user.getId());
 			if (calendarModel.indexOf(calendarEvent) >= 0) {
 				calendarModel.update(calendarEvent);
 				businessCalendarDao.updateEvent(calendarEvent);

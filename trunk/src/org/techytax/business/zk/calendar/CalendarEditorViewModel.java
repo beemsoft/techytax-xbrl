@@ -60,7 +60,7 @@ public class CalendarEditorViewModel {
 		try {
 			List<Project> projects = projectDao.findAll(user);
 			for (Project project : projects) {
-				if (project.getId() == calendarEventData.getProjectId()) {
+				if (project.equals(calendarEventData.getProject())) {
 					selectedProject = project;
 				}
 			}
@@ -144,7 +144,7 @@ public class CalendarEditorViewModel {
 	@NotifyChange("visible")
 	public void ok() {
 		if (selectedProject != null) {
-			calendarEventData.setProjectId(selectedProject.getId());
+			calendarEventData.setProject(selectedProject);
 		}
 		QueueMessage message = new QueueMessage(QueueMessage.Type.OK, calendarEventData);
 		QueueUtil.lookupQueue().publish(message);

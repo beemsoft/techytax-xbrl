@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,23 +23,52 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
+import org.jasypt.hibernate4.type.EncryptedStringType;
+import org.techytax.business.jpa.entities.Project;
+import org.techytax.domain.User;
+import org.techytax.domain.UserEntity;
 import org.techytax.domain.VatType;
-import org.zkoss.calendar.impl.SimpleCalendarEvent;
  
-public class BusinessCalendarEvent extends SimpleCalendarEvent {
+@TypeDefs({
+	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
+	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
+			@Parameter(name = "decimalScale", value = "2") }) })
+@Entity(name = "org.techytax.domain.BusinessCalendarEvent")
+@Table(name = "calendar_event")
+public class BusinessCalendarEvent extends BusinessCalendarEventParent {
 	
     private static final long serialVersionUID = 1L;
     
-	private long id;
+    @Id
+    @GeneratedValue
+	private Long id;
 	
-	private long userId;
-    
-    private long projectId;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private UserEntity user;
+
+	@ManyToOne
+	@JoinColumn(name = "project_id")	
+    private Project project;
     
     private boolean isBillable;
     
+	@Type(type = "encryptedBigDecimal")
     private BigDecimal travelingByCarCostDeclaration;
     
+	@Type(type = "encryptedBigDecimal")
     private BigDecimal otherCostDeclaration;
     
     private VatType vatTypeForOtherCostDeclaration = VatType.NONE;
@@ -78,13 +107,13 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
         setEndDate(endDate);
     }
     
-    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String title, long projectId) {
+    public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String title, Project project) {
         setHeaderColor(headerColor);
         setContentColor(contentColor);
         setTitle(title);
         setBeginDate(beginDate);
         setEndDate(endDate);
-        this.projectId = projectId;
+        this.project = project;
     }    
  
     public BusinessCalendarEvent(Date beginDate, Date endDate, String headerColor, String contentColor, String content,
@@ -122,12 +151,12 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
 		}		
 	}
     
-	public long getProjectId() {
-		return projectId;
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectId(long projectId) {
-		this.projectId = projectId; 
+	public void setProject(Project project) {
+		this.project = project; 
 	}
 
 	public boolean isBillable() {
@@ -162,20 +191,20 @@ public class BusinessCalendarEvent extends SimpleCalendarEvent {
 		this.vatTypeForOtherCostDeclaration = vatTypeForOtherCostDeclaration;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public long getUserId() {
-		return userId;
+	public UserEntity getUser() {
+		return user;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
 	}
 
 	public float getUnitsOfWork() {

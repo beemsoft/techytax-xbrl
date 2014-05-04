@@ -14,7 +14,7 @@ Changes:
 <li>Fixed display of costtype description in cost page.</li>
 <li>Added caching for RSS feeds.</li>
 <li>Upgraded to ZK 7.0.1</li>
-<li>Migrating to JPA.</li>
+<li>Finished migration from iBatis to JPA.</li>
 <li>Fixed rounding issue in VAT declaration.</li>
 </ul>
 <h4>2.1 (2014-03-29)</h4>

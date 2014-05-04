@@ -63,7 +63,7 @@ public class BusinessCalendarModel extends SimpleCalendarModel {
             long b = ce.getBeginDate().getTime();
             long e = ce.getEndDate().getTime();
             if (e >= begin && b < end && ce.getContent().toLowerCase().contains(filterText.toLowerCase()))
-            	if (filterProject == null || ce.getProjectId() == filterProject.getId().longValue()) {
+            	if (filterProject == null || ce.getProject() == filterProject) {
             		if (filterProject != null) {
             			ce.setContent(ce.getContent() + " (" + ce.getUnitsOfWork() + ")");
             		}

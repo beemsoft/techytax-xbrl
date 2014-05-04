@@ -160,5 +160,14 @@ public class Project {
 	public void setVatType(VatType vatType) {
 		this.vatType = vatType;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Project)) {
+			return false;
+		}
+		Project other = (Project)obj;
+		return this.id.equals(other.id);
+	}
 
 }
