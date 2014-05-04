@@ -20,6 +20,7 @@
 package org.techytax.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -30,7 +31,8 @@ import javax.persistence.Table;
 public class SplitMatch {
 	
 	@Id
-	private long id;
+    @GeneratedValue
+    private Long id;
 
 	@OneToOne
 	@JoinColumn(name = "kostmatch_id")
@@ -38,11 +40,11 @@ public class SplitMatch {
 
 	private int percentage;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -29,7 +29,7 @@ import javax.persistence.Table;
 public class VatMatchPrivate extends VatMatchParent {
 	
 	@OneToOne
-	@JoinColumn(name = "kostmatch_id")
+	@JoinColumn(name = "kostmatch_id" )
 	private PrivateCostMatch privateCostMatch;
 
 	public PrivateCostMatch getPrivateCostMatch() {

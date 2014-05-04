@@ -36,7 +36,6 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
-import org.techytax.zk.login.UserCredentialManager;
 
 @TypeDefs({
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
@@ -116,11 +115,4 @@ public class BookValue {
 		return balanceType.getKey();
 	}
 	
-	/**
-	 * Required for iBatis.
-	 */
-	public long getUserId() {
-		return UserCredentialManager.getUser().getId();
-	}
-
 }

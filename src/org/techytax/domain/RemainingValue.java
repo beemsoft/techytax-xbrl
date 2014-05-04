@@ -80,11 +80,6 @@ public class RemainingValue {
 		this.user = new UserEntity(user);
 	}
 
-	// For iBatis.
-	public long getUserId() {
-		return user.getId();
-	}
-
 	public long getActivaId() {
 		return activum.getId();
 	}
