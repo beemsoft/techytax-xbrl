@@ -34,7 +34,7 @@ import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
-import org.techytax.domain.Balans;
+import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Periode;
@@ -99,7 +99,7 @@ public class AccountCheckVM extends CostVM3 {
 			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()));
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
 			List<Cost> result2 = costDao.getVatCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
-			Balans balans = BalanceCalculator.calculateBtwBalance(result2, true);
+			Balance balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
 			List<Cost> taxCosts = costCache.getTaxCosts();

@@ -17,6 +17,7 @@ Changes:
 <li>Finished migration from iBatis to JPA.</li>
 <li>Fixed rounding issue in VAT declaration.</li>
 <li>Upgraded to Hibernate 4.3.5</li>
+<li>Added costtype for expenses inside the EU.</li>
 </ul>
 <h4>2.1 (2014-03-29)</h4>
 <p>

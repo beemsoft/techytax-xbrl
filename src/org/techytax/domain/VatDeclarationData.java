@@ -49,6 +49,10 @@ public class VatDeclarationData {
 
 	// Voorbelasting_1
 	private BigInteger valueAddedTaxOnInput = BigInteger.ZERO;
+	
+	private BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC = BigInteger.ZERO;
+	
+	private BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC = BigInteger.ZERO;
 
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
@@ -121,6 +125,22 @@ public class VatDeclarationData {
 
 	public User getUser() {
 		return user;
+	}
+
+	public BigInteger getTurnoverFromTaxedSuppliesFromCountriesWithinTheEC() {
+		return turnoverFromTaxedSuppliesFromCountriesWithinTheEC;
+	}
+
+	public void setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC) {
+		this.turnoverFromTaxedSuppliesFromCountriesWithinTheEC = turnoverFromTaxedSuppliesFromCountriesWithinTheEC;
+	}
+
+	public BigInteger getValueAddedTaxOnSuppliesFromCountriesWithinTheEC() {
+		return valueAddedTaxOnSuppliesFromCountriesWithinTheEC;
+	}
+
+	public void setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC) {
+		this.valueAddedTaxOnSuppliesFromCountriesWithinTheEC = valueAddedTaxOnSuppliesFromCountriesWithinTheEC;
 	}
 
 }

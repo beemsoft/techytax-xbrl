@@ -35,6 +35,14 @@
 	    line-height: 18px;
 	}
 	
+	.z-panel-header {
+		font-size: 15px;
+	}
+	
+	.z-panel-head {
+		line-height: 20px;
+	}
+	
 	.z-listitem-selected:hover > .z-listcell {
 	    border-color: rgb(227, 227, 27);
 	    background: none repeat scroll 0% 0% rgb(86, 135, 168);
@@ -123,24 +131,45 @@
 				</div>
 			</north>
 			<!-- Sidebar -->
-			<west width="160px" border="0" hflex="true" splittable="true" margins="0,5,0,0" >
+			<west width="335px" border="0" hflex="true" splittable="true" margins="0,5,0,0" >
 				<vlayout spacing="0">
-					<panel width="100%" border="normal" title="Navigatie" >
-						<panelchildren style="padding:5px;">
-							<vbox>
-								<toolbarbutton label="Omzetbelasting" href="vat.zul" />
-								<toolbarbutton label="Inkomstenbelasting" href="tax.zul" />
-								<toolbarbutton label="Kosten" href="costs.zul" />
-								<toolbarbutton label="Rekeningen" href="accounts.zul" />
-								<toolbarbutton label="Controle-stap" href="account-check.zul" />
-								<toolbarbutton label="Digipoort" href="xbrl.zul" />
-								<toolbarbutton label="${c:l('bookvalues.title')}" href="bookvalues.zul" />
-								<toolbarbutton label="Facturen" href="invoices.zul" />
-								<toolbarbutton label="Agenda" href="zk_calendar.zul" />
-								<toolbarbutton label="Klanten" href="customers.zul" />
-								<toolbarbutton label="Projecten" href="projects.zul" />
-								<toolbarbutton label="${c:l('settlement.title')}" href="settlement.zul" />							
-							</vbox>
+					<panel width="100%" border="normal" title="Online boekhouden" >
+						<panelchildren>
+							<html>
+								<![CDATA[<p>TechyTax is een online boekhoudpakket voor kleine bedrijven (eenmanszaak, zzp, vof). Het berekent de btw en geeft fiscale overzichten. Hiervoor is geen boekhoudkundige kennis vereist. Het doel van dit project is om, m.b.v. de laatste technieken, de belastingaangifte zo simpel mogelijk te maken.</p> 
+								 ]]>
+							</html>
+						</panelchildren>
+					</panel>					
+					<panel width="100%" border="normal" title="Voordelen " >
+						<panelchildren>
+							<html>
+								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
+								<li>Veilige opslag van gegevens</li>
+								 <li>Geen boekhoudkundige kennis vereist</li>
+								 <li>Open Source, broncode vrij beschikbaar op SourceForge</li>
+								</ul> ]]>
+							</html>
+						</panelchildren>
+					</panel>
+					<panel width="100%" border="normal" title="Speciale kenmerken" >
+						<panelchildren>
+							<html>
+								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
+								 <li>Automatische btw aangifte</li>
+								 <li>Administratief splitsen</li>
+								 <li>Afschrijven</li>
+								 <li>Urenregistratie</li>
+								 <li>Factureren</li>
+								 </ul> ]]>
+							</html>
+						</panelchildren>
+					</panel>
+					<panel width="100%" border="normal" title="Ohloh analyse" >
+						<panelchildren>
+							<html>
+								<script type="text/javascript" src="https://www.ohloh.net/p/337030/widgets/project_factoids_stats.js"></script>
+							</html>
 						</panelchildren>
 					</panel>
 				</vlayout>

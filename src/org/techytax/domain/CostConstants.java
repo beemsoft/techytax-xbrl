@@ -19,6 +19,9 @@
  */
 package org.techytax.domain;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 public interface CostConstants {
 
 	public static final CostType UNDETERMINED = new CostType(0);
@@ -76,13 +79,14 @@ public interface CostConstants {
 	public static final CostType SETTLEMENT_OTHER_ACCOUNT = new CostType(44);
 	public static final CostType SETTLEMENT_DISCOUNT = new CostType(45);
 	public static final CostType INCOME_CURRENT_ACCOUNT_IGNORE = new CostType(46);
+	public static final CostType EXPENSE_INSIDE_EU = new CostType(47);	
 
 //	public static final int MAXIMALE_FOR = 11227; // 2008
 //	public static final int MAXIMALE_FOR = 11590; // 2009
 //	public static final int MAXIMALE_FOR = 11811; // 2010
 //	public static final int MAXIMALE_FOR = 11882; // 2011
-	public static final int MAXIMALE_FOR = 9542; // 2012	
-	public static final float FOR_PERCENTAGE = 0.12f;
+	public static final BigInteger MAXIMALE_FOR = BigInteger.valueOf(9542); // 2012	
+	public static final BigDecimal FOR_PERCENTAGE = BigDecimal.valueOf(0.12f);
 	
 //	public static final float FOOD_TAXFREE_PERCENTAGE = 0.75f;
 	// http://www.belastingdienst.nl/zakelijk/ondernemen_kosten/ondernemen_kosten-09.html

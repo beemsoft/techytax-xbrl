@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,6 +28,7 @@ import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
 import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.FISCALE_BIJTELLING_AUTO;
 import static org.techytax.domain.CostConstants.FOOD_TAXFREE_PERCENTAGE;
@@ -66,59 +67,68 @@ import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
-import org.techytax.domain.Balans;
+import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.Reiskosten;
+import org.techytax.domain.VatBalanceWithinEu;
+import org.techytax.domain.VatType;
 import org.techytax.util.DateHelper;
 
 public class BalanceCalculator {
 
-	public static Balans calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
+	public static VatBalanceWithinEu calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
-		BigDecimal totalBtwOut = BigDecimal.ZERO;
-		BigDecimal totalBtwIn = BigDecimal.ZERO;
-		BigDecimal totalBtwCorrection = BigDecimal.ZERO;
-		BigDecimal brutoOmzet = BigDecimal.ZERO;
-		BigDecimal nettoOmzet = BigDecimal.ZERO;
+		BigDecimal totalVatOut = BigDecimal.ZERO;
+		BigDecimal totalVatIn = BigDecimal.ZERO;
+		BigDecimal totalVatCorrection = BigDecimal.ZERO;
+		BigDecimal turnoverGross = BigDecimal.ZERO;
+		BigDecimal turnoverNet = BigDecimal.ZERO;
+		BigDecimal turnoverNetEu = BigDecimal.ZERO;
+		BigInteger vatOutEu = BigInteger.ZERO;		
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 				Cost obj = null;
 				obj = res.get(i);
 				if (obj != null) {
 
-					long id = obj.getCostTypeId();
-					if (obj.getCostType().equals(INVOICE_SENT) && isForAccountBalance) {
+					CostType costType = obj.getCostType();
+					if (costType.equals(INVOICE_SENT) && isForAccountBalance) {
 						// skip
 					} else {
-						CostType kostensoort = CostTypeCache.getCostType(id);
-						if (kostensoort.isVatDeclarable()) {
-							if (kostensoort.isBijschrijving() || kostensoort.equals(INVOICE_SENT)) {
-								totalBtwIn = totalBtwIn.add(obj.getVat());
-								brutoOmzet = brutoOmzet.add(obj.getAmount());
-								nettoOmzet = nettoOmzet.add(obj.getAmount());
-								brutoOmzet = brutoOmzet.add(obj.getVat());
+						if (costType.isVatDeclarable()) {
+							if (costType.isBijschrijving() || costType.equals(INVOICE_SENT)) {
+								totalVatIn = totalVatIn.add(obj.getVat());
+								turnoverGross = turnoverGross.add(obj.getAmount());
+								turnoverNet = turnoverNet.add(obj.getAmount());
+								turnoverGross = turnoverGross.add(obj.getVat());
 							} else {
-								if (kostensoort.equals(VAT_CORRECTION_CAR_PRIVATE)) {
-									totalBtwCorrection = totalBtwCorrection.add(obj.getVat());
+								if (costType.equals(VAT_CORRECTION_CAR_PRIVATE)) {
+									totalVatCorrection = totalVatCorrection.add(obj.getVat());
+								} else if (costType.equals(EXPENSE_INSIDE_EU)){
+									turnoverNetEu = turnoverNet.add(obj.getAmount());
 								} else {
-									totalBtwOut = totalBtwOut.add(obj.getVat());
+									totalVatOut = totalVatOut.add(obj.getVat());
 								}
 							}
 						}
 					}
 				}
 			}
+			turnoverNetEu = AmountHelper.roundDown(turnoverNetEu);
+			vatOutEu = AmountHelper.roundDownToInteger(turnoverNetEu.multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
 		}
-		Balans balans = new Balans();
-		balans.setTotaleBaten(totalBtwIn);
-		balans.setTotaleKosten(totalBtwOut);
-		balans.setBrutoOmzet(brutoOmzet);
-		balans.setNettoOmzet(nettoOmzet);
-		balans.setCorrection(totalBtwCorrection);
-		return balans;
+		VatBalanceWithinEu balanceWithinEu = new VatBalanceWithinEu();
+		balanceWithinEu.setTotaleBaten(totalVatIn);
+		balanceWithinEu.setTotaleKosten(totalVatOut);
+		balanceWithinEu.setBrutoOmzet(turnoverGross);
+		balanceWithinEu.setNettoOmzet(turnoverNet);
+		balanceWithinEu.setCorrection(totalVatCorrection);
+		balanceWithinEu.setTurnoverNetEu(turnoverNetEu);
+		balanceWithinEu.setVatOutEu(vatOutEu);
+		return balanceWithinEu;
 	}
 
 	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum) throws Exception {
@@ -197,7 +207,7 @@ public class BalanceCalculator {
 		return kostensoort.isBalansMeetellen() && kostensoort.isBijschrijving();
 	}
 
-	public static Balans calculatCostBalance(List<Cost> res) {
+	public static Balance calculatCostBalance(List<Cost> res) {
 
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalBaat = new BigDecimal(0);
@@ -224,13 +234,13 @@ public class BalanceCalculator {
 				}
 			}
 		}
-		Balans balans = new Balans();
+		Balance balans = new Balance();
 		balans.setTotaleBaten(totalBaat);
 		balans.setTotaleKosten(totalKost);
 		return balans;
 	}
 
-	public static Balans calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
+	public static Balance calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
 
 		BigDecimal totalKost = new BigDecimal(0);
 		if (res != null) {
@@ -252,7 +262,7 @@ public class BalanceCalculator {
 				}
 			}
 		}
-		Balans balans = new Balans();
+		Balance balans = new Balance();
 		balans.setTotaleKosten(totalKost);
 		return balans;
 	}
@@ -305,7 +315,7 @@ public class BalanceCalculator {
 		return reiskosten;
 	}
 
-	public static Balans calculateTaxBalance(List<Cost> res) throws Exception {
+	public static Balance calculateTaxBalance(List<Cost> res) throws Exception {
 		BigDecimal total = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
@@ -320,7 +330,7 @@ public class BalanceCalculator {
 				}
 			}
 		}
-		Balans balans = new Balans();
+		Balance balans = new Balance();
 		balans.setTotaleKosten(total);
 		return balans;
 	}

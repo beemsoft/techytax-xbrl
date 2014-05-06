@@ -53,7 +53,6 @@ import org.techytax.helper.DepreciationHelper;
 @Entity(name = "org.techytax.domain.Activum")
 @Table(name = "activa")
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "TYPE")
 public class Activum {
 
 	@Id
