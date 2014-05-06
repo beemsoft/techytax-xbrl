@@ -20,11 +20,13 @@
 package org.techytax.zk;
 
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
 import static org.techytax.log.AuditType.MATCH_TRANSACTION;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.techytax.dao.CostTypeDao;
@@ -140,6 +142,9 @@ public class CostTypeViewModel {
 
 	private void insertPrivateCostMatch() throws Exception {
 		if (selectedCostType.isVatDeclarable()) {
+			if (selectedCostType.equals(EXPENSE_INSIDE_EU)) {
+				selectedVatType = VatType.NONE.name();
+			}
 			VatMatchPrivate vatMatchPrivate = new VatMatchPrivate();
 			vatMatchPrivate.setVatType(VatType.valueOf(selectedVatType));
 			vatMatchPrivate.setPrivateCostMatch(selectedPrivateMatch);
@@ -173,7 +178,8 @@ public class CostTypeViewModel {
 	}
 
 	public boolean getVatVisible() {
-		return selectedCostType.isVatDeclarable() && !selectedCostType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT) && !selectedCostType.equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);
+		List<CostType> costTypes = Arrays.asList(TRAVEL_WITH_PUBLIC_TRANSPORT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, EXPENSE_INSIDE_EU);
+		return selectedCostType.isVatDeclarable() && !costTypes.contains(selectedCostType);
 	}
 
 	public boolean getSplitVisible() {

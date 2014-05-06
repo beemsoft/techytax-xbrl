@@ -41,7 +41,7 @@ import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals10VItemType
 import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals9VItemType;
 
 import org.apache.commons.lang.StringUtils;
-import org.techytax.domain.Balans;
+import org.techytax.domain.Balance;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
@@ -218,6 +218,20 @@ public class XbrlNtp8Helper {
 			turnoverSuppliesServicesGenerallTariff.setUnitRef(unit);
 			turnoverSuppliesServicesGenerallTariff.setValue(vatDeclarationData.getTaxedTurnoverSuppliesServicesGeneralTariff());
 			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createTaxedTurnoverSuppliesServicesGeneralTariff(turnoverSuppliesServicesGenerallTariff));
+			
+			MonetaryNoDecimals10VItemType turnoverFromTaxedSuppliesFromCountriesWithinTheEC = bdTypeObjectFactory.createMonetaryNoDecimals10VItemType();
+			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setDecimals(DECIMALS_TYPE);
+			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setContextRef(context);
+			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setUnitRef(unit);
+			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setValue(vatDeclarationData.getTurnoverFromTaxedSuppliesFromCountriesWithinTheEC());			
+			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(turnoverSuppliesServicesGenerallTariff));
+			
+			MonetaryNoDecimals9VItemType valueAddedTaxOnSuppliesFromCountriesWithinTheEC = bdTypeObjectFactory.createMonetaryNoDecimals9VItemType();
+			valueAddedTaxOnSuppliesFromCountriesWithinTheEC.setDecimals(DECIMALS_TYPE);
+			valueAddedTaxOnSuppliesFromCountriesWithinTheEC.setContextRef(context);
+			valueAddedTaxOnSuppliesFromCountriesWithinTheEC.setUnitRef(unit);
+			valueAddedTaxOnSuppliesFromCountriesWithinTheEC.setValue(vatDeclarationData.getValueAddedTaxOnSuppliesFromCountriesWithinTheEC());
+			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createValueAddedTaxOnSuppliesFromCountriesWithinTheEC(valueAddedTaxOnSuppliesFromCountriesWithinTheEC));
 
 			m.marshal(xbrl, writer);
 
@@ -229,7 +243,7 @@ public class XbrlNtp8Helper {
 		return null;
 	}
 
-	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balans balans) throws Exception {
+	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balance balans) throws Exception {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
 		BigDecimal turnover = AmountHelper.roundDown(balans.getNettoOmzet());
@@ -258,7 +272,7 @@ public class XbrlNtp8Helper {
 		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
-		Balans balans = new Balans();
+		Balance balans = new Balance();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));
 		balans.setNettoOmzet(BigDecimal.valueOf(191));

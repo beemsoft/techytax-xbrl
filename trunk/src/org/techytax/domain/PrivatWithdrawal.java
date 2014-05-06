@@ -19,35 +19,37 @@
  */
 package org.techytax.domain;
 
+import java.math.BigInteger;
+
 public class PrivatWithdrawal {
 
-	private int totaleOnttrekking;
+	private BigInteger totaleOnttrekking;
 
-	private int withdrawalCash;
+	private BigInteger withdrawalCash;
 	
-	private int withdrawalPrivateUsageBusinessCar;
+	private BigInteger withdrawalPrivateUsageBusinessCar;
 
-	public int getTotaleOnttrekking() {
+	public BigInteger getTotaleOnttrekking() {
 		return totaleOnttrekking;
 	}
 
-	public int getWithdrawalCash() {
+	public BigInteger getWithdrawalCash() {
 		return withdrawalCash;
 	}
 
-	public void setTotaleOnttrekking(int totaleOnttrekking) {
+	public void setTotaleOnttrekking(BigInteger totaleOnttrekking) {
 		this.totaleOnttrekking = totaleOnttrekking;
 	}
 
-	public void setWithdrawalCash(int withdrawalCash) {
+	public void setWithdrawalCash(BigInteger withdrawalCash) {
 		this.withdrawalCash = withdrawalCash;
 	}
 
-	public int getWithdrawalPrivateUsageBusinessCar() {
+	public BigInteger getWithdrawalPrivateUsageBusinessCar() {
 		return withdrawalPrivateUsageBusinessCar;
 	}
 
-	public void setWithdrawalPrivateUsageBusinessCar(int withdrawalPrivateUsageBusinessCar) {
+	public void setWithdrawalPrivateUsageBusinessCar(BigInteger withdrawalPrivateUsageBusinessCar) {
 		this.withdrawalPrivateUsageBusinessCar = withdrawalPrivateUsageBusinessCar;
 	}
 

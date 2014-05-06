@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
-public class Balans {
+public class Balance {
 
 	BigDecimal brutoOmzet;
 

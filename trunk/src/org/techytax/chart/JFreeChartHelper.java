@@ -144,14 +144,14 @@ public class JFreeChartHelper {
 
 	private static PieDataset createDatasetForProfitAndLoss(FiscalOverview overview, Locale locale) {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		if (overview.getWinst() >= 0) {
+		if (overview.getWinst().compareTo(BigInteger.valueOf(-1))  == 1) {
 			dataset.setValue(Translator.translateKey("overview.fiscal.profit", locale), overview.getWinst());
 		} else {
-			dataset.setValue(Translator.translateKey("overview.fiscal.loss", locale), Math.abs(overview.getWinst()));
+			dataset.setValue(Translator.translateKey("overview.fiscal.loss", locale), overview.getWinst().abs());
 		}
 		dataset.setValue(Translator.translateKey("overview.fiscal.cost.other", locale), overview.getKostenOverig());
 		dataset.setValue(Translator.translateKey("overview.fiscal.cost.transport", locale), overview.getKostenOverigTransport());
-		dataset.setValue(Translator.translateKey("overview.fiscal.cost.car.deductable", locale), Math.abs(overview.getKostenAutoAftrekbaar()));
+		dataset.setValue(Translator.translateKey("overview.fiscal.cost.car.deductable", locale), overview.getKostenAutoAftrekbaar().abs());
 		dataset.setValue(Translator.translateKey("overview.fiscal.depreciation.car", locale), overview.getAfschrijvingAuto());
 		dataset.setValue(Translator.translateKey("overview.fiscal.depreciation.other", locale), overview.getAfschrijvingOverig());
 		return dataset;

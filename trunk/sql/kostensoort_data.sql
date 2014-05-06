@@ -89,6 +89,7 @@ INSERT INTO `kostensoort` VALUES
 (44,'costtype.office.other.account',0,0,0,1,0),
 (45,'costtype.office.discount',1,1,1,1,0),
 (46,'costtype.income.current.account.ignore',1,0,1,0,0);
+(47,'costtype.expense.eu',0,1,1,1,0);
 
 /*!40000 ALTER TABLE `kostensoort` ENABLE KEYS */;
 UNLOCK TABLES;

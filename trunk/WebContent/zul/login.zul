@@ -5,7 +5,7 @@
 		viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')"
 		onOK="@command('login')" >
 		<?init class="org.zkoss.zk.ui.util.Composition"
-arg0="/WEB-INF/layout/template.zul"?>
+arg0="/WEB-INF/layout/template-login.zul"?>
 		<vbox>
 			<hbox>
 				<vbox>
@@ -25,11 +25,14 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</grid>
  					<button label="Inloggen"
 					onClick="@command('login')" tooltip="loginInfo" mold="os" />
-				</vbox>								
+				</vbox>
 				<toolbarbutton id="secure"
 					label="Kies veilige verbinding"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
 						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" height="80px"/>
+				<vbox>
+					<include src="~./saas/message.zul" />
+				</vbox>								
 			</hbox>		
 			<hlayout>
 				<button label="Registreren" onClick="@command('register')" />

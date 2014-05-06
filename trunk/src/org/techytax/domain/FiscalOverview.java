@@ -31,81 +31,81 @@ public class FiscalOverview {
 	private Map<BalanceType,FiscalBalance> activaMap;
 	private Map<BalanceType,FiscalBalance> passivaMap;
 	
-	private int afschrijvingAuto;
+	private BigInteger afschrijvingAuto = BigInteger.ZERO;
 
 	@Deprecated
-	private int afschrijvingAutoCorrectie;
+	private BigInteger afschrijvingAutoCorrectie = BigInteger.ZERO;
 
-	private int afschrijvingOverig;
+	private BigInteger afschrijvingOverig = BigInteger.ZERO;
 
 	@Deprecated
-	private int afschrijvingOverigCorrectie;
+	private BigInteger afschrijvingOverigCorrectie = BigInteger.ZERO;
 
-	private int afschrijvingTotaal;
-	private int bijtellingAuto;
-	private int bookTotalBegin;
-	private int bookTotalEnd;
-	private BigInteger enterpriseCapital;
-	private BigInteger interestFromBusinessSavings;
-	private BigInteger investmentDeduction;
+	private BigInteger afschrijvingTotaal = BigInteger.ZERO;
+	private BigInteger bijtellingAuto = BigInteger.ZERO;
+	private BigInteger bookTotalBegin = BigInteger.ZERO;
+	private BigInteger bookTotalEnd = BigInteger.ZERO;
+	private BigInteger enterpriseCapital = BigInteger.ZERO;
+	private BigInteger interestFromBusinessSavings = BigInteger.ZERO;
+	private BigInteger investmentDeduction = BigInteger.ZERO;
 	private int jaar;
-	private int kostenAuto;
-	private int kostenAutoAftrekbaar;
-	private int kostenOverig;
-	private int kostenOverigTransport;
-	private int nettoOmzet;
+	private BigInteger kostenAuto = BigInteger.ZERO;
+	private BigInteger kostenAutoAftrekbaar = BigInteger.ZERO;
+	private BigInteger kostenOverig = BigInteger.ZERO;
+	private BigInteger kostenOverigTransport = BigInteger.ZERO;
+	private BigInteger nettoOmzet = BigInteger.ZERO;
 	private PrivatWithdrawal onttrekking;
-	private int oudedagsReserveMaximaal;
+	private BigInteger oudedagsReserveMaximaal = BigInteger.ZERO;
 
 	private PrepaidTax prepaidTax;
-	private BigInteger privateDeposit;
-	private int profit;
-	private BigInteger repurchase;
-	private int settlementCosts;
-	private int settlementDepreciation;
-	private BigDecimal turnOverUnpaid;
+	private BigInteger privateDeposit = BigInteger.ZERO;
+	private BigInteger profit = BigInteger.ZERO;
+	private BigInteger repurchase = BigInteger.ZERO;
+	private BigInteger settlementCosts = BigInteger.ZERO;
+	private BigInteger settlementDepreciation = BigInteger.ZERO;
+	private BigDecimal turnOverUnpaid = BigDecimal.ZERO;
 
 	public BalanceReport getActivaReport() {
 		return FiscalReportHelper.getActivaReport(activaMap);
 	}
 
-	public int getAfschrijvingAuto() {
+	public BigInteger getAfschrijvingAuto() {
 		return afschrijvingAuto;
 	}
 
 	@Deprecated
-	public int getAfschrijvingAutoCorrectie() {
+	public BigInteger getAfschrijvingAutoCorrectie() {
 		return afschrijvingAutoCorrectie;
 	}
 
-	public int getAfschrijvingOverig() {
+	public BigInteger getAfschrijvingOverig() {
 		return afschrijvingOverig;
 	}
 
 	@Deprecated
 	// Will be removed in 2017
-	public int getAfschrijvingOverigCorrectie() {
+	public BigInteger getAfschrijvingOverigCorrectie() {
 		return afschrijvingOverigCorrectie;
 	}
 
-	public int getAfschrijvingTotaal() {
+	public BigInteger getAfschrijvingTotaal() {
 		return afschrijvingTotaal;
 	}
 
-	public int getBijtellingAuto() {
+	public BigInteger getBijtellingAuto() {
 		return bijtellingAuto;
 	}
 
-	public int getBookTotalBegin() {
+	public BigInteger getBookTotalBegin() {
 		return bookTotalBegin;
 	}
 
-	public int getBookTotalEnd() {
+	public BigInteger getBookTotalEnd() {
 		return bookTotalEnd;
 	}
 
-	public int getCarAndTransportCosts() {
-		return kostenAutoAftrekbaar - kostenOverigTransport;
+	public BigInteger getCarAndTransportCosts() {
+		return kostenAutoAftrekbaar.subtract(kostenOverigTransport);
 	}
 
 	public BigInteger getEnterpriseCapital() {
@@ -124,23 +124,23 @@ public class FiscalOverview {
 		return jaar;
 	}
 
-	public int getKostenAuto() {
+	public BigInteger getKostenAuto() {
 		return kostenAuto;
 	}
 
-	public int getKostenAutoAftrekbaar() {
+	public BigInteger getKostenAutoAftrekbaar() {
 		return kostenAutoAftrekbaar;
 	}
 
-	public int getKostenOverig() {
+	public BigInteger getKostenOverig() {
 		return kostenOverig;
 	}
 
-	public int getKostenOverigTransport() {
+	public BigInteger getKostenOverigTransport() {
 		return kostenOverigTransport;
 	}
 
-	public int getNettoOmzet() {
+	public BigInteger getNettoOmzet() {
 		return nettoOmzet;
 	}
 
@@ -148,11 +148,11 @@ public class FiscalOverview {
 		return onttrekking;
 	}
 
-	public int getOtherCostsTotal() {
-		return getCarAndTransportCosts() - kostenOverig - settlementCosts;
+	public BigInteger getOtherCostsTotal() {
+		return getCarAndTransportCosts().subtract(kostenOverig.add(settlementCosts));
 	}
 
-	public int getOudedagsReserveMaximaal() {
+	public BigInteger getOudedagsReserveMaximaal() {
 		return oudedagsReserveMaximaal;
 	}
 
@@ -168,7 +168,7 @@ public class FiscalOverview {
 		return privateDeposit;
 	}
 
-	public int getProfit() {
+	public BigInteger getProfit() {
 		return profit;
 	}
 
@@ -176,11 +176,11 @@ public class FiscalOverview {
 		return repurchase;
 	}
 
-	public int getSettlementCosts() {
+	public BigInteger getSettlementCosts() {
 		return settlementCosts;
 	}
 
-	public int getSettlementDepreciation() {
+	public BigInteger getSettlementDepreciation() {
 		return settlementDepreciation;
 	}
 
@@ -188,41 +188,41 @@ public class FiscalOverview {
 		return turnOverUnpaid;
 	}
 
-	public int getWinst() {
+	public BigInteger getWinst() {
 		return profit;
 	}
 
-	public void setAfschrijvingAuto(int afschrijvingAuto) {
+	public void setAfschrijvingAuto(BigInteger afschrijvingAuto) {
 		this.afschrijvingAuto = afschrijvingAuto;
 	}
 
 	@Deprecated
-	public void setAfschrijvingAutoCorrectie(int afschrijvingAutoCorrectie) {
+	public void setAfschrijvingAutoCorrectie(BigInteger afschrijvingAutoCorrectie) {
 		this.afschrijvingAutoCorrectie = afschrijvingAutoCorrectie;
 	}
 
-	public void setAfschrijvingOverig(int afschrijvingOverig) {
+	public void setAfschrijvingOverig(BigInteger afschrijvingOverig) {
 		this.afschrijvingOverig = afschrijvingOverig;
 	}
 
 	@Deprecated
-	public void setAfschrijvingOverigCorrectie(int afschrijvingOverigCorrectie) {
+	public void setAfschrijvingOverigCorrectie(BigInteger afschrijvingOverigCorrectie) {
 		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
 	}
 
-	public void setAfschrijvingTotaal(int afschrijvingTotaal) {
+	public void setAfschrijvingTotaal(BigInteger afschrijvingTotaal) {
 		this.afschrijvingTotaal = afschrijvingTotaal;
 	}
 
-	public void setBijtellingAuto(int bijtellingAuto) {
+	public void setBijtellingAuto(BigInteger bijtellingAuto) {
 		this.bijtellingAuto = bijtellingAuto;
 	}
 
-	public void setBookTotalBegin(int bookTotalBegin) {
+	public void setBookTotalBegin(BigInteger bookTotalBegin) {
 		this.bookTotalBegin = bookTotalBegin;
 	}
 
-	public void setBookTotalEnd(int bookTotalEnd) {
+	public void setBookTotalEnd(BigInteger bookTotalEnd) {
 		this.bookTotalEnd = bookTotalEnd;
 	}
 
@@ -242,23 +242,23 @@ public class FiscalOverview {
 		this.jaar = jaar;
 	}
 
-	public void setKostenAuto(int kostenAuto) {
+	public void setKostenAuto(BigInteger kostenAuto) {
 		this.kostenAuto = kostenAuto;
 	}
 
-	public void setKostenAutoAftrekbaar(int kostenAutoAftrekbaar) {
+	public void setKostenAutoAftrekbaar(BigInteger kostenAutoAftrekbaar) {
 		this.kostenAutoAftrekbaar = kostenAutoAftrekbaar;
 	}
 
-	public void setKostenOverig(int kostenOverig) {
+	public void setKostenOverig(BigInteger kostenOverig) {
 		this.kostenOverig = kostenOverig;
 	}
 
-	public void setKostenOverigTransport(int kostenOverigTransport) {
+	public void setKostenOverigTransport(BigInteger kostenOverigTransport) {
 		this.kostenOverigTransport = kostenOverigTransport;
 	}
 
-	public void setNettoOmzet(int nettoOmzet) {
+	public void setNettoOmzet(BigInteger nettoOmzet) {
 		this.nettoOmzet = nettoOmzet;
 	}
 
@@ -266,7 +266,7 @@ public class FiscalOverview {
 		this.onttrekking = onttrekking;
 	}
 
-	public void setOudedagsReserveMaximaal(int oudedagsReserveMaximaal) {
+	public void setOudedagsReserveMaximaal(BigInteger oudedagsReserveMaximaal) {
 		this.oudedagsReserveMaximaal = oudedagsReserveMaximaal;
 	}
 
@@ -278,7 +278,7 @@ public class FiscalOverview {
 		this.privateDeposit = privateDeposit;
 	}
 
-	public void setProfit(int winst) {
+	public void setProfit(BigInteger winst) {
 		this.profit = winst;
 	}
 
@@ -286,11 +286,11 @@ public class FiscalOverview {
 		this.repurchase = repurchase;
 	}
 
-	public void setSettlementCosts(int settlementCosts) {
+	public void setSettlementCosts(BigInteger settlementCosts) {
 		this.settlementCosts = settlementCosts;
 	}
 
-	public void setSettlementDepreciation(int settlementDepreciation) {
+	public void setSettlementDepreciation(BigInteger settlementDepreciation) {
 		this.settlementDepreciation = settlementDepreciation;
 	}
 

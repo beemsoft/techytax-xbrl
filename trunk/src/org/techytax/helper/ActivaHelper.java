@@ -149,7 +149,7 @@ public class ActivaHelper {
 	}
 
 	private void handleBusinessCar() throws Exception {
-		BigInteger carDepreciation = BigInteger.valueOf(fiscalOverview.getAfschrijvingAuto());
+		BigInteger carDepreciation = fiscalOverview.getAfschrijvingAuto();
 		BookValue currentBookValue = bookValueDao.getBookValue(CAR, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(CAR, bookYear - 1);
 
@@ -207,7 +207,7 @@ public class ActivaHelper {
 			totalRemainingValue = totalRemainingValue.add(activum2.getRemainingValue());
 		}
 		if (currentBookValue != null && previousBookValue != null) {
-			BigInteger newSaldo = previousBookValue.getSaldo().add(totalCostForNewActiva).subtract(BigInteger.valueOf(fiscalOverview.getAfschrijvingOverig()));
+			BigInteger newSaldo = previousBookValue.getSaldo().add(totalCostForNewActiva).subtract(fiscalOverview.getAfschrijvingOverig());
 			if (totalRemainingValue.compareTo(newSaldo) == -1) {
 				currentBookValue.setSaldo(newSaldo);
 			} else {

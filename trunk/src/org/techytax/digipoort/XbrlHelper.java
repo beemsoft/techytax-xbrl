@@ -40,7 +40,7 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.CorrespondentDeclarant
 import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.TaxData;
 import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaration;
 
-import org.techytax.domain.Balans;
+import org.techytax.domain.Balance;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
@@ -222,7 +222,7 @@ public class XbrlHelper {
 		return null;
 	}
 	
-	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balans balans) {
+	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balance balans) {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
 		BigInteger totaleBaten = AmountHelper.roundToInteger(balans.getTotaleBaten());
@@ -254,7 +254,7 @@ public class XbrlHelper {
 				.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
-		Balans balans = new Balans();
+		Balance balans = new Balance();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));
 		balans.setTotaleBaten(BigDecimal.valueOf(40));
