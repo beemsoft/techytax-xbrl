@@ -27,25 +27,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({
-	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
-			@Parameter(name = "decimalScale", value = "2") }) })
 @Entity(name = "org.techytax.domain.PrivateCostMatch")
 @Table(name = "kostmatch_private")
 public class PrivateCostMatch extends CostMatchParent {
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", updatable=false)
 	private UserEntity user;
 	
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
+
 	@OneToOne(mappedBy = "privateCostMatch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private VatMatchPrivate vatMatchPrivate;
 
@@ -58,14 +57,6 @@ public class PrivateCostMatch extends CostMatchParent {
 	
 	public String getMatchText() {
 		return matchText;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
 	}
 
 	public void setMatchText(String matchText) {
@@ -86,10 +77,6 @@ public class PrivateCostMatch extends CostMatchParent {
 
 	public void setSplitMatch(SplitMatch splitMatch) {
 		this.splitMatch = splitMatch;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
 	}
 
 }

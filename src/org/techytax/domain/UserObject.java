@@ -19,13 +19,11 @@
  */
 package org.techytax.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
@@ -40,11 +38,23 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
 @MappedSuperclass
-public class CostMatchParent {
-
+public class UserObject {
+	
 	@Id
 	@GeneratedValue
 	protected Long id = 0L;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id", updatable=false)
+	private UserEntity user;
+	
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
+		this.user = new UserEntity(user);
+	}
 	
 	public Long getId() {
 		return id;
@@ -52,29 +62,6 @@ public class CostMatchParent {
 	
 	public void setId(Long id) {
 		this.id = id;
-	}
-	
-	@ManyToOne
-	@JoinColumn(name="kostensoort_id")
-	protected CostType costType;
-
-	@OneToOne(mappedBy = "publicCostMatch", cascade = CascadeType.ALL)
-	private VatMatch vatMatch;
-
-	public VatMatch getVatMatch() {
-		return vatMatch;
-	}
-
-	public void setVatMatch(VatMatch vatMatch) {
-		this.vatMatch = vatMatch;
 	}	
-
-	public CostType getKostenSoort() {
-		return costType;
-	}
-	
-	public void setCostType(CostType costType) {
-		this.costType = costType;
-	}
 
 }

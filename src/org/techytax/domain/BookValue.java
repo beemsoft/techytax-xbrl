@@ -25,31 +25,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({
-	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity(name = "org.techytax.domain.BookValue")
 @Table(name = "boekwaarde")
-public class BookValue {
-	
-	@Id
-	private long id = 0;
-	
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
+public class BookValue extends UserObject {
 	
 	@Column(name = "balans_id")
 	@Enumerated(EnumType.ORDINAL)
@@ -64,8 +46,7 @@ public class BookValue {
 	public BookValue() {
 	}
 	
-	public BookValue(long id, BalanceType balanceType, int jaar, BigInteger saldo) {
-		this.id = id;
+	public BookValue(BalanceType balanceType, int jaar, BigInteger saldo) {
 		this.balanceType = balanceType;
 		this.jaar = jaar;
 		this.saldo = saldo;
@@ -73,10 +54,6 @@ public class BookValue {
 
 	public BalanceType getBalanceType() {
 		return balanceType;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public int getJaar() {
@@ -87,16 +64,8 @@ public class BookValue {
 		return saldo;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	public void setBalanceType(BalanceType balanceType) {
 		this.balanceType = balanceType;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public void setJaar(int jaar) {
@@ -105,10 +74,6 @@ public class BookValue {
 
 	public void setSaldo(BigInteger saldo) {
 		this.saldo = saldo;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
 	}
 
 	public String getDescription() {

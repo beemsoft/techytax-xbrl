@@ -25,26 +25,16 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({
-		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-		@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
-				@Parameter(name = "decimalScale", value = "2") }) })
 @Entity(name = "org.techytax.domain.Cost")
 @Table(name = "kosten")
-public class Cost implements Serializable {
+public class Cost extends UserObject implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
 
@@ -59,9 +49,6 @@ public class Cost implements Serializable {
 	@Column(name = "datum")
 	private Date date;
 
-	@Id
-	private long id = 0;
-
 	@ManyToOne
 	@JoinColumn(name="kostensoort_id")
 	private CostType costType;
@@ -69,10 +56,6 @@ public class Cost implements Serializable {
 	@Column(name = "omschrijving")
 	@Type(type = "encryptedString")
 	private String description;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
 
 	public BigDecimal getAmount() {
 		return amount;
@@ -84,10 +67,6 @@ public class Cost implements Serializable {
 
 	public Date getDate() {
 		return date;
-	}
-
-	public long getId() {
-		return id;
 	}
 
 	public long getCostTypeId() {
@@ -112,10 +91,6 @@ public class Cost implements Serializable {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public void setCostType(CostType costType) {
@@ -149,14 +124,6 @@ public class Cost implements Serializable {
 		equalsBuilder.append(vat, other.vat);
 		equalsBuilder.append(costType, other.costType);
 		return equalsBuilder.isEquals();
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
 	}
 
 	public CostType getCostType() {

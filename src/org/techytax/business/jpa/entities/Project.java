@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -26,34 +26,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
-import org.techytax.domain.UserEntity;
+import org.techytax.domain.UserObject;
 import org.techytax.domain.VatType;
 
-@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"), @Parameter(name = "decimalScale", value = "2") })})
 @Entity
 @Table(name = "project")
-public class Project {
-	@Id
-	@GeneratedValue
-	private Long id;
+public class Project extends UserObject {
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
-	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
@@ -80,22 +64,6 @@ public class Project {
 	
 	@Enumerated(EnumType.ORDINAL)
 	private VatType vatType;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
 
 	public String getCode() {
 		return code;

@@ -56,7 +56,7 @@ public class BusinessCalendarEvent extends BusinessCalendarEventParent {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", updatable=false)
 	private UserEntity user;
 
 	@ManyToOne

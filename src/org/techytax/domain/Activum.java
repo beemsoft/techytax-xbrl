@@ -24,43 +24,22 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
-import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 import org.techytax.helper.DepreciationHelper;
 
-@TypeDefs({
-		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-		@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
-				@Parameter(name = "decimalScale", value = "2") }),
-		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity(name = "org.techytax.domain.Activum")
 @Table(name = "activa")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Activum {
-
-	@Id
-	public long id;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	protected UserEntity user;
+public class Activum extends UserObject {
 
 	@OneToOne(mappedBy = "activum", cascade = CascadeType.ALL)
 	private RemainingValue restwaardeOld;
@@ -109,22 +88,6 @@ public class Activum {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
 	}
 
 	public Cost getCost() {

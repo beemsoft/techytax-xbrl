@@ -22,43 +22,23 @@ package org.techytax.domain;
 import java.math.BigInteger;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({ @TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity(name = "org.techytax.domain.RemainingValue")
 @Table(name = "restwaarde")
 @Deprecated
-public class RemainingValue {
-
-	@Id
-	private long id = 0;
+public class RemainingValue extends UserObject {
 
 	@Type(type = "encryptedInteger")
 	private BigInteger restwaarde;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
-
 	@OneToOne
 	@JoinColumn(name = "activa_id")
 	private Activum activum;
-
-	public long getId() {
-		return id;
-	}
 
 	public BigInteger getRestwaarde() {
 		return restwaarde;
@@ -66,18 +46,6 @@ public class RemainingValue {
 
 	public void setRestwaarde(BigInteger restwaarde) {
 		this.restwaarde = restwaarde;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
 	}
 
 	public long getActivaId() {
