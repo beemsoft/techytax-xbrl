@@ -108,7 +108,7 @@ public class BalanceCalculator {
 								if (costType.equals(VAT_CORRECTION_CAR_PRIVATE)) {
 									totalVatCorrection = totalVatCorrection.add(obj.getVat());
 								} else if (costType.equals(EXPENSE_INSIDE_EU)){
-									turnoverNetEu = turnoverNet.add(obj.getAmount());
+									turnoverNetEu = turnoverNetEu.add(obj.getAmount());
 								} else {
 									totalVatOut = totalVatOut.add(obj.getVat());
 								}
