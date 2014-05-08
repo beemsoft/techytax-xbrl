@@ -45,10 +45,10 @@ import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
 import org.techytax.digipoort.XbrlNtp8Helper;
-import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.helper.AmountHelper;
 import org.techytax.helper.BalanceCalculator;
@@ -106,6 +106,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Label vatIn;
 	@Wire
+	private Label vatForPaymentWithinEu;
+	@Wire
 	private Label vatBalance;
 	@Wire
 	private Label turnoverGross;
@@ -113,6 +115,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Label turnoverNet;
 	@Wire
 	private Label vatCorrection;
+	@Wire
+	private Label totalOfPaymentsWithinEu;
 	@Wire
 	private Tab matchTab;
 	@Wire
@@ -127,7 +131,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Toolbarbutton digipoortBtn;
 	private Media media = null;
 	private BufferedReader reader = null;
-	private Balance balans = null;
+	private VatBalanceWithinEu vatBalanceWithinEu = null;
 	@Wire
 	private Button reloadBtn;
 	@Wire
@@ -265,26 +269,29 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
-		balans = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+		vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		if (balans.getBrutoOmzet().equals(BigDecimal.ZERO)) {
+		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			creatYearlyVatDeclarationForSmallEnterprise(vatPeriod, vatDeclarationData);
 		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
 		vatOut.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
 		vatIn.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
 		vatBalance.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
-		turnoverGross.setValue(formatWithEuroSymbol(balans.getBrutoOmzet().toBigInteger()));
-		turnoverNet.setValue(formatWithEuroSymbol(roundDownToInteger(balans.getNettoOmzet())));
-		vatCorrection.setValue(formatWithEuroSymbol(balans.getCorrection().toBigInteger()));
+		turnoverGross.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getBrutoOmzet().toBigInteger()));
+		turnoverNet.setValue(formatWithEuroSymbol(roundDownToInteger(vatBalanceWithinEu.getNettoOmzet())));
+		vatCorrection.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getCorrection().toBigInteger()));
+		vatForPaymentWithinEu.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getVatOutEu()));
+		totalOfPaymentsWithinEu.setValue(formatWithEuroSymbol(AmountHelper.roundToInteger(vatBalanceWithinEu.getTurnoverNetEu())));
+		
 		controleTab.setSelected(true);
 	}
 
 	private void creatYearlyVatDeclarationForSmallEnterprise(Periode vatPeriod, VatDeclarationData vatDeclarationData) {
 		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
 		BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
-		balans.setNettoOmzet(turnover);
+		vatBalanceWithinEu.setNettoOmzet(turnover);
 		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
 	}
 
@@ -353,10 +360,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private VatDeclarationData createVatDeclarationData() throws Exception {
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		if (balans.getBrutoOmzet().equals(BigDecimal.ZERO)) {
-			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(roundDownToInteger(balans.getNettoOmzet()));
+		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
+			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(roundDownToInteger(vatBalanceWithinEu.getNettoOmzet()));
 		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, balans);
+			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
 		Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDatum());

@@ -41,9 +41,9 @@ import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals10VItemType
 import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals9VItemType;
 
 import org.apache.commons.lang.StringUtils;
-import org.techytax.domain.Balance;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
+import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.domain.VatType;
@@ -243,19 +243,21 @@ public class XbrlNtp8Helper {
 		return null;
 	}
 
-	public static void addBalanceData(VatDeclarationData vatDeclarationData, Balance balans) throws Exception {
-		BigInteger totaleKosten = AmountHelper.roundToInteger(balans.getTotaleKosten());
-		BigInteger correction = AmountHelper.roundToInteger(balans.getCorrection());
-		BigDecimal turnover = AmountHelper.roundDown(balans.getNettoOmzet());
+	public static void addBalanceData(VatDeclarationData vatDeclarationData, VatBalanceWithinEu vatBalanceWithinEu) throws Exception {
+		BigInteger totaleKosten = AmountHelper.roundToInteger(vatBalanceWithinEu.getTotaleKosten());
+		BigInteger correction = AmountHelper.roundToInteger(vatBalanceWithinEu.getCorrection());
+		BigDecimal turnover = AmountHelper.roundDown(vatBalanceWithinEu.getNettoOmzet());
 		BigInteger totaleBaten = AmountHelper.roundDownToInteger(turnover.multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
 		BigInteger owed = totaleBaten.add(correction);
 		BigInteger owedToBePaidBack = owed.subtract(totaleKosten);
 		vatDeclarationData.setValueAddedTaxOwed(owed);
-		vatDeclarationData.setValueAddedTaxOnInput(totaleKosten);
+		vatDeclarationData.setValueAddedTaxOnInput(totaleKosten.add(vatBalanceWithinEu.getVatOutEu()));
 		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(owedToBePaidBack);
 		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
 		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleBaten);
 		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(turnover.toBigInteger());
+		vatDeclarationData.setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(AmountHelper.roundToInteger(vatBalanceWithinEu.getTurnoverNetEu()));
+		vatDeclarationData.setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(vatBalanceWithinEu.getVatOutEu());
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -272,7 +274,7 @@ public class XbrlNtp8Helper {
 		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDatum());
 		vatDeclarationData.setEndDate(period.getEindDatum());
-		Balance balans = new Balance();
+		VatBalanceWithinEu balans = new VatBalanceWithinEu();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));
 		balans.setNettoOmzet(BigDecimal.valueOf(191));
