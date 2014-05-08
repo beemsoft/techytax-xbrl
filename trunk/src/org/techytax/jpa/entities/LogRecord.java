@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,38 +24,22 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.techytax.domain.User;
-import org.techytax.domain.UserEntity;
+import org.techytax.domain.UserObject;
 import org.techytax.log.AuditType;
 
 @Entity(name = "org.techytax.jpa.entities.LogRecord")
 @Table(name = "log_record")
-public class LogRecord {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class LogRecord extends UserObject {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-    
-    @Enumerated(EnumType.STRING)
-    private AuditType auditType;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeStamp;
+	@Enumerated(EnumType.STRING)
+	private AuditType auditType;
 
-    public long getId() {
-        return id;
-    }
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timeStamp;
 
 	public void setAuditType(AuditType auditType) {
 		this.auditType = auditType;
@@ -69,11 +53,4 @@ public class LogRecord {
 		this.timeStamp = timeStamp;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
 }

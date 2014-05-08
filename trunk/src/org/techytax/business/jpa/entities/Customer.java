@@ -36,20 +36,11 @@ import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate4.type.EncryptedBigIntegerType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 import org.techytax.domain.UserEntity;
+import org.techytax.domain.UserObject;
 
-@TypeDefs({
-		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-		@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity
 @Table(name = "customer")
-public class Customer {
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
+public class Customer extends UserObject {
 
 	@Type(type = "encryptedString")
 	private String name;
@@ -92,18 +83,6 @@ public class Customer {
 
 	@Type(type = "encryptedString")
 	private String website;
-
-	public long getId() {
-		return id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(UserEntity user) {
-		this.user = user;
-	}
 
 	public String getName() {
 		return name;
@@ -161,10 +140,6 @@ public class Customer {
 
 	public void setEmailInvoice(String emailInvoice) {
 		this.emailInvoice = emailInvoice;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public BigInteger getCommerceNr() {

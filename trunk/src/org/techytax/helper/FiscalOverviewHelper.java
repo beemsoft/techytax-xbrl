@@ -195,7 +195,7 @@ public class FiscalOverviewHelper {
 		bookTotalNonCurrentAssets = bookTotalNonCurrentAssets.subtract(fiscalPension);
 		bookTotalNonCurrentAssets = bookTotalNonCurrentAssets.subtract(roundToInteger(vatDebt));
 		if (currentBookValue == null) {
-			BookValue newValue = new BookValue(0, NON_CURRENT_ASSETS, bookYear, bookTotalNonCurrentAssets);
+			BookValue newValue = new BookValue(NON_CURRENT_ASSETS, bookYear, bookTotalNonCurrentAssets);
 			newValue.setUser(user);
 			bookValueGenericDao.persistEntity(newValue);
 		} else {
@@ -220,7 +220,7 @@ public class FiscalOverviewHelper {
 		if (vatDebt != null && vatDebt.compareTo(BigDecimal.ZERO) == 1) {
 
 			if (currentBookValue == null) {
-				BookValue newValue = new BookValue(0, VAT_TO_BE_PAID, bookYear, vatDebt.toBigInteger());
+				BookValue newValue = new BookValue(VAT_TO_BE_PAID, bookYear, vatDebt.toBigInteger());
 				newValue.setUser(user);
 				bookValueGenericDao.persistEntity(newValue);
 			} else {
@@ -243,7 +243,7 @@ public class FiscalOverviewHelper {
 		if (currentBookValue == null) {
 			if (previousBookValue != null) {
 				fiscalPension = previousBookValue.getSaldo();
-				BookValue newValue = new BookValue(0, PENSION, bookYear, fiscalPension);
+				BookValue newValue = new BookValue(PENSION, bookYear, fiscalPension);
 				newValue.setUser(user);
 				bookValueGenericDao.persistEntity(newValue);
 			}

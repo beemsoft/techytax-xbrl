@@ -99,7 +99,7 @@ public class ActivaHelper {
 		BigDecimal turnOverUnpaid = fiscalOverview.getTurnOverUnpaid();
 		if (turnOverUnpaid != null && turnOverUnpaid.compareTo(BigDecimal.ZERO) != 0) {
 			BigInteger saldo = AmountHelper.roundToInteger(turnOverUnpaid);
-			BookValue newBookValue = new BookValue(0, INVOICES_TO_BE_PAID, bookYear, saldo);
+			BookValue newBookValue = new BookValue(INVOICES_TO_BE_PAID, bookYear, saldo);
 			newBookValue.setUser(user);
 
 			if (currentBookValue == null) {
@@ -126,11 +126,11 @@ public class ActivaHelper {
 		if (fiscalOverview.getRepurchase() != null && fiscalOverview.getRepurchase().intValue() > 0) {
 			if (currentBookValue == null) {
 				if (previousBookValue == null) {
-					BookValue newBookValue = new BookValue(0, STOCK, bookYear, fiscalOverview.getRepurchase());
+					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
 					newBookValue.setUser(user);
 					bookValueGenericDao.persistEntity(newBookValue);
 				} else {
-					BookValue newBookValue = new BookValue(0, STOCK, bookYear, fiscalOverview.getRepurchase());
+					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
 					newBookValue.setSaldo(previousBookValue.getSaldo().add(fiscalOverview.getRepurchase()));
 					bookValueGenericDao.persistEntity(newBookValue);
 				}
@@ -276,7 +276,7 @@ public class ActivaHelper {
 		} else {
 			if (totalCost.compareTo(BigInteger.ZERO) == 1) {
 				if (currentBookValue == null) {
-					BookValue newBookValue = new BookValue(0, OFFICE, bookYear, totalCost);
+					BookValue newBookValue = new BookValue(OFFICE, bookYear, totalCost);
 					newBookValue.setUser(user);
 					bookValueGenericDao.persistEntity(newBookValue);
 				} else {
@@ -301,7 +301,7 @@ public class ActivaHelper {
 		if (currentBookValue == null) {
 			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
-			BookValue newBookValue = new BookValue(0, CURRENT_ASSETS, bookYear, saldo);
+			BookValue newBookValue = new BookValue(CURRENT_ASSETS, bookYear, saldo);
 			newBookValue.setUser(user);
 			bookValueGenericDao.persistEntity(newBookValue);
 		} else {

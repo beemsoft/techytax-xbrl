@@ -109,9 +109,11 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 			public void onEvent(Event event) throws ParseException {
 				InputEvent ievent = (InputEvent) event;
 				BigInteger amount = AmountHelper.parse(ievent.getValue());
-				Events.postEvent(ModelDataChangeEvent.getModelDataChangeEvent(listbox,
-						new BookValue(oldBookValue.getId(), oldBookValue.getBalanceType(), oldBookValue.getJaar(), amount),
-						listitem.getIndex()));
+				BookValue newBookValue = new BookValue(oldBookValue.getBalanceType(), oldBookValue.getJaar(), amount);
+				newBookValue.setId(oldBookValue.getId());
+				Events.postEvent(ModelDataChangeEvent.getModelDataChangeEvent(listbox, newBookValue,
+						listitem.getIndex()
+						));
 			}
 		};
 	}

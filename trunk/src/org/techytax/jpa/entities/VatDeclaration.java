@@ -23,29 +23,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.techytax.domain.User;
-import org.techytax.domain.UserEntity;
+import org.techytax.domain.UserObject;
 
 @Entity(name = "org.techytax.jpa.entities.VatDeclaration")
 @Table(name = "vat_declaration")
 @NamedQuery(name="VatDeclaration.findUnpaid", query="SELECT vatDeclaration FROM org.techytax.jpa.entities.VatDeclaration vatDeclaration WHERE vatDeclaration.user = ? AND timeStampPaid = null")
-public class VatDeclaration {
-	@Id
-	@GeneratedValue
-	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
+public class VatDeclaration extends UserObject {
 
 	@Column(name = "declaration_number")
 	private String declarationNumber;
@@ -63,18 +51,6 @@ public class VatDeclaration {
 	@Column(name = "timestamp_paid")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timeStampPaid;
-
-	public long getId() {
-		return id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
-	}
 
 	public String getDeclarationNumber() {
 		return declarationNumber;

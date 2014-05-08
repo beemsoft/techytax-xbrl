@@ -23,28 +23,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
-import org.jasypt.hibernate4.type.EncryptedStringType;
 
-@TypeDefs({
-		@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
-		@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
-				@Parameter(name = "decimalScale", value = "2") }) })
 @Entity(name = "org.techytax.domain.AccountBalance")
 @Table(name = "account_balance")
-public class AccountBalance implements Comparable<AccountBalance> {
-
-	@Id
-	private long id = 0;
+public class AccountBalance extends UserObject implements Comparable<AccountBalance> {
 
 	@ManyToOne
 	@JoinColumn(name = "account_id")
@@ -54,10 +41,6 @@ public class AccountBalance implements Comparable<AccountBalance> {
 	private BigDecimal balance;
 
 	private Date datum;
-
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private UserEntity user;
 
 	public Account getAccount() {
 		return account;
@@ -71,18 +54,6 @@ public class AccountBalance implements Comparable<AccountBalance> {
 		return datum;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = new UserEntity(user);
-	}
-
 	public void setAccount(Account account) {
 		this.account = account;
 	}
@@ -93,10 +64,6 @@ public class AccountBalance implements Comparable<AccountBalance> {
 
 	public void setDatum(Date datum) {
 		this.datum = datum;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public int compareTo(AccountBalance o) {
