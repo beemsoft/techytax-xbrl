@@ -226,7 +226,7 @@
 					</tabpanel>
 					<tabpanel>
 						<hbox>
-							<grid width="300px" height="200px" >
+							<grid width="280px" height="200px" >
 								<columns>
 									<column />
 									<column width="90px" />
@@ -252,12 +252,28 @@
 										netto omzet
 										<label id="turnoverNet" style="float:right;" />
 									</row>
+							</rows>
+							</grid>
+							<grid width="280px" height="200px" >
+								<columns>
+									<column />
+									<column width="90px" />
+								</columns>
+								<rows>
 									<row>
 										btw correctie voor privé gebruik zakelijke auto
 										<label id="vatCorrection" style="float:right;" />
-									</row>									
+									</row>
+									<row>
+										netto betalingen binnen EU
+										<label id="totalOfPaymentsWithinEu" style="float:right;" />
+									</row>
+									<row>
+										btw voor betalingen binnen EU
+										<label id="vatForPaymentWithinEu" style="float:right;" />
+									</row>
 								</rows>
-							</grid>
+							</grid>							
 							<toolbarbutton id="digipoortBtn" disabled="true" 
 								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax." height="155px"/>
 							<include src="vat-report.zul"/>

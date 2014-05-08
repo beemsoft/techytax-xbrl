@@ -19,6 +19,8 @@
  */
 package org.techytax.domain;
 
+import static java.math.BigInteger.ZERO;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,28 +33,28 @@ public class VatDeclarationData {
 	private Date endDate;
 
 	// Verschuldigde_omzetbelasting_2
-	private BigInteger valueAddedTaxOwed = BigInteger.ZERO;
+	private BigInteger valueAddedTaxOwed = ZERO;
 
 	// Totaal_te_betalen_/_terug_te_vragen_2
-	private BigInteger valueAddedTaxOwedToBePaidBack = BigInteger.ZERO;
+	private BigInteger valueAddedTaxOwedToBePaidBack = ZERO;
 
 	// Omzetbelasting_over_privegebruik_1
-	private BigInteger valueAddedTaxPrivateUse = BigInteger.ZERO;
+	private BigInteger valueAddedTaxPrivateUse = ZERO;
 
 	// Omzetbelasting_leveringen/diensten_algemeen_tarief moet gelijk zijn aan
 	// Omzet_leveringen/diensten_belast_met_algemeen_tarief maal
 	// Percentage_algemene_tarief_omzetbelasting afgerond naar beneden
-	private BigInteger taxedTurnoverSuppliesServicesGeneralTariff = BigInteger.ZERO;
+	private BigInteger taxedTurnoverSuppliesServicesGeneralTariff = ZERO;
 
 	// Omzetbelasting_leveringen/diensten_algemeen_tarief_2
-	private BigInteger valueAddedTaxSuppliesServicesGeneralTariff = BigInteger.ZERO;
+	private BigInteger valueAddedTaxSuppliesServicesGeneralTariff = ZERO;
 
 	// Voorbelasting_1
-	private BigInteger valueAddedTaxOnInput = BigInteger.ZERO;
+	private BigInteger valueAddedTaxOnInput = ZERO;
 	
-	private BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC = BigInteger.ZERO;
+	private BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC = ZERO;
 	
-	private BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC = BigInteger.ZERO;
+	private BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC = ZERO;
 
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
