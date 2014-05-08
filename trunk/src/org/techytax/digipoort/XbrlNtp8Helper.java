@@ -224,7 +224,7 @@ public class XbrlNtp8Helper {
 			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setContextRef(context);
 			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setUnitRef(unit);
 			turnoverFromTaxedSuppliesFromCountriesWithinTheEC.setValue(vatDeclarationData.getTurnoverFromTaxedSuppliesFromCountriesWithinTheEC());			
-			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(turnoverSuppliesServicesGenerallTariff));
+			xbrl.getItemOrTupleOrContext().add(bdItemObjectFactory.createTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(turnoverFromTaxedSuppliesFromCountriesWithinTheEC));
 			
 			MonetaryNoDecimals9VItemType valueAddedTaxOnSuppliesFromCountriesWithinTheEC = bdTypeObjectFactory.createMonetaryNoDecimals9VItemType();
 			valueAddedTaxOnSuppliesFromCountriesWithinTheEC.setDecimals(DECIMALS_TYPE);
