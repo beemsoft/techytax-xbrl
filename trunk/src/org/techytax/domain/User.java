@@ -43,9 +43,6 @@ public class User implements Serializable {
 	private String companyName;
 	private String email;
 	
-	@Deprecated
-	private String fullName;
-	
 	private String initials;
 	private String prefix;
 	private String surname;
@@ -61,7 +58,7 @@ public class User implements Serializable {
 	private String fiscalNumber;
 	
 	@Enumerated(EnumType.ORDINAL)
-	private VatPeriodType vatPeriodType;
+	private VatPeriodType vatPeriodType = VatPeriodType.PER_QUARTER;
 	
 	private String accountNumber;
 
@@ -135,10 +132,6 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public void setId(long id) {

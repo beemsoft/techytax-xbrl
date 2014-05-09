@@ -22,5 +22,7 @@ ALTER TABLE user ADD COLUMN initials varchar(10) not null AFTER fullName;
 ALTER TABLE user ADD COLUMN prefix varchar(10) null AFTER initials;
 ALTER TABLE user ADD COLUMN surname varchar(100) not null AFTER prefix;
 
+ALTER TABLE user drop column fullName;
+
 
 

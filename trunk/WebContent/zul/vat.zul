@@ -226,7 +226,7 @@
 					</tabpanel>
 					<tabpanel>
 						<hbox>
-							<grid width="280px" height="200px" >
+							<grid width="230px" height="180px" >
 								<columns>
 									<column />
 									<column width="90px" />
@@ -254,7 +254,7 @@
 									</row>
 							</rows>
 							</grid>
-							<grid width="280px" height="200px" >
+							<grid width="230px" height="180px" >
 								<columns>
 									<column />
 									<column width="90px" />
