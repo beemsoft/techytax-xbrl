@@ -8,8 +8,9 @@
 arg0="/WEB-INF/layout/template-login.zul"?>
 		<vbox>
 			<hbox>
+				<groupbox>
 				<vbox>
-					<grid width="200px" tooltip="loginInfo">
+					<grid width="200px" tooltip="loginInfo" >
 						<rows>
 							<row>
 								<label value="Naam" />
@@ -30,6 +31,7 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 						</toolbar>
 					</hlayout> 					
 				</vbox>
+				</groupbox>
 				<toolbarbutton id="secure"
 					label="Kies veilige verbinding"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
@@ -38,7 +40,6 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 					<include src="~./saas/message.zul" />
 				</vbox>								
 			</hbox>		
-			<button label="Registreren" onClick="@command('register')" />
 		</vbox>
 		<hlayout>
 			<include src="rss_reader_belastingdienst.zul" />
