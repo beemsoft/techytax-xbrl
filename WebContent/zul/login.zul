@@ -23,8 +23,12 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 							</row>
 						</rows>
 					</grid>
- 					<button label="Inloggen"
-					onClick="@command('login')" tooltip="loginInfo" mold="os" />
+					<hlayout>
+ 						<button label="Inloggen" onClick="@command('login')" tooltip="loginInfo" mold="os" />
+ 						<toolbar mold="panel" align="center">
+							<toolbarbutton label="Wachtwoord vergeten?" onClick="@command('forgotPassword')" />
+						</toolbar>
+					</hlayout> 					
 				</vbox>
 				<toolbarbutton id="secure"
 					label="Kies veilige verbinding"
@@ -34,14 +38,7 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 					<include src="~./saas/message.zul" />
 				</vbox>								
 			</hbox>		
-			<hlayout>
-				<button label="Registreren" onClick="@command('register')" />
-				<toolbar mold="panel" align="center">
-					<toolbarbutton label="Wachtwoord vergeten?" onClick="@command('forgotPassword')" />
-					<toolbarbutton label="Vragen?"
-						href="http://www.beemsoft.nl/BeemsoftPhp/contact.php" />
-				</toolbar>
-			</hlayout>
+			<button label="Registreren" onClick="@command('register')" />
 		</vbox>
 		<hlayout>
 			<include src="rss_reader_belastingdienst.zul" />

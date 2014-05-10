@@ -180,19 +180,8 @@
 				<hbox self="@insert(content)" />
 				</vlayout>
 			</center>
-			<south size="30px" border="0"
-				style="background: none repeat scroll 0 0 ;" >
-				<toolbar mold="panel" align="center">
-					<toolbarbutton label="Algemene Voorwaarden" onClick="@command('termsAndConditions')" />
-					<separator orient="vertical" bar="true" />					
-					<toolbarbutton label="Forum" href="http://www.techytax.org/forum/" target="_other" />
-					<separator orient="vertical" bar="true" />
-					<toolbarbutton label="Softwarepakketten" href="http://www.softwarepakket.nl/cmm/swp/raadpleeg_pakket.php?zm=EPS&amp;id=5787&amp;slt=29&amp;eigs=29&amp;vn=XML%20Auditfile%20Financieel%20%28XAF%29&amp;bronw=1" target="_other" />
-					<separator orient="vertical" bar="true" />					
-					<include src="release.zul"/>
-					<separator orient="vertical" bar="true" />
-					<toolbarbutton label="Gebouwd met ZK ${desktop.webApp.version}" href="http://www.zkoss.org" target="_other" />					
-				</toolbar>
+			<south size="30px" border="0" style="background: none repeat scroll 0 0 ;" >
+				<include src="~./saas/footer.zul" />
 			</south>
 		</borderlayout>
 	</div>

@@ -90,6 +90,13 @@ public class LoginModel {
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doPopup();
 	}
+	
+	@Command
+	public void question() {
+		String template = "~./saas/question.zul";
+		Window window = (Window) Executions.createComponents(template, null, null);
+		window.doModal();
+	}	
 
 	public boolean getLoggedOn() {
 		return UserCredentialManager.getUser() != null;
