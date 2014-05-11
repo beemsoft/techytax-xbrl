@@ -278,6 +278,8 @@ public class XbrlNtp8Helper {
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));
 		balans.setNettoOmzet(BigDecimal.valueOf(191));
+		balans.setTurnoverNetEu(BigDecimal.ZERO);
+		balans.setVatOutEu(BigInteger.ZERO);
 		addBalanceData(vatDeclarationData, balans);
 		return createXbrlInstance(vatDeclarationData);
 	}
