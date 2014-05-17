@@ -83,7 +83,7 @@
 									<column label="Bedrag"
 										width="100px" />
 									<column label="btw" width="100px" />
-									<column label="type" width="200px" />
+									<column label="Kostsoort" width="200px" />
 								</columns>
 								<template name="model">
 									<row value="${each}" style="">
@@ -95,8 +95,8 @@
 									</row>
 								</template>
 							</grid>
-							Prive matches hebben voorrang boven algemene
-							matches
+							Privé match teksten hebben voorrang boven algemene
+							match teksten.
 							<hbox>
 
 								<listbox id="costTypeList"
@@ -104,7 +104,7 @@
 									selectedItem="@bind(vm.selectedCostType)" height="200px"
 									width="340px">
 									<listhead>
-										<listheader label="Type omschrijving"
+										<listheader label="Kostsoort"
 											width="300px" />
 									</listhead>
 									<template name="model"
@@ -121,7 +121,7 @@
 										selectedItem="@bind(vm.selectedPrivateMatch)" height="100px">										
 										<listhead>
 											<listheader
-												label="Private matches" width="300px" />
+												label="Privé match teksten" width="300px" />
 										</listhead>
 										<template name="model"
 											var="privateMatch">
@@ -132,12 +132,12 @@
 										</template>
 									</listbox>
 									<toolbar>
-										<button label="New"
+										<button label="Nieuw"
 											onClick="@command('newMatch')" />
-										<button label="Save"
+										<button label="Opslaan"
 											onClick="@command('saveMatch')"
 											disabled="@load(empty vm.selectedPrivateMatch)" />
-										<button label="Delete"
+										<button label="Verwijder"
 											onClick="@command('deleteMatch')"
 											disabled="@load(empty vm.selectedPrivateMatch)" />
 									</toolbar>
@@ -189,7 +189,7 @@
 											<rows>
 												<row>
 													<label
-														value="Prive percentage:" />
+														value="Privé percentage:" />
 													<textbox
 														value="@bind(vm.selectedPercentage)" />
 												</row>	
@@ -202,7 +202,7 @@
 									width="250px">
 									<listhead>
 										<listheader
-											label="Algemene matches" width="300px" />
+											label="Algemene match teksten" width="300px" />
 									</listhead>
 									<template name="model"
 										var="privateMatch">
