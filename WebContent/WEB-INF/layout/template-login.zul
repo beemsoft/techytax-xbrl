@@ -155,7 +155,8 @@
 					<panel width="100%" border="normal" title="Speciale kenmerken" >
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul> <li>Automatisch inlezen van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
+								<![CDATA[ <ul>
+								 <li>Importeren van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
 								 <li>Automatische btw aangifte</li>
 								 <li>Administratief splitsen</li>
 								 <li>Afschrijven</li>
@@ -165,7 +166,7 @@
 							</html>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal" title="Ohloh analyse" >
+					<panel width="100%" border="normal" title="Broncode analyse" >
 						<panelchildren>
 							<html>
 								<script type="text/javascript" src="https://www.ohloh.net/p/337030/widgets/project_factoids_stats.js"></script>
