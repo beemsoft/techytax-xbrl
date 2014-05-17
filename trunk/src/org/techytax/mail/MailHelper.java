@@ -82,6 +82,9 @@ public class MailHelper {
 			msg.setSubject(subject);
 
 		msg.setFrom(new InternetAddress(props.getProperty("mail.from")));
+		// Beemsterboer Software <hans@beemsoft.nl>
+		msg.setReplyTo(toAddrs);
+		
 		MimeMultipart multipart = new MimeMultipart("related");
 		BodyPart messageBodyPart = new MimeBodyPart();
 		messageBodyPart.setContent(message, "text/html");
@@ -111,7 +114,7 @@ public class MailHelper {
 		Session session = Session.getDefaultInstance(props);
 		session.setDebug(true);
 		Message msg = new MimeMessage(session);
-		InternetAddress[] toAddrs = null, bccAddrs = null;
+		InternetAddress[] toAddrs = null, ccAddrs = null, bccAddrs = null;
 
 		if (to != null) {
 			toAddrs = InternetAddress.parse(to, false);
@@ -120,19 +123,22 @@ public class MailHelper {
 			throw new MessagingException("No \"To\" address specified");
 
 		if (cc != null) {
-			bccAddrs = InternetAddress.parse(cc, false);
-			msg.setRecipients(Message.RecipientType.CC, bccAddrs);
-		}
+			ccAddrs = InternetAddress.parse(cc, false);
+			msg.setRecipients(Message.RecipientType.CC, ccAddrs);
+		} 
 
 		if (bcc != null) {
 			bccAddrs = InternetAddress.parse(bcc, false);
+			msg.setRecipients(Message.RecipientType.BCC, bccAddrs);
+		} else {
+			bccAddrs = InternetAddress.parse(user.getEmail(), false);
 			msg.setRecipients(Message.RecipientType.BCC, bccAddrs);
 		}
 
 		if (subj != null)
 			msg.setSubject(subj);
 
-		msg.setFrom(new InternetAddress(props.getProperty("mail.from")));
+		msg.setFrom(new InternetAddress(user.getCompanyName() + " <" + user.getEmail() + ">"));
 
 		MimeMultipart multipart = new MimeMultipart("related");
 
