@@ -1,32 +1,9 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<persistence xmlns='http://java.sun.com/xml/ns/persistence'
- xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
- xsi:schemaLocation='http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd'
- version='2.0'>
+<persistence version="2.1" 
+     xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd">
 
  <persistence-unit name="techyTaxPersistenceUnit" transaction-type="RESOURCE_LOCAL">
-  <provider>org.hibernate.ejb.HibernatePersistence</provider>
-  <class>org.techytax.jpa.entities.LogRecord</class>
-  <class>org.techytax.jpa.entities.VatDeclaration</class>
-  <class>org.techytax.domain.UserEntity</class>
-  <class>org.techytax.domain.SplitMatch</class>
-  <class>org.techytax.domain.BookValue</class>
-  <class>org.techytax.domain.Activum</class>
-  <class>org.techytax.domain.Settlement</class>  
-  <class>org.techytax.domain.RemainingValue</class>  
-  <class>org.techytax.domain.Cost</class>
-  <class>org.techytax.domain.CostType</class>
-  <class>org.techytax.domain.Account</class>
-  <class>org.techytax.domain.AccountBalance</class>
-  <class>org.techytax.domain.Kostmatch</class>
-  <class>org.techytax.domain.PrivateCostMatch</class>
-  <class>org.techytax.domain.VatMatch</class>
-  <class>org.techytax.domain.VatMatchPrivate</class>
-  <class>org.techytax.business.zk.calendar.BusinessCalendarEvent</class>
-  <class>org.techytax.business.jpa.entities.Customer</class>
-  <class>org.techytax.business.jpa.entities.Project</class>
-  <class>nl.beemsoft.techytax.log.SaasLogRecord</class>
-  <class>nl.beemsoft.techytax.domain.SaasUser</class>  
-  <exclude-unlisted-classes>true</exclude-unlisted-classes>
+ 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
  </persistence-unit>
 </persistence>

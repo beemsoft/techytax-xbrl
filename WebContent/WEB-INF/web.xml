@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-Copyright 2013 Hans Beemsterboer
+Copyright 2014 Hans Beemsterboer
 
 This file is part of the TechyTax program.
 
@@ -75,23 +75,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<servlet-name>zkLoader</servlet-name>
 		<url-pattern>*.zhtml</url-pattern>
 	</servlet-mapping>
-	<!-- You can also map to other extensions.
-	<servlet-mapping>
-		<servlet-name>zkLoader</servlet-name>
-		<url-pattern>*.svg</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>zkLoader</servlet-name>
-		<url-pattern>*.xml2html</url-pattern>
-	</servlet-mapping>
-	-->
-
-	<!-- [Optional] Uncomment it if you want to use richlets.
-	<servlet-mapping>
-		<servlet-name>zkLoader</servlet-name>
-		<url-pattern>/zk/*</url-pattern>
-	</servlet-mapping>
-	-->
 
 	<servlet>
 		<description>The asynchronous update engine for ZK</description>
@@ -131,58 +114,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	</session-config>
 	
 	<mime-mapping>
-		<extension>doc</extension>
-		<mime-type>application/vnd.ms-word</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>gif</extension>
-		<mime-type>image/gif</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>htm</extension>
-		<mime-type>text/html</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>html</extension>
-		<mime-type>text/html</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>jpeg</extension>
-		<mime-type>image/jpeg</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>jpg</extension>
-		<mime-type>image/jpeg</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>js</extension>
-		<mime-type>text/javascript</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>pdf</extension>
-		<mime-type>application/pdf</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>png</extension>
-		<mime-type>image/png</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>txt</extension>
-		<mime-type>text/plain</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>xls</extension>
-		<mime-type>application/vnd.ms-excel</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>xml</extension>
-		<mime-type>text/xml</mime-type>
-	</mime-mapping>
-	<mime-mapping>
-		<extension>zhtml</extension>
-		<mime-type>text/html</mime-type>
-	</mime-mapping>
-	<mime-mapping>
 		<extension>zul</extension>
 		<mime-type>text/html</mime-type>
 	</mime-mapping>	
@@ -190,4 +121,5 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<welcome-file-list>
 		<welcome-file>/zul/login.zul</welcome-file>
 	</welcome-file-list>
+    
 </web-app>
