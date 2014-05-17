@@ -96,7 +96,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 						<hlayout>
 							-(<label value="@load(vm.accountCheckData.savingBalance)"  />
 											
-					 - Prive opname saldo
+					 - Privé opname saldo
 						
 							<label value="@load(vm.accountCheckData.privateWithdrawalBalance)"  />
 							- Rente <label value="@load(vm.accountCheckData.interest)"  />
