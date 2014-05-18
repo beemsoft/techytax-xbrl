@@ -72,7 +72,7 @@
 
 					</tabpanel>
 					<tabpanel apply="org.zkoss.bind.BindComposer"
-						viewModel="@id('vm') @init('org.techytax.zk.CostTypeViewModel')">
+						viewModel="@id('vm') @init('org.techytax.zk.vat.CostTypeViewModel')">
 						<vbox>
 							<grid id="costGrid" hflex="true"
 								mold="paging" pageSize="5">
