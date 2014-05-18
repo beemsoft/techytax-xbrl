@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
-public class Reiskosten {
+public class TravelCosts {
 	
 	private BigDecimal autoKostenMetBtw;
 	
