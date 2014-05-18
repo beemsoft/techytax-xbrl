@@ -53,11 +53,10 @@ import org.techytax.zk.login.UserCredentialManager;
 
 public class ActivaHelper {
 
-	private FiscalDao fiscalDao = new FiscalDao();
-	private BookValueDao bookValueDao = new BookValueDao();
-	private CostDao costDao = new CostDao();
+	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
+	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
+	private CostDao costDao = new CostDao(Cost.class);
 	private User user = UserCredentialManager.getUser();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
 	private int bookYear;
@@ -103,7 +102,7 @@ public class ActivaHelper {
 			newBookValue.setUser(user);
 
 			if (currentBookValue == null) {
-				bookValueGenericDao.persistEntity(newBookValue);
+				bookValueDao.persistEntity(newBookValue);
 			} else {
 				currentBookValue.setSaldo(saldo);
 			}
@@ -128,11 +127,11 @@ public class ActivaHelper {
 				if (previousBookValue == null) {
 					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
 					newBookValue.setUser(user);
-					bookValueGenericDao.persistEntity(newBookValue);
+					bookValueDao.persistEntity(newBookValue);
 				} else {
 					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
 					newBookValue.setSaldo(previousBookValue.getSaldo().add(fiscalOverview.getRepurchase()));
-					bookValueGenericDao.persistEntity(newBookValue);
+					bookValueDao.persistEntity(newBookValue);
 				}
 			}
 		}
@@ -169,7 +168,7 @@ public class ActivaHelper {
 				newValue.setUser(user);
 				newValue.setJaar(bookYear);
 				newValue.setSaldo(carBookValue.subtract(carDepreciation));
-				bookValueGenericDao.persistEntity(newValue);
+				bookValueDao.persistEntity(newValue);
 			} else {
 				currentBookValue.setSaldo(carBookValue.subtract(carDepreciation));
 			}
@@ -231,7 +230,7 @@ public class ActivaHelper {
 			if (currentBookValue == null) {
 				BookValue bookValue = createBookValue(balanceType);
 				bookValue.setSaldo(totalCost);
-				bookValueGenericDao.persistEntity(bookValue);
+				bookValueDao.persistEntity(bookValue);
 			} else {
 				currentBookValue.setSaldo(totalCost);
 			}
@@ -270,7 +269,7 @@ public class ActivaHelper {
 			if (currentBookValue == null) {
 			} else {
 				currentBookValue.setSaldo(newSaldo);
-				bookValueGenericDao.merge(currentBookValue);
+				bookValueDao.merge(currentBookValue);
 			}
 
 		} else {
@@ -278,10 +277,10 @@ public class ActivaHelper {
 				if (currentBookValue == null) {
 					BookValue newBookValue = new BookValue(OFFICE, bookYear, totalCost);
 					newBookValue.setUser(user);
-					bookValueGenericDao.persistEntity(newBookValue);
+					bookValueDao.persistEntity(newBookValue);
 				} else {
 					currentBookValue.setSaldo(totalCost);
-					bookValueGenericDao.merge(currentBookValue);
+					bookValueDao.merge(currentBookValue);
 				}
 			}
 		}
@@ -303,7 +302,7 @@ public class ActivaHelper {
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
 			BookValue newBookValue = new BookValue(CURRENT_ASSETS, bookYear, saldo);
 			newBookValue.setUser(user);
-			bookValueGenericDao.persistEntity(newBookValue);
+			bookValueDao.persistEntity(newBookValue);
 		} else {
 			BigInteger saldo = BigInteger.ZERO;
 			if (previousBookValue != null) {

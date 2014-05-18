@@ -26,15 +26,15 @@ import javax.persistence.TypedQuery;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.PrivateCostMatch;
-import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class KostmatchDao extends BaseDao {
+public class KostmatchDao extends BaseDao<Kostmatch> {
 	
-	private User user = UserCredentialManager.getUser();
-	
+	public KostmatchDao(Class<Kostmatch> persistentClass) {
+		super(persistentClass);
+	}
+
 	private GenericDao<PrivateCostMatch> genericPrivateCostMatchDao = new GenericDao<>(PrivateCostMatch.class);
 
 	public void insertCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {

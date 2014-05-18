@@ -94,8 +94,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private User user = UserCredentialManager.getUser();
 
-	private CostDao costDao = new CostDao();
-	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
+	private CostDao costDao = new CostDao(Cost.class);
 
 	@Wire
 	private Grid costGrid;
@@ -241,7 +240,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				kost = (Cost) result.getElementAt(i);
 				if (!kost.getCostType().equals(EXPENSE_OTHER_ACCOUNT_IGNORE)) {
 					kost.setUser(user);
-					genericCostDao.persistEntity(kost);
+					costDao.persistEntity(kost);
 				}
 			}
 		}
@@ -420,11 +419,11 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
 				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
 				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = (Cost) genericCostDao.getEntity(updatedCost, Long.valueOf(updatedCost.getId()));
+				Cost originalCost = (Cost) costDao.getEntity(updatedCost, Long.valueOf(updatedCost.getId()));
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUser(user);
 					AuditLogger.log(UPDATE_COST, user);
-					genericCostDao.merge(updatedCost);
+					costDao.merge(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {

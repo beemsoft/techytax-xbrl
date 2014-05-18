@@ -42,17 +42,17 @@ public class CostVM3 extends CostVM2{
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
-		Cost originalCost = (Cost) genericCostDao.getEntity(cost, Long.valueOf(cost.getId()));
+		Cost originalCost = (Cost) costDao.getEntity(cost, Long.valueOf(cost.getId()));
 		cost.setUser(user);
 		if (originalCost == null) {
 			AuditLogger.log(ENTER_COST, user);
 			cost.roundValues();
-			genericCostDao.persistEntity(cost);
+			costDao.persistEntity(cost);
 			this.selected = cost;
 		} else if (!cost.equals(originalCost)) {
 			AuditLogger.log(UPDATE_COST, user);
 			cost.roundValues();
-			genericCostDao.merge(cost);
+			costDao.merge(cost);
 		}
 		if (splitCost != null) {
 			AuditLogger.log(SPLIT_COST, user);

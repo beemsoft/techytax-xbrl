@@ -26,14 +26,14 @@ import javax.persistence.TypedQuery;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.AccountType;
-import org.techytax.domain.User;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class AccountDao extends BaseDao {
+public class AccountDao extends BaseDao<Account> {
 	
-	private User user = UserCredentialManager.getUser();
-	
+	public AccountDao(Class<Account> persistentClass) {
+		super(persistentClass);
+	}
+
 	public List<Account> getAccounts() throws Exception {
 		TypedQuery<Account> query = JpaUtil.getEntityManager().createQuery("SELECT a FROM org.techytax.domain.Account a WHERE a.user = :user", Account.class);
 		query.setParameter("user", user);

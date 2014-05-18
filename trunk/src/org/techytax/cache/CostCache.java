@@ -80,7 +80,7 @@ public class CostCache {
 	}
 
 	private void fillCosts() throws Exception {
-		CostDao costDao = new CostDao();
+		CostDao costDao = new CostDao(Cost.class);
 		costs = costDao.getCostsInPeriod(beginDatum, eindDatum);
 	}
 

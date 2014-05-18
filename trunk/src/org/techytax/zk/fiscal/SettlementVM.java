@@ -27,7 +27,6 @@ import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.Settlement;
 import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -36,8 +35,7 @@ import org.zkoss.zk.ui.Executions;
 public class SettlementVM {
 
 	private User user = UserCredentialManager.getUser();
-	private SettlementDao settlementDao = new SettlementDao();
-	private GenericDao<Settlement> genericSettlementDao = new GenericDao<>(Settlement.class);
+	private SettlementDao settlementDao = new SettlementDao(Settlement.class);
 	private Settlement settlement = new Settlement();
 	private Date startDate;
 	
@@ -59,7 +57,7 @@ public class SettlementVM {
 	public void save() throws Exception {
 		settlement.setStartDate(startDate);
 		settlement.setBalanceType(OFFICE);
-		genericSettlementDao.merge(settlement);
+		settlementDao.merge(settlement);
 	}	
 	
 	public String getAddress() {

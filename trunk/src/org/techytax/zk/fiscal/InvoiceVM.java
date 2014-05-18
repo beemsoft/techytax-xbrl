@@ -49,7 +49,8 @@ public class InvoiceVM {
 
 	private ListModelList<InvoiceCheck> invoices;
 	private InvoiceCheck selected;
-	private CostDao costDao = new CostDao();
+	private CostDao costDao = new CostDao(Cost.class);
+	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);	
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
 	private BigDecimal totalIncome = BigDecimal.ZERO;
@@ -113,7 +114,6 @@ public class InvoiceVM {
 					unpaidInvoicesFromThisYear = unpaidInvoicesFromThisYear.add(invoiceCheck.getNetAmount().add(invoiceCheck.getVatAmount()));
 				}
 			}
-			BookValueDao bookValueDao = new BookValueDao();
 			BookValue bookValuePreviousYear = bookValueDao.getBookValue(BalanceType.INVOICES_TO_BE_PAID, currentYear - 1);
 			if (bookValuePreviousYear != null) {
 				unpaidInvoicesFromPreviousYear = bookValuePreviousYear.getSaldo();

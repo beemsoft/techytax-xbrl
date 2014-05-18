@@ -41,8 +41,7 @@ public class AccountVM {
 	Account selected;
 	AccountType selectedAccountType;
 	AccountBalance selectedAccountBalance;
-	AccountDao accountDao = new AccountDao();
-	GenericDao<Account> genericAccountDao = new GenericDao<>(Account.class);
+	AccountDao accountDao = new AccountDao(Account.class);
 	GenericDao<AccountBalance> genericAccountBalanceDao = new GenericDao<>(AccountBalance.class);
 	User user = UserCredentialManager.getUser();
 
@@ -118,11 +117,11 @@ public class AccountVM {
 	public void saveAccount() throws Exception{
 		if (user != null) {
 			selected.setType(selectedAccountType);
-			Account account = (Account) genericAccountDao.getEntity(selected, Long.valueOf(selected.getId()));
+			Account account = (Account) accountDao.getEntity(selected, Long.valueOf(selected.getId()));
 			if (account == null) {
-				genericAccountDao.persistEntity(selected);
+				accountDao.persistEntity(selected);
 			} else {
-				genericAccountDao.merge(selected);
+				accountDao.merge(selected);
 			}
 		}
 	}

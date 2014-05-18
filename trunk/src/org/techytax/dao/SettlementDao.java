@@ -23,14 +23,14 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import org.techytax.domain.Settlement;
-import org.techytax.domain.User;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class SettlementDao extends BaseDao {
+public class SettlementDao extends BaseDao<Settlement> {
 
-	private User user = UserCredentialManager.getUser();
-	
+	public SettlementDao(Class<Settlement> persistentClass) {
+		super(persistentClass);
+	}
+
 	public Settlement getSettlement() throws Exception {
 		TypedQuery<Settlement> query = JpaUtil.getEntityManager().createQuery("SELECT s FROM org.techytax.domain.Settlement s WHERE s.user = :user", Settlement.class);
 		query.setParameter("user", user);

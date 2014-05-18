@@ -36,9 +36,13 @@ import javax.persistence.TypedQuery;
 import org.techytax.domain.CostType;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class CostTypeDao extends BaseDao {
+public class CostTypeDao extends BaseDao<CostType> {
 
-	public List<CostType> getKostensoortLijst() throws Exception {
+	public CostTypeDao(Class<CostType> persistentClass) {
+		super(persistentClass);
+	}
+
+	public List<CostType> getCostTypes() throws Exception {
 		TypedQuery<CostType> query = JpaUtil.getEntityManager().createQuery("SELECT ct FROM org.techytax.domain.CostType ct", CostType.class);
 		List<CostType> result = query.getResultList();
 		return result;

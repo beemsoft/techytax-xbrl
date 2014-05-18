@@ -84,7 +84,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	}
 
 	protected Kostmatch findCostMatch(String omschrijving) throws Exception {
-		KostmatchDao kostmatchDao = new KostmatchDao();
+		KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
 		List<PrivateCostMatch> kostmatchList = kostmatchDao.getCostMatchPrivateList();
 		Iterator<PrivateCostMatch> iterator = kostmatchList.iterator();
 		while (iterator.hasNext()) {

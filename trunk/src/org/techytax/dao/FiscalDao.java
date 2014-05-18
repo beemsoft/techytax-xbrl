@@ -40,14 +40,14 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.User;
 import org.techytax.util.DateHelper;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class FiscalDao extends BaseDao {
+public class FiscalDao extends BaseDao<BookValue> {
 
-	private final User user = UserCredentialManager.getUser();
+	public FiscalDao(Class<BookValue> persistentClass) {
+		super(persistentClass);
+	}
 
 	public List<BookValue> getPassivaList(int year) throws Exception {
 		List<BalanceType> balanceTypes = Arrays.asList(NON_CURRENT_ASSETS, PENSION, VAT_TO_BE_PAID);

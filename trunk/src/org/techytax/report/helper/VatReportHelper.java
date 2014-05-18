@@ -120,7 +120,7 @@ public class VatReportHelper {
 
 	public static void main(String[] args) throws Exception {
 		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-		CostDao costDao = new CostDao();
+		CostDao costDao = new CostDao(Cost.class);
 		List<Cost> vatCosts = costDao.getVatCostsInPeriod(period.getBeginDatum(), period.getEindDatum());
 		createReportData(vatCosts);
 	}

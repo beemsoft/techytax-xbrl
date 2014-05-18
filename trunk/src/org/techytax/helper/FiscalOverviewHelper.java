@@ -68,11 +68,11 @@ import org.techytax.zk.login.UserCredentialManager;
 public class FiscalOverviewHelper {
 
 	private User user = UserCredentialManager.getUser();
-	private FiscalDao fiscalDao = new FiscalDao();
+	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
 	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
-	private BookValueDao bookValueDao = new BookValueDao();
+	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
 	private CostCache costCache = new CostCache();
-	private CostDao costDao = new CostDao();
+	private CostDao costDao = new CostDao(Cost.class);
 	private FiscalOverview overview = new FiscalOverview();
 	private InvestmentDeductionHelper investmentDeductionHelper = new InvestmentDeductionHelper();
 	private int bookYear;

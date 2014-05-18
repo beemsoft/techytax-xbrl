@@ -55,8 +55,8 @@ public class CostTypeViewModel {
 	private List<CostType> costTypes = new ArrayList<>();
 	private List<Kostmatch> publicMatches = new ArrayList<>();
 	private List<PrivateCostMatch> privateMatches = new ArrayList<>();
-	private KostmatchDao kostmatchDao = new KostmatchDao();
-	private CostTypeDao kostensoortDao = new CostTypeDao();
+	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
+	private CostTypeDao kostensoortDao = new CostTypeDao(CostType.class);
 
 	@Init
 	public void init() throws Exception {

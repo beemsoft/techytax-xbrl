@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,21 +24,18 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.techytax.business.zk.calendar.BusinessCalendarEvent;
-import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class BusinessCalendarDao extends BaseDao {
+public class BusinessCalendarDao extends BaseDao<BusinessCalendarEvent> {
 
-	private User user = UserCredentialManager.getUser();
-
-	private GenericDao<BusinessCalendarEvent> genericBusinessCalendarEventDao = new GenericDao<>(BusinessCalendarEvent.class);
+	public BusinessCalendarDao(Class<BusinessCalendarEvent> persistentClass) {
+		super(persistentClass);
+	}
 
 	public void insertBusinessCalendarEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
 		event.setUser(user);
-		genericBusinessCalendarEventDao.persistEntity(event);
+		persistEntity(event);
 	}
 
 	public List<BusinessCalendarEvent> getEvents() throws Exception {
@@ -51,11 +48,11 @@ public class BusinessCalendarDao extends BaseDao {
 
 	public void updateEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
-		genericBusinessCalendarEventDao.merge(event);
+		merge(event);
 	}
 
 	public void deleteEvent(BusinessCalendarEvent event) throws Exception {
-		genericBusinessCalendarEventDao.deleteEntity(event);
+		deleteEntity(event);
 	}
 
 }

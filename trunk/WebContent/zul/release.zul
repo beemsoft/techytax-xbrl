@@ -16,9 +16,25 @@ Changes:
 <li>Upgraded to ZK 7.0.1</li>
 <li>Finished migration from iBatis to JPA.</li>
 <li>Fixed rounding issue in VAT declaration.</li>
-<li>Upgraded to Hibernate 4.3.5</li>
+<li>Upgraded to Hibernate 4.3.5/JPA 2.1</li>
 <li>Added costtype for expenses inside the EU.</li>
+<li>Removed JRebel.</li>
+<li>Send invoice with user email as from-address.</li>
+<li>Implement Domain-Specific DAO Strategy (from Adam Bien).</li>
 </ul>
+
+<p>Investigated migration possibility from Tomcat to GlassFish:
+</p>
+<ul>
+<li>There is an issue (hibernate.atlassian.net/browse/HHH-8818) with using a datasource in Tomcat with Hibernate 4.3.5</li>
+<li>GlassFish supports Java EE 7, but Oracle has stopped commercial support.</li>
+<li>GlassFish is distributed with EclipseLink, but we keep using Hibernate, because of its integration with Jasypt encryption.</li>
+<li>Use ZK workaround for GlassFish bug. See: tracker.zkoss.org/browse/ZK-2039</li>
+<li>ZK has no full CDI support.</li>
+<li>GlassFish 4.0 is too slow when running in debug mode.</li>
+</ul>
+</li>
+
 <h4>2.1 (2014-03-29)</h4>
 <p>
 Changes:

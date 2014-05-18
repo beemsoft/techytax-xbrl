@@ -43,17 +43,14 @@ import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
-import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class CostDao extends BaseDao {
+public class CostDao extends BaseDao<Cost> {
 
-	private User user = UserCredentialManager.getUser();
-	
-	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
+	public CostDao(Class<Cost> persistentClass) {
+		super(persistentClass);
+	}
 
 	public void insertSplitCost(Cost originalCost, Cost splitCost) throws Exception {
 		splitCost.setDate(originalCost.getDate());
@@ -64,7 +61,7 @@ public class CostDao extends BaseDao {
 			splitCost.setCostType(EXPENSE_OTHER_ACCOUNT_IGNORE);
 		}
 		splitCost.roundValues();
-		genericCostDao.persistEntity(splitCost);
+		persistEntity(splitCost);
 	}
 
 	public List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {

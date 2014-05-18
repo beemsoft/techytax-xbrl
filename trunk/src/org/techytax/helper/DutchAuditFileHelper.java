@@ -67,11 +67,11 @@ import org.techytax.util.DateHelper;
 public class DutchAuditFileHelper {
 
 	public static void sendAuditFile(User user, Periode periode) {
-		CostDao costDao = new CostDao();
 		AuditLogger.log(SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<>();
 			if (periode != null) {
+				CostDao costDao = new CostDao(Cost.class);				
 				allCosts = costDao.getCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
 				// TODO: sort costs
 			}

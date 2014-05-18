@@ -55,9 +55,8 @@ public class ActivaVM {
 	private User user = UserCredentialManager.getUser();
 	private List<BookValueHistory> bookValueHistories = new ArrayList<>();
 	private Activum selected;
-	private FiscalDao fiscalDao = new FiscalDao();
-	private BookValueDao bookValueDao = new BookValueDao();
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
+	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
+	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
 	private GenericDao<Activum> activumGenericDao = new GenericDao<>(Activum.class);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
@@ -160,18 +159,18 @@ public class ActivaVM {
 			return;
 		}
 		if (bookValue.getId() > 0) {
-			originalBookValue = (BookValue) bookValueGenericDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
+			originalBookValue = (BookValue) bookValueDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
 		}
 		if (originalBookValue == null && bookValue.getSaldo() != null) {
 			AuditLogger.log(ENTER_BOOKVALUE, user);
 			bookValue.setUser(user);
-			bookValueGenericDao.persistEntity(bookValue);
+			bookValueDao.persistEntity(bookValue);
 		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
 			AuditLogger.log(UPDATE_BOOKVALUE, user);
 			bookValue.setUser(user);
-			bookValueGenericDao.merge(bookValue);
+			bookValueDao.merge(bookValue);
 		} else if (bookValue.getSaldo() == null) {
-			bookValueGenericDao.deleteEntity(bookValue);
+			bookValueDao.deleteEntity(bookValue);
 		}
 	}
 

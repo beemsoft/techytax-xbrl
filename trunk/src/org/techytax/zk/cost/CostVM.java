@@ -58,8 +58,9 @@ public class CostVM {
 
 	protected CostType selectedCostType;
 
-	protected CostDao costDao = new CostDao();
-	protected GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
+	protected CostDao costDao = new CostDao(Cost.class);
+	
+	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
 
 	protected CostCache costCache = new CostCache();
 
@@ -76,8 +77,7 @@ public class CostVM {
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			CostTypeDao kostensoortDao = new CostTypeDao();
-			List<CostType> vatCostTypes = kostensoortDao.getCostTypesForVatCostsWithPrivateMoney();
+			List<CostType> vatCostTypes = costTypeDao.getCostTypesForVatCostsWithPrivateMoney();
 			costTypes = new ListModelList<>(vatCostTypes);
 			selectedCostType = costTypes.get(0);
 		}
@@ -104,14 +104,14 @@ public class CostVM {
 		if (user != null) {
 			selected.setUser(user);
 			selected.setCostType(selectedCostType);
-			Cost cost = (Cost) genericCostDao.getEntity(selected, Long.valueOf(selected.getId()));
+			Cost cost = (Cost) costDao.getEntity(selected, Long.valueOf(selected.getId()));
 			selected.roundValues();
 			if (cost == null) {
 				AuditLogger.log(ENTER_COST, user);
-				genericCostDao.persistEntity(selected);
+				costDao.persistEntity(selected);
 			} else {
 				AuditLogger.log(UPDATE_COST, user);
-				genericCostDao.merge(selected);
+				costDao.merge(selected);
 			}
 			costCache.invalidate();
 		}
@@ -136,7 +136,7 @@ public class CostVM {
 		if (user != null) {
 			AuditLogger.log(DELETE_COST, user);
 			selected.setUser(user);
-			genericCostDao.deleteEntity(selected);
+			costDao.deleteEntity(selected);
 			getCosts().remove(selected);
 			selected = null;
 			costCache.invalidate();
