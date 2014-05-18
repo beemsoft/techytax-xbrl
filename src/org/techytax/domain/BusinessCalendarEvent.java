@@ -17,7 +17,7 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.business.zk.calendar;
+package org.techytax.domain;
  
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -36,10 +36,6 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.jasypt.hibernate4.type.EncryptedBigDecimalType;
 import org.jasypt.hibernate4.type.EncryptedStringType;
-import org.techytax.business.jpa.entities.Project;
-import org.techytax.domain.User;
-import org.techytax.domain.UserEntity;
-import org.techytax.domain.VatType;
  
 @TypeDefs({
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),

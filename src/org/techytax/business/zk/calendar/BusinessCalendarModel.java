@@ -24,7 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.techytax.business.jpa.entities.Project;
+import org.techytax.domain.BusinessCalendarEvent;
+import org.techytax.domain.Project;
 import org.zkoss.calendar.api.CalendarEvent;
 import org.zkoss.calendar.api.RenderContext;
 import org.zkoss.calendar.impl.SimpleCalendarModel;

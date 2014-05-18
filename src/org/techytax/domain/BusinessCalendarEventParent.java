@@ -1,4 +1,4 @@
-package org.techytax.business.zk.calendar;
+package org.techytax.domain;
 
 import java.util.Date;
 

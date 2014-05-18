@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.techytax.business.jpa.entities.Customer;
+import org.techytax.domain.Customer;
 import org.techytax.props.PropsFactory;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;

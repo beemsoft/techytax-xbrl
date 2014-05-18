@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.business.jpa.entities.Customer;
+import org.techytax.domain.Customer;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;

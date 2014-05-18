@@ -22,7 +22,7 @@ package org.techytax.business.zk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.techytax.business.jpa.entities.Customer;
+import org.techytax.domain.Customer;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.helper.DutchAuditFileHelper;
