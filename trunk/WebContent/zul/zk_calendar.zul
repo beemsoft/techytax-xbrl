@@ -21,7 +21,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	-->
     <style src="/widgets/application/zk_calendar/style.css" />
-    <window id="win" apply="org.techytax.business.zk.calendar.CalendarController" self="@define(content)">
+    <window id="win" title="Agenda" apply="org.techytax.business.zk.calendar.CalendarController" self="@define(content)">
         <!-- Calendars Body -->
         <div>
             <!-- Control Menu -->
