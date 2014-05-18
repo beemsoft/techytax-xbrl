@@ -72,7 +72,7 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.Liquiditeit;
-import org.techytax.domain.Reiskosten;
+import org.techytax.domain.TravelCosts;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatType;
 import org.techytax.util.DateHelper;
@@ -284,8 +284,8 @@ public class BalanceCalculator {
 		return total;
 	}
 
-	public static Reiskosten calculatTravelCostBalance(List<Cost> res) {
-		Reiskosten reiskosten = new Reiskosten();
+	public static TravelCosts calculatTravelCostBalance(List<Cost> res) {
+		TravelCosts reiskosten = new TravelCosts();
 		BigDecimal totalKostOV = new BigDecimal(0);
 		BigDecimal totalKostAuto = new BigDecimal(0);
 		BigDecimal totalKostAutoMetBtw = new BigDecimal(0);
