@@ -36,6 +36,7 @@ import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.SettlementDao;
+import org.techytax.domain.Account;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
@@ -43,6 +44,7 @@ import org.techytax.domain.CostMatchParent;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.PrivateCostMatch;
+import org.techytax.domain.Settlement;
 import org.techytax.domain.SplitMatch;
 import org.techytax.domain.VatMatchParent;
 import org.techytax.domain.VatType;
@@ -51,19 +53,19 @@ import org.techytax.helper.CostSplitter;
 public abstract class BaseTransactionReader implements TransactionReader {
 
 	protected static Vector<String[]> regels = null;
-	protected CostTypeDao costTypeDao = new CostTypeDao();
-	protected SettlementDao settlementDao = new SettlementDao();
+	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
+	protected SettlementDao settlementDao = new SettlementDao(Settlement.class);
+	private AccountDao accountDao = new AccountDao(Account.class);
+	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);	
 	protected List<Cost> kostLijst = new ArrayList<>();
 
 	public AccountType getAccountType(String fileName) throws Exception {
 		int index = fileName.indexOf("_");
 		String accountNumber = fileName.substring(0, index);
-		AccountDao accountDao = new AccountDao();
 		return accountDao.getAccountType(accountNumber);
 	}
 
 	protected CostMatchParent findCostMatch(String omschrijving) throws Exception {
-		KostmatchDao kostmatchDao = new KostmatchDao();
 		List<PrivateCostMatch> privateCostMatchList = kostmatchDao.getCostMatchPrivateList();
 		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
 		while (iterator.hasNext()) {

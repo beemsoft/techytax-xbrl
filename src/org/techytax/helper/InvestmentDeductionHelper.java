@@ -26,6 +26,7 @@ import java.util.List;
 import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
+import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
@@ -36,7 +37,7 @@ public class InvestmentDeductionHelper {
 
 	public BigInteger getInvestmentDeduction(List<Cost> costList) throws Exception {
 		BigInteger totalInvestmentDeduction = BigInteger.ZERO;
-		FiscalDao fiscaalDao = new FiscalDao();
+		FiscalDao fiscaalDao = new FiscalDao(BookValue.class);
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
 			activum.setUser(user);

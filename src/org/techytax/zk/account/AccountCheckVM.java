@@ -53,8 +53,8 @@ import org.zkoss.zul.Window;
 
 public class AccountCheckVM extends CostVM3 {
 
-	private AccountDao accountDao = new AccountDao();
-	private CostDao costDao = new CostDao();
+	private AccountDao accountDao = new AccountDao(Account.class);
+	private CostDao costDao = new CostDao(Cost.class);
 	private User user = UserCredentialManager.getUser();
 	private BigDecimal businessAccountBalance;
 

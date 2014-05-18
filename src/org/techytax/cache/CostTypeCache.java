@@ -46,8 +46,8 @@ public class CostTypeCache {
 
 	private static void fill() throws Exception {
 		costTypeMap = new HashMap<>();
-		CostTypeDao costTypeDao = new CostTypeDao();
-		for (CostType costType : costTypeDao.getKostensoortLijst()) {
+		CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
+		for (CostType costType : costTypeDao.getCostTypes()) {
 			if (!costType.equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
 				costTypeMap.put(costType.getId(), costType);
 				System.out.println("Cache costtype: " + costType.getOmschrijving());

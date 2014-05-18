@@ -64,7 +64,7 @@ public class PdfReportHelper {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-			CostDao costDao = new CostDao();
+			CostDao costDao = new CostDao(Cost.class);
 			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period.getBeginDatum(), period.getEindDatum());
 			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
 			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);

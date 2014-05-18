@@ -26,13 +26,13 @@ import javax.persistence.TypedQuery;
 
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
-import org.techytax.domain.User;
-import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
-public class BookValueDao extends BaseDao {
+public class BookValueDao extends BaseDao<BookValue> {
 
-	private final User user = UserCredentialManager.getUser();
+	public BookValueDao(Class<BookValue> persistentClass) {
+		super(persistentClass);
+	}
 
 	public List<BookValue> getBookValuesHistory() throws Exception {
 		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc", BookValue.class);

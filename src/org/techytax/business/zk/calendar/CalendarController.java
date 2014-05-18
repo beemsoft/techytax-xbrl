@@ -94,9 +94,8 @@ public class CalendarController extends SelectorComposer<Component> {
 	private User user = UserCredentialManager.getUser();
 
 	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
-	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao();
-	private CostDao costDao = new CostDao();
-	private GenericDao<Cost> genericCostDao = new GenericDao<>(Cost.class);
+	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao(BusinessCalendarEvent.class);
+	private CostDao costDao = new CostDao(Cost.class);
 
 	private ListModel<Project> projectsModel;
 
@@ -365,7 +364,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());
 					cost.setCostType(INVOICE_SENT);
-					genericCostDao.persistEntity(cost);
+					costDao.persistEntity(cost);
 				}
 			});
 			invoiceWindow.doPopup();

@@ -132,7 +132,7 @@ public class BalanceCalculator {
 	}
 
 	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum) throws Exception {
-		AccountDao accountDao = new AccountDao();
+		AccountDao accountDao = new AccountDao(Account.class);
 		Account businessAccount = accountDao.getBusinessAccount();
 		if (businessAccount != null) {
 			List<AccountBalance> accountBalances = accountDao.getAccountBalances(businessAccount);
