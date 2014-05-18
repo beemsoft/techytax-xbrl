@@ -35,11 +35,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.techytax.business.jpa.entities.Customer;
-import org.techytax.business.jpa.entities.Project;
 import org.techytax.dao.BusinessCalendarDao;
 import org.techytax.dao.CostDao;
+import org.techytax.domain.BusinessCalendarEvent;
 import org.techytax.domain.Cost;
+import org.techytax.domain.Customer;
+import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.jpa.dao.GenericDao;

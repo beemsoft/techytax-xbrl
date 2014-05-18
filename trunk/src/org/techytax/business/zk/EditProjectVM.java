@@ -22,8 +22,8 @@ package org.techytax.business.zk;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.techytax.business.jpa.entities.Customer;
-import org.techytax.business.jpa.entities.Project;
+import org.techytax.domain.Customer;
+import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;

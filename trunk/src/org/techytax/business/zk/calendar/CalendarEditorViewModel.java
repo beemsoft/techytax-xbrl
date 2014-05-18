@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cxf.common.util.StringUtils;
-import org.techytax.business.jpa.entities.Project;
+import org.techytax.domain.BusinessCalendarEvent;
+import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;

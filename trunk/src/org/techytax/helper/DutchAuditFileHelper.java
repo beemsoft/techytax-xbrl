@@ -53,9 +53,9 @@ import nl.auditfiles.xaf._3.CountryCodeType;
 import nl.auditfiles.xaf._3.CurrencyCodeType;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
-import org.techytax.business.jpa.entities.Customer;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.Customer;
 import org.techytax.domain.Periode;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;

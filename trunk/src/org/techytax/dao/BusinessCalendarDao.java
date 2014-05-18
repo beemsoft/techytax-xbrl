@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.persistence.TypedQuery;
 
-import org.techytax.business.zk.calendar.BusinessCalendarEvent;
+import org.techytax.domain.BusinessCalendarEvent;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class BusinessCalendarDao extends BaseDao<BusinessCalendarEvent> {
