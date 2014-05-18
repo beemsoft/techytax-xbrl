@@ -82,7 +82,6 @@ public class MailHelper {
 			msg.setSubject(subject);
 
 		msg.setFrom(new InternetAddress(props.getProperty("mail.from")));
-		// Beemsterboer Software <hans@beemsoft.nl>
 		msg.setReplyTo(toAddrs);
 		
 		MimeMultipart multipart = new MimeMultipart("related");
