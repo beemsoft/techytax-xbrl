@@ -17,7 +17,7 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.business.jpa.entities;
+package org.techytax.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,8 +31,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-import org.techytax.domain.UserObject;
-import org.techytax.domain.VatType;
 
 @Entity
 @Table(name = "project")

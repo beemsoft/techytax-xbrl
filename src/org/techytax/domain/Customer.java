@@ -17,7 +17,7 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.business.jpa.entities;
+package org.techytax.domain;
 
 import java.math.BigInteger;
 
@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
-import org.techytax.domain.UserObject;
 
 @Entity
 @Table(name = "customer")
