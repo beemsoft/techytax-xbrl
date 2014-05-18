@@ -39,7 +39,7 @@ public class BusinessCalendarDao extends BaseDao<BusinessCalendarEvent> {
 	}
 
 	public List<BusinessCalendarEvent> getEvents() throws Exception {
-		TypedQuery<BusinessCalendarEvent> query = JpaUtil.getEntityManager().createQuery("SELECT e FROM org.techytax.business.zk.calendar.BusinessCalendarEvent e WHERE e.user = :user",
+		TypedQuery<BusinessCalendarEvent> query = JpaUtil.getEntityManager().createQuery("SELECT e FROM org.techytax.domain.BusinessCalendarEvent e WHERE e.user = :user",
 				BusinessCalendarEvent.class);
 		query.setParameter("user", user);
 		List<BusinessCalendarEvent> result = query.getResultList();
