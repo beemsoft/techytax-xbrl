@@ -17,7 +17,7 @@
  * along with TechyTax; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.techytax.zk;
+package org.techytax.zk.vat;
 
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
