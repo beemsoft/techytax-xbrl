@@ -56,7 +56,7 @@ import nl.auditfiles.xaf._3.ObjectFactory;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Customer;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
@@ -66,13 +66,13 @@ import org.techytax.util.DateHelper;
 
 public class DutchAuditFileHelper {
 
-	public static void sendAuditFile(User user, Periode periode) {
+	public static void sendAuditFile(User user, FiscalPeriod periode) {
 		AuditLogger.log(SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<>();
 			if (periode != null) {
 				CostDao costDao = new CostDao(Cost.class);				
-				allCosts = costDao.getCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
+				allCosts = costDao.getCostsInPeriod(periode);
 				// TODO: sort costs
 			}
 			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);

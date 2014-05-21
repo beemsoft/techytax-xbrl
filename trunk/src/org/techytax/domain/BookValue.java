@@ -25,27 +25,39 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
-@Entity(name = "org.techytax.domain.BookValue")
+@Entity
+@NamedQueries({
+		@NamedQuery(name = BookValue.HISTORY, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc"),
+		@NamedQuery(name = BookValue.FOR_YEAR, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.jaar = :year order by bv.balanceType asc"),
+		@NamedQuery(name = BookValue.GET, query = "SELECT bv FROM BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType"),
+		@NamedQuery(name = BookValue.FOR_YEAR_AND_TYPES, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.jaar = :year AND bv.balanceType IN :balanceTypes ORDER BY bv.balanceType asc") })
 @Table(name = "boekwaarde")
 public class BookValue extends UserObject {
-	
+
+	public static final String HISTORY = "org.techytax.domain.BookValue.HISTORY";
+	public static final String FOR_YEAR = "org.techytax.domain.BookValue.FOR_YEAR";
+	public static final String GET = "org.techytax.domain.BookValue.GET";
+	public static final String FOR_YEAR_AND_TYPES = "org.techytax.domain.BookValue.FOR_YEAR_AND_TYPES";
+
 	@Column(name = "balans_id")
 	@Enumerated(EnumType.ORDINAL)
 	private BalanceType balanceType;
-	
+
 	@Column(name = "boekjaar")
 	private int jaar;
-	
+
 	@Type(type = "encryptedInteger")
 	private BigInteger saldo;
-	
+
 	public BookValue() {
 	}
-	
+
 	public BookValue(BalanceType balanceType, int jaar, BigInteger saldo) {
 		this.balanceType = balanceType;
 		this.jaar = jaar;
@@ -79,5 +91,5 @@ public class BookValue extends UserObject {
 	public String getDescription() {
 		return balanceType.getKey();
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,25 +21,30 @@ package org.techytax.domain;
 
 import java.util.Date;
 
-public class Periode {
+public class FiscalPeriod {
 
-	private Date beginDatum;
-	private Date eindDatum;
+	private Date beginDate;
+	private Date endDate;
+	
+	public FiscalPeriod(Date beginDate, Date endDate) {
+		this.beginDate = beginDate;
+		this.endDate = endDate;
+	}
 
-	public Date getBeginDatum() {
-		return beginDatum;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
 	public void setBeginDatum(Date beginDatum) {
-		this.beginDatum = beginDatum;
+		this.beginDate = beginDatum;
 	}
 
-	public Date getEindDatum() {
-		return eindDatum;
+	public Date getEndDate() {
+		return endDate;
 	}
 
 	public void setEindDatum(Date eindDatum) {
-		this.eindDatum = eindDatum;
+		this.endDate = eindDatum;
 	}
 
 }

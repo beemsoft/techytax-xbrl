@@ -25,6 +25,7 @@ import static org.techytax.helper.AmountHelper.formatWithEuroSymbol;
 import static org.techytax.helper.AmountHelper.roundDownToInteger;
 import static org.techytax.log.AuditType.IMPORT_TRANSACTIONS;
 import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
+import static org.techytax.log.AuditType.SPLIT_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
 import static org.techytax.log.AuditType.VAT_OVERVIEW;
@@ -46,7 +47,7 @@ import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
@@ -262,8 +263,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private void createVatOverview() throws Exception {
 		AuditLogger.log(VAT_OVERVIEW, user);
-		Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		List<Cost> vatCosts = costDao.getVatCostsInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
+		List<Cost> vatCosts = costDao.getVatCostsInPeriod(DateHelper.getLatestVatPeriod(user.getVatPeriodType()));
 		ListModelList<Cost> costModel = new ListModelList<>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
@@ -271,7 +271,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
-			creatYearlyVatDeclarationForSmallEnterprise(vatPeriod, vatDeclarationData);
+			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
@@ -287,8 +287,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		controleTab.setSelected(true);
 	}
 
-	private void creatYearlyVatDeclarationForSmallEnterprise(Periode vatPeriod, VatDeclarationData vatDeclarationData) {
-		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
+	private void creatYearlyVatDeclarationForSmallEnterprise(FiscalPeriod vatPeriod, VatDeclarationData vatDeclarationData) {
+		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod);
 		BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 		vatBalanceWithinEu.setNettoOmzet(turnover);
 		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
@@ -364,9 +364,9 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
-		Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		vatDeclarationData.setStartDate(period.getBeginDatum());
-		vatDeclarationData.setEndDate(period.getEindDatum());
+		FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+		vatDeclarationData.setStartDate(period.getBeginDate());
+		vatDeclarationData.setEndDate(period.getEndDate());
 		return vatDeclarationData;
 	}
 
@@ -427,7 +427,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
-						splitCost.setUser(user);
+						AuditLogger.log(SPLIT_COST, user);
 						costDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();

@@ -19,71 +19,21 @@
  */
 package org.techytax.dao;
 
-import java.util.List;
+import static org.techytax.dao.QueryParameter.with;
 
-import javax.persistence.TypedQuery;
+import java.util.List;
 
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
-import org.techytax.domain.PrivateCostMatch;
-import org.techytax.jpa.dao.GenericDao;
-import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class KostmatchDao extends BaseDao<Kostmatch> {
-	
+
 	public KostmatchDao(Class<Kostmatch> persistentClass) {
 		super(persistentClass);
 	}
 
-	private GenericDao<PrivateCostMatch> genericPrivateCostMatchDao = new GenericDao<>(PrivateCostMatch.class);
-
-	public void insertCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
-		costMatch.setUser(user);
-		genericPrivateCostMatchDao.persistEntity(costMatch);
-	}
-
-	public void deleteCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
-		genericPrivateCostMatchDao.deleteEntity(costMatch);
-	}
-
-	public List<Kostmatch> getKostmatchLijstForCostType(CostType costType) throws Exception {
-		TypedQuery<Kostmatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.Kostmatch cm WHERE cm.costType = :costType", Kostmatch.class);
-		query.setParameter("costType", costType);
-		List<Kostmatch> costMatches = query.getResultList();
-		return costMatches;
-	}
-
-	public List<PrivateCostMatch> getCostMatchPrivateListForCostType(CostType costType) throws Exception {
-		TypedQuery<PrivateCostMatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.PrivateCostMatch cm WHERE cm.user = :user AND cm.costType = :costType", PrivateCostMatch.class);
-		query.setParameter("costType", costType);
-		query.setParameter("user", user);
-		List<PrivateCostMatch> costMatches = query.getResultList();
-		return costMatches;
-	}
-
-	public List<Kostmatch> getKostmatchLijst() throws Exception {
-		TypedQuery<Kostmatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.Kostmatch cm", Kostmatch.class);
-		List<Kostmatch> costMatches = query.getResultList();
-		return costMatches;
-	}
-
-	public List<PrivateCostMatch> getCostMatchPrivateList() throws Exception {
-		TypedQuery<PrivateCostMatch> query = JpaUtil.getEntityManager().createQuery("SELECT cm FROM org.techytax.domain.PrivateCostMatch cm WHERE cm.user = :user", PrivateCostMatch.class);
-		query.setParameter("user", user);
-		List<PrivateCostMatch> result = query.getResultList();
-		return result ;
-	}
-
-	public void updateCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
-		genericPrivateCostMatchDao.merge(costMatch);
-	}
-
-	public PrivateCostMatch getCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
-		if (costMatch.getId() == null) {
-			return null;
-		}
-		PrivateCostMatch result = (PrivateCostMatch) genericPrivateCostMatchDao.getEntity(costMatch, costMatch.getId());
-		return result;
+	public List<Kostmatch> getKostmatchLijstForCostType(CostType costType) {
+		return findByNamedQuery(Kostmatch.FOR_TYPE, with("costType", costType).parameters());
 	}
 
 }

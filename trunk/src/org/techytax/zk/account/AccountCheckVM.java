@@ -37,7 +37,7 @@ import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Liquiditeit;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
@@ -58,7 +58,7 @@ public class AccountCheckVM extends CostVM3 {
 	private User user = UserCredentialManager.getUser();
 	private BigDecimal businessAccountBalance;
 
-	protected Periode periode;
+	protected FiscalPeriod periode;
 	private CostCache costCache = new CostCache();
 
 	protected List<Cost> costList;
@@ -81,8 +81,8 @@ public class AccountCheckVM extends CostVM3 {
 	public ListModelList<Cost> getCosts() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			costCache.setBeginDatum(periode.getBeginDatum());
-			costCache.setEindDatum(periode.getEindDatum());
+			costCache.setBeginDatum(periode.getBeginDate());
+			costCache.setEindDatum(periode.getEndDate());
 			costCache.getCosts();
 			costList = costCache.getBusinessAccountCosts();
 			costs = new ListModelList<>(costList);
@@ -96,9 +96,9 @@ public class AccountCheckVM extends CostVM3 {
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDatum()), DateHelper.getDate(periode.getEindDatum()));
+			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDate()), DateHelper.getDate(periode.getEndDate()));
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
-			List<Cost> result2 = costDao.getVatCostsInPeriod(periode.getBeginDatum(), periode.getEindDatum());
+			List<Cost> result2 = costDao.getVatCostsInPeriod(periode);
 			Balance balans = BalanceCalculator.calculateBtwBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
@@ -147,7 +147,7 @@ public class AccountCheckVM extends CostVM3 {
 	}
 
 	public Date getBeginDate() {
-		return periode.getBeginDatum();
+		return periode.getBeginDate();
 	}
 
 	@NotifyChange({ "costs", "accountCheck", "accountCheckData" })
@@ -156,10 +156,10 @@ public class AccountCheckVM extends CostVM3 {
 	}
 
 	public Date getEndDate() {
-		return periode.getEindDatum();
+		return periode.getEndDate();
 	}
 
-	public Periode getPeriode() {
+	public FiscalPeriod getPeriode() {
 		return periode;
 	}
 
@@ -175,7 +175,7 @@ public class AccountCheckVM extends CostVM3 {
 		if (user != null) {
 			AccountBalance accountBalance = new AccountBalance();
 			accountBalance.setBalance(businessAccountBalance);
-			accountBalance.setDatum(periode.getEindDatum());
+			accountBalance.setDatum(periode.getEndDate());
 			Account businessAccount = accountDao.getBusinessAccount();
 			accountBalance.setAccount(businessAccount);
 			genericAccountBalanceDao.persistEntity(accountBalance);

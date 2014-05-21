@@ -19,34 +19,21 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.dao.QueryParameter.with;
+
 import java.util.List;
 
 import org.techytax.domain.Account;
-import org.techytax.domain.AccountType;
+import org.techytax.domain.AccountBalance;
 
-public class AccountDao extends BaseDao<Account> {
+public class AccountBalanceDao extends BaseDao<AccountBalance> {
 	
-	public AccountDao(Class<Account> persistentClass) {
+	public AccountBalanceDao(Class<AccountBalance> persistentClass) {
 		super(persistentClass);
 	}
 
-	public AccountType getAccountType(String accountNumber) throws Exception {
-		for (Account account: findAll()) {
-			if (account.getNumber().equals(accountNumber)) {
-				return account.getType();
-			}
-		}
-		return null;
+	public List<AccountBalance> getAccountBalances(Account account) {
+		return findByNamedQuery(AccountBalance.BY_ACCOUNT, with("account", account).parameters());
 	}
-	
-	public Account getBusinessAccount() throws IllegalAccessException {
-		List<Account> accounts = findAll();
-		for (Account account: accounts) {
-			if (account.getType() == AccountType.BUSINESS) {
-				return account;
-			}
-		}
-		return null;
-	}	
 	
 }

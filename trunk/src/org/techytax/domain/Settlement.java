@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,6 +24,7 @@ import java.math.BigInteger;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
@@ -41,9 +42,12 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 			@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }),			
 	@TypeDef(name = "encryptedInteger", typeClass = EncryptedBigIntegerType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "integerEncryptor") }) })
 @Entity
+@NamedQuery(name = Settlement.GET, query = "SELECT s FROM Settlement s WHERE s.user = :user")
 @Table(name = "settlement")
 @DiscriminatorValue("S")
 public class Settlement extends Activum {
+	
+	public static final String GET = "org.techytax.domain.Settlement.GET";
 
 	@Type(type = "encryptedString")
 	private String description;

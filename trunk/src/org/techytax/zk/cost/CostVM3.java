@@ -56,7 +56,6 @@ public class CostVM3 extends CostVM2{
 		}
 		if (splitCost != null) {
 			AuditLogger.log(SPLIT_COST, user);
-			splitCost.setUser(user);
 			costDao.insertSplitCost(cost, splitCost);
 		}
 	}	

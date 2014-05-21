@@ -24,7 +24,7 @@ import java.util.Date;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
@@ -48,13 +48,13 @@ public class AuditLogger {
 		if (user == null) {
 			throw new IllegalAccessException();
 		}
-		Periode latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		Periode latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
+		FiscalPeriod latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+		FiscalPeriod latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
 		TypedQuery<LogRecord> query = JpaUtil.getEntityManager().createQuery(
 				"SELECT lr FROM org.techytax.jpa.entities.LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId",
 				LogRecord.class);
-		query.setParameter("beginTime", latestVatPeriod.getEindDatum());
-		query.setParameter("endTime", latestVatPeriodTillToday.getEindDatum());
+		query.setParameter("beginTime", latestVatPeriod.getEndDate());
+		query.setParameter("endTime", latestVatPeriodTillToday.getEndDate());
 		query.setParameter("userId", user.getId());
 		LogRecord result = null;
 		try {

@@ -23,22 +23,29 @@ import static org.techytax.domain.CostConstants.SETTLEMENT;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 import org.zkoss.util.resource.Labels;
 
 @Immutable
-@Entity(name = "org.techytax.domain.CostType")
+@Entity
+@NamedQueries({ @NamedQuery(name = CostType.FOR_MATCHING, query = "SELECT ct FROM CostType ct WHERE ct.balansMeetellen = true OR ct IN :costTypes"),
+		@NamedQuery(name = CostType.FOR_TYPES, query = "SELECT ct FROM CostType ct WHERE ct IN :costTypes") })
 @Table(name = "kostensoort")
 public class CostType {
-	
+
+	public static final String FOR_MATCHING = "org.techytax.domain.CostType.FOR_MATCHING";
+	public static final String FOR_TYPES = "org.techytax.domain.CostType.FOR_TYPES";
+
 	@Id
 	private long id = 0;
 
 	private String omschrijving;
 
-	private boolean bijschrijving ;
+	private boolean bijschrijving;
 
 	private boolean btwVerrekenbaar;
 
@@ -47,11 +54,11 @@ public class CostType {
 	private boolean aftrekbaar;
 
 	private boolean investering;
-	
+
 	public CostType() {
 		// default constructor required by JPA
 	}
-	
+
 	public CostType(long id) {
 		this.id = id;
 	}
@@ -71,7 +78,7 @@ public class CostType {
 	public boolean isBijschrijving() {
 		return bijschrijving;
 	}
-	
+
 	public boolean isForSettlement() {
 		return this.equals(SETTLEMENT);
 	}

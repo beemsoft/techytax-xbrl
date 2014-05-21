@@ -41,7 +41,7 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.TaxData;
 import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaration;
 
 import org.techytax.domain.Balance;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.domain.VatPeriodType;
@@ -250,10 +250,10 @@ public class XbrlHelper {
 		user.setSurname("Tester");
 		user.setPhoneNumber("12345678");
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		Periode period = DateHelper
+		FiscalPeriod period = DateHelper
 				.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-		vatDeclarationData.setStartDate(period.getBeginDatum());
-		vatDeclarationData.setEndDate(period.getEindDatum());
+		vatDeclarationData.setStartDate(period.getBeginDate());
+		vatDeclarationData.setEndDate(period.getEndDate());
 		Balance balans = new Balance();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));

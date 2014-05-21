@@ -21,12 +21,12 @@ package org.techytax.zk.account;
 
 import java.util.List;
 
+import org.techytax.dao.AccountBalanceDao;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -42,14 +42,13 @@ public class AccountVM {
 	AccountType selectedAccountType;
 	AccountBalance selectedAccountBalance;
 	AccountDao accountDao = new AccountDao(Account.class);
-	GenericDao<AccountBalance> genericAccountBalanceDao = new GenericDao<>(AccountBalance.class);
+	AccountBalanceDao accountBalanceDao = new AccountBalanceDao(AccountBalance.class);
 	User user = UserCredentialManager.getUser();
 
 	public ListModelList<Account> getAccounts() throws Exception {
 		if (accounts == null) {
 			if (user != null) {
-				List<Account> accounts2 = accountDao.getAccounts();
-				accounts = new ListModelList<>(accounts2);
+				accounts = new ListModelList<>(accountDao.findAll());
 			} else {
 				Executions.sendRedirect("login.zul");
 			}
@@ -59,8 +58,7 @@ public class AccountVM {
 	
 	public ListModelList<AccountBalance> getAccountBalances() throws Exception {
 		if (user != null && selected != null) {
-			List<AccountBalance> accountBalances2 = accountDao.getAccountBalances(selected);
-			accountBalances = new ListModelList<>(accountBalances2);
+			accountBalances = new ListModelList<>(accountBalanceDao.getAccountBalances(selected));
 		}
 		return accountBalances;
 	}	
@@ -139,11 +137,11 @@ public class AccountVM {
 	public void saveAccountBalance() throws Exception{
 		if (user != null) {
 			selectedAccountBalance.setAccount(selected);
-			AccountBalance accountBalance = (AccountBalance) genericAccountBalanceDao.getEntity(selectedAccountBalance, Long.valueOf(selectedAccountBalance.getId()));
+			AccountBalance accountBalance = (AccountBalance) accountBalanceDao.getEntity(selectedAccountBalance, Long.valueOf(selectedAccountBalance.getId()));
 			if (accountBalance == null) {
-				genericAccountBalanceDao.persistEntity(selectedAccountBalance);
+				accountBalanceDao.persistEntity(selectedAccountBalance);
 			} else {
-				genericAccountBalanceDao.merge(selectedAccountBalance);
+				accountBalanceDao.merge(selectedAccountBalance);
 			}
 		}
 	}	

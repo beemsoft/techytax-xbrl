@@ -25,11 +25,11 @@ import java.math.BigInteger;
 public interface CostConstants {
 
 	public static final CostType UNDETERMINED = new CostType(0);
-	public static final CostType INKOMST_DEZE_REKENING = new CostType(1);
+	public static final CostType INCOME_CURRENT_ACCOUNT = new CostType(1);
 	public static final CostType EXPENSE_CURRENT_ACCOUNT = new CostType(2);
-	public static final CostType UITGAVE_DEZE_REKENING_FOUTIEF = new CostType(3);
-	public static final CostType INLEG = new CostType(4);
-	public static final CostType OPNAME = new CostType(5);
+	public static final CostType EXPENSE_CURRENT_ACCOUNT_IGNORE = new CostType(3);
+	public static final CostType DEPOSIT = new CostType(4);
+	public static final CostType WITHDRAWAL = new CostType(5);
 	public static final CostType EXPENSE_OTHER_ACCOUNT_IGNORE = new CostType(6);
 	public static final CostType EXPENSE_OTHER_ACCOUNT = new CostType(7);
 	public static final CostType TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT = new CostType(8);
@@ -54,12 +54,12 @@ public interface CostConstants {
 	public static final CostType FISCALE_BIJTELLING_AUTO = new CostType(24);
 	
 	public static final CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
-	public static final CostType ADVERTENTIE = new CostType(27);
-	public static final CostType ADVERTENTIE_ZONDER_BTW = new CostType(28);
+	public static final CostType ADVERTORIAL = new CostType(27);
+	public static final CostType ADVERTORIAL_NO_VAT = new CostType(28);
 	public static final CostType INCOME_TAX = new CostType(29);
 	public static final CostType INCOME_TAX_PAID_BACK = new CostType(30);
 	public static final CostType ROAD_TAX = new CostType(31);
-	public static final CostType UITGAVE_CREDIT_CARD = new CostType(32);
+	public static final CostType EXPENSE_CREDIT_CARD = new CostType(32);
 	public static final CostType INTEREST = new CostType(33);
 	public static final CostType VAT_PAID_BACK_ON_OTHER_ACCOUNT = new CostType(34);	
 	

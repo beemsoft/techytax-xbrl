@@ -40,6 +40,7 @@ import org.techytax.dao.CostDao;
 import org.techytax.domain.BusinessCalendarEvent;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Customer;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
@@ -226,7 +227,7 @@ public class CalendarController extends SelectorComposer<Component> {
 		switch (message.getType()) {
 		case DELETE:
 			calendarModel.remove((BusinessCalendarEvent) message.getData());
-			businessCalendarDao.deleteEvent(calendarEvent);
+			businessCalendarDao.deleteEntity(calendarEvent);
 			// clear the shadow of the event after editingMaak een PDF factuur.
 			calendarsEvent.clearGhost();
 			calendarsEvent = null;
@@ -292,7 +293,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (maand < 10) {
 				factuurNummerString += "0";
 			}
-			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(beginDate, endDate);
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(new FiscalPeriod(beginDate, endDate));
 			List<Cost> invoices = new ArrayList<>();
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {

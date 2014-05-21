@@ -23,26 +23,25 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.techytax.dao.FiscalDao;
+import org.techytax.dao.ActivumDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
-import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
 
 public class InvestmentDeductionHelper {
-	
+
 	private User user = UserCredentialManager.getUser();
 
 	public BigInteger getInvestmentDeduction(List<Cost> costList) throws Exception {
 		BigInteger totalInvestmentDeduction = BigInteger.ZERO;
-		FiscalDao fiscaalDao = new FiscalDao(BookValue.class);
+		ActivumDao activumDao = new ActivumDao(Activum.class);
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
 			activum.setUser(user);
 			activum.setCost(cost);
-			activum = fiscaalDao.getActivumForCost(cost);
+			activum = activumDao.getActivumForCost(cost);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
 				totalInvestmentDeduction = totalInvestmentDeduction.add(calculateInvestmentDeduction(cost.getAmount()));
 			}

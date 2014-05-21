@@ -30,16 +30,30 @@ import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.techytax.helper.DepreciationHelper;
 
-@Entity(name = "org.techytax.domain.Activum")
+@Entity
+@NamedQueries({
+		@NamedQuery(name = Activum.NEW_ACTIVA, query = "SELECT act FROM Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND (act.startDate = null OR act.startDate <= :startDate) AND act.endDate = null AND act.user = :user"),
+		@NamedQuery(name = Activum.ALL_ACTIVA, query = "SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user ORDER BY act.cost.date ASC"),
+		@NamedQuery(name = Activum.GET_ACTIVUM_FOR_COST, query = "SELECT act FROM Activum act WHERE act.user = :user AND act.cost = :cost"),
+		@NamedQuery(name = Activum.ACTIVE_ACTIVA, query = "SELECT act FROM org.techytax.domain.Activum act WHERE act.user = :user AND act.endDate = null ORDER BY act.cost.date ASC"),
+		@NamedQuery(name = Activum.ACTIVE_ACTIVA_FOR_TYPE, query = "SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null AND (act.startDate = null OR act.startDate <= :startDate) ORDER BY act.cost.date ASC") })
 @Table(name = "activa")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Activum extends UserObject {
+
+	public static final String NEW_ACTIVA = "org.techytax.domain.Activum.NEW_ACTIVA";
+	public static final String ALL_ACTIVA = "org.techytax.domain.Activum.ALL_ACTIVA";
+	public static final String GET_ACTIVUM_FOR_COST = "org.techytax.domain.Activum.GET_ACTIVUM_FOR_COST";
+	public static final String ACTIVE_ACTIVA = "org.techytax.domain.Activum.ACTIVE_ACTIVA";
+	public static final String ACTIVE_ACTIVA_FOR_TYPE = "org.techytax.domain.Activum.ACTIVE_ACTIVA_FOR_TYPE";
 
 	@OneToOne(mappedBy = "activum", cascade = CascadeType.ALL)
 	private RemainingValue restwaardeOld;
@@ -77,7 +91,7 @@ public class Activum extends UserObject {
 	public BigInteger getRemainingValue() {
 		return remainingValue;
 	}
-	
+
 	public RemainingValue getRestwaarde() {
 		return restwaardeOld;
 	}
@@ -125,7 +139,7 @@ public class Activum extends UserObject {
 	public void setRemainingValue(BigInteger remainingValue) {
 		this.remainingValue = remainingValue;
 	}
-	
+
 	public BigInteger getDepreciation() {
 		DepreciationHelper depreciationHelper = new DepreciationHelper();
 		return depreciationHelper.getDepreciation(this);

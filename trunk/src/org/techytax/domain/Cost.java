@@ -27,16 +27,28 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.hibernate.annotations.Type;
 
-@Entity(name = "org.techytax.domain.Cost")
+@Entity
+@NamedQueries({
+		@NamedQuery(name = Cost.FOR_PERIOD, query = "SELECT c FROM Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc"),
+		@NamedQuery(name = Cost.FOR_PERIOD_AND_TYPES, query = "SELECT c FROM Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType IN :costTypes AND c.user = :user"),
+		@NamedQuery(name = Cost.FOR_PERIOD_AND_VAT_DECLARABLE, query = "SELECT c FROM Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType.btwVerrekenbaar = true AND c.user = :user"),
+		@NamedQuery(name = Cost.FOR_PERIOD_AND_ACCOUNT, query = "SELECT c FROM Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType.balansMeetellen = true AND c.user = :user") })
 @Table(name = "kosten")
 public class Cost extends UserObject implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
+
+	public static final String FOR_PERIOD = "org.techytax.domain.Cost.FOR_PERIOD";
+	public static final String FOR_PERIOD_AND_TYPES = "org.techytax.domain.Cost.FOR_PERIOD_AND_TYPES";
+	public static final String FOR_PERIOD_AND_VAT_DECLARABLE = "org.techytax.domain.Cost.FOR_PERIOD_AND_VAT_DECLARABLE";
+	public static final String FOR_PERIOD_AND_ACCOUNT = "org.techytax.domain.Cost.FOR_PERIOD_AND_ACCOUNT";
 
 	@Column(name = "bedrag")
 	@Type(type = "encryptedBigDecimal")
@@ -50,7 +62,7 @@ public class Cost extends UserObject implements Serializable {
 	private Date date;
 
 	@ManyToOne
-	@JoinColumn(name="kostensoort_id")
+	@JoinColumn(name = "kostensoort_id")
 	private CostType costType;
 
 	@Column(name = "omschrijving")

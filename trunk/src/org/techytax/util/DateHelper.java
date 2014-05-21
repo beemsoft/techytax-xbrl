@@ -33,7 +33,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.net.time.TimeTCPClient;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.VatPeriodType;
 
 public class DateHelper {
@@ -127,7 +127,7 @@ public class DateHelper {
 		return cal.get(Calendar.MONTH);
 	}
 
-	public static Periode getPeriodPreviousYear() {
+	public static FiscalPeriod getPeriodPreviousYear() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		cal.add(Calendar.YEAR, -1);
@@ -137,13 +137,10 @@ public class DateHelper {
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		Date eindDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
+		return new FiscalPeriod(beginDatum, eindDatum);
 	}
 
-	public static Periode getLastVatPeriodPreviousYear() {
+	public static FiscalPeriod getLastVatPeriodPreviousYear() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		cal.add(Calendar.YEAR, -1);
@@ -153,14 +150,10 @@ public class DateHelper {
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, 31);
 		Date eindDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
-	}
+		return new FiscalPeriod(beginDatum, eindDatum);	}
 
-	public static Periode getLatestVatPeriod(VatPeriodType vatPeriodType) {
-		Periode period = null;
+	public static FiscalPeriod getLatestVatPeriod(VatPeriodType vatPeriodType) {
+		FiscalPeriod period = null;
 		switch (vatPeriodType) {
 		case PER_QUARTER:
 			period = getLatestQuarterPeriod();
@@ -173,7 +166,7 @@ public class DateHelper {
 		return period;
 	}
 
-	private static Periode getLatestQuarterPeriod() {
+	private static FiscalPeriod getLatestQuarterPeriod() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 
@@ -190,10 +183,7 @@ public class DateHelper {
 		cal.set(Calendar.MONTH, lastMonth);
 		cal.set(Calendar.DAY_OF_MONTH, 0);
 		Date eindDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
+		return new FiscalPeriod(beginDatum, eindDatum);
 	}
 
 	public static Date getLastDayOfFirstMonthOfNextQuarter(Date date) {
@@ -238,7 +228,7 @@ public class DateHelper {
 		return lastDay;
 	}
 
-	public static Periode getLatestVatPeriodTillToday() {
+	public static FiscalPeriod getLatestVatPeriodTillToday() {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(new Date());
 		int month = cal.get(Calendar.MONTH);
@@ -253,10 +243,7 @@ public class DateHelper {
 		cal.setTime(new Date());
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		Date eindDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
+		return new FiscalPeriod(beginDatum, eindDatum);
 	}
 
 	private static int getQuarter(int month) {
@@ -333,17 +320,14 @@ public class DateHelper {
 		return false;
 	}
 
-	public static Periode getPeriodTillDate(Date balanceDate) {
+	public static FiscalPeriod getPeriodTillDate(Date balanceDate) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(balanceDate);
 		Date eindDatum = cal.getTime();
 		cal.set(Calendar.MONTH, 0);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		Date beginDatum = cal.getTime();
-		Periode periode = new Periode();
-		periode.setBeginDatum(beginDatum);
-		periode.setEindDatum(eindDatum);
-		return periode;
+		return new FiscalPeriod(beginDatum, eindDatum);
 	}
 
 	public static Date getNTPDate() {
@@ -465,10 +449,10 @@ public class DateHelper {
 	}	
 
 	public static void main(String[] args) {
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getBeginDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getEindDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getBeginDatum());
-		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getEindDatum());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getBeginDate());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getEndDate());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getBeginDate());
+		System.out.println(getLatestVatPeriod(VatPeriodType.PER_YEAR).getEndDate());
 		System.out.println(getDateForXml(new Date()));
 		System.out.println(getNTPDate());
 	}

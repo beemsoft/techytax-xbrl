@@ -41,7 +41,7 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
-@Entity(name = "org.techytax.domain.BusinessCalendarEvent")
+@Entity
 @Table(name = "calendar_event")
 public class BusinessCalendarEvent extends BusinessCalendarEventParent {
 	

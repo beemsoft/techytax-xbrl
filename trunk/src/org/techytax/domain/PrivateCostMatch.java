@@ -24,14 +24,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
-@Entity(name = "org.techytax.domain.PrivateCostMatch")
+@Entity
+@NamedQueries({
+	@NamedQuery(name = PrivateCostMatch.FOR_TYPE, query = "SELECT cm FROM PrivateCostMatch cm WHERE cm.user = :user AND cm.costType = :costType")
+})
 @Table(name = "kostmatch_private")
 public class PrivateCostMatch extends CostMatchParent {
+	
+	public static final String FOR_TYPE = "org.techytax.domain.PrivateCostMatch.FOR_TYPE";
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", updatable=false)

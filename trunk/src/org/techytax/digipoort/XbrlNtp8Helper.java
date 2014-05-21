@@ -41,7 +41,7 @@ import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals10VItemType
 import nl.nltaxonomie._8_0.basis.bd.types.bd_types.MonetaryNoDecimals9VItemType;
 
 import org.apache.commons.lang.StringUtils;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
@@ -271,9 +271,9 @@ public class XbrlNtp8Helper {
 		user.setSurname("Tester");
 		user.setPhoneNumber("12345678");
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-		vatDeclarationData.setStartDate(period.getBeginDatum());
-		vatDeclarationData.setEndDate(period.getEindDatum());
+		FiscalPeriod period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
+		vatDeclarationData.setStartDate(period.getBeginDate());
+		vatDeclarationData.setEndDate(period.getEndDate());
 		VatBalanceWithinEu balans = new VatBalanceWithinEu();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));

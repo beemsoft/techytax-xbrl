@@ -21,6 +21,8 @@ package org.techytax.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
@@ -33,9 +35,14 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
-@Entity(name = "org.techytax.domain.KostMatch")
+@Entity
+@NamedQueries({
+	@NamedQuery(name = Kostmatch.FOR_TYPE, query = "SELECT cm FROM Kostmatch cm WHERE cm.costType = :costType")
+})
 @Table(name = "kostmatch")
 public class Kostmatch extends CostMatchParent {
+	
+	public static final String FOR_TYPE = "org.techytax.domain.Kostmatch.FOR_TYPE";
 	
 	@Column(name = "match_text")
 	protected String matchText;

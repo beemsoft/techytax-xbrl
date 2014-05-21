@@ -19,14 +19,22 @@
  */
 package org.techytax.dao;
 
-import java.util.List;
+import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.domain.BalanceType.CAR;
+import static org.techytax.domain.BalanceType.CURRENT_ASSETS;
+import static org.techytax.domain.BalanceType.INVOICES_TO_BE_PAID;
+import static org.techytax.domain.BalanceType.MACHINERY;
+import static org.techytax.domain.BalanceType.NON_CURRENT_ASSETS;
+import static org.techytax.domain.BalanceType.OFFICE;
+import static org.techytax.domain.BalanceType.PENSION;
+import static org.techytax.domain.BalanceType.STOCK;
+import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import java.util.Arrays;
+import java.util.List;
 
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
-import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class BookValueDao extends BaseDao<BookValue> {
 
@@ -34,45 +42,28 @@ public class BookValueDao extends BaseDao<BookValue> {
 		super(persistentClass);
 	}
 
-	public List<BookValue> getBookValuesHistory() throws Exception {
-		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc", BookValue.class);
-		query.setParameter("user", user);
-		List<BookValue> result = query.getResultList();
-		return result;
+	public List<BookValue> getBookValuesHistory() {
+		return findByNamedQuery(BookValue.HISTORY);
 	}
 
-	public List<BookValue> getBookValuesForYear(int year) throws Exception {
-		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery("SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.user = :user AND bv.jaar = :year order by bv.balanceType asc", BookValue.class);
-		query.setParameter("user", user);
-		query.setParameter("year", year);
-		List<BookValue> result = query.getResultList();
-		return result;
+	public List<BookValue> getBookValuesForYear(int year) {
+		return findByNamedQuery(BookValue.FOR_YEAR, with("year", year).parameters());
 	}
 
-	public BookValue getBookValue(BalanceType balanceType, int year) throws Exception {
-		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery(
-				"SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType", BookValue.class);
-		query.setParameter("year", year);
-		query.setParameter("user", user);
-		query.setParameter("balanceType", balanceType);
-		BookValue result = null;
-		try {
-			result = query.getSingleResult();
-		} catch (NoResultException e) {
-			// ok
-		}
-		return result;
+	public BookValue getBookValue(BalanceType balanceType, int year) {
+		return findEntityByNamedQuery(BookValue.GET, with("year", year).and("balanceType", balanceType).parameters());
+	}
+	
+	public List<BookValue> getPassivaList(int year) {
+		return getBookValuesForBalanceTypes(year, Arrays.asList(NON_CURRENT_ASSETS, PENSION, VAT_TO_BE_PAID));
+	}
+	
+	public List<BookValue> getActivaList(int year) {
+		return getBookValuesForBalanceTypes(year, Arrays.asList(MACHINERY, CAR, CURRENT_ASSETS, STOCK, OFFICE, INVOICES_TO_BE_PAID));
 	}
 
-	@Deprecated
-	public BookValue getBookValueForActivum(BookValue bookValue) throws Exception {
-		TypedQuery<BookValue> query = JpaUtil.getEntityManager().createQuery(
-				"SELECT bv FROM org.techytax.domain.BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType", BookValue.class);
-		query.setParameter("year", bookValue.getJaar());
-		query.setParameter("user", user);
-		query.setParameter("balanceType", bookValue.getBalanceType());
-		BookValue result = query.getSingleResult();
-		return result;
+	private List<BookValue> getBookValuesForBalanceTypes(int year, List<BalanceType> balanceTypes) {
+		return findByNamedQuery(BookValue.FOR_YEAR_AND_TYPES, with("year", year).and("balanceTypes", balanceTypes).parameters());
 	}
 
 }

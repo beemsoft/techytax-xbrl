@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.techytax.domain.FiscalOverview;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.helper.FiscalOverviewHelper;
 import org.techytax.log.AuditLogger;
@@ -47,11 +47,11 @@ public class TaxVM {
 
 	public TaxVM() throws Exception {
 		if (user != null && overview == null) {
-			Periode previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
-			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDatum());
+			FiscalPeriod previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
+			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDate());
 			try {
 				FiscalOverviewHelper fiscalOverviewHelper = new FiscalOverviewHelper();
-				overview = fiscalOverviewHelper.createFiscalOverview(previousFiscalPeriod.getBeginDatum(), previousFiscalPeriod.getEindDatum());
+				overview = fiscalOverviewHelper.createFiscalOverview(previousFiscalPeriod.getBeginDate(), previousFiscalPeriod.getEndDate());
 				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				e.printStackTrace();
