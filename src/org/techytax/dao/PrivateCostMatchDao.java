@@ -19,34 +19,29 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.dao.QueryParameter.with;
+
 import java.util.List;
 
-import org.techytax.domain.Account;
-import org.techytax.domain.AccountType;
+import org.techytax.domain.CostType;
+import org.techytax.domain.PrivateCostMatch;
 
-public class AccountDao extends BaseDao<Account> {
-	
-	public AccountDao(Class<Account> persistentClass) {
+public class PrivateCostMatchDao extends BaseDao<PrivateCostMatch> {
+
+	public PrivateCostMatchDao(Class<PrivateCostMatch> persistentClass) {
 		super(persistentClass);
 	}
 
-	public AccountType getAccountType(String accountNumber) throws Exception {
-		for (Account account: findAll()) {
-			if (account.getNumber().equals(accountNumber)) {
-				return account.getType();
-			}
-		}
-		return null;
+	public List<PrivateCostMatch> getCostMatchPrivateListForCostType(CostType costType) {
+		return findByNamedQuery(PrivateCostMatch.FOR_TYPE, with("costType", costType).and("user", user).parameters());
 	}
-	
-	public Account getBusinessAccount() throws IllegalAccessException {
-		List<Account> accounts = findAll();
-		for (Account account: accounts) {
-			if (account.getType() == AccountType.BUSINESS) {
-				return account;
-			}
+
+	public PrivateCostMatch getCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {
+		if (costMatch.getId() == null) {
+			return null;
 		}
-		return null;
-	}	
-	
+		PrivateCostMatch result = (PrivateCostMatch) getEntity(costMatch, costMatch.getId());
+		return result;
+	}
+
 }

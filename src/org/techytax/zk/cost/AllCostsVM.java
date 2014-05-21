@@ -42,7 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.VatPeriodType;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.Command;
@@ -53,7 +53,7 @@ import org.zkoss.zul.Window;
 
 public class AllCostsVM extends CostVM3 {
 
-	private Periode periode;
+	private FiscalPeriod periode;
 	private List<Cost> unhandledCosts = new ArrayList<>();
 	private List<Cost> filteredCosts = new ArrayList<>();
 	private boolean showUnhandledInvestments = false;
@@ -82,8 +82,8 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user != null) {
-			costCache.setBeginDatum(periode.getBeginDatum());
-			costCache.setEindDatum(periode.getEindDatum());
+			costCache.setBeginDatum(periode.getBeginDate());
+			costCache.setEindDatum(periode.getEndDate());
 			List<Cost> allCosts = costCache.getCosts();
 			unhandledCosts = new ArrayList<>();
 			filteredCosts = new ArrayList<>();
@@ -136,7 +136,7 @@ public class AllCostsVM extends CostVM3 {
 
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
 		if (user != null && costs == null) {
-			List<Cost> vatCosts = costDao.getCostsOnBusinessAccountInPeriod(periode.getBeginDatum(), periode.getEindDatum());
+			List<Cost> vatCosts = costDao.getCostsOnBusinessAccountInPeriod(periode);
 			costs = new ListModelList<>(vatCosts);
 		}
 		return costs;
@@ -157,7 +157,7 @@ public class AllCostsVM extends CostVM3 {
 	}
 
 	public Date getBeginDate() {
-		return periode.getBeginDatum();
+		return periode.getBeginDate();
 	}
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
@@ -166,7 +166,7 @@ public class AllCostsVM extends CostVM3 {
 	}
 
 	public Date getEndDate() {
-		return periode.getEindDatum();
+		return periode.getEndDate();
 	}
 
 	@Command

@@ -19,11 +19,7 @@
  */
 package org.techytax.dao;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-
 import org.techytax.domain.Settlement;
-import org.zkoss.zkplus.jpa.JpaUtil;
 
 public class SettlementDao extends BaseDao<Settlement> {
 
@@ -31,18 +27,6 @@ public class SettlementDao extends BaseDao<Settlement> {
 		super(persistentClass);
 	}
 
-	public Settlement getSettlement() throws Exception {
-		TypedQuery<Settlement> query = JpaUtil.getEntityManager().createQuery("SELECT s FROM org.techytax.domain.Settlement s WHERE s.user = :user", Settlement.class);
-		query.setParameter("user", user);
-		Settlement result = null;
-		try {
-			result = query.getSingleResult();
-		} catch (NoResultException e) {
-			// ok
-		}
-		return result;
-	}	
-	
 	public long getPercentage() throws Exception {
 		Settlement settlement = getSettlement();
 		long percentage = 0;
@@ -51,5 +35,9 @@ public class SettlementDao extends BaseDao<Settlement> {
 		}
 		return percentage;
 	}
+	
+	public Settlement getSettlement() throws Exception {
+		return findEntityByNamedQuery(Settlement.GET);		
+	}	
 
 }

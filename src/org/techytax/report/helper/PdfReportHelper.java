@@ -25,7 +25,7 @@ import java.util.List;
 import org.techytax.dao.CostDao;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
@@ -63,14 +63,14 @@ public class PdfReportHelper {
 	public static byte[] createVatReport() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			Periode period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 			CostDao costDao = new CostDao(Cost.class);
-			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period.getBeginDatum(), period.getEindDatum());
+			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
 			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);
 			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
-			vatDeclarationData.setStartDate(period.getBeginDatum());
-			vatDeclarationData.setEndDate(period.getEindDatum());
+			vatDeclarationData.setStartDate(period.getBeginDate());
+			vatDeclarationData.setEndDate(period.getEndDate());
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 			vatReportData.setVatDeclarationData(vatDeclarationData);
 			PdfReportHelper pdfHelper = new PdfReportHelper();

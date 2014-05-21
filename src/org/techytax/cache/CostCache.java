@@ -19,8 +19,8 @@
  */
 package org.techytax.cache;
 
-import static org.techytax.domain.CostConstants.ADVERTENTIE;
-import static org.techytax.domain.CostConstants.ADVERTENTIE_ZONDER_BTW;
+import static org.techytax.domain.CostConstants.ADVERTORIAL;
+import static org.techytax.domain.CostConstants.ADVERTORIAL_NO_VAT;
 import static org.techytax.domain.CostConstants.BUSINESS_CAR;
 import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
@@ -28,6 +28,7 @@ import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT;
 import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
@@ -43,7 +44,6 @@ import static org.techytax.domain.CostConstants.SETTLEMENT;
 import static org.techytax.domain.CostConstants.SETTLEMENT_INTEREST;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
 import static org.techytax.domain.CostConstants.VAT;
 import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_DEPRECIATION;
@@ -60,6 +60,7 @@ import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.util.DateHelper;
 
@@ -81,7 +82,7 @@ public class CostCache {
 
 	private void fillCosts() throws Exception {
 		CostDao costDao = new CostDao(Cost.class);
-		costs = costDao.getCostsInPeriod(beginDatum, eindDatum);
+		costs = costDao.getCostsInPeriod(new FiscalPeriod(beginDatum, eindDatum));
 	}
 
 	public void invalidate() {
@@ -162,8 +163,8 @@ public class CostCache {
 
 	public List<Cost> getCostListCurrentAccount() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
-		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, UITGAVE_DEZE_REKENING_FOUTIEF, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTENTIE,
-				ADVERTENTIE_ZONDER_BTW, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST);
+		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, EXPENSE_CURRENT_ACCOUNT_IGNORE, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTORIAL,
+				ADVERTORIAL_NO_VAT, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST);
 		for (Cost cost : costs) {
 			if (costTypes.contains(cost.getCostType())) {
 				filteredCosts.add(cost);
@@ -210,8 +211,7 @@ public class CostCache {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		List<Cost> filteredCostList = new ArrayList<>();
 		for (Cost cost : costs) {
-			CostType costType = cost.getCostType();
-			if (costType.equals(INCOME_TAX)) {
+			if (cost.getCostType().equals(INCOME_TAX)) {
 				filteredCostList.add(cost);
 			}
 		}
@@ -234,8 +234,7 @@ public class CostCache {
 	public BigDecimal getRepurchases() throws Exception {
 		BigDecimal repurchases = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			CostType costType = cost.getCostType();
-			if (costType.equals(REPURCHASES)) {
+			if (cost.getCostType().equals(REPURCHASES)) {
 				repurchases = repurchases.add(cost.getAmount());
 			}
 		}
@@ -245,8 +244,7 @@ public class CostCache {
 	public BigDecimal getCostCurrentAccountIgnore() throws Exception {
 		BigDecimal totalCost = BigDecimal.ZERO;
 		for (Cost cost : costs) {
-			CostType costType = cost.getCostType();
-			if (costType.equals(INCOME_CURRENT_ACCOUNT_IGNORE)) {
+			if (cost.getCostType().equals(INCOME_CURRENT_ACCOUNT_IGNORE)) {
 				totalCost = totalCost.add(cost.getAmount()).add(cost.getVat());
 			}
 		}

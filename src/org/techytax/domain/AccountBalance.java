@@ -25,13 +25,17 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
-@Entity(name = "org.techytax.domain.AccountBalance")
+@Entity
+@NamedQuery(name=AccountBalance.BY_ACCOUNT, query="SELECT ab FROM AccountBalance ab WHERE ab.account = :account AND ab.user = :user")
 @Table(name = "account_balance")
 public class AccountBalance extends UserObject implements Comparable<AccountBalance> {
+	
+	public final static String BY_ACCOUNT = "org.techytax.domain.AccountBalance.BY_ACCOUNT";
 
 	@ManyToOne
 	@JoinColumn(name = "account_id")

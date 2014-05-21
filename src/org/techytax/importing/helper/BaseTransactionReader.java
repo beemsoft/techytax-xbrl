@@ -20,10 +20,10 @@
 package org.techytax.importing.helper;
 
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.SETTLEMENT;
 import static org.techytax.domain.CostConstants.SETTLEMENT_DISCOUNT;
-import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,10 +31,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.dao.PrivateCostMatchDao;
 import org.techytax.dao.SettlementDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountType;
@@ -56,7 +56,8 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
 	protected SettlementDao settlementDao = new SettlementDao(Settlement.class);
 	private AccountDao accountDao = new AccountDao(Account.class);
-	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);	
+	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
+	protected PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);	
 	protected List<Cost> kostLijst = new ArrayList<>();
 
 	public AccountType getAccountType(String fileName) throws Exception {
@@ -66,7 +67,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected CostMatchParent findCostMatch(String omschrijving) throws Exception {
-		List<PrivateCostMatch> privateCostMatchList = kostmatchDao.getCostMatchPrivateList();
+		List<PrivateCostMatch> privateCostMatchList = privateCostMatchDao.findAll();
 		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
 		while (iterator.hasNext()) {
 			PrivateCostMatch kostmatch = iterator.next();
@@ -74,7 +75,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 				return kostmatch;
 			}
 		}
-		List<Kostmatch> kostmatchList = kostmatchDao.getKostmatchLijst();
+		List<Kostmatch> kostmatchList = kostmatchDao.findAll();
 		Iterator<Kostmatch> iterator2 = kostmatchList.iterator();
 		while (iterator2.hasNext()) {
 			Kostmatch kostmatch = iterator2.next();
@@ -138,7 +139,7 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		Cost splitCost = new Cost();
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
-		splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getId()));
+		splitCost.setCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE);
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
 		CostSplitter.applyPercentage(splitCost, privatePercentage);
@@ -153,9 +154,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
 		if (cost.getCostType().equals(SETTLEMENT)) {
-			splitCost.setCostType(CostTypeCache.getCostType(UITGAVE_DEZE_REKENING_FOUTIEF.getId()));
+			splitCost.setCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE);
 		} else {
-			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getId()));
+			splitCost.setCostType(INCOME_CURRENT_ACCOUNT_IGNORE);
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());

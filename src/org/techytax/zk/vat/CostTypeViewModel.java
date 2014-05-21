@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
+import org.techytax.dao.PrivateCostMatchDao;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.PrivateCostMatch;
@@ -56,11 +57,12 @@ public class CostTypeViewModel {
 	private List<Kostmatch> publicMatches = new ArrayList<>();
 	private List<PrivateCostMatch> privateMatches = new ArrayList<>();
 	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
+	private PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);	
 	private CostTypeDao kostensoortDao = new CostTypeDao(CostType.class);
 
 	@Init
 	public void init() throws Exception {
-		costTypes = kostensoortDao.getCostTypesForAccount();
+		costTypes = kostensoortDao.getCostTypesForTransactionMatching();
 		selectedCostType = costTypes.get(0); // Selected First One
 		setPrivateMatches(selectedCostType);
 	}
@@ -71,7 +73,7 @@ public class CostTypeViewModel {
 
 	private void setPrivateMatches(CostType costType) throws Exception {
 		if (user != null) {
-			privateMatches = kostmatchDao.getCostMatchPrivateListForCostType(costType);
+			privateMatches = privateCostMatchDao.getCostMatchPrivateListForCostType(costType);
 		}
 
 	}
@@ -132,7 +134,7 @@ public class CostTypeViewModel {
 	}
 
 	private void insertOrUpdatePrivateCostMatch(SplitMatch splitMatch) throws Exception {
-		PrivateCostMatch costMatch = kostmatchDao.getCostMatchPrivate(selectedPrivateMatch);
+		PrivateCostMatch costMatch = privateCostMatchDao.getCostMatchPrivate(selectedPrivateMatch);
 		if (costMatch == null) {
 			insertPrivateCostMatch();
 		} else {
@@ -149,13 +151,14 @@ public class CostTypeViewModel {
 			vatMatchPrivate.setVatType(VatType.valueOf(selectedVatType));
 			vatMatchPrivate.setPrivateCostMatch(selectedPrivateMatch);
 			selectedPrivateMatch.setVatMatchPrivate(vatMatchPrivate);
+			selectedPrivateMatch.setUser(user);
 		}
-		kostmatchDao.insertCostMatchPrivate(selectedPrivateMatch);
+		privateCostMatchDao.persistEntity(selectedPrivateMatch);
 	}
 	
 	private void updatePrivateCostMatch(SplitMatch splitMatch, PrivateCostMatch costMatch) throws Exception {
 		setSplitMatchIdWhenUpdating(costMatch);
-		kostmatchDao.updateCostMatchPrivate(selectedPrivateMatch);
+		privateCostMatchDao.merge(selectedPrivateMatch);
 	}
 
 	/**
@@ -171,7 +174,7 @@ public class CostTypeViewModel {
 	@Command
 	public void deleteMatch() throws Exception {
 		if (user != null) {
-			kostmatchDao.deleteCostMatchPrivate(selectedPrivateMatch);
+			privateCostMatchDao.deleteEntity(selectedPrivateMatch);
 		}
 		privateMatches.remove(selectedPrivateMatch);
 		selectedPrivateMatch = null;

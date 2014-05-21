@@ -19,32 +19,23 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.dao.QueryParameter.with;
 import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.INVOICE_PAID;
 import static org.techytax.domain.CostConstants.INVOICE_SENT;
-import static org.techytax.domain.CostConstants.UITGAVE_CREDIT_CARD;
-import static org.techytax.domain.CostConstants.UITGAVE_DEZE_REKENING_FOUTIEF;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
-
-import org.techytax.cache.CostTypeCache;
-import org.techytax.domain.Activum;
-import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
-import org.techytax.util.DateHelper;
-import org.zkoss.zkplus.jpa.JpaUtil;
+import org.techytax.domain.FiscalPeriod;
 
 public class CostDao extends BaseDao<Cost> {
 
@@ -52,112 +43,39 @@ public class CostDao extends BaseDao<Cost> {
 		super(persistentClass);
 	}
 
-	public void insertSplitCost(Cost originalCost, Cost splitCost) throws Exception {
+	public void insertSplitCost(Cost originalCost, Cost splitCost) {
 		splitCost.setDate(originalCost.getDate());
-		CostType costType = CostTypeCache.getCostType(originalCost.getCostTypeId());
-		if (costType.isBalansMeetellen()) {
-			splitCost.setCostType(UITGAVE_DEZE_REKENING_FOUTIEF);
-		} else {
-			splitCost.setCostType(EXPENSE_OTHER_ACCOUNT_IGNORE);
-		}
+		splitCost.setCostType(originalCost.getCostType().isBalansMeetellen() ? EXPENSE_CURRENT_ACCOUNT_IGNORE : EXPENSE_OTHER_ACCOUNT_IGNORE);
 		splitCost.roundValues();
+		splitCost.setUser(user);
 		persistEntity(splitCost);
 	}
 
-	public List<Cost> getCostsInPeriod(Date beginDatum, Date eindDatum) {
-		TypedQuery<Cost> query = JpaUtil.getEntityManager().createQuery("SELECT c FROM org.techytax.domain.Cost c WHERE c.user = :user AND c.date >= :beginDate AND c.date <= :endDate order by c.date asc", Cost.class);
-		query.setParameter("user", user);
-		query.setParameter("beginDate", beginDatum, TemporalType.DATE);
-		query.setParameter("endDate", eindDatum, TemporalType.DATE);
-		List<Cost> costs = query.getResultList();
-		return costs;
+	public List<Cost> getCostsInPeriod(FiscalPeriod period) {
+		return findByNamedQueryForPeriod(Cost.FOR_PERIOD, period);
 	}
 
-	public List<Cost> getVatCostsInPeriod(Date beginDatum, Date eindDatum) {
-		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<>();
-		for (Cost cost : costs) {
-			if (cost.getCostType().isVatDeclarable()) {
-				filteredCosts.add(cost);
-			}
-		}
-		return filteredCosts;
+	public List<Cost> getVatCostsInPeriod(FiscalPeriod period) {
+		return findByNamedQueryForPeriod(Cost.FOR_PERIOD_AND_VAT_DECLARABLE, period);
 	}
 
-	public List<Cost> getCostsOnBusinessAccountInPeriod(Date beginDatum, Date eindDatum) {
-		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<>();
-		for (Cost cost : costs) {
-			if (cost.getCostType().isBalansMeetellen()) {
-				filteredCosts.add(cost);
-			}
-		}
-		return filteredCosts;
+	public List<Cost> getCostsOnBusinessAccountInPeriod(FiscalPeriod period) {
+		return findByNamedQueryForPeriod(Cost.FOR_PERIOD_AND_ACCOUNT, period);
 	}
 
-	public List<Activum> getNewActiva(BalanceType balanceType, Date beginDate, Date endDate) {
-		TypedQuery<Activum> query = JpaUtil
-				.getEntityManager()
-				.createQuery(
-						"SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND (act.startDate = null OR act.startDate <= :startDate) AND act.endDate = null AND act.user = :user",
-						Activum.class);
-		query.setParameter("user", user);
-		query.setParameter("beginDate", beginDate, TemporalType.DATE);
-		query.setParameter("endDate", endDate, TemporalType.DATE);
-		query.setParameter("startDate", DateHelper.getLastDayOfFiscalYear(), TemporalType.DATE);
-		query.setParameter("balanceType", balanceType);
-		List<Activum> result = query.getResultList();
-		return result;
+	public List<Cost> getInvoicesSentAndPaid(FiscalPeriod period) {
+		return getCosts(period, Arrays.asList(INVOICE_SENT, INVOICE_PAID));
 	}
 
-	public BigDecimal getInvoiceBalance(Date beginDatum, Date eindDatum) throws Exception {
-		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		BigDecimal invoiceBalance = BigDecimal.ZERO;
-		for (Cost cost : costs) {
-			if (cost.getCostType().equals(INVOICE_SENT)) {
-				invoiceBalance = invoiceBalance.add(cost.getAmount()).add(cost.getVat());
-			} else if (cost.getCostType().equals(INVOICE_PAID)) {
-				invoiceBalance = invoiceBalance.subtract(cost.getAmount()).subtract(cost.getVat());
-			}
-		}
-		return invoiceBalance;
+	public List<Cost> getInvoicesSent(FiscalPeriod period) {
+		return getCosts(period, Arrays.asList(INVOICE_SENT));
 	}
 
-	public List<Cost> getInvoices(Date beginDatum, Date eindDatum) throws Exception {
-		List<Cost> costs = getCostsInPeriod(beginDatum, eindDatum);
-		List<Cost> filteredCosts = new ArrayList<>();
-		for (Cost cost : costs) {
-			if (cost.getCostType().equals(INVOICE_SENT) || cost.getCostType().equals(INVOICE_PAID)) {
-				filteredCosts.add(cost);
-			}
-		}
-		return filteredCosts;
+	public List<Cost> getVatCostsWithPrivateMoney(FiscalPeriod period) {
+		return getCosts(period, Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT, EXPENSE_CREDIT_CARD));
 	}
 
-	public BigDecimal getVatDebtFromPreviousYear(Date beginDate, Date endDate) {
-		List<Cost> costs = getCostsInPeriod(beginDate, endDate);
-		BigDecimal vatBalance = BigDecimal.ZERO;
-		for (Cost cost : costs) {
-			if (cost.getCostType().equals(INVOICE_SENT)) {
-				vatBalance = vatBalance.add(cost.getVat());
-			}
-		}
-		return vatBalance;
+	private List<Cost> getCosts(FiscalPeriod period, List<CostType> costTypes) {
+		return findByNamedQuery(Cost.FOR_PERIOD_AND_TYPES, with("beginDate", period.getBeginDate()).and("endDate", period.getEndDate()).and("costTypes", costTypes).parameters());
 	}
-
-	public List<Cost> getVatCostsWithPrivateMoney(Date beginDate, Date endDate) throws Exception {
-		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT, UITGAVE_CREDIT_CARD);
-		TypedQuery<Cost> query = JpaUtil
-				.getEntityManager()
-				.createQuery(
-						"SELECT c FROM org.techytax.domain.Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType IN :costTypes AND c.user = :user",
-						Cost.class);
-		query.setParameter("user", user);
-		query.setParameter("beginDate", beginDate, TemporalType.DATE);
-		query.setParameter("endDate", endDate, TemporalType.DATE);
-		query.setParameter("costTypes", costTypes);
-		List<Cost> result = query.getResultList();
-		return result;
-	}
-
 }

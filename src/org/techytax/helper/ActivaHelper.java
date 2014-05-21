@@ -35,9 +35,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.techytax.cache.CostCache;
+import org.techytax.dao.ActivumDao;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.CostDao;
-import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -47,15 +46,13 @@ import org.techytax.domain.FiscalBalance;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 
 public class ActivaHelper {
 
-	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
 	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
-	private CostDao costDao = new CostDao(Cost.class);
+	private ActivumDao activumDao = new ActivumDao(Activum.class);
 	private User user = UserCredentialManager.getUser();
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
@@ -87,8 +84,7 @@ public class ActivaHelper {
 	}
 
 	public List<Activum> getActiveActiva() throws Exception {
-		List<Activum> activaLijst = fiscalDao.getActiveActiva();
-		return activaLijst;
+		return activumDao.getActiveActiva();
 	}
 
 	private void handleInvoicesToBePaid() throws Exception {
@@ -152,7 +148,7 @@ public class ActivaHelper {
 		BookValue currentBookValue = bookValueDao.getBookValue(CAR, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(CAR, bookYear - 1);
 
-		List<Activum> allActiva = fiscalDao.getActiveActiva(CAR);
+		List<Activum> allActiva = activumDao.getActiveActiva(CAR);
 		BigDecimal totalPurchaseCostForAllActiva = BigDecimal.ZERO;
 		BigInteger totalRemainingValue = BigInteger.ZERO;
 		for (Activum activum2 : allActiva) {
@@ -191,14 +187,14 @@ public class ActivaHelper {
 
 		Activum activum = createActivum(balanceType);
 		activum.setEndDate(costCache.getBeginDatum());
-		List<Activum> newActiva = costDao.getNewActiva(balanceType, costCache.getBeginDatum(), costCache.getEindDatum());
+		List<Activum> newActiva = activumDao.getNewActiva(balanceType, costCache.getBeginDatum(), costCache.getEindDatum());
 		BigDecimal totalCost = BigDecimal.ZERO;
 		for (Activum activum2 : newActiva) {
 			totalCost = totalCost.add(activum2.getCost().getAmount());
 		}
 		BigInteger totalCostForNewActiva = AmountHelper.roundToInteger(totalCost);
 
-		List<Activum> allActiva = fiscalDao.getActiveActiva(balanceType);
+		List<Activum> allActiva = activumDao.getActiveActiva(balanceType);
 		BigDecimal totalPurchaseCostForAllActiva = BigDecimal.ZERO;
 		BigInteger totalRemainingValue = BigInteger.ZERO;
 		for (Activum activum2 : allActiva) {
@@ -256,7 +252,7 @@ public class ActivaHelper {
 		BookValue previousBookValue = bookValueDao.getBookValue(BalanceType.OFFICE, bookYear - 1);
 		BookValue currentBookValue = bookValueDao.getBookValue(BalanceType.OFFICE, bookYear);
 
-		List<Activum> allActiva = fiscalDao.getActiveActiva(OFFICE);
+		List<Activum> allActiva = activumDao.getActiveActiva(OFFICE);
 		BigDecimal totalCostForActivum = BigDecimal.ZERO;
 		for (Activum activum2 : allActiva) {
 			totalCostForActivum = totalCostForActivum.add(activum2.getCost().getAmount());

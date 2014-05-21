@@ -35,7 +35,7 @@ import org.techytax.dao.CostDao;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.log.AuditLogger;
@@ -61,8 +61,8 @@ public class InvoiceVM {
 	public ListModelList<InvoiceCheck> getInvoices() throws Exception {
 		if (user != null) {
 			AuditLogger.log(INVOICE_OVERVIEW, user);
-			Periode period = DateHelper.getPeriodTillDate(balanceDate);
-			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoices(period.getBeginDatum(), period.getEindDatum());
+			FiscalPeriod period = DateHelper.getPeriodTillDate(balanceDate);
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(period);
 			invoices = new ListModelList<>();
 
 			int currentYear = DateHelper.getYear(new Date());

@@ -19,6 +19,7 @@
  */
 package org.techytax.helper;
 
+import static java.math.BigDecimal.ZERO;
 import static org.techytax.domain.BalanceType.MACHINERY;
 import static org.techytax.domain.BalanceType.NON_CURRENT_ASSETS;
 import static org.techytax.domain.BalanceType.PENSION;
@@ -45,9 +46,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.techytax.cache.CostCache;
+import org.techytax.dao.ActivumDao;
 import org.techytax.dao.BookValueDao;
 import org.techytax.dao.CostDao;
-import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -55,12 +56,11 @@ import org.techytax.domain.Cost;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.FiscalBalance;
 import org.techytax.domain.FiscalOverview;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivatWithdrawal;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
@@ -68,8 +68,7 @@ import org.techytax.zk.login.UserCredentialManager;
 public class FiscalOverviewHelper {
 
 	private User user = UserCredentialManager.getUser();
-	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
-	private GenericDao<BookValue> bookValueGenericDao = new GenericDao<>(BookValue.class);
+	private ActivumDao activumDao = new ActivumDao(Activum.class);
 	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
 	private CostCache costCache = new CostCache();
 	private CostDao costDao = new CostDao(Cost.class);
@@ -100,14 +99,14 @@ public class FiscalOverviewHelper {
 		Map<BalanceType, FiscalBalance> activaMap = activaHelper.handleActiva(props, deductableCosts, costCache.getBusinessAccountCosts());
 		overview.setActivaMap(activaMap);
 
-		List<BookValue> activumListThisYear = fiscalDao.getActivaList(bookYear);
-		List<BookValue> activumListPreviousYear = fiscalDao.getActivaList(bookYear - 1);
+		List<BookValue> activumListThisYear = bookValueDao.getActivaList(bookYear);
+		List<BookValue> activumListPreviousYear = bookValueDao.getActivaList(bookYear - 1);
 		setBalanceTotals(activumListThisYear, activumListPreviousYear);
 
 		handlePassiva();
 		overview.setPassivaMap(passivaMap);
 
-		List<BookValue> passivaList = fiscalDao.getPassivaList(bookYear);
+		List<BookValue> passivaList = bookValueDao.getPassivaList(bookYear);
 
 		BigInteger enterpriseCapital = getEnterpriseCapital(passivaList);
 		overview.setEnterpriseCapital(enterpriseCapital);
@@ -197,7 +196,7 @@ public class FiscalOverviewHelper {
 		if (currentBookValue == null) {
 			BookValue newValue = new BookValue(NON_CURRENT_ASSETS, bookYear, bookTotalNonCurrentAssets);
 			newValue.setUser(user);
-			bookValueGenericDao.persistEntity(newValue);
+			bookValueDao.persistEntity(newValue);
 		} else {
 			currentBookValue.setSaldo(bookTotalNonCurrentAssets);
 		}
@@ -214,15 +213,14 @@ public class FiscalOverviewHelper {
 	private BigDecimal handleVatToBePaid() throws Exception {
 		BookValue currentBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear - 1);
-		Periode lastVatPeriod = DateHelper.getLastVatPeriodPreviousYear();
-		BigDecimal vatDebt = costDao.getVatDebtFromPreviousYear(lastVatPeriod.getBeginDatum(), lastVatPeriod.getEindDatum());
+		BigDecimal vatDebt = getVatDebtFromPreviousYear(DateHelper.getLastVatPeriodPreviousYear());
 
 		if (vatDebt != null && vatDebt.compareTo(BigDecimal.ZERO) == 1) {
 
 			if (currentBookValue == null) {
 				BookValue newValue = new BookValue(VAT_TO_BE_PAID, bookYear, vatDebt.toBigInteger());
 				newValue.setUser(user);
-				bookValueGenericDao.persistEntity(newValue);
+				bookValueDao.persistEntity(newValue);
 			} else {
 				currentBookValue.setSaldo(vatDebt.toBigInteger());
 			}
@@ -235,6 +233,15 @@ public class FiscalOverviewHelper {
 		}
 		return vatDebt;
 	}
+	
+	private BigDecimal getVatDebtFromPreviousYear(FiscalPeriod period) {
+		List<Cost> costs = costDao.getInvoicesSent(period);
+		BigDecimal vatBalance = ZERO;
+		for (Cost cost : costs) {
+			vatBalance = vatBalance.add(cost.getVat());
+		}
+		return vatBalance;
+	}
 
 	private BigInteger handleFiscalPension() throws Exception {
 		BigInteger fiscalPension = BigInteger.ZERO;
@@ -245,7 +252,7 @@ public class FiscalOverviewHelper {
 				fiscalPension = previousBookValue.getSaldo();
 				BookValue newValue = new BookValue(PENSION, bookYear, fiscalPension);
 				newValue.setUser(user);
-				bookValueGenericDao.persistEntity(newValue);
+				bookValueDao.persistEntity(newValue);
 			}
 		} else {
 			fiscalPension = currentBookValue.getSaldo();
@@ -271,7 +278,7 @@ public class FiscalOverviewHelper {
 	}
 
 	private void handlePrivateWithdrawals(PrivatWithdrawal privatWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
-		List<BookValue> passivaListPreviousYear = fiscalDao.getPassivaList(bookYear - 1);
+		List<BookValue> passivaListPreviousYear = bookValueDao.getPassivaList(bookYear - 1);
 		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaListPreviousYear);
 		BigInteger totalWithdrawal = overview.getProfit();
 		totalWithdrawal = totalWithdrawal.subtract(enterpriseCapital.subtract(enterpriseCapitalPreviousYear));
@@ -289,7 +296,7 @@ public class FiscalOverviewHelper {
 	}
 
 	private void handleDepreciations(List<DeductableCostGroup> deductableCosts) throws Exception {
-		List<Activum> allActiva = fiscalDao.getActiveActiva(MACHINERY);
+		List<Activum> allActiva = activumDao.getActiveActiva(MACHINERY);
 		BigInteger totalDeprecationActiva = BigInteger.ZERO;
 		for (Activum activum : allActiva) {
 			totalDeprecationActiva = totalDeprecationActiva.add(activum.getDepreciation());

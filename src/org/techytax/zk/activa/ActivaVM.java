@@ -28,14 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.techytax.dao.ActivumDao;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.FiscalDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
 import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
@@ -55,9 +54,8 @@ public class ActivaVM {
 	private User user = UserCredentialManager.getUser();
 	private List<BookValueHistory> bookValueHistories = new ArrayList<>();
 	private Activum selected;
-	private FiscalDao fiscalDao = new FiscalDao(BookValue.class);
 	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
-	private GenericDao<Activum> activumGenericDao = new GenericDao<>(Activum.class);
+	private ActivumDao activumDao = new ActivumDao(Activum.class);
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
 		if (user != null) {
@@ -127,11 +125,11 @@ public class ActivaVM {
 	@Command
 	public void saveActivum() throws Exception {
 		if (user != null) {
-			Activum activum = (Activum) activumGenericDao.getEntity(selected, selected.getId());
+			Activum activum = (Activum) activumDao.getEntity(selected, selected.getId());
 			if (activum == null) {
-				activumGenericDao.persistEntity(selected);
+				activumDao.persistEntity(selected);
 			} else {
-				activumGenericDao.merge(selected);
+				activumDao.merge(selected);
 			}
 		}
 	}
@@ -195,7 +193,7 @@ public class ActivaVM {
 
 	public ListModelList<Activum> getActiva() throws Exception {
 		if (user != null) {
-			List<Activum> activaList = fiscalDao.getAllActiva();
+			List<Activum> activaList = activumDao.getAllActiva();
 			return new ListModelList<>(activaList);
 		} else {
 			Executions.sendRedirect("login.zul");
@@ -216,7 +214,7 @@ public class ActivaVM {
 	@NotifyChange("activa")
 	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
 		AuditLogger.log(UPDATE_ACTIVUM, user);
-		activumGenericDao.merge(activum);
+		activumDao.merge(activum);
 	}
 
 	@GlobalCommand

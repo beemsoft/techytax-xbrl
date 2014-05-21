@@ -31,10 +31,9 @@ import org.techytax.dao.CostDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
-import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
@@ -68,8 +67,8 @@ public class CostVM {
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
-			Periode vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-			List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(vatPeriod.getBeginDatum(), vatPeriod.getEindDatum());
+			FiscalPeriod vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
+			List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(vatPeriod);
 			costs = new ListModelList<>(vatCosts);
 		}
 		return costs;

@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.DigipoortServiceStub;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.props.PropsFactory;
@@ -47,7 +47,7 @@ public class XbrlVM implements Serializable {
 	private static final long serialVersionUID = -4600263940170016764L;
 	
 	protected User user = UserCredentialManager.getUser();
-	private Periode periode = DateHelper.getLatestVatPeriodTillToday();
+	private FiscalPeriod periode = DateHelper.getLatestVatPeriodTillToday();
 	private DigipoortService digipoortService;
 	private List<String> berichtsoorten;
 	private List<ProcesResultaat> processen;
@@ -164,8 +164,8 @@ public class XbrlVM implements Serializable {
 	}
 
 	private void setDates(VatDeclarationData vatDeclarationData) {
-		vatDeclarationData.setStartDate(periode.getBeginDatum());
-		vatDeclarationData.setEndDate(periode.getEindDatum());
+		vatDeclarationData.setStartDate(periode.getBeginDate());
+		vatDeclarationData.setEndDate(periode.getEndDate());
 	}
 
 	@Command
@@ -219,11 +219,11 @@ public class XbrlVM implements Serializable {
 	}
 
 	public Date getBeginDate() {
-		return periode.getBeginDatum();
+		return periode.getBeginDate();
 	}
 
 	public Date getEndDate() {
-		return periode.getEindDatum();
+		return periode.getEndDate();
 	}
 
 	public String getFiscalNumber() {

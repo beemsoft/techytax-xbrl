@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
-import org.techytax.domain.Periode;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatJournals;
@@ -93,7 +92,7 @@ public class VatReportHelper {
 	private static void groupCosts(List<Cost> vatCosts, Map<String, List<Cost>> journalMapIn, Map<String, List<Cost>> journalMapOut) throws Exception {
 		List<Cost> journalCosts;
 		for (Cost cost : vatCosts) {
-			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
+			CostType costType = cost.getCostType();
 			if (costType.isBijschrijving() || costType.equals(INVOICE_SENT)) {
 				if (journalMapIn.containsKey(cost.getCostType().getOmschrijving())) {
 					journalCosts = journalMapIn.get(cost.getCostType().getOmschrijving());
@@ -119,9 +118,9 @@ public class VatReportHelper {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Periode period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
+		FiscalPeriod period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		CostDao costDao = new CostDao(Cost.class);
-		List<Cost> vatCosts = costDao.getVatCostsInPeriod(period.getBeginDatum(), period.getEindDatum());
+		List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 		createReportData(vatCosts);
 	}
 }
