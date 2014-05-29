@@ -49,8 +49,8 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine;
 import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.TrLine.Vat;
 import nl.auditfiles.xaf._3.Auditfile.Header;
-import nl.auditfiles.xaf._3.CountryCodeType;
-import nl.auditfiles.xaf._3.CurrencyCodeType;
+import nl.auditfiles.xaf._3.CountrycodeIso3166;
+import nl.auditfiles.xaf._3.CurrencycodeIso4217;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
 import org.techytax.dao.CostDao;
@@ -106,9 +106,6 @@ public class DutchAuditFileHelper {
 		JAXBContext jc = null;
 		Marshaller m = null;
 		try {
-			// Load properties
-			Properties props = PropsFactory.loadProperties();
-
 			jc = JAXBContext.newInstance("nl.auditfiles.xaf._3");
 			m = jc.createMarshaller();
 			StringWriter writer = new StringWriter();
@@ -118,10 +115,12 @@ public class DutchAuditFileHelper {
 			ObjectFactory objectFactory = new ObjectFactory();
 			Auditfile auditfile = objectFactory.createAuditfile();
 			Company company = objectFactory.createAuditfileCompany();
-			company.setCompanyIdent(user.getCompanyName());
 			company.setCompanyName(user.getCompanyName());
-			company.setTaxRegIdent(props.getProperty("tax.id"));
-			company.setTaxRegistrationCountry(props.getProperty("tax.country"));
+			if (user.getChamberOfCommerceNumber() != null) {
+				company.setCompanyIdent(Long.toString(user.getChamberOfCommerceNumber()));
+			}
+			company.setTaxRegIdent(user.getFiscalNumber());
+			company.setTaxRegistrationCountry(CountrycodeIso3166.NL);
 
 			CustomersSuppliers customersElement = objectFactory.createAuditfileCompanyCustomersSuppliers();
 			for (Customer customer : customers) {
@@ -144,7 +143,7 @@ public class DutchAuditFileHelper {
 				}
 				address.setNumberExtension(customer.getNumberExtension());
 				address.setPostalCode(customer.getPostalCode());
-				address.setCountry(CountryCodeType.NL);
+				address.setCountry(CountrycodeIso3166.NL);
 				customerElement.getStreetAddress().add(address);
 				customersElement.getCustomerSupplier().add(customerElement);
 			}
@@ -172,7 +171,7 @@ public class DutchAuditFileHelper {
 			auditfile.setCompany(company);
 
 			Header header = objectFactory.createAuditfileHeader();
-			header.setCurCode(CurrencyCodeType.EUR);
+			header.setCurCode(CurrencycodeIso4217.EUR);
 			int year = 0;
 			if (costList != null && costList.size() > 0) {
 				Cost firstCost = (Cost) costList.get(0);

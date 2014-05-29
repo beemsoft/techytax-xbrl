@@ -30,6 +30,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Check;
+
 @MappedSuperclass
 public class User implements Serializable {
 
@@ -56,6 +58,9 @@ public class User implements Serializable {
 	private String username;
 	private String phoneNumber;
 	private String fiscalNumber;
+	
+	@Column(name = "kvk_nummer")
+	private Long chamberOfCommerceNumber;
 	
 	@Enumerated(EnumType.ORDINAL)
 	private VatPeriodType vatPeriodType = VatPeriodType.PER_QUARTER;
@@ -196,6 +201,14 @@ public class User implements Serializable {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+	
+	public Long getChamberOfCommerceNumber() {
+		return chamberOfCommerceNumber;
+	}
+
+	public void setChamberOfCommerceNumber(Long chamberOfCommerceNumber) {
+		this.chamberOfCommerceNumber = chamberOfCommerceNumber;
 	}
 	
 }
