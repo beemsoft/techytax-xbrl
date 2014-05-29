@@ -21,31 +21,31 @@ arg0="/WEB-INF/layout/template.zul"?>
 		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	-->
     <style src="/widgets/application/zk_calendar/style.css" />
-    <window id="win" title="Agenda" apply="org.techytax.business.zk.calendar.CalendarController" self="@define(content)">
+    <window id="win" title="${c:l('agenda')}" apply="org.techytax.business.zk.calendar.CalendarController" self="@define(content)">
         <!-- Calendars Body -->
         <div>
             <!-- Control Menu -->
             <hlayout sclass="z-valign-middle">
-                <button id="today" label="Vandaag" />
+                <button id="today" label="${c:l('today')}" />
                 <button id="prev" image="/widgets/application/zk_calendar/img/arrow-180.png"/>
                 <button id="next" image="/widgets/application/zk_calendar/img/arrow.png"/>
                 <separator width="50px" />
-                <button id="pageDay" label="Dag" width="55px" />
-                <button id="pageWeek" label="Week" width="55px"/>
-                <button id="pageMonth" label="Maand" width="55px"/>
+                <button id="pageDay" label="${c:l('day')}" width="55px" />
+                <button id="pageWeek" label="${c:l('week')}" width="55px"/>
+                <button id="pageMonth" label="${c:l('month')}" width="55px"/>
                 <separator width="50px" />
-                Filter :
+                <label value="${c:l('filter')}:" />
                 <textbox id="filter"/>
-                <button id="applyFilter" label="Zoek met filter"/>                
+                <button id="applyFilter" label="${c:l('search.filter')}"/>                
                 <listbox id="projectListbox" mold="select" rows="1" model="${win$composer.projectsModel}">
 		            <template name="model">
 						<listitem label="${each.code}" />
 			        </template>
     			</listbox>
-                <button id="resetFilter" label="Reset"/>
-                <button id="invoiceButton" label="Factuur" tooltiptext="Selecteer 1 project om een factuur te maken."/><span>
+                <button id="resetFilter" label="${c:l('reset')}"/>
+                <button id="invoiceButton" label="${c:l('invoice')}" tooltiptext="${c:l('invoice.tooltip')}"/><span>
 			    <window id="invoiceWindow" visible="false" border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" >
-			    <button id="sendInvoiceButton" label="Verstuur factuur"/>
+			    <button id="sendInvoiceButton" label="${c:l('invoice.send')}"/>
 				<borderlayout height="100%">
 					<center border="none" flex="true">
 						<iframe id="invoiceFrame" />

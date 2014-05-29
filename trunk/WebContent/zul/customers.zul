@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -7,20 +7,20 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Alle klanten beheren" border="normal" width="1100px"
+<window self="@define(content)" title="${c:l('maintain.customers')}" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.business.zk.CustomerVM')" 
 	binder="@init(queueName='queueName',queueScope='desktop')" validationMessages="@id('vmsgs')">
 	<vbox>
 		<listbox model="@load(vm.customers)" selectedItem="@bind(vm.selected)" hflex="true" height="540px">
 			<auxhead>
-            	<auxheader colspan="5" class="topic">Klanten</auxheader>
+            	<auxheader colspan="5" class="topic"><label value="${c:l('customers')}" /></auxheader>
         	</auxhead>
 			<listhead>
-				<listheader label="Naam" width="150px" />
-				<listheader label="Omschrijving" width="250px" />
-				<listheader label="Adres" width="200px" />
-				<listheader label="Contact" width="100px" />
-				<listheader label="Factuur email" width="200px" />
+				<listheader label="${c:l('name')}" width="150px" />
+				<listheader label="${c:l('description')}" width="250px" />
+				<listheader label="${c:l('address')}" width="200px" />
+				<listheader label="${c:l('contact')}" width="100px" />
+				<listheader label="${c:l('invoice.email')}" width="200px" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem onDoubleClick="@command('onDoubleClicked')">
@@ -33,20 +33,20 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</template>
 		</listbox>
 		<toolbar>
-			<button label="New" onClick="@command('newCustomer')" />
-			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCustomer':'confirmDelete')" disabled="@load(empty vm.selected)" />
-			<button label="Exporteer klanten" onClick="@command('audit')" tooltiptext="Er wordt een email gestuurd met een XAF 3.1 XML bestand"/>
+			<button label="${c:l('new')}" onClick="@command('newCustomer')" />
+			<button label="${c:l('delete')}" onClick="@command(empty vm.selected.id?'deleteCustomer':'confirmDelete')" disabled="@load(empty vm.selected)" />
+			<button label="${c:l('export.customers')}" onClick="@command('audit')" tooltiptext="${c:l('email.xaf')}"/>
 		</toolbar>
 	</vbox>
-	<window title="Confirm" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
+	<window title="${c:l('confirm')}" mode="modal" border="normal" width="300px" visible="@load(not empty vm.deleteMessage)">
 		<vbox hflex="true">
 			<hlayout height="50px">
 				<image src="~./zul/img/msgbox/question-btn.png"/>
 				<label value="@load(vm.deleteMessage)"/>
 			</hlayout>
 			<hbox pack="center" hflex="true">
-				<button label="Delete" onClick="@command('deleteCustomer')"/>
-				<button label="Cancel" onClick="@command('cancelDelete')"/>
+				<button label="${c:l('delete')}" onClick="@command('deleteCustomer')"/>
+				<button label="${c:l('cancel')}" onClick="@command('cancelDelete')"/>
 			</hbox>
 		</vbox>
 	</window>

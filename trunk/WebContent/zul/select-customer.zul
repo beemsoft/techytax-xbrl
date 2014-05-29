@@ -1,21 +1,21 @@
-<window id="selectWin" title="Klant selecteren" width="640px"
+<window id="selectWin" title="${c:l('customer.select')}" width="640px"
 	height="500px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.business.zk.SelectCustomerVM')">
 
-	<button label="Selecteer" onClick="@command('select')" />
-	<button label="Annuleer" onClick="@command('cancel')" />
+	<button label="${c:l('select')}" onClick="@command('select')" />
+	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
 	<listbox model="@load(vm.customers)"
 		selectedItem="@bind(vm.selectedCustomer)" height="350px">
 		<auxhead>
 			<auxheader colspan="5" class="topic">
-				Alle bedrijven op deze postcode
+				<label value="${c:l('companies.zipcode')}" />
 			</auxheader>
 		</auxhead>
 		<listhead>
-			<listheader label="Bedrijfsnaam" width="300px" />
-			<listheader label="KvK" align="center" width="80px" />
-			<listheader label="Adres" align="center" width="220px" />
+			<listheader label="${c:l('companyname')}" width="300px" />
+			<listheader label="${c:l('chamber.of.commerce')}" align="center" width="80px" />
+			<listheader label="${c:l('address')}" align="center" width="220px" />
 		</listhead>
 		<template name="model" var="item">
 			<listitem onDoubleClick="@command('onDoubleClicked')">

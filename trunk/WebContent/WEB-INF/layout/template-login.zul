@@ -120,7 +120,7 @@
 					<div style="float:right; padding: 10px">
 						<hbox visible="@load(vm.loggedOn)">
 							<hbox visible="@load(vm.displayVatWarning)">						
-								<label value="Heeft u de omzetbelasting al aangegeven en betaald?" />
+								<label value="${c:l('mainMenu.vatDeclaration')}" />
 							</hbox>						
 							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" sclass="loggedOnUserButton"/>
 							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" />
@@ -133,40 +133,28 @@
 			<!-- Sidebar -->
 			<west width="335px" border="0" hflex="true" splittable="true" margins="0,5,0,0" >
 				<vlayout spacing="0">
-					<panel width="100%" border="normal" title="Online boekhouden" >
+					<panel width="100%" border="normal" title="${c:l('panel1.title')}" >
 						<panelchildren>
 							<html>
-								<![CDATA[<p>TechyTax is een online boekhoudpakket voor kleine bedrijven (eenmanszaak, zzp, vof). Het berekent de btw en geeft fiscale overzichten. Hiervoor is geen boekhoudkundige kennis vereist. Het doel van dit project is om, m.b.v. de laatste technieken, de belastingaangifte zo simpel mogelijk te maken.</p> 
-								 ]]>
+								<![CDATA[${c:l('panel1.text')}]]>
 							</html>
 						</panelchildren>
 					</panel>					
-					<panel width="100%" border="normal" title="Voordelen " >
+					<panel width="100%" border="normal" title="${c:l('panel2.title')}" >
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul> <li>Gebruiksvriendelijk</li>
-								<li>Veilige opslag van gegevens</li>
-								 <li>Geen boekhoudkundige kennis vereist</li>
-								 <li>Open Source, broncode vrij beschikbaar op SourceForge</li>
-								</ul> ]]>
+								<![CDATA[${c:l('panel2.text')}]]>
 							</html>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal" title="Speciale kenmerken" >
+					<panel width="100%" border="normal" title="${c:l('panel3.title')}" >
 						<panelchildren>
 							<html>
-								<![CDATA[ <ul>
-								 <li>Importeren van transacties voor ING, ABN-AMRO en OV-chipkaart</li>
-								 <li>Automatische btw aangifte</li>
-								 <li>Administratief splitsen</li>
-								 <li>Afschrijven</li>
-								 <li>Urenregistratie</li>
-								 <li>Factureren</li>
-								 </ul> ]]>
+								<![CDATA[${c:l('panel3.text')}]]>
 							</html>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal" title="Broncode analyse" >
+					<panel width="100%" border="normal" title="${c:l('panel4.title')}" >
 						<panelchildren>
 							<html>
 								<script type="text/javascript" src="https://www.ohloh.net/p/337030/widgets/project_factoids_stats.js"></script>

@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <zk>
 	<window self="@define(content)" id="loginWin" border="normal"
 		apply="org.zkoss.bind.BindComposer"
@@ -13,27 +13,27 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 					<grid width="200px" tooltip="loginInfo" >
 						<rows>
 							<row>
-								<label value="Naam" />
+								<label value="${c:l('logon.name')}" />
 								<textbox id="nameTxb" width="85px"
 									value="@bind(vm.username)" />
 							</row>
 							<row>
-								<label value="Wachtwoord" />
+								<label value="${c:l('logon.password')}" />
 								<textbox id="passwordTxb" type="password" width="85px"
 									value="@bind(vm.password)" />
 							</row>
 						</rows>
 					</grid>
 					<hlayout>
- 						<button label="Inloggen" onClick="@command('login')" tooltip="loginInfo" mold="os" />
+ 						<button label="${c:l('logon.button')}" onClick="@command('login')" tooltip="loginInfo" mold="os" />
  						<toolbar mold="panel" align="center">
-							<toolbarbutton label="Wachtwoord vergeten?" onClick="@command('forgotPassword')" />
+							<toolbarbutton label="${c:l('logon.forgot')}" onClick="@command('forgotPassword')" />
 						</toolbar>
 					</hlayout> 					
 				</vbox>
 				</groupbox>
 				<toolbarbutton id="secure"
-					label="Kies veilige verbinding"
+					label="${c:l('go.secure')}"
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
 						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" height="80px"/>
 				<vbox>
@@ -47,18 +47,12 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 		</hlayout>
 		<popup id="secureInfo" width="300px">
 			<html>
-				<![CDATA[ De verbinding is op dit moment niet beveiligd.
-				Kies a.u.b. voor een beveiligde verbinding. Indien u een
-				waarschuwing krijgt van de browser, kunt u deze website
-				als veilig aangeven.]]>
+				<![CDATA[${c:l('secure.line')}]]>
 			</html>
 		</popup>
 		<popup id="loginInfo" width="300px">
 			<html>
-				<![CDATA[ Indien u geregistreerd bent, kunt u hier inloggen.
-				Zoniet, dan kunt u hier voor een demo inloggen met de volgende
-				gegevens: Naam: guest, Wachtwoord: guest
-				]]>
+				<![CDATA[${c:l('logon.info')}]]>
 			</html>
 		</popup>		
 	</window>

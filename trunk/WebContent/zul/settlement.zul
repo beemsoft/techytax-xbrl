@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -7,51 +7,44 @@ arg0="/WEB-INF/layout/template.zul"?>
 	validationMessages="@id('vmsgs')">
 	<hbox>
 	<vbox hflex="true" width="1090px" height="490px">
-		<groupbox hflex="true" mold="3d">
+		<groupbox hflex="true" >
 			<grid hflex="true" >
 				<columns>
 					<column width="120px"/>
 					<column/>
 				</columns>
 				<rows>
-					<row>Adres
-						<hlayout>
-							<label value="@load(vm.address)" />
-						</hlayout>
+					<row>
+						<label value="${c:l('address')}" />
+						<label value="@load(vm.address)" />
 					</row>				
-					<row>Omschrijving
-						<hlayout>
-							<textbox value="@bind(vm.settlement.description)" cols="100" rows="10" />
-						</hlayout>
+					<row>
+						<label value="${c:l('description')}" />
+						<textbox value="@bind(vm.settlement.description)" cols="100" rows="10" />
 					</row>
-					<row>Startdatum
-						<hlayout> 
-							<datebox value="@bind(vm.startDate) @save(vm.selected.date, before='saveCost')"/>
-						</hlayout>	
+					<row>
+						<label value="${c:l('date.start')}" />
+						<datebox value="@bind(vm.startDate) @save(vm.selected.date, before='saveCost')"/>
 					</row>									
-					<row>Koopsom
-						<hlayout>
-							<textbox value="@bind(vm.settlement.purchasePrice)" />
-						</hlayout>
+					<row>
+						<label value="${c:l('house.purchase.price')}" />
+						<textbox value="@bind(vm.settlement.purchasePrice)" />
 					</row>
-					<row>Aanloopkosten
-						<hlayout>
-							<textbox value="@bind(vm.settlement.startupCosts)" />
-						</hlayout>
+					<row>
+						<label value="${c:l('initial.expenses')}" />					
+						<textbox value="@bind(vm.settlement.startupCosts)" />
 					</row>
-					<row>Aantal vierkante meters voor zakelijk gebruik
-						<hlayout>
-							<intbox value="@bind(vm.settlement.nofSquareMetersBusiness)" />
-						</hlayout>
+					<row>
+						<label value="${c:l('square.meters.business')}" />					
+						<intbox value="@bind(vm.settlement.nofSquareMetersBusiness)" />
 					</row>
-					<row>Aantal vierkante meters voor privégebruik
-						<hlayout>
-							<intbox value="@bind(vm.settlement.nofSquareMetersPrivate)" />
-						</hlayout>
+					<row>
+						<label value="${c:l('square.meters.private')}" />
+						<intbox value="@bind(vm.settlement.nofSquareMetersPrivate)" />
 					</row>					
 				</rows>
 			</grid>
-			<button label="Wijzig" onClick="@command('save')" />
+			<button label="${c:l('save')}" onClick="@command('save')" />
 		</groupbox>		
 	</vbox>
 	</hbox>

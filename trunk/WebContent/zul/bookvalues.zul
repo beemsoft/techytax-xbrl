@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -22,19 +22,19 @@ arg0="/WEB-INF/layout/template.zul"?>
 					selectedItem="@bind(vm.selected)" hflex="true" height="490px">
 					<auxhead>
 						<auxheader colspan="5" class="topic">
-							Activa
+							<label value="${c:l('activa')}" />
 						</auxheader>
 					</auxhead>
 					<listhead>
-						<listheader label="Aanschafdatum" align="center" width="120px" />
-						<listheader label="Aanschafkosten" align="right" width="120px" />
-						<listheader label="Begindatum" align="center" width="100px" />
-						<listheader label="Einddatum" align="center" width="100px" />
-						<listheader label="Omschrijving" width="500px" />
-						<listheader label="Type" width="100px" />
-						<listheader label="Jaren" align="right" width="90px" />
-						<listheader label="Afschrijving" align="right" width="90px" />
-						<listheader label="Restwaarde" align="right" width="90px" />
+						<listheader label="${c:l('date.purchase')}" align="center" width="120px" />
+						<listheader label="${c:l('purchase.expenses')}" align="right" width="120px" />
+						<listheader label="${c:l('date.start')}" align="center" width="100px" />
+						<listheader label="${c:l('date.end')}" align="center" width="100px" />
+						<listheader label="${c:l('description')}" width="500px" />
+						<listheader label="${c:l('type')}" width="100px" />
+						<listheader label="${c:l('years')}" align="right" width="90px" />
+						<listheader label="${c:l('depreciation')}" align="right" width="90px" />
+						<listheader label="${c:l('remaining.value')}" align="right" width="90px" />
 					</listhead>
 					<template name="model" var="item">
 						<listitem onDoubleClick="@command('onDoubleClicked')">

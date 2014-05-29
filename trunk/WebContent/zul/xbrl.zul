@@ -1,9 +1,9 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
 	<!--
-		Copyright 2013 Hans Beemsterboer
+		Copyright 2014 Hans Beemsterboer
 		
 		This file is part of the TechyTax program.
 		
@@ -21,50 +21,45 @@ arg0="/WEB-INF/layout/template.zul"?>
 		along with TechyTax; if not, write to the Free Software
 		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	-->
-	<window self="@define(content)" title="Digipoort overzicht" border="normal"
-		apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('org.techytax.zk.xbrl.XbrlVM')">
+	<window self="@define(content)" title="${c:l('digipoort.title')}" border="normal" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.xbrl.XbrlVM')">
 		<hbox>
 			<vbox width="500px">
 				<hbox>
-					<label value="U bent verbonden met de " />
-					<label visible="@load(vm.testEnvironment)" value="TEST"/>
-					<label visible="@load(not vm.testEnvironment)" value="PRODUCTIE"/>
-					<label value=" omgeving." />
+					<label value="${c:l('digipoort.env')} " />
+					<label visible="@load(vm.testEnvironment)" value="${c:l('env.test')}"/>
+					<label visible="@load(not vm.testEnvironment)" value="${c:l('env.prod')}"/>
+					<label value=" ${c:l('environment')}." />
 				</hbox>				
-				<label value="Hier kunt u controleren of ingestuurde aangiftes goed zijn aangekomen bij de Belastingdienst." />
+				<label value="${c:l('digipoort.check')}" />
 		 	</vbox>
-		 	<vbox tooltiptext="De tijden mogen niet te veel verschillen, omdat anders het signeren fout gaat.">
+		 	<vbox tooltiptext="${c:l('digipoort.warning')}">
 		 		<hbox>
-		 			<label value="Systeemtijd:"/>
+		 			<label value="${c:l('system.time')}:"/>
 		 			<label value="@load(vm.systemDate)" />
 		 		</hbox>
 		 		<hbox>
-		 			<label value="Echte tijd:"/>		 		
+		 			<label value="${c:l('real.time')}:"/>		 		
 		 			<label value="@load(vm.realTimDate)" />
 		 		</hbox>
 		 	</vbox>
 		 </hbox>	
 		<tabbox width="1500px" height="565px">
 			<tabs>
-				<tab label="Berichtsoorten" />
-				<tab label="Processen" />
-				<tab label="Nieuwe statussen" />
+				<tab label="${c:l('message.types')}" />
+				<tab label="${c:l('processes')}" />
+				<tab label="${c:l('new.statusses')}" />
 			</tabs>
 			<tabpanels>
 				<tabpanel>
-					<button label="Check berichtsoort"
-						onClick="@command('berichtsoort')" />
-					<listbox model="@load(vm.berichtsoorten)"
-						hflex="true" height="350px">
+					<button label="${c:l('check.message.type')}" onClick="@command('berichtsoort')" />
+					<listbox model="@load(vm.berichtsoorten)" hflex="true" height="350px">
 						<auxhead>
 							<auxheader colspan="5" class="topic">
-								Berichtsoorten
+								<label value="${c:l('message.types')}" />
 							</auxheader>
 						</auxhead>
 						<listhead>
-							<listheader label="Berichtsoort"
-								align="center" width="100px" />
+							<listheader label="${c:l('message.type')}" align="center" width="100px" />
 						</listhead>
 						<template name="model" var="item">
 							<listitem>
@@ -74,18 +69,16 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</listbox>
 				</tabpanel>
 				<tabpanel>
-					<button label="Check processen"
-						onClick="@command('processen')" />
+					<button label="${c:l('check.processes')}" onClick="@command('processen')" />
 					<hbox>
-						<listbox model="@load(vm.processen)"
-							selectedItem="@bind(vm.selectedProces)" width="235px" height="500px">
+						<listbox model="@load(vm.processen)" selectedItem="@bind(vm.selectedProces)" width="235px" height="500px">
 							<auxhead>
 								<auxheader colspan="4" class="topic">
-									Processen
+									<label value="${c:l('processes')}" />
 								</auxheader>
 							</auxhead>
 							<listhead>
-								<listheader label="Kenmerk" width="220px" />
+								<listheader label="${c:l('feature')}" width="220px" />
 							</listhead>
 							<template name="model" var="item">
 								<listitem>
@@ -98,79 +91,55 @@ arg0="/WEB-INF/layout/template.zul"?>
 							hflex="true" height="500px">
 							<auxhead>
 								<auxheader colspan="5" class="topic">
-									Statussen voor dit proces
+									<label value="${c:l('statusses')}" />
 								</auxheader>
 							</auxhead>
 							<listhead>
-								<listheader label="Status"
-									align="center" width="50px" />
-								<listheader label="Tijdstip"
-									align="center" width="150px" />
-								<listheader label="Omschrijving"
-									align="center" width="200px" />
-								<listheader label="Foutcode"
-									align="center" width="60px" />
-								<listheader label="Details"
-									align="center" width="350px" />
+								<listheader label="${c:l('status')}" align="center" width="50px" />
+								<listheader label="${c:l('time')}" align="center" width="150px" />
+								<listheader label="${c:l('description')}" align="center" width="200px" />
+								<listheader label="${c:l('error.code')}" align="center" width="60px" />
+								<listheader label="${c:l('details')}" align="center" width="350px" />
 							</listhead>
 							<template name="model" var="item">
 								<listitem >
-									<listcell
-										label="@load(item.statuscode)" />
-									<listcell
-										label="@load(item.tijdstempelStatus)" />
-									<listcell
-										label="@load(item.statusomschrijving)" />
-									<listcell tooltiptext="Klik hier voor meer info" onClick="@command('popupMessage', target=self, content=item.statusFoutcode.foutbeschrijving)"
-										label="@load(item.statusFoutcode.foutcode)" />
-									<listcell
-										label="@load(item.statusdetails)" />
+									<listcell label="@load(item.statuscode)" />
+									<listcell label="@load(item.tijdstempelStatus)" />
+									<listcell label="@load(item.statusomschrijving)" />
+									<listcell tooltiptext="${c:l('click.info')}" onClick="@command('popupMessage', target=self, content=item.statusFoutcode.foutbeschrijving)" label="@load(item.statusFoutcode.foutcode)" />
+									<listcell label="@load(item.statusdetails)" />
 								</listitem>
 							</template>
 						</listbox>
 					</hbox>
 				</tabpanel>
 				<tabpanel>
-					<button label="Nieuwe statussen"
-						onClick="@command('nieuweStatussen')" />
-					<listbox model="@load(vm.nieuweStatussen)"
-						hflex="true" height="350px">
+					<button label="${c:l('new.statusses')}" onClick="@command('nieuweStatussen')" />
+					<listbox model="@load(vm.nieuweStatussen)" hflex="true" height="350px">
 						<auxhead>
 							<auxheader colspan="7" class="topic">
-								Nieuwe statussen
+								<label value="${c:l('new.statusses')}" />
 							</auxheader>
 						</auxhead>
 						<listhead>
-							<listheader label="Kenmerk" align="center"
+							<listheader label="${c:l('feature')}" align="center"
 								width="220px" />
-							<listheader label="Belanghebbende"
-								align="center" width="150px" />
-							<listheader label="Status" align="center"
-								width="50px" />
-							<listheader label="Tijdstip" align="center"
-								width="150px" />
-							<listheader label="Omschrijving"
-								align="center" width="200px" />
-							<listheader label="Foutcode" align="center"
-								width="60px" />
-							<listheader label="Details" align="center"
-								width="300px" />
+							<listheader label="${c:l('identity')}" align="center" width="150px" />
+							<listheader label="${c:l('status')}" align="center" width="50px" />
+							<listheader label="${c:l('time')}" align="center" width="150px" />
+							<listheader label="${c:l('description')}" align="center" width="200px" />
+							<listheader label="${c:l('error.code')}" align="center" width="60px" />
+							<listheader label="${c:l('details')}" align="center" width="300px" />
 						</listhead>
 						<template name="model" var="item">
 							<listitem>
 								<listcell label="@load(item.kenmerk)" />
-								<listcell
-									label="@load(item.identiteitBelanghebbende.nummer)" />
-								<listcell
-									label="@load(item.statuscode)" />
-								<listcell
-									label="@load(item.tijdstempelStatus)" />
-								<listcell
-									label="@load(item.statusomschrijving)" />
-								<listcell
-									label="@load(item.statusFoutcode.foutcode)" />
-								<listcell
-									label="@load(item.statusdetails)" />
+								<listcell label="@load(item.identiteitBelanghebbende.nummer)" />
+								<listcell label="@load(item.statuscode)" />
+								<listcell label="@load(item.tijdstempelStatus)" />
+								<listcell label="@load(item.statusomschrijving)" />
+								<listcell label="@load(item.statusFoutcode.foutcode)" />
+								<listcell label="@load(item.statusdetails)" />
 							</listitem>
 						</template>
 					</listbox>

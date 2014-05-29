@@ -1,8 +1,8 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
-<window self="@define(content)" title="Facturen controleren" border="normal"
+<window self="@define(content)" title="${c:l('check.invoices')}" border="normal"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.fiscal.InvoiceVM')" 
 	validationMessages="@id('vmsgs')">
 	<hbox>
@@ -16,21 +16,20 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<column/>														
 				</columns>
 				<rows>
-					<row>Saldo datum
-						<hlayout> 
-							<datebox id="cdbeginbox" value="@bind(vm.balanceDate)"/>
-						</hlayout>	
+					<row>
+						<label value="${c:l('balance.date')}" />					
+						<datebox value="@bind(vm.balanceDate)"/>
 					</row>								
 				</rows>
 			</grid>
 		</groupbox>
 		<listbox model="@load(vm.invoices)" selectedItem="@bind(vm.selected)" hflex="true" height="350px">
 			<listhead>
-				<listheader label="Datum verstuurd"/>
-				<listheader label="Datum betaald"/>				
-				<listheader label="Factuurnummer"/>
-				<listheader label="Bedrag" width="90px"/>				
-				<listheader label="btw" width="80px"/>
+				<listheader label="${c:l('date.sent')}"/>
+				<listheader label="${c:l('date.paid')}"/>				
+				<listheader label="${c:l('invoice.number')}"/>
+				<listheader label="${c:l('amount')}" width="90px"/>				
+				<listheader label="${c:l('vat')}" width="80px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
@@ -49,25 +48,21 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<column/>
 				</columns>
 				<rows>
-					<row>Onbetaalde facturen van vorig jaar
-						<hlayout style="float:right">
-							<textbox value="@load(vm.unpaidInvoicesFromPreviousYear)" width="300px" />
-						</hlayout>
+					<row>
+						<label value="${c:l('invoices.unpaid.previous.year')}" />
+						<textbox value="@load(vm.unpaidInvoicesFromPreviousYear)" width="100px" style="text-align: right" />
 					</row>
-					<row>Betaalde facturen van vorig jaar
-						<hlayout style="float:right">
-							<textbox value="@load(vm.paidInvoicesWithoutMatch)" width="300px" />
-						</hlayout>
+					<row>
+						<label value="${c:l('invoices.paid.previous.year')}" />					
+						<textbox value="@load(vm.paidInvoicesWithoutMatch)" width="100px" style="text-align: right" />
 					</row>
-					<row>Onbetaalde facturen van dit jaar
-						<hlayout style="float:right">
-							<textbox value="@load(vm.unpaidInvoicesFromThisYear)" width="300px" />
-						</hlayout>
+					<row>
+						<label value="${c:l('invoices.unpaid.this.year')}" />
+						<textbox value="@load(vm.unpaidInvoicesFromThisYear)" width="100px" style="text-align: right" />
 					</row>										
-					<row>Totale omzet
-						<hlayout style="float:right">
-							<textbox value="@load(vm.totalIncome)" width="300px" />
-						</hlayout>
+					<row>
+						<label value="${c:l('turnover.total')}" />
+						<textbox value="@load(vm.totalIncome)" width="100px" style="text-align: right" />
 					</row>													
 				</rows>
 			</grid>

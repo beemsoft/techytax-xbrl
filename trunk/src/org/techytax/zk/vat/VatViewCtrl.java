@@ -126,8 +126,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Label msg;
 	@Wire
-	private Popup costPopup;
-	@Wire
 	private Toolbarbutton digipoortBtn;
 	private Media media = null;
 	private BufferedReader reader = null;

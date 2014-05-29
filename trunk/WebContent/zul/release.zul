@@ -21,6 +21,7 @@ Changes:
 <li>Removed JRebel.</li>
 <li>Send invoice with user email as from-address.</li>
 <li>Implement Domain-Specific DAO Strategy (from Adam Bien).</li>
+<li>Restored multi-language support.</li>
 </ul>
 
 <p>Investigated migration possibility from Tomcat to GlassFish:

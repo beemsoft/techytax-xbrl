@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -7,10 +7,10 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Zakelijke rekening controleren" border="normal" width="1015px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
+<window self="@define(content)" title="${c:l('account.check.business')}" border="normal" width="1015px" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountCheckVM')" 
 	binder="@init(queueName='queueName',queueScope='desktop')" validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
-		<groupbox hflex="true" mold="3d">
+		<groupbox hflex="true" >
 			<grid hflex="true" >
 				<columns>
 					<column/>
@@ -19,13 +19,14 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<column/>														
 				</columns>
 				<rows>
-					<row>Datum begin
+					<row>
+						<label value="${c:l('date.start')}" />
 						<hlayout> 
-							<datebox id="cdbeginbox" value="@bind(vm.beginDate)"/>
+							<datebox value="@bind(vm.beginDate)"/>
 						</hlayout>	
-						Datum eind
+						<label value="${c:l('date.end')}" />
 						<hlayout> 
-							<datebox id="cdendbox" value="@bind(vm.endDate)"/>
+							<datebox value="@bind(vm.endDate)"/>
 						</hlayout>	
 					</row>								
 				</rows>
@@ -33,76 +34,81 @@ arg0="/WEB-INF/layout/template.zul"?>
 		</groupbox>	
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
 			<listhead>
-				<listheader label="Datum" align="center" width="100px" />
-				<listheader label="Bedrag" align="center" width="80px" />
-				<listheader label="btw" align="center" width="80px" />
-				<listheader label="Omschrijving" width="400px" />
-				<listheader label="Type" width="400px"/>
+				<listheader label="${c:l('date')}" align="center" width="100px" />
+				<listheader label="${c:l('amount')}" align="center" width="80px" />
+				<listheader label="${c:l('vat')}" align="center" width="80px" />
+				<listheader label="${c:l('description')}" width="400px" />
+				<listheader label="${c:l('type')}" width="400px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem onDoubleClick="@command('onDoubleClicked')">
 					<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')"/>				
-					<listcell label="@load(item.amount)"/>
-					<listcell label="@load(item.vat)"/>
+					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')" style="text-align: right;"/>
+					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')" style="text-align: right;"/>
 					<listcell label="@load(item.description)"/>
 					<listcell label="@load(item.costType.omschrijving)"/>					
 				</listitem>
 			</template>
 		</listbox>
-		<groupbox hflex="true" mold="3d">
+		<groupbox hflex="true" >
 			<grid hflex="true" >
 				<columns>
 					<column width="120px"/>
 					<column/>
 				</columns>
 				<rows>
-					<row>Rekening saldo van TechyTax
+					<row>
+						<label value="${c:l('account.balance.techytax')}" />
 						<hlayout>
 							<label value="@load(vm.accountCheckData.accountBalance)"   />
 						</hlayout>					
 					</row>				
-					<row>Rekening saldo van online bankieren
+					<row>
+						<label value="${c:l('account.balance.actual')}" />
 						<hlayout>
 							<label value="@load(vm.accountCheckData.actualBalance)" />
 							<toolbar visible="@load(empty vm.accountCheckData.actualBalance)">
-								<doublebox id="box9" value="@bind(vm.businessAccountBalance)" />
-								<button label="Save" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.businessAccountBalance)" />
-								<label value="Vul saldo in"/>
+								<doublebox value="@bind(vm.businessAccountBalance)" />
+								<button label="${c:l('save')}" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.businessAccountBalance)" />
+								<label value="${c:l('balance.enter')}"/>
 							</toolbar>
-							<label visible="@load(!vm.accountCheckData.correct)" value="Niet correct, probeer een kleinere selectieperiode."/> 
+							<label visible="@load(!vm.accountCheckData.correct)" value="${c:l('account.check.warning')}"/> 
 						</hlayout>					
 					</row>
-					<row>Double check van TechyTax
+					<row>
+						<label value="${c:l('account.check.double')}" />
 						<hlayout>
 							<label value="@load(vm.accountCheckData.doubleCheck)"  />
 						</hlayout>					
 					</row>
-					<row>Betaalde facturen
+					<row>
+						<label value="${c:l('invoices.paid')}" />
 						<hlayout>
 							<label value="@load(vm.accountCheckData.paidInvoices)"  />
 						</hlayout>					
 					</row>					
-					<row>Belasting saldo
+					<row>
+						<label value="${c:l('balance.tax')}" />
 						<hlayout>
 							-<label value="@load(vm.accountCheckData.taxBalance)"  />
 						</hlayout>					
 					</row>
-					<row>Kost saldo
+					<row>
+						<label value="${c:l('balance.cost')}" />
 						<hlayout>
 							-<label value="@load(vm.accountCheckData.costBalance)"  />
 						</hlayout>					
 					</row>					
-					<row>Spaarsaldo
+					<row>
+						<label value="${c:l('balance.savings')}" />
 						<hlayout>
 							-(<label value="@load(vm.accountCheckData.savingBalance)"  />
-											
-					 - Privé opname saldo
-						
-							<label value="@load(vm.accountCheckData.privateWithdrawalBalance)"  />
-							- Rente <label value="@load(vm.accountCheckData.interest)"  />
+							- <label value="${c:l('balance.private.withdrawal')}" /> <label value="@load(vm.accountCheckData.privateWithdrawalBalance)"  />
+							- <label value="${c:l('interest')}" /> <label value="@load(vm.accountCheckData.interest)"  />
 						)</hlayout>					
 					</row>
-					<row>Ignore
+					<row>
+						<label value="${c:l('balance.ignore')}" />
 						<hlayout>
 							-<label value="@load(vm.accountCheckData.costIgnoreBalance)"  />
 						</hlayout>					

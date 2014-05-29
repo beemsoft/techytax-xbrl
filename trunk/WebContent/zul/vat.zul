@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <zk xmlns:html="http://www.w3.org/1999/xhtml">
 	<!--
 		Copyright 2014 Hans Beemsterboer
@@ -20,70 +20,47 @@
 		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	-->
 	<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
-	<window self="@define(content)" title="Omzetbelasting"
+	<window self="@define(content)" title="${c:l('vat.tax')}"
 		border="normal" apply="org.techytax.zk.vat.VatViewCtrl">
-		Bereken je omzetbelasting in vijf stappen.
-
+		<label value="${c:l('vat.info')}" />
 		<hbox>
 			<tabbox width="1150px" height="630px">
 				<tabs>
-					<tab label="1: Transacties downloaden" />
-					<tab label="2: Transacties selecteren" />
-					<tab id="matchTab" label="3: Transacties matchen" />
-					<tab id="manualTab"
-						label="4: Handmatig transacties toevoegen" />
-					<tab id="controleTab" label="5: Btw overzicht" />
+					<tab label="1: ${c:l('transactions.download')}" />
+					<tab label="2: ${c:l('transactions.select')}" />
+					<tab id="matchTab" label="3: ${c:l('transactions.match')}" />
+					<tab id="manualTab" label="4: ${c:l('transactions.add')}" />
+					<tab id="controleTab" label="5: ${c:l('vat.overview')}" />
 				</tabs>
 				<tabpanels>
 					<tabpanel>
-						Download je transacties van online bankieren of ov-chipkaart voor het afgelopen kwartaal.
+						<label value="${c:l('transactions.download.info')}" />
 						<hbox>
-							<toolbarbutton href="https://mijn.ing.nl/"
-								target="other" image="/images/logo_ing.gif" height="60px"/>
-							<toolbarbutton
-								href="https://www.abnamro.nl/nl/logon/" target="other"
-								image="/images/logo_abn_amro.gif" height="60px" />
-							<toolbarbutton
-								href="https://www.ov-chipkaart.nl/mijnovchipkaart/reizenentransacties/mijnreizenentransacties/" target="other"
-								image="/images/ov.png" height="60px" />								
+							<toolbarbutton href="https://mijn.ing.nl/" target="other" image="/images/logo_ing.gif" height="60px"/>
+							<toolbarbutton href="https://www.abnamro.nl/nl/logon/" target="other" image="/images/logo_abn_amro.gif" height="60px" />
+							<toolbarbutton href="https://www.ov-chipkaart.nl/mijnovchipkaart/reizenentransacties/mijnreizenentransacties/" target="other" image="/images/ov.png" height="60px" />								
 						</hbox>
 						<hbox width="500px">
-							Op dit moment ondersteunt TechyTax voor online bankieren alleen
-							transactie bestanden van de ING en ABN-AMRO.
-							Zorg bij het downloaden van het bestand dat
-							de juiste periode wordt geselecteerd. Nadat
-							je het bestand hebt gedownload, kun je
-							verdergaan naar het volgende tabblad. Let
-							op: Sla het .TAB bestand van ABN-AMRO op als
-							.TXT bestand. Tip: Maak een backup van de
-							gedownloade bestanden.
+							<label value="${c:l('import.support')}" />
 						</hbox>
 					</tabpanel>
 					<tabpanel>
-						Hier kun je het gedownloade bestand met
-						transacties selecteren.
+						<label value="${c:l('transactions.download.link')}" />
 						<vbox>
-							<toolbarbutton id="uploadBtn" label="Selecteer bestand" upload="true,maxsize=1024"/>
+							<toolbarbutton id="uploadBtn" label="${c:l('select.file')}" upload="true,maxsize=1024"/>
 						</vbox>
-						Hierna kun je de transacties bekijken en
-						eventueel matchen in het volgende tabblad. De
-						transacties worden niet meteen ingeladen in
-						TechyTax.
-
+						<label value="${c:l('transactions.match.info')}" />
 					</tabpanel>
 					<tabpanel apply="org.zkoss.bind.BindComposer"
 						viewModel="@id('vm') @init('org.techytax.zk.vat.CostTypeViewModel')">
 						<vbox>
-							<grid id="costGrid" hflex="true"
-								mold="paging" pageSize="5">
+							<grid id="costGrid" hflex="true" mold="paging" pageSize="5">
 								<columns sizable="true">
-									<column label="Omschrijving"
-										width="700px" />
-									<column label="Datum" width="100px" />
-									<column label="Bedrag"
-										width="100px" />
-									<column label="btw" width="100px" />
-									<column label="Kostsoort" width="200px" />
+									<column label="${c:l('description')}" width="700px" />
+									<column label="${c:l('date')}" width="100px" />
+									<column label="${c:l('amount')}" width="100px" />
+									<column label="${c:l('vat')}" width="100px" />
+									<column label="${c:l('costtype')}" width="200px" />
 								</columns>
 								<template name="model">
 									<row value="${each}" style="">
@@ -95,58 +72,37 @@
 									</row>
 								</template>
 							</grid>
-							Privé match teksten hebben voorrang boven algemene
-							match teksten.
+							<label value="${c:l('match.texts.private.info')}" />
 							<hbox>
-
-								<listbox id="costTypeList"
-									model="@load(vm.costTypeList)"
-									selectedItem="@bind(vm.selectedCostType)" height="200px"
-									width="340px">
+								<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="340px">
 									<listhead>
-										<listheader label="Kostsoort"
-											width="300px" />
+										<listheader label="${c:l('costtype')}" width="300px" />
 									</listhead>
-									<template name="model"
-										var="costType">
+									<template name="model" var="costType">
 										<listitem>
-											<listcell
-												label="@load(costType.omschrijving)" />
+											<listcell label="@load(costType.omschrijving)" />
 										</listitem>
 									</template>
 								</listbox>
 								<vbox width="250px">
-									<listbox id="privateMatchesList"
-										model="@load(vm.privateMatchesList)"
-										selectedItem="@bind(vm.selectedPrivateMatch)" height="100px">										
+									<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="100px">										
 										<listhead>
-											<listheader
-												label="Privé match teksten" width="300px" />
+											<listheader label="${c:l('match.texts.private')}" width="300px" />
 										</listhead>
-										<template name="model"
-											var="privateMatch">
+										<template name="model" var="privateMatch">
 											<listitem>
-												<listcell
-													label="@load(privateMatch.matchText)" />
+												<listcell label="@load(privateMatch.matchText)" />
 											</listitem>
 										</template>
 									</listbox>
 									<toolbar>
-										<button label="Nieuw"
-											onClick="@command('newMatch')" />
-										<button label="Opslaan"
-											onClick="@command('saveMatch')"
-											disabled="@load(empty vm.selectedPrivateMatch)" />
-										<button label="Verwijder"
-											onClick="@command('deleteMatch')"
-											disabled="@load(empty vm.selectedPrivateMatch)" />
+										<button label="${c:l('new')}" onClick="@command('newMatch')" />
+										<button label="${c:l('save')}" onClick="@command('saveMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
+										<button label="${c:l('delete')}" onClick="@command('deleteMatch')" disabled="@load(empty vm.selectedPrivateMatch)" />
 									</toolbar>
-									<radiogroup id="vat"
-										selectedItem="@bind(vm.selectedVatType)" />
-									<groupbox
-										visible="@load(not empty vm.selectedPrivateMatch)" mold="3d"
-										width="100%" >
-										<caption><label value="Match eigenschappen" /></caption>
+									<radiogroup id="vat" selectedItem="@bind(vm.selectedVatType)" />
+									<groupbox visible="@load(not empty vm.selectedPrivateMatch)" width="100%" >
+										<caption><label value="${c:l('match.features')}" /></caption>
 										<grid>
 											<columns>
 												<column />
@@ -154,15 +110,12 @@
 											</columns>
 											<rows>
 												<row>
-													<label
-														value="Match tekst:" />
-													<textbox
-														value="@bind(vm.selectedPrivateMatch.matchText)" />
+													<label value="${c:l('match.text')}:" />
+													<textbox value="@bind(vm.selectedPrivateMatch.matchText)" />
 												</row>	
 											</rows>
 										</grid>
-										<grid
-											visible="@load(vm.vatVisible)" >
+										<grid visible="@load(vm.vatVisible)" >
 											<columns>
 												<column />
 												<column />
@@ -171,13 +124,10 @@
 											</columns>
 											<rows>
 												<row>
-													<label value="btw:" />
-													<radio id="vatNone"
-														label="Geen" value="NONE" radiogroup="vat" />
-													<radio id="vatLow"
-														label="Laag" value="LOW" radiogroup="vat" />
-													<radio id="vatHigh"
-														label="Hoog" value="HIGH" radiogroup="vat" />
+													<label value="${c:l('vat')}:" />
+													<radio id="vatNone" label="${c:l('none')}" value="NONE" radiogroup="vat" />
+													<radio id="vatLow" label="${c:l('low')}" value="LOW" radiogroup="vat" />
+													<radio id="vatHigh" label="${c:l('high')}" value="HIGH" radiogroup="vat" />
 												</row>
 											</rows>
 										</grid>
@@ -188,35 +138,26 @@
 											</columns>
 											<rows>
 												<row>
-													<label
-														value="Privé percentage:" />
-													<textbox
-														value="@bind(vm.selectedPercentage)" />
+													<label value="${c:l('percentage.private')}:" />
+													<textbox value="@bind(vm.selectedPercentage)" />
 												</row>	
 											</rows>
 										</grid>										
 									</groupbox>
 								</vbox>
-								<listbox id="publicMatchesList"
-									model="@load(vm.publicMatchesList)" height="200px"
-									width="250px">
+								<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="250px">
 									<listhead>
-										<listheader
-											label="Algemene match teksten" width="300px" />
+										<listheader label="${c:l('match.texts.public')}" width="300px" />
 									</listhead>
-									<template name="model"
-										var="privateMatch">
+									<template name="model" var="privateMatch">
 										<listitem>
-											<listcell
-												label="@load(privateMatch.matchText)" />
+											<listcell label="@load(privateMatch.matchText)" />
 										</listitem>
 									</template>
 								</listbox>
 								<vbox>
-									<button id="reloadBtn" disabled="true"
-										image="/images/Button-Refresh-icon.png" tooltip="reload" />
-									<button id="importBtn" disabled="true"
-										image="/images/Button-Add-icon.png" tooltip="import" />
+									<button id="reloadBtn" disabled="true" image="/images/Button-Refresh-icon.png" tooltip="reload" />
+									<button id="importBtn" disabled="true" image="/images/Button-Add-icon.png" tooltip="import" />
 								</vbox>
 							</hbox>
 						</vbox>
@@ -233,23 +174,23 @@
 								</columns>
 								<rows>
 									<row>
-										btw uit
+										<label value="${c:l('vat.out')}" />
 										<label id="vatOut" style="float:right;" />
 									</row>
 									<row>
-										btw in
+										<label value="${c:l('vat.in')}" />
 										<label id="vatIn" style="float:right;" />
 									</row>
 									<row>
-										btw saldo
+										<label value="${c:l('vat.balance')}" />
 										<label id="vatBalance" style="float:right;" />
 									</row>
 									<row>
-										bruto omzet
+										<label value="${c:l('turnover.gross')}" />
 										<label id="turnoverGross" style="float:right;" />
 									</row>
 									<row>
-										netto omzet
+										<label value="${c:l('turnover.net')}" />
 										<label id="turnoverNet" style="float:right;" />
 									</row>
 							</rows>
@@ -261,33 +202,31 @@
 								</columns>
 								<rows>
 									<row>
-										btw correctie voor privé gebruik zakelijke auto
+										<label value="${c:l('costtype.vat.correction.private')}" />
 										<label id="vatCorrection" style="float:right;" />
 									</row>
 									<row>
-										netto betalingen binnen EU
+										<label value="${c:l('net.payments.eu')}" />
 										<label id="totalOfPaymentsWithinEu" style="float:right;" />
 									</row>
 									<row>
-										btw voor betalingen binnen EU
+										<label value="${c:l('vat.eu')}" />
 										<label id="vatForPaymentWithinEu" style="float:right;" />
 									</row>
 								</rows>
 							</grid>							
-							<toolbarbutton id="digipoortBtn" disabled="true" 
-								image="/images/Digipoort_w176.JPG" tooltiptext="Verstuur hiermee uw btw aangifte naar de Belastingdienst. Hiervoor moet wel uw fiscaal nummer bekend zijn bij TechyTax." height="155px"/>
+							<toolbarbutton id="digipoortBtn" disabled="true" image="/images/Digipoort_w176.JPG" tooltiptext="${c:l('vat.send')}" height="155px"/>
 							<include src="vat-report.zul"/>
-							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="Bekijk de btw aangifte in SBR/XBRL." height="155px"/>															
+							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="${c:l('vat.sbr')}" height="155px"/>															
 						</hbox>
 						<vbox>
 							<grid id="vatGrid" mold="paging" pageSize="6" >
 								<columns sizable="true">
-									<column label="Omschrijving"
-										width="690px" />
-									<column label="Datum" width="90px" />
-									<column label="Bedrag" width="90px" align="right"/>
-									<column label="Btw" width="90px" align="right" />
-									<column label="Type" width="180px" />
+									<column label="${c:l('description')}" width="690px" />
+									<column label="${c:l('date')}" width="90px" />
+									<column label="${c:l('amount')}" width="90px" align="right"/>
+									<column label="${c:l('vat')}" width="90px" align="right" />
+									<column label="${c:l('type')}" width="180px" />
 								</columns>
 							</grid>
 						</vbox>
@@ -296,16 +235,13 @@
 			</tabbox>
 		</hbox>
 		<popup id="reload" width="300px">
-			<html><![CDATA[ Transactie-bestand opnieuw inladen]]></html>
+			<html><![CDATA[${c:l('reload')}]]></html>
 		</popup>
 		<popup id="import" width="300px">
-			<html><![CDATA[ Transacties inladen in TechyTax]]></html>
+			<html><![CDATA[${c:l('import')}]]></html>
 		</popup>
 		<popup id="sbrPopup">
     		<label id="msg"></label>
 		</popup>
-		<popup id="costPopup" >
-    		<label value="Test"></label>
-		</popup>			
 	</window>
 </zk>

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -18,8 +18,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.techytax.zk.login;
-
-import java.util.Locale;
 
 import org.techytax.domain.User;
 import org.zkoss.zk.ui.Session;
@@ -47,8 +45,6 @@ public class UserCredentialManager {
 		synchronized (zkSession) {
 			zkSession.setAttribute(KEY_USER_MODEL, user);
 			zkSession.setAttribute("user", user);
-			zkSession.setAttribute("org.apache.struts.action.LOCALE", new Locale("nl"));
-			zkSession.setAttribute("px_preferred_locale", new Locale("nl"));
 		}
 	}
 }

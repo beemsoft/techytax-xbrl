@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -25,6 +25,7 @@ import java.text.ParseException;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.BookValueHistory;
 import org.techytax.helper.AmountHelper;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -67,7 +68,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 
 		Listhead lh = new Listhead();
 
-		Listheader header = createListheader("Balanssoort");
+		Listheader header = createListheader(Labels.getLabel("balance.type"));
 		header.setWidth("150px");
 		header.setParent(lh);
 		for (BookValue bookValue : data.getBookValues()) {

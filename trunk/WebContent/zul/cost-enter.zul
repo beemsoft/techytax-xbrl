@@ -6,17 +6,17 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window title="Handmatig transacties invoeren" border="normal" width="100%"
+<window title="${c:l('transactions.add')}" border="normal" width="100%"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="100px">
 			<listhead>
-				<listheader label="Datum" align="center" width="80px" />
-				<listheader label="Bedrag" align="center" width="70px" />
-				<listheader label="btw" align="center" width="70px" />
-				<listheader label="Omschrijving" width="380px" />
-				<listheader label="Type" width="350px"/>
+				<listheader label="${c:l('date')}" align="center" width="80px" />
+				<listheader label="${c:l('amount')}" align="center" width="70px" />
+				<listheader label="${c:l('vat')}" align="center" width="70px" />
+				<listheader label="${c:l('description')}" width="380px" />
+				<listheader label="${c:l('type')}" width="350px"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
@@ -29,50 +29,53 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</template>
 		</listbox>
 		<toolbar>
-			<button label="New" onClick="@command('newCost')" />
-			<button label="Save" onClick="@command('saveCost')" disabled="@bind(empty vm.selected)" />
+			<button label="${c:l('new')}" onClick="@command('newCost')" />
+			<button label="${c:l('save')}" onClick="@command('saveCost')" disabled="@bind(empty vm.selected)" />
 			<!-- show confirm dialog when selected is persisted -->
-			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
+			<button label="${c:l('delete')}" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
 		</toolbar>
-		<groupbox visible="@load(not empty vm.selected)" hflex="true" mold="3d">
+		<groupbox visible="@load(not empty vm.selected)" hflex="true" >
 			<grid hflex="true" >
 				<columns>
 					<column width="120px"/>
 					<column/>
 				</columns>
 				<rows>
-					<row>Datum
+					<row>
+						<label value="${c:l('date')}" />
 						<hlayout> 
-							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost')
-							@validator(vm.creationDateValidator)"/>
+							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost') @validator(vm.creationDateValidator)"/>
 							<label value="@load(vmsgs[cdbox])" sclass="red" />
 						</hlayout>	
 					</row>				
-					<row>Bedrag 
+					<row>
+						<label value="${c:l('amount')}" /> 
 						<hlayout>
-							<doublebox value="@bind(vm.selected.amount) @save(vm.selected.amount,before='saveCost') 
-							@validator(vm.priceValidator)" />
+							<doublebox value="@bind(vm.selected.amount) @save(vm.selected.amount,before='saveCost') @validator(vm.priceValidator)" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
-							<button id="vatHighBtn" label="btw hoog" onClick="@command('highVat')"/>
-							<button id="vatLowBtn" label="btw laag" onClick="@command('lowVat')"/>							
+							<button id="vatHighBtn" label="${c:l('vat.high')}" onClick="@command('highVat')"/>
+							<button id="vatLowBtn" label="${c:l('vat.low')}" onClick="@command('lowVat')"/>							
 						</hlayout>
 					</row>
-					<row>btw 
+					<row>
+						<label value="${c:l('vat')}" /> 
 						<hlayout>
 							<doublebox value="@bind(vm.selected.vat) @save(vm.selected.vat,before='saveCost')" format="###,##0.00" />
 							<label value="@load(vmsgs[pbox])" sclass="red" />
 						</hlayout>
 					</row>					
-					<row>Omschrijving 
+					<row>
+						<label value="${c:l('description')}" /> 
 						<hlayout>
 							<textbox value="@bind(vm.selected.description) @save(vm.selected.description,before='saveCost')" width="900px" hflex="true" />
 						</hlayout>
 					</row>
-					<row>Type
+					<row>
+						<label value="${c:l('type')}" />
 						<hlayout>
 							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" >
 								<listhead>
-									<listheader label="Omschrijving" width="400px" />
+									<listheader label="${c:l('description')}" width="400px" />
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
