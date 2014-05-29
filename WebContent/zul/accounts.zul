@@ -1,18 +1,18 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
-<window self="@define(content)" title="Alle rekeningen beheren" border="normal"
+<window self="@define(content)" title="${c:l('maintain.accounts')}" border="normal"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.account.AccountVM')" 
-	validationMessages="@id('vmsgs')">
+	validationMessages="@id('vmsgs')" width="950px">
 	<hbox>
-	<vbox hflex="true" width="600px">
-		<listbox model="@load(vm.accounts)" selectedItem="@bind(vm.selected)" hflex="true" height="200px">
+	<vbox width="600px">
+		<listbox model="@load(vm.accounts)" selectedItem="@bind(vm.selected)" height="200px">
 			<listhead>
-				<listheader label="Rekening"/>
-				<listheader label="Naam"/>				
-				<listheader label="Omschrijving"/>
-				<listheader label="Type"/>
+				<listheader label="${c:l('account')}"/>
+				<listheader label="${c:l('name')}"/>				
+				<listheader label="${c:l('description')}"/>
+				<listheader label="${c:l('type')}"/>
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
@@ -24,36 +24,40 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</template>
 		</listbox>
 		<toolbar>
-			<button label="New" onClick="@command('newAccount')" />
-			<button label="Save" onClick="@command('saveAccount')" disabled="@bind(empty vm.selected)" />
+			<button label="${c:l('new')}" onClick="@command('newAccount')" />
+			<button label="${c:l('save')}" onClick="@command('saveAccount')" disabled="@bind(empty vm.selected)" />
 		</toolbar>
-		<groupbox visible="@load(not empty vm.selected)" hflex="true" mold="3d">
-			<grid hflex="true" >
+		<groupbox visible="@load(not empty vm.selected)" >
+			<grid>
 				<columns>
 					<column width="120px"/>
 					<column/>
 				</columns>
 				<rows>
-					<row>Datum geopend
+					<row>
+						<label value="${c:l('date.opened')}" />
 						<hlayout> 
 							<datebox value="@load(vm.selected.dateOpened) @save(vm.selected.dateOpened, before='saveAccount')"/>
 						</hlayout>	
 					</row>
-					<row>Datum gesloten
+					<row>
+						<label value="${c:l('date.closed')}" />
 						<hlayout> 
 							<datebox value="@load(vm.selected.dateClosed) @save(vm.selected.dateClosed, before='saveAccount')"/>
 						</hlayout>	
 					</row>
-					<row>Omschrijving
+					<row>
+						<label value="${c:l('description')}" />
 						<hlayout>
 							<textbox value="@load(vm.selected.description) @save(vm.selected.description,before='saveAccount')" width="300px" />
 						</hlayout>
 					</row>													
-					<row>Type
+					<row>
+						<label value="${c:l('type')}" />
 						<hlayout>
 							<listbox model="@load(vm.accountTypes)" selectedItem="@bind(vm.selectedAccountType)" hflex="true" height="200px">
 								<listhead>
-									<listheader label="Omschrijving" width="400px" />
+									<listheader label="${c:l('description')}" width="400px" />
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
@@ -67,38 +71,40 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</grid>
 		</groupbox>		
 	</vbox>
-	<vbox hflex="true" visible="@load(not empty vm.selected)">
+	<vbox visible="@load(not empty vm.selected)" width="300px" >
 		<listbox model="@load(vm.accountBalances)" selectedItem="@bind(vm.selectedAccountBalance)" hflex="true" height="300px">
 			<listhead>
-				<listheader label="Datum"/>
-				<listheader label="Saldo"/>				
+				<listheader label="${c:l('date')}"/>
+				<listheader label="${c:l('balance')}"/>				
 			</listhead>
 			<template name="model" var="item">
 				<listitem >
 					<listcell label="@load(item.datum) @converter('formatedDate', format='yyyy/MM/dd')"/>
-					<listcell label="@load(item.balance)"/>					
+					<listcell label="@load(item.balance) @converter('formatedNumber', format='###,##0.00')" style="text-align: right;"/>					
 				</listitem>
 			</template>
 		</listbox>
 		<toolbar>
-			<button label="New" onClick="@command('newAccountBalance')" />
-			<button label="Save" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.selectedAccountBalance)" />
+			<button label="${c:l('new')}" onClick="@command('newAccountBalance')" />
+			<button label="${c:l('save')}" onClick="@command('saveAccountBalance')" disabled="@bind(empty vm.selectedAccountBalance)" />
 		</toolbar>
-		<groupbox visible="@load(not empty vm.selectedAccountBalance)" hflex="true" mold="3d">
-			<grid hflex="true" >
+		<groupbox visible="@load(not empty vm.selectedAccountBalance)" >
+			<grid>
 				<columns>
 					<column width="120px"/>
 					<column/>
 				</columns>
 				<rows>
-					<row>Datum
+					<row>
+						<label value="${c:l('date')}" />
 						<hlayout> 
-							<datebox id="cdabbox" value="@load(vm.selectedAccountBalance.datum) @save(vm.selectedAccountBalance.datum, before='saveAccountBalance')"/>
+							<datebox value="@load(vm.selectedAccountBalance.datum) @save(vm.selectedAccountBalance.datum, before='saveAccountBalance')"/>
 						</hlayout>	
 					</row>
-					<row>Saldo
+					<row>
+						<label value="${c:l('balance')}" />
 						<hlayout>
-							<doublebox id="sbox" value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
+							<doublebox value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
 						</hlayout>					
 					</row>					
 				</rows>

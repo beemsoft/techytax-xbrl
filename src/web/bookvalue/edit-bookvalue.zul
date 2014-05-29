@@ -3,8 +3,8 @@
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.fiscal.ModelWindowVM')">
 
-	<button label="Wijzig" onClick="@command('save')" />
-	<button label="Annuleer" onClick="@command('cancel')" />
+	<button label="${c:l('edit')}" onClick="@command('save')" />
+	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
 	<groupbox width="450px" height="230px" >
 		<hbox>
 			<vbox hflex="true">
@@ -15,7 +15,7 @@
 					</columns>
 					<rows>
 						<row>
-							Jaar
+								<label value="${c:l('year')}" />
 								<hlayout>
 									<listbox id="yearsListbox"
 										mold="select" rows="1"
@@ -31,7 +31,7 @@
 								</hlayout>
 						</row>
 						<row>
-							Saldo
+							<label value="${c:l('balance')}" />
 							<hlayout>
 								<doublebox id="pbox"
 									value="@bind(vm.bookValue.saldo)"
@@ -50,7 +50,7 @@
 						<listbox model="@load(vm.balanceTypes)"
 							selectedItem="@bind(vm.selectedBalanceType)" width="180px" >
 							<listhead>
-								<listheader label="Balanssoort" />
+								<listheader label="${c:l('balance.type')}" />
 							</listhead>
 							<template name="model" var="item">
 								<listitem>

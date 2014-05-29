@@ -31,6 +31,7 @@ import org.techytax.security.AuthenticationException;
 import org.techytax.security.SecurityService;
 import org.techytax.security.SecurityServiceImpl;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
@@ -115,7 +116,7 @@ public class LoginModel {
 	}
 
 	public String getLoggedOnText() {
-		String text = "Inloggen a.u.b.";
+		String text = Labels.getLabel("logon.please");
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			text = user.getCompanyName();

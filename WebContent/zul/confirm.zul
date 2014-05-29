@@ -1,12 +1,12 @@
-	<window title="Bevestigen" mode="modal" border="normal" width="300px" height="250px" visible="@load(not empty vm.deleteMessage)">
+	<window title="${c:l('confirm')}" mode="modal" border="normal" width="300px" height="250px" visible="@load(not empty vm.deleteMessage)">
 		<vbox>
 			<hlayout height="80px">
 				<image src="~./zul/img/msgbox/question-btn.png"/>
 				<label value="@load(vm.deleteMessage)"/>
 			</hlayout>
 			<hbox pack="center">
-				<button label="Verwijder" onClick="@command('deleteCost')"/>
-				<button label="Annuleer" onClick="@command('cancelDelete')"/>
+				<button label="${c:l('delete')}" onClick="@command('deleteCost')"/>
+				<button label="${c:l('cancel')}" onClick="@command('cancelDelete')"/>
 			</hbox>
 		</vbox>
 	</window>

@@ -112,7 +112,7 @@
 					<div style="float:right; padding: 10px">
 						<hbox visible="@load(vm.loggedOn)">
 							<hbox visible="@load(vm.displayVatWarning)">						
-								<label value="Heeft u de omzetbelasting al aangegeven en betaald?" />
+								<label value="${c:l('mainMenu.vatDeclaration')}" />
 							</hbox>						
 							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" sclass="loggedOnUserButton"/>
 							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" />
@@ -125,20 +125,20 @@
 			<!-- Sidebar -->
 			<west width="160px" border="0" hflex="true" splittable="true" margins="0,5,0,0" >
 				<vlayout spacing="0">
-					<panel width="100%" border="normal" title="Navigatie" >
+					<panel width="100%" border="normal" title="${c:l('mainMenu.menu')}" >
 						<panelchildren style="padding:5px;">
 							<vbox>
-								<toolbarbutton label="Omzetbelasting" href="vat.zul" />
-								<toolbarbutton label="Inkomstenbelasting" href="tax.zul" />
-								<toolbarbutton label="Kosten" href="costs.zul" />
-								<toolbarbutton label="Rekeningen" href="accounts.zul" />
-								<toolbarbutton label="Controle-stap" href="account-check.zul" />
-								<toolbarbutton label="Digipoort" href="xbrl.zul" />
+								<toolbarbutton label="${c:l('vat.tax')}" href="vat.zul" />
+								<toolbarbutton label="${c:l('tax.title')}" href="tax.zul" />
+								<toolbarbutton label="${c:l('costs.title')}" href="costs.zul" />
+								<toolbarbutton label="${c:l('accounts.title')}" href="accounts.zul" />
+								<toolbarbutton label="${c:l('account.check')}" href="account-check.zul" />
+								<toolbarbutton label="${c:l('digipoort.title')}" href="xbrl.zul" />
 								<toolbarbutton label="${c:l('bookvalues.title')}" href="bookvalues.zul" />
-								<toolbarbutton label="Facturen" href="invoices.zul" />
-								<toolbarbutton label="Agenda" href="zk_calendar.zul" />
-								<toolbarbutton label="Klanten" href="customers.zul" />
-								<toolbarbutton label="Projecten" href="projects.zul" />
+								<toolbarbutton label="${c:l('invoices.title')}" href="invoices.zul" />
+								<toolbarbutton label="${c:l('agenda.title')}" href="zk_calendar.zul" />
+								<toolbarbutton label="${c:l('customers')}" href="customers.zul" />
+								<toolbarbutton label="${c:l('projects')}" href="projects.zul" />
 								<toolbarbutton label="${c:l('settlement.title')}" href="settlement.zul" />							
 							</vbox>
 						</panelchildren>

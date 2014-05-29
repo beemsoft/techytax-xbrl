@@ -1,25 +1,25 @@
 <div apply="org.zkoss.bind.BindComposer"
 	viewModel="@id('vm') @init('org.techytax.business.zk.calendar.CalendarEditorViewModel')"
 	validationMessages="@id('vmsgs')">
-	<window title="Maak een agenda item" border="normal" width="600px"
+	<window title="${c:l('agenda.item.create')}" border="normal" width="600px"
 		form="@id('fx') @load(vm.calendarEvent) @save(vm.calendarEvent, before='ok') @validator(vm.dateValidator)"
 		allDay="@ref(vm.isAllDay(fx.beginDate,fx.endDate))" mode="popup"
 		visible="@load(vm.visible)" position="center,center">
-		<caption>
-			Zet dit item vast :
+		<groupbox>
+			<label value="${c:l('agenda.item.fix')}:" />
 			<checkbox checked="@bind(fx.locked)" />
-			Hele dag:
+			<label value="${c:l('whole.day')}:" />
 			<checkbox checked="@load(allDay)" disabled="true" />
-		</caption>
+		</groupbox>
 		<hbox>
 			<grid width="380px">
 				<columns>
-					<column width="100px" align="right" />
-					<column />
+					<column width="100px" align="left" />
+					<column/>
 				</columns>
 				<rows>
 					<row>
-						Van::
+						<label value="${c:l('from')}:" />
 						<div>
 							<datebox hflex="true" locale="en"
 								timeZone="GMT+1" format="@load(allDay ? 'long' : 'long+medium')"
@@ -28,7 +28,7 @@
 						</div>
 					</row>
 					<row>
-						Tot:
+						<label value="${c:l('until')}:" />
 						<div>
 							<datebox hflex="true" locale="en"
 								timeZone="GMT+1" format="@load(allDay ? 'long' : 'long+medium')"
@@ -36,54 +36,51 @@
 						</div>
 					</row>
 					<row>
-						Kleur:
+						<label value="${c:l('color')}:" />
 						<hlayout sclass="z-valign-middle">
-							Rand -
+							<label value="${c:l('color.border')}" /> -
 							<colorbox value="@bind(fx.headerColor)"
 								height="20px" />
-							Inhoud -
+							<label value="${c:l('content')}" /> -
 							<colorbox value="@bind(fx.contentColor)"
 								height="20px" />
 						</hlayout>
 
 					</row>
 					<row>
-						Titel:
+						<label value="${c:l('title')}:" />
 						<textbox width="97%" value="@bind(fx.content)" />
 					</row>
 					<row>
-						Omschrijving:
+						<label value="${c:l('description')}:" />
 						<textbox multiline="true" rows="3" width="97%"
 							value="@bind(fx.title)" />
 					</row>
 					<row>
-						Aantal:
+						<label value="${c:l('number')}:" />
 						<doublebox width="97%" value="@bind(fx.unitsOfWork)" />
 					</row>
 					<row>
-						Billable:
+						<label value="${c:l('billable')}:" />
 						<checkbox checked="@bind(fx.billable)" />
 					</row>
 					<row>
-						Kilometer vergoeding:
+						<label value="${c:l('travel.fee')}:" />
 						<doublebox value="@bind(fx.travelingByCarCostDeclaration)" />
 					</row>
 					<row>
-						Overige kosten:
+						<label value="${c:l('costs.other')}:" />
 						<doublebox value="@bind(fx.otherCostDeclaration)" />						
 					</row>
 					<row>
-						btw type overige kosten:
+						<label value="${c:l('vat.type.other.costs')}:" />
 						<textbox value="@bind(fx.vatTypeForOtherCostDeclaration)" />
 					</row>
 					<row>
 						<cell colspan="2" style="text-align:center;">
-							<button label="OK" onClick="@command('ok')"
-								width="80px" />
-							<button label="Cancel"
-								onClick="@command('cancel')" width="80px" />
-							<button label="Delete"
-								onClick="@command('delete')" width="80px" />
+							<button label="${c:l('ok')}" onClick="@command('ok')" width="80px" />
+							<button label="${c:l('cancel')}" onClick="@command('cancel')" width="80px" />
+							<button label="${c:l('delete')}" onClick="@command('delete')" width="80px" />
 						</cell>
 					</row>
 				</rows>
@@ -94,10 +91,9 @@
 				</columns>
 				<rows>
 					<row>
-						<listbox model="@load(vm.projects)"
-							selectedItem="@bind(vm.selectedProject)" height="500px">
+						<listbox model="@load(vm.projects)" selectedItem="@bind(vm.selectedProject)" height="500px">
 							<listhead>
-								<listheader label="Project" />
+								<listheader label="${c:l('project')}" />
 							</listhead>
 							<template name="model" var="item">
 								<listitem>

@@ -1,4 +1,4 @@
-<?page title="TechyTax - Online boekhouden"?>
+<?page title="${c:l('page.title')}"?>
 <?init class="org.zkoss.zk.ui.util.Composition"
 arg0="/WEB-INF/layout/template.zul"?>
 <zk>
@@ -7,7 +7,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 	color:red;
 }
 </style>
-<window self="@define(content)" title="Alle kosten beheren" border="normal" width="1100px"
+<window self="@define(content)" title="${c:l('maintain.costs')}" border="normal" width="1100px"
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.AllCostsVM')" 
 	binder="@init(queueName='queueName',queueScope='desktop')" validationMessages="@id('vmsgs')">
     <zscript><![CDATA[
@@ -34,36 +34,37 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<column width="160px"/>														
 				</columns>
 				<rows>
-					<row>Van
+					<row>
+						<label value="${c:l('from')}:" />
 						<hlayout> 
-							<datebox id="cdbeginbox" value="@bind(vm.beginDate)"/>
+							<datebox value="@bind(vm.beginDate)"/>
 						</hlayout>	
-						t/m
+						<label value="${c:l('until')}:" />
 						<hlayout> 
-							<datebox id="cdendbox" value="@bind(vm.endDate)"/>
+							<datebox value="@bind(vm.endDate)"/>
 						</hlayout>	
 					</row>								
 				</rows>
 			</grid>
-	 	<label value="Zoeken:" />
+	 	<label value="${c:l('search')}:" />
 		<textbox id="searchBox" value="@bind(vm.searchString) @save(vm.searchString, before='filterCosts')" width="60px" onChanging="@command('filterCosts')">
 		    <attribute name="onChanging">
       			searchBox.setValue(event.getValue());
     		</attribute>
     	</textbox>			
-		<button label="Export XML Audit File" onClick="@command('audit')" />
-		<button label="Er zijn nog onbehandelde investeringen" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
+		<button label="${c:l('export.xaf')}" onClick="@command('audit')" />
+		<button label="${c:l('check.investments')}" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" height="490px">
 			<auxhead>
-            	<auxheader colspan="5" class="topic">Alle kosten</auxheader>
+            	<auxheader colspan="5" class="topic"><label value="${c:l('all.costs')}" /></auxheader>
         	</auxhead>
 			<listhead>
-				<listheader label="Datum" align="center" width="100px" sortAscending="${cDateAsc}" sortDescending="${cDateDsc}" />
-				<listheader label="Bedrag" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}" />
-				<listheader label="btw" align="center" width="80px" sortAscending="${cVatAsc}" sortDescending="${cVatDsc}" />
-				<listheader label="Omschrijving" width="400px" sortAscending="${cDescrAsc}" sortDescending="${cDescrDsc}" />
-				<listheader label="Type" width="400px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
+				<listheader label="${c:l('date')}" align="center" width="100px" sortAscending="${cDateAsc}" sortDescending="${cDateDsc}" />
+				<listheader label="${c:l('amount')}" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}" />
+				<listheader label="${c:l('vat')}" align="center" width="80px" sortAscending="${cVatAsc}" sortDescending="${cVatDsc}" />
+				<listheader label="${c:l('description')}" width="400px" sortAscending="${cDescrAsc}" sortDescending="${cDescrDsc}" />
+				<listheader label="${c:l('type')}" width="400px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
 			</listhead>
 			<template name="model" var="item">
 				<listitem onDoubleClick="@command('onDoubleClicked')" sclass="@load(item.style)">
@@ -76,9 +77,9 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</template>
 		</listbox>
 		<toolbar>
-			<button label="New" onClick="@command('newCost')" />
+			<button label="${c:l('new')}" onClick="@command('newCost')" />
 			<!-- show confirm dialog when selected is persisted -->
-			<button label="Delete" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
+			<button label="${c:l('delete')}" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
 		</toolbar>
 	</vbox>
 	<include src="confirm.zul"/>

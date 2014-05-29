@@ -1,11 +1,11 @@
-<window id="resultWin" title="Klant wijzigen" width="500px"
+<window id="resultWin" title="${c:l('customer.edit')}" width="500px"
 	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.business.zk.EditCustomerVM')"
 	binder="@init(queueName='queueName',queueScope='desktop')">
 
-	<button label="Wijzig" onClick="@command('save')" />
-	<button label="Annuleer" onClick="@command('cancel')" />
+	<button label="${c:l('save')}" onClick="@command('save')" />
+	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
 	<groupbox width="490px">
 		<hbox>
 			<vbox>
@@ -16,97 +16,66 @@
 					</columns>
 					<rows>
 						<row>
-							Naam
-							<hlayout>
-								<textbox value="@bind(vm.customer.name)"
-									width="300px" />
-							</hlayout>
+							<label value="${c:l('name')}" />
+							<textbox value="@bind(vm.customer.name)" width="300px" />
 						</row>
 						<row>
-							KvK nummer
-							<hlayout>
-								<intbox
-									value="@bind(vm.customer.commerceNr)" width="100px" />
-							</hlayout>
+							<label value="${c:l('chamber.number')}" />
+							<intbox	value="@bind(vm.customer.commerceNr)" width="100px" />
 						</row>
 						<row>
-							Omschrijving
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.description)" width="300px"
-									height="60px" rows="4" />
-							</hlayout>
+							<label value="${c:l('description')}" />
+							<textbox value="@bind(vm.customer.description)" width="300px" height="60px" rows="4" />
 						</row>
 						<row>
-							Adres
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.address)" width="300px" />
-							</hlayout>
+							<label value="${c:l('address')}" />
+							<textbox value="@bind(vm.customer.address)" width="300px" />
 						</row>
 						<row>
-							Postcode
+							<label value="${c:l('zipcode')}" />
 							<hlayout>
 								<textbox
 									value="@bind(vm.customer.postalCode)" width="70px" />
 								<image src="/images/kvk_icon.png" onClick="@command('checkKvK')"
-									tooltiptext="Toon lijst met bedrijven op deze postcode." />
+									tooltiptext="${c:l('companies.zipcode.display')}" />
 							</hlayout>
 						</row>
 						<row>
-							Huisnummer
+							<label value="${c:l('house.number')}" />
 							<hlayout>
 								<textbox
 									value="@bind(vm.customer.number)" width="40px" />
-								Toevoeging
+								<label value="${c:l('addition')}" />
 								<textbox
 									value="@bind(vm.customer.numberExtension)" width="40px" />
 								<image src="/images/postcode-logo.png"
 									height="40px" onClick="@command('checkPostalCode')"
-									tooltiptext="Vul postcode en huisnummer aan met straat en plaats" />
+									tooltiptext="${c:l('address.fill')}" />
 							</hlayout>
 						</row>
 						<row>
-							Plaats
-							<hlayout>
-								<textbox value="@bind(vm.customer.city)"
-									width="200px" />
-							</hlayout>
+							<label value="${c:l('city')}" />
+							<textbox value="@bind(vm.customer.city)" width="200px" />
 						</row>
 						<row>
-							Contact
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.contact)" width="300px" />
-							</hlayout>
+							<label value="${c:l('contact')}" />
+							<textbox value="@bind(vm.customer.contact)" width="300px" />
 						</row>
 						<row>
-							Factuur email
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.emailInvoice)" width="300px" />
-							</hlayout>
+							<label value="${c:l('invoice.email')}" />
+							<textbox value="@bind(vm.customer.emailInvoice)" width="300px" />
 						</row>
 						<row>
-							Telefoon
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.telephone)" width="100px" />
-							</hlayout>
+							<label value="${c:l('phone')}" />
+							<textbox value="@bind(vm.customer.telephone)" width="100px" />
 						</row>
 						<row>
-							Fax
-							<hlayout>
-								<textbox value="@bind(vm.customer.fax)"
-									width="100px" />
-							</hlayout>
+							<label value="${c:l('fax')}" />
+							<textbox value="@bind(vm.customer.fax)" width="100px" />
 						</row>
 						<row>
-							Website
-							<hlayout>
-								<textbox
-									value="@bind(vm.customer.website)" width="300px" />
-							</hlayout>
+							<label value="${c:l('website')}" />
+							<textbox value="@bind(vm.customer.website)" width="300px" />
 						</row>
 					</rows>
 				</grid>

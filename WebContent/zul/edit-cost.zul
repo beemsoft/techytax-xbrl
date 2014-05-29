@@ -1,14 +1,12 @@
-<window id="resultWin" title="Kost bewerken" width="1150px"
+<window id="resultWin" title="${c:l('cost.edit')}" width="1150px"
 	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.vat.ModelWindowVM')">
 
-	<button label="Wijzig" onClick="@command('save')" />
-	<button label="Annuleer" onClick="@command('cancel')" />
-	<button label="Splits" onClick="@command('split')"
-		disabled="@load(not empty vm.splitCost)" />
-	<button label="Annuleer splits" onClick="@command('unSplit')"
-		disabled="@load(empty vm.splitCost)" />
+	<button label="${c:l('save')}" onClick="@command('save')" />
+	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
+	<button label="${c:l('split')}" onClick="@command('split')"	disabled="@load(not empty vm.splitCost)" />
+	<button label="${c:l('cancel.split')}" onClick="@command('unSplit')" disabled="@load(empty vm.splitCost)" />
 	<groupbox width="1100px">
 		<hbox>
 			<vbox hflex="true">
@@ -19,52 +17,38 @@
 					</columns>
 					<rows>
 						<row>
-							Datum
+							<label value="${c:l('date')}" />
 							<hlayout>
-								<datebox id="cdbox"
-									value="@bind(vm.cost.date) @save(vm.cost.date, before='saveCost')
-							@validator(vm.creationDateValidator)" />
-								<label value="@load(vmsgs[cdbox])"
-									sclass="red" />
+								<datebox value="@bind(vm.cost.date) @save(vm.cost.date, before='saveCost') @validator(vm.creationDateValidator)" />
+								<label value="@load(vmsgs[cdbox])" sclass="red" />
 							</hlayout>
 						</row>
 						<row>
-							Bedrag
+							<label value="${c:l('amount')}" />
 							<hlayout>
-								<doublebox id="pbox"
-									value="@bind(vm.cost.amount) @save(vm.cost.amount,before='saveCost') 
-							@validator(vm.priceValidator)"
-									format="###,##0.00" />
-								<label value="@load(vmsgs[pbox])"
-									sclass="red" />
-								<button id="vatHighBtn" label="btw hoog"
-									onClick="@command('highVat')" />
-								<button id="vatLowBtn" label="btw laag"
-									onClick="@command('lowVat')" />
+								<doublebox value="@bind(vm.cost.amount) @save(vm.cost.amount,before='saveCost') @validator(vm.priceValidator)" format="###,##0.00" />
+								<label value="@load(vmsgs[pbox])" sclass="red" />
+								<button id="vatHighBtn" label="${c:l('vat.high')}" onClick="@command('highVat')" />
+								<button id="vatLowBtn" label="${c:l('vat.low')}" onClick="@command('lowVat')" />
 							</hlayout>
 						</row>
 						<row>
-							btw
+							<label value="${c:l('vat')}" />
 							<hlayout>
-								<doublebox id="vbox"
-									value="@bind(vm.cost.vat) @save(vm.cost.vat,before='saveCost')"
-									format="###,##0.00" />
-								<button id="resetVatBtn" label="Reset"
-									onClick="@command('resetVat')" />									
+								<doublebox value="@bind(vm.cost.vat) @save(vm.cost.vat,before='saveCost')" format="###,##0.00" />
+								<button id="resetVatBtn" label="${c:l('reset')}" onClick="@command('resetVat')" />									
 							</hlayout>
 						</row>
 						<row>
-							Omschrijving
+							<label value="${c:l('description')}" />
 							<hlayout>
-								<textbox id="tbx" constraint="no empty"
-									value="@bind(vm.cost.description) @save(vm.cost.description,before='saveCost')"
-									width="300px" height="60px" rows="4" />
+								<textbox constraint="no empty" value="@bind(vm.cost.description) @save(vm.cost.description,before='saveCost')" width="300px" height="60px" rows="4" />
 							</hlayout>
 						</row>
 					</rows>
 				</grid>
 				<groupbox visible="@load(not empty vm.splitCost)">
-					<caption label="Splitsen" />
+					<caption label="${c:l('split')}" />
 					<grid>
 						<columns>
 							<column width="90px" />
@@ -72,28 +56,21 @@
 						</columns>
 						<rows>
 							<row>
-								Bedrag
+								<label value="${c:l('amount')}" />
 								<hlayout>
-									<doublebox id="pboxsplit"
-										value="@bind(vm.splitCost.amount) @save(vm.splitCost.amount,before='saveCost') 
-							@validator(vm.priceValidator)"
-										format="###,##0.00" />
+									<doublebox value="@bind(vm.splitCost.amount) @save(vm.splitCost.amount,before='saveCost') @validator(vm.priceValidator)" format="###,##0.00" />
 								</hlayout>
 							</row>
 							<row>
-								btw
+								<label value="${c:l('vat')}" />
 								<hlayout>
-									<doublebox id="vboxsplit"
-										value="@bind(vm.splitCost.vat) @save(vm.splitCost.vat,before='saveCost')"
-										format="###,##0.00" />
+									<doublebox value="@bind(vm.splitCost.vat) @save(vm.splitCost.vat,before='saveCost')" format="###,##0.00" />
 								</hlayout>
 							</row>
 							<row>
-								Omschrijving
+								<label value="${c:l('description')}" />
 								<hlayout>
-									<textbox id="tbxsplit"
-										value="@bind(vm.splitCost.description) @save(vm.splitCost.description,before='saveCost')"
-										width="300px" height="60px" rows="4" />
+									<textbox value="@bind(vm.splitCost.description) @save(vm.splitCost.description,before='saveCost')" width="300px" height="60px" rows="4" />
 								</hlayout>
 							</row>
 						</rows>
@@ -109,12 +86,12 @@
 						<listbox model="@load(vm.costTypes)"
 							selectedItem="@bind(vm.selectedCostType)" height="550px">
 							<listhead>
-								<listheader label="Type" width="160px" />
-								<listheader label="Bij" />
-								<listheader label="Aftr." />
-								<listheader label="btw" />
-								<listheader label="Inv." />
-								<listheader label="Knt." />
+								<listheader label="${c:l('type')}" width="160px" />
+								<listheader label="${c:l('incoming')}" />
+								<listheader label="${c:l('deductable')}" />
+								<listheader label="${c:l('vat')}" />
+								<listheader label="${c:l('investment')}" />
+								<listheader label="${c:l('office.abbreviated')}" />
 							</listhead>
 							<template name="model" var="item">
 								<listitem>

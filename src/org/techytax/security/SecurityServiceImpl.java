@@ -35,6 +35,7 @@ import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
+import org.zkoss.util.resource.Labels;
 
 public class SecurityServiceImpl implements SecurityService {
 
@@ -48,12 +49,12 @@ public class SecurityServiceImpl implements SecurityService {
 			return null;
 		}
 		if (CollectionUtils.isEmpty(users)) {
-			throw new AuthenticationException("Onbekende gebruiker");
+			throw new AuthenticationException(Labels.getLabel("warning.unknown.user"));
 		}
 		UserEntity user = users.get(0);
 		boolean passwordIsValid = user.passwordMatch(password);
 		if (!passwordIsValid) {
-			throw new AuthenticationException("Ongeldig wachtwoord");
+			throw new AuthenticationException(Labels.getLabel("warning.invalid.password"));
 		}
 		if (user.isBlocked()) {
 			throw new AuthenticationException("Deze gebruiker is geblokkeerd");
