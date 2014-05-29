@@ -1,20 +1,7 @@
 package org.techytax.domain;
 
-import org.techytax.helper.Translator;
-import org.zkoss.util.Locales;
-
 public enum VatPeriodType {
-	PER_QUARTER("vat.period.quarter"), PER_YEAR("vat.period.year");
-
-	private String key;
-
-	private VatPeriodType(String key) {
-		this.key = key;
-	}
-
-	public String getKey() {
-		return Translator.translateKey(key, Locales.getCurrent());
-	}
+	PER_QUARTER, PER_YEAR;
 
 	public static VatPeriodType getInstance(int type) {
 		VatPeriodType vatPeriodType;

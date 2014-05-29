@@ -22,7 +22,7 @@ package org.techytax.helper;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
+@Deprecated
 public class Translator {
 	
 	public static String translateKey(String key, Locale locale) {
