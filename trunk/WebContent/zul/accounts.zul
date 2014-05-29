@@ -19,7 +19,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<listcell label="@load(item.number)"/>
 					<listcell label="@load(item.name)"/>					
 					<listcell label="@load(item.description)"/>
-					<listcell label="@load(item.type)"/>					
+					<listcell label="@load(c:l(item.type.key))"/>					
 				</listitem>
 			</template>
 		</listbox>
@@ -36,21 +36,15 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<rows>
 					<row>
 						<label value="${c:l('date.opened')}" />
-						<hlayout> 
-							<datebox value="@load(vm.selected.dateOpened) @save(vm.selected.dateOpened, before='saveAccount')"/>
-						</hlayout>	
+						<datebox value="@load(vm.selected.dateOpened) @save(vm.selected.dateOpened, before='saveAccount')"/>
 					</row>
 					<row>
 						<label value="${c:l('date.closed')}" />
-						<hlayout> 
-							<datebox value="@load(vm.selected.dateClosed) @save(vm.selected.dateClosed, before='saveAccount')"/>
-						</hlayout>	
+						<datebox value="@load(vm.selected.dateClosed) @save(vm.selected.dateClosed, before='saveAccount')"/>
 					</row>
 					<row>
 						<label value="${c:l('description')}" />
-						<hlayout>
-							<textbox value="@load(vm.selected.description) @save(vm.selected.description,before='saveAccount')" width="300px" />
-						</hlayout>
+						<textbox value="@load(vm.selected.description) @save(vm.selected.description,before='saveAccount')" width="300px" />
 					</row>													
 					<row>
 						<label value="${c:l('type')}" />
@@ -61,7 +55,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
-										<listcell label="@load(item.key)"/>					
+										<listcell label="@load(c:l(item.key))"/>					
 									</listitem>
 								</template>
 							</listbox>
@@ -97,15 +91,11 @@ arg0="/WEB-INF/layout/template.zul"?>
 				<rows>
 					<row>
 						<label value="${c:l('date')}" />
-						<hlayout> 
-							<datebox value="@load(vm.selectedAccountBalance.datum) @save(vm.selectedAccountBalance.datum, before='saveAccountBalance')"/>
-						</hlayout>	
+						<datebox value="@load(vm.selectedAccountBalance.datum) @save(vm.selectedAccountBalance.datum, before='saveAccountBalance')"/>
 					</row>
 					<row>
 						<label value="${c:l('balance')}" />
-						<hlayout>
-							<doublebox value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
-						</hlayout>					
+						<doublebox value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
 					</row>					
 				</rows>
 			</grid>

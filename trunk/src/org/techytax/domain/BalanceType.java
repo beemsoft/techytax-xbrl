@@ -19,8 +19,7 @@
  */
 package org.techytax.domain;
 
-import org.techytax.helper.Translator;
-import org.zkoss.util.Locales;
+import org.zkoss.util.resource.Labels;
 
 public enum BalanceType {
 	NONE("balance.type.none", null), MACHINERY("balance.type.machines", true), CAR("balance.type.car", true), CURRENT_ASSETS(
@@ -40,7 +39,7 @@ public enum BalanceType {
 	}
 
 	public String getKey() {
-		return Translator.translateKey(key, Locales.getCurrent());
+		return Labels.getLabel(key);
 	}
 	
 	public Boolean isActivum() {
