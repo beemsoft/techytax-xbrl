@@ -86,15 +86,15 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		return null;
 	}
 
-	protected CostMatchParent matchKost(Cost kost) throws Exception {
-		CostType kostensoort = CostConstants.UNDETERMINED;
+	protected CostMatchParent matchCost(Cost kost) throws Exception {
+		CostType costType = CostConstants.UNDETERMINED;
 		kost.setVat(BigDecimal.ZERO);
 		CostMatchParent costMatch = findCostMatch(kost.getDescription());
 		if (costMatch != null) {
-			kostensoort = costMatch.getKostenSoort();
-			handleVat(kost, costMatch, kostensoort);
+			costType = costMatch.getCostType();
+			handleVat(kost, costMatch, costType);
 		}
-		kost.setCostType(kostensoort);
+		kost.setCostType(costType);
 		return costMatch;
 	}
 

@@ -44,7 +44,11 @@ public interface CostConstants {
 	public static final CostType FROM_PRIVATE_ACCOUNT = new CostType(18);	
 	public static final CostType BUSINESS_CAR_OTHER_ACCOUNT = new CostType(19);	
 	public static final CostType BUSINESS_FOOD_OTHER_ACCOUNT = new CostType(20);
+	
+	@Deprecated
 	public static final CostType BUSINESS_TRAVEL_CREDIT_CARD = new CostType(21);
+	
+	@Deprecated	
 	public static final CostType BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = new CostType(22);
 	
 	@Deprecated

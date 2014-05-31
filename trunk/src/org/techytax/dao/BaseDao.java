@@ -19,6 +19,12 @@
  */
 package org.techytax.dao;
 
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
+
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +41,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserObject;
@@ -44,6 +51,7 @@ import org.zkoss.zkplus.jpa.JpaUtil;
 
 class BaseDao<T> {
 
+	protected static final List<CostType> COSTS_FROM_OTHER_ACCOUNT = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT);
 	private EntityManager entityManager;
 	private final Class<T> persistentClass;
 	private boolean isForTesting = false;

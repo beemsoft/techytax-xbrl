@@ -20,13 +20,7 @@
 package org.techytax.dao;
 
 import static org.techytax.dao.QueryParameter.with;
-import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
-import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
-import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
-import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
 
 import java.util.Arrays;
@@ -46,9 +40,7 @@ public class CostTypeDao extends BaseDao<CostType> {
 	}
 
 	public List<CostType> getCostTypesForVatCostsWithPrivateMoney() throws Exception {
-		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT,
-				EXPENSE_CREDIT_CARD);
-		return findByNamedQuery(CostType.FOR_TYPES, with("costTypes", costTypes).parameters());
+		return findByNamedQuery(CostType.FOR_TYPES, with("costTypes", COSTS_FROM_OTHER_ACCOUNT).parameters());
 	}
 
 }

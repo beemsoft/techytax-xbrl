@@ -68,7 +68,7 @@ public class CostVM {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
 			FiscalPeriod vatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-			List<Cost> vatCosts = costDao.getVatCostsWithPrivateMoney(vatPeriod);
+			List<Cost> vatCosts = costDao.getCostsWithPrivateMoneyExceptForTravelCosts(vatPeriod);
 			costs = new ListModelList<>(vatCosts);
 		}
 		return costs;

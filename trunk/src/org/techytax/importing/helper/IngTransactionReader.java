@@ -102,7 +102,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
 				}
-				costMatch = matchKost(kost);
+				costMatch = matchCost(kost);
 			}
 			addCostOrHandleAdminstrativeSplitting(kost, costMatch);
 		} catch (Exception e) {

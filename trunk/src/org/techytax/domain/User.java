@@ -30,13 +30,16 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Check;
-
 @MappedSuperclass
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
+	
+	@Id
+	private long id;
 
+	private String role;
+	
 	private boolean blocked;
 	
 	@Column(name = "company_address")
@@ -48,9 +51,6 @@ public class User implements Serializable {
 	private String initials;
 	private String prefix;
 	private String surname;
-	
-	@Id
-	private long id;
 	
     @Temporal(TemporalType.TIMESTAMP)
 	private Date latestOnlineTime;
@@ -209,6 +209,14 @@ public class User implements Serializable {
 
 	public void setChamberOfCommerceNumber(Long chamberOfCommerceNumber) {
 		this.chamberOfCommerceNumber = chamberOfCommerceNumber;
+	}
+	
+	public boolean isAdmin() {
+		return role.equals("admin");
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

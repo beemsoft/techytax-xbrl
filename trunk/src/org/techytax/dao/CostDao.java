@@ -20,13 +20,8 @@
 package org.techytax.dao;
 
 import static org.techytax.dao.QueryParameter.with;
-import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
-import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
-import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
-import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.INVOICE_PAID;
 import static org.techytax.domain.CostConstants.INVOICE_SENT;
 
@@ -71,8 +66,11 @@ public class CostDao extends BaseDao<Cost> {
 		return getCosts(period, Arrays.asList(INVOICE_SENT));
 	}
 
-	public List<Cost> getVatCostsWithPrivateMoney(FiscalPeriod period) {
-		return getCosts(period, Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, INVESTMENT_OTHER_ACCOUNT, EXPENSE_CREDIT_CARD));
+	/**
+	 * Get the costs that have been paid with private money. Leave TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT out, because it is paid with a chipcard.  
+	 */
+	public List<Cost> getCostsWithPrivateMoneyExceptForTravelCosts(FiscalPeriod period) {
+		return getCosts(period, COSTS_FROM_OTHER_ACCOUNT);
 	}
 
 	private List<Cost> getCosts(FiscalPeriod period, List<CostType> costTypes) {
