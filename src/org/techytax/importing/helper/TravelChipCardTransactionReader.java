@@ -93,7 +93,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		return null;
 	}
 
-	protected Kostmatch matchKost(Cost kost) throws Exception {
+	protected Kostmatch matchCost(Cost kost) throws Exception {
 		CostType kostensoort = TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
 		Kostmatch costMatch = findCostMatch(kost.getDescription());
 		if (costMatch != null) {
@@ -116,7 +116,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			String omschrijving = "Van " + line[2] + " naar " + line[4] + " (" + line[3] + ") " + line[6] + " " + line[7] + " " + line[8];
 
 			kost.setDescription(omschrijving);
-			matchKost(kost);
+			matchCost(kost);
 			return kost;
 		} catch (Exception e) {
 			e.printStackTrace();

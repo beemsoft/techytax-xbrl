@@ -26,7 +26,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -61,7 +60,6 @@ import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.mail.MailHelper;
-import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 
 public class DutchAuditFileHelper {
@@ -183,7 +181,7 @@ public class DutchAuditFileHelper {
 			header.setFiscalYear(Integer.toString(year));
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("2.1");
+			header.setSoftwareVersion("2.2");
 
 			auditfile.setHeader(header);
 

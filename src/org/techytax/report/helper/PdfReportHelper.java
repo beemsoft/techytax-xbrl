@@ -67,7 +67,7 @@ public class PdfReportHelper {
 			CostDao costDao = new CostDao(Cost.class);
 			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
-			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
 			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 			vatDeclarationData.setStartDate(period.getBeginDate());
 			vatDeclarationData.setEndDate(period.getEndDate());

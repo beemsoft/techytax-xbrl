@@ -89,7 +89,7 @@ public class FiscalOverviewHelper {
 		costCache.setEindDatum(eindDatum);
 		PrivatWithdrawal privatWithdrawal = new PrivatWithdrawal();
 
-		VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(costCache.getCosts(), false);
+		VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(costCache.getCosts(), false);
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
 

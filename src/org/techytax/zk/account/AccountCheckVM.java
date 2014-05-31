@@ -99,7 +99,7 @@ public class AccountCheckVM extends CostVM3 {
 			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDate()), DateHelper.getDate(periode.getEndDate()));
 			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
 			List<Cost> result2 = costDao.getVatCostsInPeriod(periode);
-			Balance balans = BalanceCalculator.calculateBtwBalance(result2, true);
+			Balance balans = BalanceCalculator.calculateVatBalance(result2, true);
 			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
 			List<Cost> taxCosts = costCache.getTaxCosts();

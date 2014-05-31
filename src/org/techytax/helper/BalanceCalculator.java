@@ -61,7 +61,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountBalanceDao;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
@@ -78,7 +77,7 @@ import org.techytax.util.DateHelper;
 
 public class BalanceCalculator {
 
-	public static VatBalanceWithinEu calculateBtwBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
+	public static VatBalanceWithinEu calculateVatBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
 		BigDecimal totalVatOut = BigDecimal.ZERO;
 		BigDecimal totalVatIn = BigDecimal.ZERO;

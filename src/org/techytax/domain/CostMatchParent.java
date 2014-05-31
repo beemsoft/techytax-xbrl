@@ -69,7 +69,7 @@ public class CostMatchParent {
 		this.vatMatch = vatMatch;
 	}	
 
-	public CostType getKostenSoort() {
+	public CostType getCostType() {
 		return costType;
 	}
 	

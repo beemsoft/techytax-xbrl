@@ -19,10 +19,14 @@
  */
 package org.techytax.cache;
 
+import static org.techytax.domain.CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT;
+import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.VAT_CORRECTION_CAR_DEPRECIATION;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.techytax.dao.CostTypeDao;
@@ -30,6 +34,7 @@ import org.techytax.domain.CostType;
 
 public class CostTypeCache {
 
+	private static final List<CostType> COST_TYPES_SKIP = Arrays.asList(VAT_CORRECTION_CAR_DEPRECIATION, BUSINESS_TRAVEL_CREDIT_CARD, BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT);
 	private static Map<Long, CostType> costTypeMap = null;
 	
 	private CostTypeCache() {
@@ -48,7 +53,7 @@ public class CostTypeCache {
 		costTypeMap = new HashMap<>();
 		CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
 		for (CostType costType : costTypeDao.findAll()) {
-			if (!costType.equals(VAT_CORRECTION_CAR_DEPRECIATION)) {
+			if (!COST_TYPES_SKIP.contains(costType)) {
 				costTypeMap.put(costType.getId(), costType);
 				System.out.println("Cache costtype: " + costType.getOmschrijving());
 			}

@@ -266,7 +266,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
-		vatBalanceWithinEu = BalanceCalculator.calculateBtwBalance(vatCosts, false);
+		vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);

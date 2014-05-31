@@ -19,18 +19,16 @@
  */
 package org.techytax.cache;
 
+import static java.math.BigDecimal.ZERO;
 import static org.techytax.domain.CostConstants.ADVERTORIAL;
 import static org.techytax.domain.CostConstants.ADVERTORIAL_NO_VAT;
 import static org.techytax.domain.CostConstants.BUSINESS_CAR;
 import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT;
-import static org.techytax.domain.CostConstants.BUSINESS_TRAVEL_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INCOME_TAX;
 import static org.techytax.domain.CostConstants.INCOME_TAX_PAID_BACK;
@@ -103,7 +101,7 @@ public class CostCache {
 		Collections.sort(deductableCostList);
 		CostType latestCostType = UNDETERMINED;
 		DeductableCostGroup groupedCost = null;
-		BigDecimal totalDeductableCost = BigDecimal.ZERO;
+		BigDecimal totalDeductableCost = ZERO;
 		List<DeductableCostGroup> groupedDeducatableCostList = new ArrayList<>();
 		for (DeductableCostGroup deductableCost : deductableCostList) {
 			if (deductableCost.getKostenSoort() != latestCostType) {
@@ -114,7 +112,7 @@ public class CostCache {
 				}
 				latestCostType = deductableCost.getKostenSoort();
 				groupedCost = new DeductableCostGroup();
-				totalDeductableCost = BigDecimal.ZERO;
+				totalDeductableCost = ZERO;
 			}
 			totalDeductableCost = totalDeductableCost.add(deductableCost.getAftrekbaarBedrag());
 		}
@@ -174,9 +172,9 @@ public class CostCache {
 	}
 
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
-		BigDecimal costsWithPrivateMoney = BigDecimal.ZERO;
-		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT_IGNORE, EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT,
-				BUSINESS_FOOD_OTHER_ACCOUNT, BUSINESS_TRAVEL_CREDIT_CARD, BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT, INVESTMENT_OTHER_ACCOUNT);
+		BigDecimal costsWithPrivateMoney = ZERO;
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT,
+				BUSINESS_FOOD_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT);
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
 			if (costTypes.contains(costType)) {
@@ -187,7 +185,7 @@ public class CostCache {
 	}
 
 	public BigDecimal getInterest() throws Exception {
-		BigDecimal interest = BigDecimal.ZERO;
+		BigDecimal interest = ZERO;
 		for (Cost cost : costs) {
 			if (cost.getCostType().equals(INTEREST)) {
 				interest = interest.add(cost.getAmount());
@@ -232,7 +230,7 @@ public class CostCache {
 	}
 
 	public BigDecimal getRepurchases() throws Exception {
-		BigDecimal repurchases = BigDecimal.ZERO;
+		BigDecimal repurchases = ZERO;
 		for (Cost cost : costs) {
 			if (cost.getCostType().equals(REPURCHASES)) {
 				repurchases = repurchases.add(cost.getAmount());
@@ -242,7 +240,7 @@ public class CostCache {
 	}
 	
 	public BigDecimal getCostCurrentAccountIgnore() throws Exception {
-		BigDecimal totalCost = BigDecimal.ZERO;
+		BigDecimal totalCost = ZERO;
 		for (Cost cost : costs) {
 			if (cost.getCostType().equals(INCOME_CURRENT_ACCOUNT_IGNORE)) {
 				totalCost = totalCost.add(cost.getAmount()).add(cost.getVat());
