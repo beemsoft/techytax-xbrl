@@ -54,6 +54,7 @@ import org.zkoss.calendar.Calendars;
 import org.zkoss.calendar.api.CalendarEvent;
 import org.zkoss.calendar.event.CalendarsEvent;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Event;
@@ -132,7 +133,6 @@ public class CalendarController extends SelectorComposer<Component> {
 					sendInvoice();
 				}
 
-				@SuppressWarnings("unused")
 				private void sendInvoice() throws Exception {
 					MailHelper.sendInvoice(invoice, invoiceBuf, user);
 					registerInvoice();
@@ -143,7 +143,7 @@ public class CalendarController extends SelectorComposer<Component> {
 				private void registerInvoice() throws Exception {
 					Cost cost = new Cost();
 					cost.setUser(user);
-					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
+					cost.setDescription(Labels.getLabel("invoice") + " " + invoice.getInvoiceNumber());
 					cost.setAmount(invoice.getNetAmount());
 					cost.setVat(invoice.getVatAmount());
 					cost.setDate(new Date());
@@ -340,7 +340,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setInvoiceNumber(Integer.parseInt(factuurNummerString));
 
 			Customer customer = selectedProject.getCustomer();
-			sendInvoiceButton.setLabel("Verstuur deze factuur naar: " + customer.getEmailInvoice());
+			sendInvoiceButton.setLabel(Labels.getLabel("send.invoice.to") +": " + customer.getEmailInvoice());
 
 			invoice.setConsumerAddress(customer.getFullAddress());
 			invoice.setConsumerName(customer.getName());
