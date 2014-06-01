@@ -115,6 +115,7 @@ public class CalendarController extends SelectorComposer<Component> {
 	private Invoice invoice;
 	private byte[] invoiceBuf;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -124,6 +125,32 @@ public class CalendarController extends SelectorComposer<Component> {
 			calendarModel = new BusinessCalendarModel(calendarEvents);
 			calendars.setModel(this.calendarModel);
 			invoiceButton.setDisabled(true);
+			
+			sendInvoiceButton = (Button) Path.getComponent("/win/invoiceWindow/sendInvoiceButton");
+			sendInvoiceButton.addEventListener("onClick", new EventListener() {
+				public void onEvent(Event event) throws Exception {
+					sendInvoice();
+				}
+
+				@SuppressWarnings("unused")
+				private void sendInvoice() throws Exception {
+					MailHelper.sendInvoice(invoice, invoiceBuf, user);
+					registerInvoice();
+					AuditLogger.log(SEND_INVOICE, user);
+					alert("De factuur is de deur uit.");
+				}
+
+				private void registerInvoice() throws Exception {
+					Cost cost = new Cost();
+					cost.setUser(user);
+					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
+					cost.setAmount(invoice.getNetAmount());
+					cost.setVat(invoice.getVatAmount());
+					cost.setDate(new Date());
+					cost.setCostType(INVOICE_SENT);
+					costDao.persistEntity(cost);
+				}
+			});			
 		}
 	}
 
@@ -267,7 +294,6 @@ public class CalendarController extends SelectorComposer<Component> {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Listen("onClick = #invoiceButton")
 	public void createInvoice() throws IOException {
 		InputStream is = null;
@@ -314,6 +340,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setInvoiceNumber(Integer.parseInt(factuurNummerString));
 
 			Customer customer = selectedProject.getCustomer();
+			sendInvoiceButton.setLabel("Verstuur deze factuur naar: " + customer.getEmailInvoice());
 
 			invoice.setConsumerAddress(customer.getFullAddress());
 			invoice.setConsumerName(customer.getName());
@@ -343,32 +370,6 @@ public class CalendarController extends SelectorComposer<Component> {
 			// set iframe content
 			invoiceFrame = (Iframe) Path.getComponent("/win/invoiceWindow/invoiceFrame");
 			invoiceFrame.setContent(amedia);
-
-			sendInvoiceButton = (Button) Path.getComponent("/win/invoiceWindow/sendInvoiceButton");
-			sendInvoiceButton.setLabel("Verstuur deze factuur naar: " + customer.getEmailInvoice());
-			sendInvoiceButton.addEventListener("onClick", new EventListener() {
-				public void onEvent(Event event) throws Exception {
-					sendInvoice();
-				}
-
-				private void sendInvoice() throws Exception {
-					MailHelper.sendInvoice(invoice, invoiceBuf, user);
-					registerInvoice();
-					AuditLogger.log(SEND_INVOICE, user);
-					alert("De factuur is de deur uit.");
-				}
-
-				private void registerInvoice() throws Exception {
-					Cost cost = new Cost();
-					cost.setUser(user);
-					cost.setDescription("Factuur " + invoice.getInvoiceNumber());
-					cost.setAmount(invoice.getNetAmount());
-					cost.setVat(invoice.getVatAmount());
-					cost.setDate(new Date());
-					cost.setCostType(INVOICE_SENT);
-					costDao.persistEntity(cost);
-				}
-			});
 			invoiceWindow.doPopup();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
