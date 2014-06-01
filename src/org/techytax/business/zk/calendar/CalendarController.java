@@ -137,7 +137,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					MailHelper.sendInvoice(invoice, invoiceBuf, user);
 					registerInvoice();
 					AuditLogger.log(SEND_INVOICE, user);
-					alert("De factuur is de deur uit.");
+					alert(Labels.getLabel("invoice.sent"));
 				}
 
 				private void registerInvoice() throws Exception {
