@@ -71,9 +71,11 @@ public class GenericDao<T> {
 	public void persistEntity(T entity) {
 		getNewEntityManager();
 		try {
+			entityManager.getTransaction().begin();
 			entityManager.persist(entity);
 			entityManager.flush();
 			entityManager.clear();
+			entityManager.getTransaction().commit();
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,5 @@
-<window id="resultWin" title="${c:l('cost.edit')}" width="1150px"
-	height="650px" border="normal" apply="org.zkoss.bind.BindComposer"
+<window id="resultWin" title="${c:l('cost.edit')}" width="1300px"
+	height="700px" border="normal" apply="org.zkoss.bind.BindComposer"
 	onCancel="@command('closeThis')"
 	viewModel="@id('vm') @init('org.techytax.zk.vat.ModelWindowVM')">
 
@@ -7,7 +7,7 @@
 	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
 	<button label="${c:l('split')}" onClick="@command('split')"	disabled="@load(not empty vm.splitCost)" />
 	<button label="${c:l('cancel.split')}" onClick="@command('unSplit')" disabled="@load(empty vm.splitCost)" />
-	<groupbox width="1100px">
+	<groupbox width="1250px">
 		<hbox>
 			<vbox hflex="true">
 				<grid width="550px">
@@ -77,36 +77,42 @@
 					</grid>
 				</groupbox>
 			</vbox>
-			<grid width="500px">
-				<columns>
-					<column />
-				</columns>
-				<rows>
-					<row>
-						<listbox model="@load(vm.costTypes)"
-							selectedItem="@bind(vm.selectedCostType)" height="550px">
-							<listhead>
-								<listheader label="${c:l('type')}" width="160px" />
-								<listheader label="${c:l('incoming')}" />
-								<listheader label="${c:l('deductable')}" />
-								<listheader label="${c:l('vat')}" />
-								<listheader label="${c:l('investment')}" />
-								<listheader label="${c:l('office.abbreviated')}" />
-							</listhead>
-							<template name="model" var="item">
-								<listitem>
-									<listcell label="@load(item.omschrijving)" />
-									<listcell><checkbox checked="@load(item.bijschrijving)" disabled="true" /></listcell>
-									<listcell><checkbox checked="@load(item.aftrekbaar)" disabled="true" /></listcell>
-									<listcell><checkbox checked="@load(item.vatDeclarable)" disabled="true" /></listcell>
-									<listcell><checkbox checked="@load(item.investering)" disabled="true" /></listcell>
-									<listcell><checkbox checked="@load(item.forSettlement)" disabled="true" /></listcell>
-								</listitem>
-							</template>
-						</listbox>
-					</row>
-				</rows>
-			</grid>
+			<groupbox>
+				<caption label="${c:l('costtype')}" />
+				<grid width="700px">
+					<columns>
+						<column />
+					</columns>
+					<rows>
+						<row>
+							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" height="550px">
+								<listhead>
+									<listheader label="${c:l('type')}" width="160px" />
+									<listheader label="${c:l('incoming')}" />
+									<listheader label="${c:l('deductable')}" />
+									<listheader label="${c:l('vat')}" />
+									<listheader label="${c:l('investment')}" />
+									<listheader label="${c:l('account')}" />
+									<listheader label="${c:l('code')}" width="120px"/>
+									<listheader label="${c:l('description')}" width="200px"/>								
+								</listhead>
+								<template name="model" var="item">
+									<listitem>
+										<listcell label="@load(item.omschrijving)" />
+										<listcell><checkbox checked="@load(item.bijschrijving)" disabled="true" /></listcell>
+										<listcell><checkbox checked="@load(item.aftrekbaar)" disabled="true" /></listcell>
+										<listcell><checkbox checked="@load(item.vatDeclarable)" disabled="true" /></listcell>
+										<listcell><checkbox checked="@load(item.investering)" disabled="true" /></listcell>
+										<listcell><checkbox checked="@load(item.balansMeetellen)" disabled="true" /></listcell>
+										<listcell><label value="@load(item.externalCostType.code)" /></listcell>
+										<listcell><label value="@load(item.externalCostType.description)" /></listcell>
+									</listitem>
+								</template>
+							</listbox>
+						</row>
+					</rows>
+				</grid>
+			</groupbox>
 		</hbox>
 	</groupbox>
 </window>
