@@ -1606,14 +1606,14 @@
 <Account>
   <Referentiecode>WBedHuiElk</Referentiecode>
   <Description>Elektra</Description>
-  <Level/>
+  <Level>4</Level>
   <Substitutioncode/>
 </Account>
 <Account><Referentiecode>WBedHuiWat</Referentiecode><Description>Water</Description><Level>4</Level><Substitutioncode/></Account>
 <Account>
   <Referentiecode>WBedHuiNed</Referentiecode>
   <Description>Netdiensten</Description>
-  <Level/>
+  <Level>4</Level>
   <Substitutioncode/>
 </Account>
 <Account><Referentiecode>WBedHuiPre</Referentiecode><Description>Privé-gebruik energie</Description><Level>4</Level><Substitutioncode/></Account>
