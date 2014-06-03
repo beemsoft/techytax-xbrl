@@ -55,7 +55,10 @@ public interface CostConstants {
 	public static final CostType DEPRECIATION_CAR = new CostType(23);
 	
 	@Deprecated
-	public static final CostType FISCALE_BIJTELLING_AUTO = new CostType(24);
+	public static final CostType FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE = new CostType(24);
+	
+	@Deprecated
+	public static final CostType DEPRECIATION_MACHINE = new CostType(25);
 	
 	public static final CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
 	public static final CostType ADVERTORIAL = new CostType(27);
@@ -65,6 +68,8 @@ public interface CostConstants {
 	public static final CostType ROAD_TAX = new CostType(31);
 	public static final CostType EXPENSE_CREDIT_CARD = new CostType(32);
 	public static final CostType INTEREST = new CostType(33);
+	
+	@Deprecated
 	public static final CostType VAT_PAID_BACK_ON_OTHER_ACCOUNT = new CostType(34);	
 	
 	@Deprecated

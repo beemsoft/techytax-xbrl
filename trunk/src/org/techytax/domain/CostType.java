@@ -23,11 +23,15 @@ import static org.techytax.domain.CostConstants.SETTLEMENT;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
+import org.techytax.external.domain.ExternalCostType;
 import org.zkoss.util.resource.Labels;
 
 @Immutable
@@ -54,6 +58,10 @@ public class CostType {
 	private boolean aftrekbaar;
 
 	private boolean investering;
+
+	@OneToOne
+	@JoinTable(name = "cost_type_export", joinColumns = { @JoinColumn(name = "cost_type_id") }, inverseJoinColumns = { @JoinColumn(name = "external_code", referencedColumnName = "code") })
+	private ExternalCostType externalCostType;
 
 	public CostType() {
 		// default constructor required by JPA
@@ -101,6 +109,10 @@ public class CostType {
 		} else {
 			return "Onbekend";
 		}
+	}
+
+	public ExternalCostType getExternalCostType() {
+		return externalCostType;
 	}
 
 	@Override

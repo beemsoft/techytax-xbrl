@@ -32,7 +32,7 @@ import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
-import static org.techytax.domain.CostConstants.FISCALE_BIJTELLING_AUTO;
+import static org.techytax.domain.CostConstants.FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE;
 import static org.techytax.domain.CostConstants.FOOD_TAXFREE_PERCENTAGE;
 import static org.techytax.domain.CostConstants.FROM_PRIVATE_ACCOUNT;
 import static org.techytax.domain.CostConstants.FROM_SAVINGS_ACCOUNT;
@@ -329,7 +329,7 @@ public class BalanceCalculator {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoort().equals(FISCALE_BIJTELLING_AUTO)) {
+			if (aftrekpost.getKostenSoort().equals(FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE)) {
 				return aftrekpost.getAftrekbaarBedrag();
 			}
 		}

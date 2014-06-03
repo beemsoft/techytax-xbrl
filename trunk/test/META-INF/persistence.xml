@@ -1,13 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence version="1.0"
-	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-	<persistence-unit name="TechyTaxDB"
-		transaction-type="RESOURCE_LOCAL">
-		<description>TechyTax DB</description>
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>org.techytax.jpa.entities.LogRecord</class>
-		<class>org.techytax.domain.User</class>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-	</persistence-unit>
+<persistence version="2.1" 
+     xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd">
+
+ <persistence-unit name="TechyTaxDB" transaction-type="RESOURCE_LOCAL">
+ 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+ </persistence-unit>
 </persistence>
