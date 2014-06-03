@@ -128,7 +128,7 @@ public class CostCache {
 		List<Cost> filteredCostList = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
-			if (costType.isBalansMeetellen()) {
+			if (costType != null && costType.isBalansMeetellen()) {
 				filteredCostList.add(cost);
 			}
 		}
@@ -139,7 +139,7 @@ public class CostCache {
 		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
-			if (costType.equals(INVESTMENT)) {
+			if (costType != null && costType.equals(INVESTMENT)) {
 				if (cost.getAmount().compareTo(BigDecimal.valueOf(INVESTMENT_MINIMUM_AMOUNT)) == 1) {
 					filteredCosts.add(cost);
 				}
