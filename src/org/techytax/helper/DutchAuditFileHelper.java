@@ -193,8 +193,12 @@ public class DutchAuditFileHelper {
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
 			header.setSoftwareVersion("2.2");
-			header.setStartDate(DateHelper.getDateForXml(startDate));
-			header.setEndDate(DateHelper.getDateForXml(endDate));
+			if (startDate != null) {
+				header.setStartDate(DateHelper.getDateForXml(startDate));
+			}
+			if (endDate != null) {
+				header.setEndDate(DateHelper.getDateForXml(endDate));
+			}
 
 			auditfile.setHeader(header);
 
