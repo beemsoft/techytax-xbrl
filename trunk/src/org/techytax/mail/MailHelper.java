@@ -100,10 +100,6 @@ public class MailHelper {
 		sendMail("OB aangifte", message, to);
 	}
 
-	public static void sendAuditReport(String message, String to) throws Exception {
-		sendMail("Audit report", message, to);
-	}
-
 	public static void sendInvoice(Invoice factuur, byte[] invoiceBuf, User user) throws Exception {
 		loadProperties();
 		String to = factuur.getEmail();
