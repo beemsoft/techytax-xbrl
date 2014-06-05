@@ -74,18 +74,22 @@
 							</grid>
 							<label value="${c:l('match.texts.private.info')}" />
 							<hbox>
-								<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="340px">
+								<listbox id="costTypeList" model="@load(vm.costTypeList)" selectedItem="@bind(vm.selectedCostType)" height="200px" width="540px">
 									<listhead>
-										<listheader label="${c:l('costtype')}" width="300px" />
+										<listheader label="${c:l('costtype')}" width="200px" />
+										<listheader/>
+										<listheader width="200px" />
 									</listhead>
 									<template name="model" var="costType">
 										<listitem>
 											<listcell label="@load(costType.omschrijving)" />
+											<listcell label="@load(costType.externalCostType.code)" />
+											<listcell label="@load(costType.externalCostType.description)" />
 										</listitem>
 									</template>
 								</listbox>
 								<vbox width="250px">
-									<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="100px">										
+									<listbox id="privateMatchesList" model="@load(vm.privateMatchesList)" selectedItem="@bind(vm.selectedPrivateMatch)" height="200px">										
 										<listhead>
 											<listheader label="${c:l('match.texts.private')}" width="300px" />
 										</listhead>
@@ -145,17 +149,17 @@
 										</grid>										
 									</groupbox>
 								</vbox>
-								<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="250px">
-									<listhead>
-										<listheader label="${c:l('match.texts.public')}" width="300px" />
-									</listhead>
-									<template name="model" var="privateMatch">
-										<listitem>
-											<listcell label="@load(privateMatch.matchText)" />
-										</listitem>
-									</template>
-								</listbox>
 								<vbox>
+									<listbox id="publicMatchesList" model="@load(vm.publicMatchesList)" height="200px" width="250px">
+										<listhead>
+											<listheader label="${c:l('match.texts.public')}" width="300px" />
+										</listhead>
+										<template name="model" var="privateMatch">
+											<listitem>
+												<listcell label="@load(privateMatch.matchText)" />
+											</listitem>
+										</template>
+									</listbox>
 									<button id="reloadBtn" disabled="true" image="/images/Button-Refresh-icon.png" tooltip="reload" />
 									<button id="importBtn" disabled="true" image="/images/Button-Add-icon.png" tooltip="import" />
 								</vbox>

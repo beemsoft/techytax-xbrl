@@ -13,7 +13,7 @@ Changes:
 <li>Fixed display of costtype description after importing transactions.</li>
 <li>Fixed display of costtype description in cost page.</li>
 <li>Added caching for RSS feeds.</li>
-<li>Upgraded to ZK 7.0.1</li>
+<li>Upgraded to ZK 7.0.2</li>
 <li>Finished migration from iBatis to JPA.</li>
 <li>Fixed rounding issue in VAT declaration.</li>
 <li>Upgraded to Hibernate 4.3.5/JPA 2.1</li>
@@ -22,6 +22,10 @@ Changes:
 <li>Send invoice with user email as from-address.</li>
 <li>Implement Domain-Specific DAO Strategy (from Adam Bien).</li>
 <li>Restored multi-language support.</li>
+<li>Upgraded audit file to XAF 3.2</li>
+<li>Fixed invoice sending (multiple invoices were sent).</li>
+<li>Added integration with external costtype system: RGS 1.0 (Referentie Grootboek Schema).</li>
+<li>Save audit file locally using .XAF extension.</li>
 </ul>
 
 <p>Investigated migration possibility from Tomcat to GlassFish:

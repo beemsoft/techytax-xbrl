@@ -24,7 +24,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')"/>
 					<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')"/>
 					<listcell label="@load(item.description)"/>
-					<listcell label="@load(item.costType.omschrijving)"/>					
+					<listcell label="@load(item.costType.omschrijving)"/>
 				</listitem>
 			</template>
 		</listbox>
@@ -76,10 +76,14 @@ arg0="/WEB-INF/layout/template.zul"?>
 							<listbox model="@load(vm.costTypes)" selectedItem="@bind(vm.selectedCostType)" hflex="true" >
 								<listhead>
 									<listheader label="${c:l('description')}" width="400px" />
+									<listheader/>
+									<listheader width="400px"/>									
 								</listhead>
 								<template name="model" var="item">
 									<listitem >
-										<listcell label="@load(item.omschrijving)"/>					
+										<listcell label="@load(item.omschrijving)"/>	
+										<listcell label="@load(item.externalCostType.code)" />
+										<listcell label="@load(item.externalCostType.description)" />														
 									</listitem>
 								</template>
 							</listbox>

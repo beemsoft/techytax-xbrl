@@ -104,8 +104,8 @@
 										<listcell><checkbox checked="@load(item.vatDeclarable)" disabled="true" /></listcell>
 										<listcell><checkbox checked="@load(item.investering)" disabled="true" /></listcell>
 										<listcell><checkbox checked="@load(item.balansMeetellen)" disabled="true" /></listcell>
-										<listcell><label value="@load(item.externalCostType.code)" /></listcell>
-										<listcell><label value="@load(item.externalCostType.description)" /></listcell>
+										<listcell label="@load(item.externalCostType.code)" />
+										<listcell label="@load(item.externalCostType.description)" />
 									</listitem>
 								</template>
 							</listbox>
