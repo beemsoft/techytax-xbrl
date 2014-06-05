@@ -59,24 +59,24 @@ import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
-import org.techytax.mail.MailHelper;
 import org.techytax.util.DateHelper;
+import org.zkoss.zul.Filedownload;
 
 public class DutchAuditFileHelper {
 
-	public static void sendAuditFile(User user, FiscalPeriod periode) {
+	public static void sendAuditFile(User user, FiscalPeriod fiscalPeriod) {
 		AuditLogger.log(SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<>();
-			if (periode != null) {
+			if (fiscalPeriod != null) {
 				CostDao costDao = new CostDao(Cost.class);				
-				allCosts = costDao.getCostsInPeriod(periode);
+				allCosts = costDao.getCostsInPeriod(fiscalPeriod);
 				// TODO: sort costs
 			}
 			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
 			List<Customer> customers = customerDao.findAll(user);
 			String message = DutchAuditFileHelper.createAuditFile(allCosts, customers, user);
-			MailHelper.sendAuditReport(message, user.getEmail());
+			Filedownload.save(message, "XAF", user.getCompanyName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,6 +119,13 @@ public class DutchAuditFileHelper {
 			}
 			company.setTaxRegIdent(user.getFiscalNumber());
 			company.setTaxRegistrationCountry(CountrycodeIso3166.NL);
+			
+			nl.auditfiles.xaf._3.Auditfile.Company.StreetAddress address = objectFactory.createAuditfileCompanyStreetAddress();
+			address.setStreetname(user.getCompanyAddress());
+			address.setCity(user.getCompanyCity());
+			address.setPostalCode(user.getCompanyZipCode());
+			address.setCountry(CountrycodeIso3166.NL);
+			company.getStreetAddress().add(address);
 
 			CustomersSuppliers customersElement = objectFactory.createAuditfileCompanyCustomersSuppliers();
 			for (Customer customer : customers) {
@@ -133,16 +140,16 @@ public class DutchAuditFileHelper {
 				customerElement.setFax(customer.getFax());
 				customerElement.setTelephone(customer.getTelephone());
 				customerElement.setWebsite(customer.getWebsite());
-				StreetAddress address = objectFactory.createAuditfileCompanyCustomersSuppliersCustomerSupplierStreetAddress();
-				address.setStreetname(customer.getAddress());
-				address.setCity(customer.getCity());
+				StreetAddress customerAddress = objectFactory.createAuditfileCompanyCustomersSuppliersCustomerSupplierStreetAddress();
+				customerAddress.setStreetname(customer.getAddress());
+				customerAddress.setCity(customer.getCity());
 				if (customer.getNumber() != null) {
-					address.setNumber(customer.getNumber().toString());
+					customerAddress.setNumber(customer.getNumber().toString());
 				}
-				address.setNumberExtension(customer.getNumberExtension());
-				address.setPostalCode(customer.getPostalCode());
-				address.setCountry(CountrycodeIso3166.NL);
-				customerElement.getStreetAddress().add(address);
+				customerAddress.setNumberExtension(customer.getNumberExtension());
+				customerAddress.setPostalCode(customer.getPostalCode());
+				customerAddress.setCountry(CountrycodeIso3166.NL);
+				customerElement.getStreetAddress().add(customerAddress);
 				customersElement.getCustomerSupplier().add(customerElement);
 			}
 			company.setCustomersSuppliers(customersElement);
@@ -171,10 +178,14 @@ public class DutchAuditFileHelper {
 			Header header = objectFactory.createAuditfileHeader();
 			header.setCurCode(CurrencycodeIso4217.EUR);
 			int year = 0;
+			Date startDate = null;
+			Date endDate = null;
 			if (costList != null && costList.size() > 0) {
 				Cost firstCost = (Cost) costList.get(0);
-				Date firstDate = firstCost.getDate();
-				year = DateHelper.getYear(firstDate);
+				startDate = firstCost.getDate();
+				Cost lastCost = (Cost) costList.get(costList.size() - 1);
+				endDate = lastCost.getDate();
+				year = DateHelper.getYear(startDate);
 			} else {
 				year = DateHelper.getYear(new Date());
 			}
@@ -182,6 +193,8 @@ public class DutchAuditFileHelper {
 			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 			header.setSoftwareDesc("TechyTax");
 			header.setSoftwareVersion("2.2");
+			header.setStartDate(DateHelper.getDateForXml(startDate));
+			header.setEndDate(DateHelper.getDateForXml(endDate));
 
 			auditfile.setHeader(header);
 

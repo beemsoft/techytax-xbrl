@@ -45,6 +45,12 @@ public class User implements Serializable {
 	@Column(name = "company_address")
 	private String companyAddress;
 	
+	@Column(name = "company_zipcode")
+	private String companyZipCode;
+	
+	@Column(name = "company_city")
+	private String companyCity;
+	
 	private String companyName;
 	private String email;
 	
@@ -162,7 +168,23 @@ public class User implements Serializable {
 	public void setCompanyAddress(String companyAddress) {
 		this.companyAddress = companyAddress;
 	}
+	
+	public String getCompanyZipCode() {
+		return companyZipCode;
+	}
 
+	public void setCompanyZipCode(String companyZipCode) {
+		this.companyZipCode = companyZipCode;
+	}
+
+	public String getCompanyCity() {
+		return companyCity;
+	}
+
+	public void setCompanyCity(String companyCity) {
+		this.companyCity = companyCity;
+	}
+	
 	public String getAccountNumber() {
 		return accountNumber;
 	}
