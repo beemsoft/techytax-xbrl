@@ -31,14 +31,14 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import nl.auditfiles.xaf._3.Accounttype;
 import nl.auditfiles.xaf._3.Auditfile;
 import nl.auditfiles.xaf._3.Auditfile.Company;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier;
 import nl.auditfiles.xaf._3.Auditfile.Company.CustomersSuppliers.CustomerSupplier.StreetAddress;
 import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger;
-import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger.Basics;
-import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger.Basics.Basic;
+import nl.auditfiles.xaf._3.Auditfile.Company.GeneralLedger.LedgerAccount;
 import nl.auditfiles.xaf._3.Auditfile.Company.OpeningBalance;
 import nl.auditfiles.xaf._3.Auditfile.Company.Periods;
 import nl.auditfiles.xaf._3.Auditfile.Company.Periods.Period;
@@ -50,13 +50,17 @@ import nl.auditfiles.xaf._3.Auditfile.Company.Transactions.Journal.Transaction.T
 import nl.auditfiles.xaf._3.Auditfile.Header;
 import nl.auditfiles.xaf._3.CountrycodeIso3166;
 import nl.auditfiles.xaf._3.CurrencycodeIso4217;
+import nl.auditfiles.xaf._3.Debitcredittype;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostType;
 import org.techytax.domain.Customer;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
+import org.techytax.external.domain.ExternalCostType;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
@@ -93,7 +97,13 @@ public class DutchAuditFileHelper {
 			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
 			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
 			vat.setVatAmnt(cost.getVat());
+			if (cost.getCostType().isBijschrijving()) {
+				vat.setVatAmntTp(Debitcredittype.C);
+			} else {
+				vat.setVatAmntTp(Debitcredittype.D);
+			}
 			trLine.getVat().add(vat);
+			trLine.setAccID(Long.toString(cost.getCostTypeId()));
 			transaction.getTrLine().add(trLine);
 		}
 		return transaction;
@@ -155,12 +165,23 @@ public class DutchAuditFileHelper {
 			company.setCustomersSuppliers(customersElement);
 
 			GeneralLedger generalLedger = objectFactory.createAuditfileCompanyGeneralLedger();
-			Basics basics = objectFactory.createAuditfileCompanyGeneralLedgerBasics();
-			// basics.
-			Basic basic = objectFactory.createAuditfileCompanyGeneralLedgerBasicsBasic();
-
-			generalLedger.setBasics(basics);
-			// company.setGeneralLedger(generalLedger);
+			
+			for (CostType costType : CostTypeCache.getCostTypes()) {
+				LedgerAccount ledgerAccount = objectFactory.createAuditfileCompanyGeneralLedgerLedgerAccount();
+				ExternalCostType externalCostType = costType.getExternalCostType();
+				if (externalCostType != null) {
+					ledgerAccount.setAccDesc(externalCostType.getDescription());
+					ledgerAccount.setAccID(Long.toString(costType.getId()));
+					if ("B".equals(externalCostType.getCode().substring(0,  1))) {
+						ledgerAccount.setAccTp(Accounttype.B);
+					} else {
+						ledgerAccount.setAccTp(Accounttype.P);
+					}
+					ledgerAccount.setLeadCrossRef(externalCostType.getCode());
+					generalLedger.getLedgerAccount().add(ledgerAccount);
+				}
+			}
+			company.setGeneralLedger(generalLedger);
 
 			OpeningBalance openingBalance = objectFactory.createAuditfileCompanyOpeningBalance();
 			// company.setOpeningBalance(openingBalance);
@@ -175,33 +196,9 @@ public class DutchAuditFileHelper {
 
 			auditfile.setCompany(company);
 
-			Header header = objectFactory.createAuditfileHeader();
-			header.setCurCode(CurrencycodeIso4217.EUR);
-			int year = 0;
-			Date startDate = null;
-			Date endDate = null;
-			if (costList != null && costList.size() > 0) {
-				Cost firstCost = (Cost) costList.get(0);
-				startDate = firstCost.getDate();
-				Cost lastCost = (Cost) costList.get(costList.size() - 1);
-				endDate = lastCost.getDate();
-				year = DateHelper.getYear(startDate);
-			} else {
-				year = DateHelper.getYear(new Date());
-			}
-			header.setFiscalYear(Integer.toString(year));
-			header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
-			header.setSoftwareDesc("TechyTax");
-			header.setSoftwareVersion("2.2");
-			if (startDate != null) {
-				header.setStartDate(DateHelper.getDateForXml(startDate));
-			}
-			if (endDate != null) {
-				header.setEndDate(DateHelper.getDateForXml(endDate));
-			}
-
+			Header header = createHeader(costList, objectFactory);
 			auditfile.setHeader(header);
-
+			
 			// Transactions
 			Transactions transactions = objectFactory.createAuditfileCompanyTransactions();
 			transactions.setLinesCount(new BigInteger(Long.toString(costList.size())));
@@ -237,6 +234,34 @@ public class DutchAuditFileHelper {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private static Header createHeader(List<Cost> costList, ObjectFactory objectFactory) throws Exception {
+		Header header = objectFactory.createAuditfileHeader();
+		header.setCurCode(CurrencycodeIso4217.EUR);
+		int year = 0;
+		Date startDate = null;
+		Date endDate = null;
+		if (costList != null && costList.size() > 0) {
+			Cost firstCost = (Cost) costList.get(0);
+			startDate = firstCost.getDate();
+			Cost lastCost = (Cost) costList.get(costList.size() - 1);
+			endDate = lastCost.getDate();
+			year = DateHelper.getYear(startDate);
+		} else {
+			year = DateHelper.getYear(new Date());
+		}
+		header.setFiscalYear(Integer.toString(year));
+		header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
+		header.setSoftwareDesc("TechyTax");
+		header.setSoftwareVersion("2.2");
+		if (startDate != null) {
+			header.setStartDate(DateHelper.getDateForXml(startDate));
+		}
+		if (endDate != null) {
+			header.setEndDate(DateHelper.getDateForXml(endDate));
+		}
+		return header;
 	}
 
 }
