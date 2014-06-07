@@ -51,11 +51,11 @@ public class AuditLogger {
 		FiscalPeriod latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		FiscalPeriod latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
 		TypedQuery<LogRecord> query = JpaUtil.getEntityManager().createQuery(
-				"SELECT lr FROM org.techytax.jpa.entities.LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user.id= :userId",
+				"SELECT lr FROM LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user= :user",
 				LogRecord.class);
 		query.setParameter("beginTime", latestVatPeriod.getEndDate());
 		query.setParameter("endTime", latestVatPeriodTillToday.getEndDate());
-		query.setParameter("userId", user.getId());
+		query.setParameter("user", user);
 		LogRecord result = null;
 		try {
 			result = query.getSingleResult();

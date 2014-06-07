@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 import org.techytax.domain.UserObject;
 import org.techytax.log.AuditType;
 
-@Entity(name = "org.techytax.jpa.entities.LogRecord")
+@Entity
 @Table(name = "log_record")
 public class LogRecord extends UserObject {
 

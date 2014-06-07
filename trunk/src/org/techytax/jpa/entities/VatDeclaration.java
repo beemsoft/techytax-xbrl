@@ -30,9 +30,9 @@ import javax.persistence.TemporalType;
 
 import org.techytax.domain.UserObject;
 
-@Entity(name = "org.techytax.jpa.entities.VatDeclaration")
+@Entity
 @Table(name = "vat_declaration")
-@NamedQuery(name="VatDeclaration.findUnpaid", query="SELECT vatDeclaration FROM org.techytax.jpa.entities.VatDeclaration vatDeclaration WHERE vatDeclaration.user = ? AND timeStampPaid = null")
+@NamedQuery(name="VatDeclaration.findUnpaid", query="SELECT vatDeclaration FROM VatDeclaration vatDeclaration WHERE vatDeclaration.user = ? AND timeStampPaid = null")
 public class VatDeclaration extends UserObject {
 
 	@Column(name = "declaration_number")

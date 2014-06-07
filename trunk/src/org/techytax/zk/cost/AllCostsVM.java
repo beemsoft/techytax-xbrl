@@ -30,6 +30,7 @@ import static org.techytax.util.DateHelper.getPeriodPreviousYear;
 import static org.techytax.util.DateHelper.isTimeForUsingLatestYearPeriod;
 import static org.zkoss.zk.ui.Executions.sendRedirect;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,17 +39,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.apache.commons.lang.StringUtils;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.VatPeriodType;
+import org.techytax.helper.DutchAuditFileHelper;
+import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.AMedia;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
 public class AllCostsVM extends CostVM3 {
@@ -59,6 +70,9 @@ public class AllCostsVM extends CostVM3 {
 	private boolean showUnhandledInvestments = false;
 	private boolean filterCosts = false;
 	private String searchString;
+
+	private boolean fileuploaded = false;
+	private AMedia fileContent;
 
 	public AllCostsVM() throws Exception {
 		super();
@@ -78,6 +92,40 @@ public class AllCostsVM extends CostVM3 {
 	@Command
 	public void audit() {
 		sendAuditFile(user, periode);
+	}
+
+	@Command
+	public void importXaf(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx) throws IOException, DatatypeConfigurationException {
+		UploadEvent upEvent = null;
+		Object objUploadEvent = ctx.getTriggerEvent();
+		if (objUploadEvent != null && (objUploadEvent instanceof UploadEvent)) {
+			upEvent = (UploadEvent) objUploadEvent;
+		}
+		if (upEvent != null) {
+			Media media = upEvent.getMedia();
+			Messagebox.show("File Sucessfully uploaded");
+			
+			DutchAuditFileHelper.importAuditFile(media.getStreamData(), user);
+			
+			fileuploaded = true;
+			
+		}
+	}
+
+	public AMedia getFileContent() {
+		return fileContent;
+	}
+
+	public void setFileContent(AMedia fileContent) {
+		this.fileContent = fileContent;
+	}
+
+	public boolean isFileuploaded() {
+		return fileuploaded;
+	}
+
+	public void setFileuploaded(boolean fileuploaded) {
+		this.fileuploaded = fileuploaded;
 	}
 
 	public ListModelList<Cost> getCosts() throws Exception {

@@ -51,8 +51,7 @@
 						</vbox>
 						<label value="${c:l('transactions.match.info')}" />
 					</tabpanel>
-					<tabpanel apply="org.zkoss.bind.BindComposer"
-						viewModel="@id('vm') @init('org.techytax.zk.vat.CostTypeViewModel')">
+					<tabpanel apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.vat.CostTypeViewModel')">
 						<vbox>
 							<grid id="costGrid" hflex="true" mold="paging" pageSize="5">
 								<columns sizable="true">

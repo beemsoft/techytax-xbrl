@@ -50,6 +50,7 @@ INSERT INTO cost_type_export VALUES
 (25,33,'WFbeRlmObr'),
 (26,36,'WBedAutBop'),
 (27,39,'WOmzNopOlh'),
+(34,38,'WOmzNopOlh'),
 (28,40,'WKvdInh'),
 (29,41,'BMvaBei'),
 (30,42,'WBedHui'),
