@@ -21,6 +21,7 @@ package org.techytax.helper;
 
 import static org.techytax.log.AuditType.SEND_AUDIT_FILE;
 
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import nl.auditfiles.xaf._3.Accounttype;
@@ -53,12 +55,15 @@ import nl.auditfiles.xaf._3.CurrencycodeIso4217;
 import nl.auditfiles.xaf._3.Debitcredittype;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Customer;
 import org.techytax.domain.FiscalPeriod;
+import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.external.domain.ExternalCostType;
 import org.techytax.jpa.dao.GenericDao;
@@ -93,11 +98,16 @@ public class DutchAuditFileHelper {
 		transaction.setDesc(cost.getDescription().trim());
 		transaction.setNr(Long.toString(cost.getId()));
 		transaction.setTrDt(DateHelper.getDate(DateHelper.getDate(cost.getDate())));
+		if (cost.getCostType().isBijschrijving() || cost.getCostType() == CostConstants.INVOICE_SENT) {
+			transaction.setAmntTp(Debitcredittype.C);
+		} else {
+			transaction.setAmntTp(Debitcredittype.D);
+		}
 		if (cost.getVat() != null && cost.getVat().floatValue() > 0) {
 			TrLine trLine = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLine();
 			Vat vat = objectFactory.createAuditfileCompanyTransactionsJournalTransactionTrLineVat();
 			vat.setVatAmnt(cost.getVat());
-			if (cost.getCostType().isBijschrijving()) {
+			if (cost.getCostType().isBijschrijving() || cost.getCostType() == CostConstants.INVOICE_SENT) {
 				vat.setVatAmntTp(Debitcredittype.C);
 			} else {
 				vat.setVatAmntTp(Debitcredittype.D);
@@ -217,7 +227,12 @@ public class DutchAuditFileHelper {
 					}
 					// Start a new journal
 					journal = objectFactory.createAuditfileCompanyTransactionsJournal();
-					journal.setDesc(cost.getCostType().getOmschrijving().trim());
+					ExternalCostType externalCostType = cost.getCostType().getExternalCostType();
+					if (externalCostType != null) {
+						journal.setDesc(externalCostType.getDescription());
+						journal.setJrnID(externalCostType.getCode());
+					}
+					journal.setOffsetAccID(Long.toString(cost.getCostType().getId()));
 				}
 				journal.getTransaction().add(transaction);
 			}
@@ -263,5 +278,48 @@ public class DutchAuditFileHelper {
 		}
 		return header;
 	}
+	
+	public static void importAuditFile(InputStream inputStream, User user) throws DatatypeConfigurationException {
+
+		GenericDao<Cost> costDao = new GenericDao<>(Cost.class);
+		
+		JAXBContext jc = null;
+		Unmarshaller m = null;
+		try {
+			jc = JAXBContext.newInstance("nl.auditfiles.xaf._3");
+			m = jc.createUnmarshaller();
+			
+			
+			Auditfile auditFile = (Auditfile) m.unmarshal(inputStream);
+			
+			System.out.println(auditFile.getHeader().getSoftwareDesc());
+			
+			List<Journal> journals = auditFile.getCompany().getTransactions().getJournal();
+			for (Journal journal : journals) {
+				String accID = journal.getOffsetAccID();
+				for (Transaction transaction : journal.getTransaction()) {
+					Cost importedCost = new Cost();
+					importedCost.setAmount(transaction.getAmnt());
+					if (StringUtils.isNotEmpty(accID)) {
+						importedCost.setCostType(CostTypeCache.getCostType(Long.parseLong(accID)));
+					}
+					importedCost.setDate(transaction.getTrDt().toGregorianCalendar().getTime());
+					importedCost.setDescription(transaction.getDesc());
+					importedCost.setUser(user);
+					for (TrLine trLine : transaction.getTrLine()) {
+						if (!trLine.getVat().isEmpty()) {
+							Vat vat = trLine.getVat().get(0);
+							importedCost.setVat(vat.getVatAmnt());
+						}
+					}
+					costDao.persistEntity(importedCost);
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
 
 }
