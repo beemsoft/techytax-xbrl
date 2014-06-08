@@ -54,7 +54,7 @@ public class FiscalOverview {
 	private BigInteger kostenOverig = BigInteger.ZERO;
 	private BigInteger kostenOverigTransport = BigInteger.ZERO;
 	private BigInteger nettoOmzet = BigInteger.ZERO;
-	private PrivatWithdrawal onttrekking;
+	private PrivateWithdrawal onttrekking;
 	private BigInteger oudedagsReserveMaximaal = BigInteger.ZERO;
 
 	private PrepaidTax prepaidTax;
@@ -144,7 +144,7 @@ public class FiscalOverview {
 		return nettoOmzet;
 	}
 
-	public PrivatWithdrawal getOnttrekking() {
+	public PrivateWithdrawal getOnttrekking() {
 		return onttrekking;
 	}
 
@@ -262,7 +262,7 @@ public class FiscalOverview {
 		this.nettoOmzet = nettoOmzet;
 	}
 
-	public void setOnttrekking(PrivatWithdrawal onttrekking) {
+	public void setOnttrekking(PrivateWithdrawal onttrekking) {
 		this.onttrekking = onttrekking;
 	}
 

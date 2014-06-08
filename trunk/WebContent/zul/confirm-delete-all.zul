@@ -1,0 +1,12 @@
+	<window title="${c:l('confirm')}" mode="modal" border="normal" width="400px" height="250px" visible="@load(not empty vm.deleteAllMessage)">
+		<vbox>
+			<hlayout height="80px">
+				<image src="~./zul/img/msgbox/question-btn.png"/>
+				<label value="@load(vm.deleteAllMessage)"/>
+			</hlayout>
+			<hbox pack="center">
+				<button label="${c:l('delete')}" onClick="@command('deleteAllCosts')"/>
+				<button label="${c:l('cancel')}" onClick="@command('cancelDeleteAll')"/>
+			</hbox>
+		</vbox>
+	</window>

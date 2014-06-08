@@ -48,8 +48,6 @@ arg0="/WEB-INF/layout/template.zul"?>
       			searchBox.setValue(event.getValue());
     		</attribute>
     	</textbox>			
-		<button label="${c:l('xaf.export')}" onClick="@command('audit')" />
-		<button label="${c:l('xaf.import')}" onUpload="@command('importXaf',upEvent=event)" upload="true,maxsize=1024" />
 		<button label="${c:l('check.investments')}" visible="@load(vm.listWithUnhandledInvestments)" onClick="@command('showUnhandledInvestments')"/>
 		</hbox>
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" height="490px">
@@ -79,10 +77,13 @@ arg0="/WEB-INF/layout/template.zul"?>
 		</listbox>
 		<toolbar>
 			<button label="${c:l('new')}" onClick="@command('newCost')" />
-			<!-- show confirm dialog when selected is persisted -->
 			<button label="${c:l('delete')}" onClick="@command(empty vm.selected.id?'deleteCost':'confirmDelete')" disabled="@load(empty vm.selected)" />
+			<button label="${c:l('delete.all')}" onClick="@command('confirmDeleteAll')" />
+			<button label="${c:l('xaf.export')}" onClick="@command('audit')" />
+			<button label="${c:l('xaf.import')}" onUpload="@command('importXaf',upEvent=event)" upload="true,maxsize=1024" />
 		</toolbar>
 	</vbox>
-	<include src="confirm.zul"/>
+	<include src="confirm-delete.zul"/>
+	<include src="confirm-delete-all.zul"/>	
 </window>
 </zk>

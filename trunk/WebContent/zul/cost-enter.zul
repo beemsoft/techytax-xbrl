@@ -7,7 +7,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 }
 </style>
 <window title="${c:l('transactions.add')}" border="normal" width="100%"
-	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM3')" 
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM2')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="100px">
@@ -93,6 +93,6 @@ arg0="/WEB-INF/layout/template.zul"?>
 			</grid>
 		</groupbox>
 	</vbox>
-	<include src="confirm.zul"/>
+	<include src="confirm-delete.zul"/>
 </window>
 </zk>

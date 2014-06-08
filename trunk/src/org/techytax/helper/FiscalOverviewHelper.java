@@ -58,7 +58,7 @@ import org.techytax.domain.FiscalBalance;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.PrepaidTax;
-import org.techytax.domain.PrivatWithdrawal;
+import org.techytax.domain.PrivateWithdrawal;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.props.PropsFactory;
@@ -87,7 +87,7 @@ public class FiscalOverviewHelper {
 		Properties props = PropsFactory.loadProperties();
 		costCache.setBeginDatum(beginDatum);
 		costCache.setEindDatum(eindDatum);
-		PrivatWithdrawal privatWithdrawal = new PrivatWithdrawal();
+		PrivateWithdrawal privatWithdrawal = new PrivateWithdrawal();
 
 		VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(costCache.getCosts(), false);
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
@@ -128,7 +128,7 @@ public class FiscalOverviewHelper {
 
 	}
 
-	private void handleProfitAndLoss(PrivatWithdrawal privatWithdrawal, VatBalanceWithinEu vatBalanceWithinEu, List<DeductableCostGroup> deductableCosts) throws Exception {
+	private void handleProfitAndLoss(PrivateWithdrawal privatWithdrawal, VatBalanceWithinEu vatBalanceWithinEu, List<DeductableCostGroup> deductableCosts) throws Exception {
 		handleTurnOver(vatBalanceWithinEu);
 
 		handleRepurchase();
@@ -277,17 +277,19 @@ public class FiscalOverviewHelper {
 		overview.setPrepaidTax(prepaidTax);
 	}
 
-	private void handlePrivateWithdrawals(PrivatWithdrawal privatWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
+	private void handlePrivateWithdrawals(PrivateWithdrawal privateWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
 		List<BookValue> passivaListPreviousYear = bookValueDao.getPassivaList(bookYear - 1);
 		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaListPreviousYear);
 		BigInteger totalWithdrawal = overview.getProfit();
 		totalWithdrawal = totalWithdrawal.subtract(enterpriseCapital.subtract(enterpriseCapitalPreviousYear));
 		totalWithdrawal = totalWithdrawal.add(roundToInteger(privateDeposit));
-		privatWithdrawal.setTotaleOnttrekking(totalWithdrawal);
+		privateWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		BigInteger withdrawalCash = totalWithdrawal;
-		withdrawalCash = withdrawalCash.subtract(privatWithdrawal.getWithdrawalPrivateUsageBusinessCar());
-		privatWithdrawal.setWithdrawalCash(withdrawalCash);
-		overview.setOnttrekking(privatWithdrawal);
+		if (privateWithdrawal.getWithdrawalPrivateUsageBusinessCar() != null) {
+			withdrawalCash = withdrawalCash.subtract(privateWithdrawal.getWithdrawalPrivateUsageBusinessCar());
+		}
+		privateWithdrawal.setWithdrawalCash(withdrawalCash);
+		overview.setOnttrekking(privateWithdrawal);
 	}
 
 	private void handleInterest() throws Exception {
@@ -321,7 +323,7 @@ public class FiscalOverviewHelper {
 		overview.setSettlementCosts(roundToInteger(getSettlementCosts(deductableCosts)));
 	}
 
-	private void handleCar(PrivatWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts) throws Exception {
+	private void handleCar(PrivateWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts) throws Exception {
 		BigDecimal afschrijvingAuto = getAfschrijvingAuto(deductableCosts);
 		BookValue carActivum = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear);
 		if (carActivum != null) {
@@ -331,7 +333,7 @@ public class FiscalOverviewHelper {
 		}
 	}
 
-	private void handleBusinessCar(PrivatWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts, BigDecimal afschrijvingAuto) throws Exception {
+	private void handleBusinessCar(PrivateWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts, BigDecimal afschrijvingAuto) throws Exception {
 		if (afschrijvingAuto != null) {
 			overview.setAfschrijvingAuto(AmountHelper.roundToInteger(afschrijvingAuto));
 		}
@@ -351,7 +353,7 @@ public class FiscalOverviewHelper {
 		overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);
 	}
 
-	private void handleBusinessCarPrivateWithDrawal(PrivatWithdrawal privatWithdrawal, BigInteger kostenAutoAftrekbaar) {
+	private void handleBusinessCarPrivateWithDrawal(PrivateWithdrawal privatWithdrawal, BigInteger kostenAutoAftrekbaar) {
 		BigInteger withDrawal = BigInteger.ZERO;
 		if (kostenAutoAftrekbaar.compareTo(BigInteger.ZERO) == -1) {
 			withDrawal = overview.getBijtellingAuto();
