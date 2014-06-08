@@ -141,7 +141,7 @@ public class CostVM {
 			costCache.invalidate();
 		}
 	}
-
+	
 	@NotifyChange("selected")
 	@Command
 	public void highVat() throws Exception {

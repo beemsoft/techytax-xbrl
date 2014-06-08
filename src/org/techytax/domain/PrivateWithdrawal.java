@@ -21,7 +21,7 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
-public class PrivatWithdrawal {
+public class PrivateWithdrawal {
 
 	private BigInteger totaleOnttrekking;
 

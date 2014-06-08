@@ -27,6 +27,7 @@ Changes:
 <li>Added integration with external costtype system: RGS 1.0 (Referentie Grootboek Schema).</li>
 <li>Save audit file locally using .XAF extension.</li>
 <li>Added import button for audit file in cost page.</li>
+<li>Added delete all button in cost page.</li>
 </ul>
 
 <p>Investigated migration possibility from Tomcat to GlassFish:

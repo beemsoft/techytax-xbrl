@@ -169,9 +169,14 @@
 				<hbox self="@insert(content)" />
 				</vlayout>
 			</center>
-			<south size="30px" border="0" style="background: none repeat scroll 0 0 ;" >
+			<south size="30px" border="0" >
 				<include src="~./saas/footer.zul" />
 			</south>
 		</borderlayout>
 	</div>
+	<toolbar align="center">
+	<image src="/images/logo_rgs.png" width="180px"/>
+	<image src="/images/Digipoort_w176.JPG" width="176px"/>
+	<image src="/images/digidentity_logo.png"/>
+	</toolbar>
 </zk>
