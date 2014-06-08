@@ -7,7 +7,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 }
 </style>
 <window title="${c:l('transactions.add')}" border="normal" width="100%"
-	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM2')" 
+	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.cost.CostVM')" 
 	validationMessages="@id('vmsgs')">
 	<vbox hflex="true">
 		<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" hflex="true" height="100px">

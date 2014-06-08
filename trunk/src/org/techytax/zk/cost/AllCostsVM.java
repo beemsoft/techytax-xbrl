@@ -25,7 +25,6 @@ import static org.techytax.domain.CostConstants.INVESTMENT;
 import static org.techytax.domain.CostConstants.INVESTMENT_MINIMUM_AMOUNT;
 import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.helper.DutchAuditFileHelper.sendAuditFile;
-import static org.techytax.log.AuditType.DELETE_ALL_COSTS;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.SPLIT_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
@@ -69,7 +68,7 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
-public class AllCostsVM extends CostVM2 {
+public class AllCostsVM extends CostVM {
 
 	private FiscalPeriod periode;
 	private List<Cost> unhandledCosts = new ArrayList<>();
@@ -81,10 +80,6 @@ public class AllCostsVM extends CostVM2 {
 	private boolean fileuploaded = false;
 	private AMedia fileContent;
 	
-	private String deleteMessage;
-	
-	private String deleteAllMessage;
-
 	public AllCostsVM() throws Exception {
 		super();
 		if (user != null) {
@@ -99,61 +94,6 @@ public class AllCostsVM extends CostVM2 {
 			sendRedirect("login.zul");
 		}
 	}
-	
-	public String getDeleteMessage(){
-		return deleteMessage;
-	}
-	
-	public String getDeleteAllMessage(){
-		return deleteAllMessage;
-	}	
-	
-	@Override
-	@NotifyChange({"selected","costs","deleteMessage"})
-	@Command
-	public void deleteCost() throws Exception{
-		super.deleteCost();
-		deleteMessage = null;
-	}
-	
-	@NotifyChange({"costs","deleteAllMessage"})
-	@Command
-	public void deleteAllCosts() throws Exception{
-		if (user != null) {
-			AuditLogger.log(DELETE_ALL_COSTS, user);
-			for (Cost cost : getSelectedCosts()) {
-				costDao.deleteEntity(cost);				
-			}
-			getCosts().removeAll(getCosts());
-			selected = null;
-			costCache.invalidate();
-		}
-		deleteAllMessage = null;
-	}	
-	
-	@NotifyChange("deleteMessage")
-	@Command
-	public void confirmDelete(){
-		deleteMessage = "Weet u zeker dat u wilt verwijderen: "+selected.getDescription()+" ?";
-	}
-	
-	@NotifyChange("deleteAllMessage")
-	@Command
-	public void confirmDeleteAll() throws Exception{
-		deleteAllMessage = "Weet u zeker dat u alle geselecteerde kosten wilt verwijderen? (Totaal: " + getSelectedCosts().size() + ")";
-	}	
-	
-	@NotifyChange("deleteMessage")
-	@Command
-	public void cancelDelete(){
-		deleteMessage = null;
-	}
-	
-	@NotifyChange("deleteAllMessage")
-	@Command
-	public void cancelDeleteAll(){
-		deleteAllMessage = null;
-	}	
 	
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
@@ -215,10 +155,6 @@ public class AllCostsVM extends CostVM2 {
 		this.fileuploaded = fileuploaded;
 	}
 	
-	public List<Cost> getSelectedCosts() {
-		return costs;
-	}
-
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user != null) {
 			costCache.setBeginDatum(periode.getBeginDate());

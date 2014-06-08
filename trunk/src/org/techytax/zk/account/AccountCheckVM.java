@@ -43,7 +43,7 @@ import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
-import org.techytax.zk.cost.CostVM2;
+import org.techytax.zk.cost.CostVM;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -51,7 +51,7 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
-public class AccountCheckVM extends CostVM2 {
+public class AccountCheckVM extends CostVM {
 
 	private AccountDao accountDao = new AccountDao(Account.class);
 	private CostDao costDao = new CostDao(Cost.class);
