@@ -63,12 +63,12 @@ import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Customer;
 import org.techytax.domain.FiscalPeriod;
-import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.external.domain.ExternalCostType;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
+import org.techytax.util.VersionHelper;
 import org.zkoss.zul.Filedownload;
 
 public class DutchAuditFileHelper {
@@ -269,7 +269,7 @@ public class DutchAuditFileHelper {
 		header.setFiscalYear(Integer.toString(year));
 		header.setDateCreated(DateHelper.getDate(DateHelper.getDate(new Date())));
 		header.setSoftwareDesc("TechyTax");
-		header.setSoftwareVersion("2.2");
+		header.setSoftwareVersion(VersionHelper.getVersion());
 		if (startDate != null) {
 			header.setStartDate(DateHelper.getDateForXml(startDate));
 		}
