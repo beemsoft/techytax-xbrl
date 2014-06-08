@@ -19,6 +19,7 @@
  */
 package org.techytax.zk.cost;
 
+import static org.techytax.log.AuditType.DELETE_ALL_COSTS;
 import static org.techytax.log.AuditType.DELETE_COST;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
@@ -62,6 +63,76 @@ public class CostVM {
 	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
 
 	protected CostCache costCache = new CostCache();
+	
+	String deleteMessage;
+	
+	String deleteAllMessage;
+	
+	
+	public String getDeleteMessage(){
+		return deleteMessage;
+	}
+	
+	public String getDeleteAllMessage(){
+		return deleteAllMessage;
+	}	
+	
+	public List<Cost> getSelectedCosts() {
+		return costs;
+	}
+	
+	@NotifyChange({"selected","costs","deleteMessage"})
+	@Command
+	public void deleteCost() throws Exception {
+		if (user != null) {
+			AuditLogger.log(DELETE_COST, user);
+			selected.setUser(user);
+			costDao.deleteEntity(selected);
+			getCosts().remove(selected);
+			selected = null;
+			costCache.invalidate();
+		}
+		deleteMessage = null;		
+	}	
+	
+	@NotifyChange({"costs","deleteAllMessage"})
+	@Command
+	public void deleteAllCosts() throws Exception{
+		if (user != null) {
+			AuditLogger.log(DELETE_ALL_COSTS, user);
+			for (Cost cost : getSelectedCosts()) {
+				costDao.deleteEntity(cost);				
+			}
+			getCosts().removeAll(getCosts());
+			selected = null;
+			costCache.invalidate();
+		}
+		deleteAllMessage = null;
+	}	
+	
+	@NotifyChange("deleteMessage")
+	@Command
+	public void confirmDelete(){
+		deleteMessage = "Weet u zeker dat u wilt verwijderen: "+selected.getDescription()+" ?";
+	}
+	
+	@NotifyChange("deleteAllMessage")
+	@Command
+	public void confirmDeleteAll() throws Exception{
+		deleteAllMessage = "Weet u zeker dat u alle geselecteerde kosten wilt verwijderen? (Totaal: " + getSelectedCosts().size() + ")";
+	}	
+	
+	@NotifyChange("deleteMessage")
+	@Command
+	public void cancelDelete(){
+		deleteMessage = null;
+	}
+	
+	@NotifyChange("deleteAllMessage")
+	@Command
+	public void cancelDeleteAll(){
+		deleteAllMessage = null;
+	}	
 
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (user == null) {
@@ -127,19 +198,6 @@ public class CostVM {
 
 	public void setSelectedCostType(CostType selected) {
 		this.selectedCostType = selected;
-	}
-
-	@NotifyChange({ "selected", "costs" })
-	@Command
-	public void deleteCost() throws Exception {
-		if (user != null) {
-			AuditLogger.log(DELETE_COST, user);
-			selected.setUser(user);
-			costDao.deleteEntity(selected);
-			getCosts().remove(selected);
-			selected = null;
-			costCache.invalidate();
-		}
 	}
 	
 	@NotifyChange("selected")
