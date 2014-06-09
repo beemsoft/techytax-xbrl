@@ -30,6 +30,7 @@ import org.techytax.log.AuditType;
 import org.techytax.security.AuthenticationException;
 import org.techytax.security.SecurityService;
 import org.techytax.security.SecurityServiceImpl;
+import org.techytax.util.VersionHelper;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
@@ -41,6 +42,14 @@ public class LoginModel {
 	private String username = "";
 
 	private String password = "";
+	
+	public boolean isSaasVersion() {
+		return VersionHelper.isSaasVersion();
+	}
+	
+	public String getVersion() {
+		return VersionHelper.getVersion();
+	}
 
 	@Command
 	public void login() throws Exception {
