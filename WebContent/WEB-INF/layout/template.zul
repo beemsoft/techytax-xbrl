@@ -49,7 +49,7 @@
 				</vlayout>
 			</center>
 			<south size="30px" border="0" style="background: none repeat scroll 0 0 ;" >
-				<include src="~./saas/footer.zul" />
+				<include src="~./saas/footer.zul" if="${vm.saasVersion}" />
 			</south>
 		</borderlayout>
 	</div>
