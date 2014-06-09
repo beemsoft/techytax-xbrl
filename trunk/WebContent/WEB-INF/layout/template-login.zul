@@ -1,118 +1,6 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk>
-	<style>
-		.breeze .complex-layout, .breeze .complex-layout .z-south,
-		.breeze .complex-layout .z-west { background: #F7F7F7; }
-		.z-borderlayout { background: #FFFFFF } 
-		.complex-layout .z-north { background: #4b93fe; } 
-		img.complex-layout-header-img {padding: 0 10px; } 
-		.complex-layout-header-label { position:relative; top: 10px; padding-left: 40px; font-size: 24px; color: White; font-weight: bold; }
-		.complex-layout-header2-label { position:relative; top: 10px; padding-left: 100px; font-size: 20px; color: White; }
-		.inner-border, .inner-border .z-north, .inner-border .z-west, .inner-border .z-south, .inner-border .z-east { background: #FFFFFF; } 
-		.dl-link {text-decoration: none; cursor: pointer; }
-		a, li, p, dd, dt { font-size: 12px; }
-		p { padding: 5px; }
-		
-		
-/*
-	The following style overides the default "sapphire" theme styles for grids
-	and listboxes.  It tries to make the style similar to the old "classic" theme.
-	
-	It also "removes" the "highlighting" of grid rows when you move the cursor
-	over a row.
-	
-	Note: this overides the theme for "ALL" grid and lisbox components in all pages where
-	header.css is included.
-*/
-
-	tr.z-row td.z-row-inner, tr.z-row td.z-cell, tr.z-group td.z-group-inner, tr.z-groupfoot td.z-groupfoot-inner {
-	    padding: 1px 1px 1px 1px;
-	}
-	td.z-listcell {
-	    border: 1px solid transparent;
-	}
-	tr.z-row td.z-row-inner, tr.z-row .z-cell, .z-listcell-content, .z-row-content {
-	    line-height: 18px;
-	}
-	
-	.z-panel-header {
-		font-size: 15px;
-	}
-	
-	.z-panel-head {
-		line-height: 20px;
-	}
-	
-	.z-listitem-selected:hover > .z-listcell {
-	    border-color: rgb(227, 227, 27);
-	    background: none repeat scroll 0% 0% rgb(86, 135, 168);
-	}
-	
-	.z-listitem-selected:hover .z-listcell-content {
-	    color: #4b93fe;
-	}
-	
-	.z-listitem:hover > .z-listcell {
-	    border-color: rgb(227, 227, 227);
-	    background: none repeat scroll 0% 0% #66ccff;
-	}
-	
-	.z-row-content:hover  {
-	    border-color: rgb(227, 227, 227);
-	    background: none repeat scroll 0% 0% #66ccff;
-	}
-	
-	.z-row-inner:hover  {
-	    border-color: rgb(227, 227, 227);
-	    background: none repeat scroll 0% 0% #66ccff;
-	}			
-	
-	div.z-listbox-body .z-listcell, .z-listcell-content {
-	   padding: 0px;
-	}
-	
-	.z-listitem-positive-amount .z-listcell-content {
-		background-color: lightgreen;
-	}
-	
-	.z-listitem-negative-amount .z-listcell-content {
-		background-color: lightblue;
-	}		
-	
-	.z-listitem-selected .z-listcell  {
-		background-color: #ffff99;
-	}	
-	
-	.z-listheader-content, .z-tab {
-	   padding: 2px;
-	   line-height: 20px;
-	}	
-	tr.z-row td.z-row-inner, tr.z-row .z-cell, tr.z-row {
-	    background: none repeat scroll 0% 0% white;
-	}
-	tr.z-grid-odd td.z-row-inner, tr.z-grid-odd .z-cell, tr.z-grid-odd {
-	    background: none repeat scroll 0% 0% rgb(240, 250, 255);
-	}    		
-	
-	div.z-listbox-body td.mine {
-		text-align: right;
-		background-color: green;
-	   	text-align: right;		
-	}
-	.z-intbox {
-	   	text-align: right;
-	}
-	
-	.loggedOnUserButton .z-toolbarbutton-content {
-		color: white;
-	}
-	
-	a {
-		font-weight: bold;
-		color: #4b93fe;
-	}		
-	
-	</style>
+	<style src="/widgets/application/template/template.css" />
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
 		<borderlayout sclass="complex-layout" height="800px">
 			<north size="45px" border="0">
@@ -126,7 +14,8 @@
 							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" />
 						</hbox>
 					</div>				
-					<label sclass="complex-layout-header-label" value="TechyTax" tooltip="notes, x=250,y=50" />
+					<label sclass="complex-layout-header-label" value="TechyTax" />
+					<label sclass="complex-layout-header3-label" value="Version ${vm.version}" />
 					<label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
 				</div>
 			</north>
@@ -170,7 +59,7 @@
 				</vlayout>
 			</center>
 			<south size="30px" border="0" >
-				<include src="~./saas/footer.zul" />
+				<include src="~./saas/footer.zul" if="${vm.saasVersion}" />
 			</south>
 		</borderlayout>
 	</div>

@@ -37,7 +37,7 @@ arg0="/WEB-INF/layout/template-login.zul"?>
 						href="https://www.techytax.org/TechyTax/zul/login.zul"
 						tooltip="secureInfo" image="/images/FirefoxPolicemanForSecureConnectionFailedScreen.jpeg" height="80px"/>
 				<vbox>
-					<include src="~./saas/message.zul" />
+					<include src="~./saas/message.zul" if="${vm.saasVersion}" />
 				</vbox>								
 			</hbox>		
 		</vbox>
