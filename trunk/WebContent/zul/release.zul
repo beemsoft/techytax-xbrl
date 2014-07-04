@@ -5,13 +5,15 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>2.3 -in progress</h4>
+<h4>2.2.1 -in progress</h4>
 <p>
 Changes:
 </p>
 <ul>
 <li>Fixed NPE in project page.</li>
 <li>Added VAT radiogroup to edit project page.</li>
+<li>End date of project can be empty.</li>
+<li>Fixed adding private costtype match in vat page.</li>
 </ul>
 <h4>2.2 (2014-06-08)</h4>
 <p>
