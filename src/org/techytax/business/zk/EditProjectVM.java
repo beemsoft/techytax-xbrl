@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -62,15 +62,21 @@ public class EditProjectVM {
 		try {
 			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
 			customers = new ListModelList<>(customerDao.findAll(user));
-			for (Customer customer: customers) {
-				if (customer.getId() == project.getCustomer().getId()) {
-					selectedCustomer = customer;
-				}
-			}			
+			selectCustomerIfPresent();
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}
 		return customers;
+	}
+
+	private void selectCustomerIfPresent() {
+		if (project.getCustomer() != null) {
+			for (Customer customer : customers) {
+				if (customer.getId() == project.getCustomer().getId()) {
+					selectedCustomer = customer;
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
