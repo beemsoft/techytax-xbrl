@@ -31,7 +31,25 @@
 					</row>
 					<row>
 						<label value="${c:l('vat')}" />
-						<textbox value="@bind(vm.project.vatType)" width="300px" />
+						<hlayout>
+							<radiogroup id="vatType" selectedItem="@bind(vm.selectedVatType)" />
+							<grid width="300px">
+								<columns>
+									<column width="120px" />
+								</columns>
+								<rows>
+									<row>
+										<radio id="radio1" label="${c:l('vat.high')}" value="HIGH" radiogroup="vatType" />
+									</row>
+									<row>
+										<radio id="radio2" label="${c:l('vat.low')}" value="LOW" radiogroup="vatType" />
+									</row>
+									<row>
+										<radio id="radio3" label="${c:l('vat.none')}" value="NONE" radiogroup="vatType" />
+									</row>
+								</rows>
+							</grid>
+						</hlayout>
 					</row>					
 					<row>
 						<label value="${c:l('date.start')}" />

@@ -25,6 +25,7 @@ import java.util.Map;
 import org.techytax.domain.Customer;
 import org.techytax.domain.Project;
 import org.techytax.domain.User;
+import org.techytax.domain.VatType;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindUtils;
@@ -52,10 +53,13 @@ public class EditProjectVM {
 
 	private ListModelList<Customer> customers;
 
+	private VatType selectedVatType;
+
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("project") Project project) {
 		Selectors.wireComponents(view, this, false);
 		this.project = project;
+		setSelectedVatType(project.getVatType().name());
 	}
 
 	public ListModelList<Customer> getCustomers() throws IllegalAccessException {
@@ -113,6 +117,15 @@ public class EditProjectVM {
 
 	public void setSelectedCustomer(Customer selectedCustomer) {
 		this.selectedCustomer = selectedCustomer;
+	}
+
+	public String getSelectedVatType() {
+		return selectedVatType.name();
+	}
+
+	public void setSelectedVatType(String value) {
+		this.selectedVatType = VatType.valueOf(value);
+		project.setVatType(selectedVatType);
 	}
 
 }
