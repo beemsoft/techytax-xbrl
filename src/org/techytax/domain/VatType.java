@@ -24,7 +24,7 @@ import java.util.Date;
 import org.techytax.util.DateHelper;
 
 public enum VatType {
-	NONE("vat.none", 0), LOW("vat.low", 0.6d), HIGH("vat.high", 0.21d), HIGH_OLD("vat.high", 0.19d);
+	NONE("vat.none", 0), LOW("vat.low", 0.06d), HIGH("vat.high", 0.21d), HIGH_OLD("vat.high", 0.19d);
 
 	private static final String changeDateForHighVat = "2012-10-01";
 	private String key;
