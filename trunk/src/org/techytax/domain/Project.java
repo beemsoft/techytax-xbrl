@@ -61,7 +61,7 @@ public class Project extends UserObject {
 	private BigDecimal rate;
 	
 	@Enumerated(EnumType.ORDINAL)
-	private VatType vatType;
+	private VatType vatType = VatType.HIGH;
 
 	public String getCode() {
 		return code;
