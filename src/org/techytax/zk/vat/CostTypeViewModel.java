@@ -158,6 +158,7 @@ public class CostTypeViewModel {
 	
 	private void updatePrivateCostMatch(SplitMatch splitMatch, PrivateCostMatch costMatch) throws Exception {
 		setSplitMatchIdWhenUpdating(costMatch);
+		selectedPrivateMatch.setUser(user);
 		privateCostMatchDao.merge(selectedPrivateMatch);
 	}
 
