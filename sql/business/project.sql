@@ -12,3 +12,5 @@ CREATE TABLE project
    vatType smallint(1) default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE project MODIFY COLUMN end_date date NULL;
