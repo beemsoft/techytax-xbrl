@@ -26,14 +26,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostMatchParent;
 import org.techytax.domain.CostType;
-import org.techytax.domain.Kostmatch;
-import org.techytax.domain.PrivateCostMatch;
 import org.techytax.helper.CostSplitter;
 import org.techytax.util.DateHelper;
 
@@ -56,7 +55,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				cost = processLine(regel, regelNummer);
-				if (cost != null) {
+				if (cost != null && cost.getCostType().equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT)) {
 					kostLijst.add(cost);
 				}
 			}
@@ -81,24 +80,11 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		}
 	}
 
-	protected Kostmatch findCostMatch(String omschrijving) throws Exception {
-		List<PrivateCostMatch> kostmatchList = privateCostMatchDao.findAll();
-		Iterator<PrivateCostMatch> iterator = kostmatchList.iterator();
-		while (iterator.hasNext()) {
-//			Kostmatch kostmatch = iterator.next();
-//			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
-//				return kostmatch;
-//			}
-		}
-		return null;
-	}
-
-	protected Kostmatch matchCost(Cost kost) throws Exception {
-		CostType kostensoort = TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
-		Kostmatch costMatch = findCostMatch(kost.getDescription());
+	protected CostMatchParent matchCost(Cost kost) throws Exception {
+		CostMatchParent costMatch = super.findCostMatch(kost.getDescription());
 		if (costMatch != null) {
 			kost.setDescription(kost.getDescription());
-			kost.setCostType(kostensoort);
+			kost.setCostType(costMatch.getCostType());
 			CostSplitter.splitPercentagFromAmount(kost, 6);
 			return costMatch;
 		}
