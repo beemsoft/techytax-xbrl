@@ -136,6 +136,7 @@ public class AccountVM {
 	@Command
 	public void saveAccountBalance() throws Exception{
 		if (user != null) {
+			selectedAccountBalance.setUser(user);
 			selectedAccountBalance.setAccount(selected);
 			AccountBalance accountBalance = (AccountBalance) accountBalanceDao.getEntity(selectedAccountBalance, Long.valueOf(selectedAccountBalance.getId()));
 			if (accountBalance == null) {
