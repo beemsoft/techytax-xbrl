@@ -50,7 +50,7 @@ public class CostTypeViewModel {
 	private User user = UserCredentialManager.getUser();
 	private CostType selectedCostType;
 	private PrivateCostMatch selectedPrivateMatch;
-	private String selectedVatType;
+	private VatType selectedVatType;
 	private int selectedPercentage;
 
 	private List<CostType> costTypes = new ArrayList<>();
@@ -84,6 +84,7 @@ public class CostTypeViewModel {
 		setPrivateMatches(selected);
 		setPublicMatches(selected);
 		this.selectedPrivateMatch = null;
+		this.selectedVatType = null;
 	}
 
 	private void setPublicMatches(CostType selected) throws Exception {
@@ -92,11 +93,15 @@ public class CostTypeViewModel {
 
 	@NotifyChange
 	public void setSelectedVatType(String vatType) {
-		this.selectedVatType = vatType;
+		this.selectedVatType = VatType.valueOf(vatType);
 	}
 
 	public String getSelectedVatType() {
-		return selectedVatType;
+		if (selectedVatType != null) {
+			return selectedVatType.name();
+		} else {
+			return null;
+		}
 	}
 
 	@NotifyChange({ "selectedPrivateMatch", "privateMatchesList" })
@@ -114,12 +119,12 @@ public class CostTypeViewModel {
 		if (user != null) {
 			SplitMatch splitMatch = selectedPrivateMatch.getSplitMatch();
 			AuditLogger.log(MATCH_TRANSACTION, user);
-			splitMatch = handleSplitMatchPercentage(splitMatch);
-			insertOrUpdatePrivateCostMatch(splitMatch);
+			handleSplitMatchPercentage(splitMatch);
+			insertOrUpdatePrivateCostMatch();
 		}
 	}
 
-	private SplitMatch handleSplitMatchPercentage(SplitMatch splitMatch) {
+	private void handleSplitMatchPercentage(SplitMatch splitMatch) {
 		if (selectedPercentage > 0) {
 			if (splitMatch == null) {
 				splitMatch = new SplitMatch();
@@ -130,36 +135,26 @@ public class CostTypeViewModel {
 		} else {
 			selectedPrivateMatch.setSplitMatch(null);
 		}
-		return splitMatch;
 	}
 
-	private void insertOrUpdatePrivateCostMatch(SplitMatch splitMatch) throws Exception {
+	private void insertOrUpdatePrivateCostMatch() throws Exception {
 		PrivateCostMatch costMatch = privateCostMatchDao.getCostMatchPrivate(selectedPrivateMatch);
-		if (costMatch == null) {
-			insertPrivateCostMatch();
-		} else {
-			updatePrivateCostMatch(splitMatch, costMatch);
-		}
-	}
-
-	private void insertPrivateCostMatch() throws Exception {
 		if (selectedCostType.isVatDeclarable()) {
 			if (selectedCostType.equals(EXPENSE_INSIDE_EU)) {
-				selectedVatType = VatType.NONE.name();
+				selectedVatType = VatType.NONE;
 			}
 			VatMatchPrivate vatMatchPrivate = new VatMatchPrivate();
-			vatMatchPrivate.setVatType(VatType.valueOf(selectedVatType));
+			vatMatchPrivate.setVatType(selectedVatType);
 			vatMatchPrivate.setPrivateCostMatch(selectedPrivateMatch);
 			selectedPrivateMatch.setVatMatchPrivate(vatMatchPrivate);
-			selectedPrivateMatch.setUser(user);
 		}
-		privateCostMatchDao.persistEntity(selectedPrivateMatch);
-	}
-	
-	private void updatePrivateCostMatch(SplitMatch splitMatch, PrivateCostMatch costMatch) throws Exception {
-		setSplitMatchIdWhenUpdating(costMatch);
 		selectedPrivateMatch.setUser(user);
-		privateCostMatchDao.merge(selectedPrivateMatch);
+		if (costMatch == null) {
+			privateCostMatchDao.persistEntity(selectedPrivateMatch);
+		} else {
+			setSplitMatchIdWhenUpdating(costMatch);
+			privateCostMatchDao.merge(selectedPrivateMatch);
+		}
 	}
 
 	/**
@@ -209,6 +204,7 @@ public class CostTypeViewModel {
 	@NotifyChange({ "selectedPrivateMatch", "selectedVatType", "selectedPercentage" })
 	public void setSelectedPrivateMatch(PrivateCostMatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;
+		this.selectedVatType = null;
 		if (selectedCostType.isVatDeclarable() && selectedPrivateMatch.getVatMatchPrivate() != null) {
 			setSelectedVatType(selectedPrivateMatch.getVatMatchPrivate().getVatType().name());
 		}
