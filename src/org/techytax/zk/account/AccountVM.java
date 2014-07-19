@@ -19,7 +19,7 @@
  */
 package org.techytax.zk.account;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 import org.techytax.dao.AccountBalanceDao;
 import org.techytax.dao.AccountDao;
@@ -27,6 +27,7 @@ import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.User;
+import org.techytax.helper.AmountHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -139,6 +140,10 @@ public class AccountVM {
 			selectedAccountBalance.setUser(user);
 			selectedAccountBalance.setAccount(selected);
 			AccountBalance accountBalance = (AccountBalance) accountBalanceDao.getEntity(selectedAccountBalance, Long.valueOf(selectedAccountBalance.getId()));
+			
+			// Rounding issue: .60 becomes .59
+			BigDecimal roundedBalance = AmountHelper.round(selectedAccountBalance.getBalance());
+			selectedAccountBalance.setBalance(roundedBalance);
 			if (accountBalance == null) {
 				accountBalanceDao.persistEntity(selectedAccountBalance);
 			} else {
