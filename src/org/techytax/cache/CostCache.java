@@ -28,6 +28,7 @@ import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.INCOME_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.INCOME_TAX;
@@ -162,7 +163,7 @@ public class CostCache {
 	public List<Cost> getCostListCurrentAccount() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
 		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, EXPENSE_CURRENT_ACCOUNT_IGNORE, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTORIAL,
-				ADVERTORIAL_NO_VAT, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST);
+				ADVERTORIAL_NO_VAT, ROAD_TAX, SETTLEMENT, SETTLEMENT_INTEREST, EXPENSE_INSIDE_EU);
 		for (Cost cost : costs) {
 			if (costTypes.contains(cost.getCostType())) {
 				filteredCosts.add(cost);
@@ -173,8 +174,7 @@ public class CostCache {
 
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
 		BigDecimal costsWithPrivateMoney = ZERO;
-		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT,
-				BUSINESS_FOOD_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT);
+		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT);
 		for (Cost cost : costs) {
 			CostType costType = cost.getCostType();
 			if (costTypes.contains(costType)) {
@@ -238,7 +238,7 @@ public class CostCache {
 		}
 		return repurchases;
 	}
-	
+
 	public BigDecimal getCostCurrentAccountIgnore() throws Exception {
 		BigDecimal totalCost = ZERO;
 		for (Cost cost : costs) {
@@ -247,7 +247,7 @@ public class CostCache {
 			}
 		}
 		return totalCost;
-	}	
+	}
 
 	public Date getBeginDatum() {
 		return beginDatum;
