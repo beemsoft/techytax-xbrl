@@ -249,16 +249,17 @@ public class XbrlNtp8Helper {
 		BigInteger correction = AmountHelper.roundToInteger(vatBalanceWithinEu.getCorrection());
 		BigDecimal turnover = AmountHelper.roundDown(vatBalanceWithinEu.getNettoOmzet());
 		BigInteger totaleBaten = AmountHelper.roundDownToInteger(turnover.multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
-		BigInteger owed = totaleBaten.add(correction);
-		BigInteger owedToBePaidBack = owed.subtract(totaleKosten);
+		BigInteger vatOutEu = vatBalanceWithinEu.getVatOutEu();
+		BigInteger owed = totaleBaten.add(correction).add(vatOutEu);
+		BigInteger owedToBePaidBack = owed.subtract(totaleKosten.add(vatOutEu));
 		vatDeclarationData.setValueAddedTaxOwed(owed);
-		vatDeclarationData.setValueAddedTaxOnInput(totaleKosten.add(vatBalanceWithinEu.getVatOutEu()));
+		vatDeclarationData.setValueAddedTaxOnInput(totaleKosten.add(vatOutEu));
 		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(owedToBePaidBack);
 		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
 		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleBaten);
 		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(turnover.toBigInteger());
 		vatDeclarationData.setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(AmountHelper.roundToInteger(vatBalanceWithinEu.getTurnoverNetEu()));
-		vatDeclarationData.setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(vatBalanceWithinEu.getVatOutEu());
+		vatDeclarationData.setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(vatOutEu);
 	}
 
 	public static void main(String[] args) throws Exception {
