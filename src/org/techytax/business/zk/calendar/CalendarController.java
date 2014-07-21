@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.StringUtils;
 import org.techytax.dao.BusinessCalendarDao;
 import org.techytax.dao.CostDao;
 import org.techytax.domain.BusinessCalendarEvent;
@@ -88,6 +89,9 @@ public class CalendarController extends SelectorComposer<Component> {
 	private Calendars calendars;
 	@Wire
 	private Textbox filter;
+	
+	@Wire
+	private Textbox discount;
 
 	private BusinessCalendarModel calendarModel;
 
@@ -126,6 +130,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			calendarModel = new BusinessCalendarModel(calendarEvents);
 			calendars.setModel(this.calendarModel);
 			invoiceButton.setDisabled(true);
+			discount.setDisabled(true);
 			
 			sendInvoiceButton = (Button) Path.getComponent("/win/invoiceWindow/sendInvoiceButton");
 			sendInvoiceButton.addEventListener("onClick", new EventListener() {
@@ -189,6 +194,7 @@ public class CalendarController extends SelectorComposer<Component> {
 		calendars.setMold("month");
 		if (selectedProject != null) {
 			invoiceButton.setDisabled(false);
+			discount.setDisabled(false);
 		}
 	}
 
@@ -208,6 +214,7 @@ public class CalendarController extends SelectorComposer<Component> {
 		projectListbox.setSelectedItem(null);
 		calendars.setModel(calendarModel);
 		invoiceButton.setDisabled(true);
+		discount.setDisabled(true);
 	}
 
 	// listen to the calendar-create and edit of a event data
@@ -291,6 +298,7 @@ public class CalendarController extends SelectorComposer<Component> {
 
 		if (calendars.getMold().equals("month")) {
 			invoiceButton.setDisabled(false);
+			discount.setDisabled(false);
 		}
 	}
 
@@ -319,13 +327,13 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (maand < 10) {
 				factuurNummerString += "0";
 			}
-			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(new FiscalPeriod(beginDate, endDate));
+			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(new FiscalPeriod(beginDate, new Date()));
 			List<Cost> invoices = new ArrayList<>();
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostType().equals(INVOICE_SENT)) {
 					String monthStr = Integer.toString(maand);
-					if (cost.getDescription().charAt(6) == monthStr.charAt(monthStr.length() - 1)) {
+					if (cost.getDescription().contains(monthStr)) {
 						invoices.add(cost);
 					}
 				}
@@ -360,7 +368,15 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setNetAmount(bd);
 			invoice.setVatAmount(btwBedrag);
 			invoice.setTotalAmount(totaalBedrag);
+			invoice.setTotalAmountAfterDiscount(totaalBedrag);
 			invoice.setEmail(customer.getEmailInvoice());
+			if (StringUtils.isNotEmpty(discount.getValue())) {
+				int discountPercentage = Integer.parseInt(discount.getValue());
+				invoice.setDiscountPercentage(discountPercentage);
+				BigDecimal discount = new BigDecimal(totaalBedrag.doubleValue() * discountPercentage / 100.0d);
+				invoice.setDiscount(discount);
+				invoice.setTotalAmountAfterDiscount(totaalBedrag.subtract(discount));
+			}
 			invoiceBuf = org.techytax.report.helper.PdfInvoiceHelper.createPdfInvoice(invoice, user);
 
 			// prepare the AMedia for iframe
