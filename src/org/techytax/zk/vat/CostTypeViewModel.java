@@ -57,7 +57,7 @@ public class CostTypeViewModel {
 	private List<Kostmatch> publicMatches = new ArrayList<>();
 	private List<PrivateCostMatch> privateMatches = new ArrayList<>();
 	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
-	private PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);	
+	private PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);
 	private CostTypeDao kostensoortDao = new CostTypeDao(CostType.class);
 
 	@Init
@@ -158,13 +158,13 @@ public class CostTypeViewModel {
 	}
 
 	/**
-	 * If the id's are unequal, JPA will do insert instead of update. 
+	 * If the id's are unequal, JPA will do insert instead of update.
 	 */
 	private void setSplitMatchIdWhenUpdating(PrivateCostMatch costMatch) {
 		if (selectedPrivateMatch.getSplitMatch() != null && costMatch.getSplitMatch() != null) {
 			selectedPrivateMatch.getSplitMatch().setId(costMatch.getSplitMatch().getId());
 		}
-	}	
+	}
 
 	@NotifyChange({ "selectedPrivateMatch", "privateMatchesList" })
 	@Command
@@ -205,7 +205,7 @@ public class CostTypeViewModel {
 	public void setSelectedPrivateMatch(PrivateCostMatch selectedPrivateMatch) {
 		this.selectedPrivateMatch = selectedPrivateMatch;
 		this.selectedVatType = null;
-		if (selectedCostType.isVatDeclarable() && selectedPrivateMatch.getVatMatchPrivate() != null) {
+		if (selectedCostType.isVatDeclarable() && selectedPrivateMatch.getVatMatchPrivate() != null && selectedPrivateMatch.getVatMatchPrivate().getVatType() != null) {
 			setSelectedVatType(selectedPrivateMatch.getVatMatchPrivate().getVatType().name());
 		}
 		if (selectedPrivateMatch.getSplitMatch() != null) {
