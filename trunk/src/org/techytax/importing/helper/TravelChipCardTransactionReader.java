@@ -30,11 +30,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Vector;
 
-import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostMatchParent;
-import org.techytax.domain.CostType;
 import org.techytax.helper.CostSplitter;
 import org.techytax.util.DateHelper;
 
