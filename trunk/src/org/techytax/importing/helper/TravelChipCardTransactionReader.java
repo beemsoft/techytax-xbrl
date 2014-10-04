@@ -20,6 +20,7 @@
 package org.techytax.importing.helper;
 
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.UNDETERMINED;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -31,6 +32,7 @@ import java.util.Vector;
 
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostMatchParent;
 import org.techytax.domain.CostType;
 import org.techytax.helper.CostSplitter;
@@ -55,7 +57,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
 				String[] regel = (String[]) data.get(regelNummer - 1);
 				cost = processLine(regel, regelNummer);
-				if (cost != null && cost.getCostType().equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT)) {
+				if (cost != null && cost.getCostType() != null && (cost.getCostType().equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) || cost.getCostType().equals(UNDETERMINED))) {
 					kostLijst.add(cost);
 				}
 			}
@@ -83,10 +85,12 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	protected CostMatchParent matchCost(Cost kost) throws Exception {
 		CostMatchParent costMatch = super.findCostMatch(kost.getDescription());
 		if (costMatch != null) {
-			kost.setDescription(kost.getDescription());
+			// kost.setDescription(kost.getDescription());
 			kost.setCostType(costMatch.getCostType());
 			CostSplitter.splitPercentagFromAmount(kost, 6);
 			return costMatch;
+		} else {
+			kost.setCostType(CostConstants.UNDETERMINED);
 		}
 		return null;
 	}
