@@ -2,7 +2,7 @@
 <zk>
 	<style src="/widgets/application/template/template.css" />
 	<div apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.login.LoginModel')">
-		<borderlayout sclass="complex-layout" height="800px">
+		<borderlayout sclass="complex-layout" height="900px">
 			<north size="45px" border="0">
 				<div>
 					<div style="float:right; padding: 10px">
