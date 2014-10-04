@@ -43,13 +43,6 @@
 							</html>
 						</panelchildren>
 					</panel>
-					<panel width="100%" border="normal" title="${c:l('panel4.title')}" >
-						<panelchildren>
-							<html>
-								<script type="text/javascript" src="https://www.ohloh.net/p/337030/widgets/project_factoids_stats.js"></script>
-							</html>
-						</panelchildren>
-					</panel>
 				</vlayout>
 			</west>
 			<!-- Content -->
