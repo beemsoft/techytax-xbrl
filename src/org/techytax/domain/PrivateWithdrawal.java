@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,6 +21,9 @@ package org.techytax.domain;
 
 import java.math.BigInteger;
 
+import lombok.Data;
+
+@Data
 public class PrivateWithdrawal {
 
 	private BigInteger totaleOnttrekking;
@@ -28,29 +31,5 @@ public class PrivateWithdrawal {
 	private BigInteger withdrawalCash;
 	
 	private BigInteger withdrawalPrivateUsageBusinessCar;
-
-	public BigInteger getTotaleOnttrekking() {
-		return totaleOnttrekking;
-	}
-
-	public BigInteger getWithdrawalCash() {
-		return withdrawalCash;
-	}
-
-	public void setTotaleOnttrekking(BigInteger totaleOnttrekking) {
-		this.totaleOnttrekking = totaleOnttrekking;
-	}
-
-	public void setWithdrawalCash(BigInteger withdrawalCash) {
-		this.withdrawalCash = withdrawalCash;
-	}
-
-	public BigInteger getWithdrawalPrivateUsageBusinessCar() {
-		return withdrawalPrivateUsageBusinessCar;
-	}
-
-	public void setWithdrawalPrivateUsageBusinessCar(BigInteger withdrawalPrivateUsageBusinessCar) {
-		this.withdrawalPrivateUsageBusinessCar = withdrawalPrivateUsageBusinessCar;
-	}
 
 }

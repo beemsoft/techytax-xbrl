@@ -21,6 +21,9 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
+import lombok.Data;
+
+@Data
 public class Balance {
 
 	BigDecimal brutoOmzet;
@@ -32,45 +35,5 @@ public class Balance {
 	BigDecimal totaleBaten;
 	
 	BigDecimal totaleKosten;
-
-	public BigDecimal getBrutoOmzet() {
-		return brutoOmzet;
-	}
-
-	public BigDecimal getCorrection() {
-		return correction;
-	}
-
-	public BigDecimal getNettoOmzet() {
-		return nettoOmzet;
-	}
-
-	public BigDecimal getTotaleBaten() {
-		return totaleBaten;
-	}
-
-	public BigDecimal getTotaleKosten() {
-		return totaleKosten;
-	}
-
-	public void setBrutoOmzet(BigDecimal brutoOmzet) {
-		this.brutoOmzet = brutoOmzet;
-	}
-
-	public void setCorrection(BigDecimal correction) {
-		this.correction = correction;
-	}
-
-	public void setNettoOmzet(BigDecimal nettoOmzet) {
-		this.nettoOmzet = nettoOmzet;
-	}
-
-	public void setTotaleBaten(BigDecimal totaleBaten) {
-		this.totaleBaten = totaleBaten;
-	}
-
-	public void setTotaleKosten(BigDecimal totaleKosten) {
-		this.totaleKosten = totaleKosten;
-	}
 
 }

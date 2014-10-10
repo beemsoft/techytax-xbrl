@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.MappedSuperclass;
 
+import lombok.Getter;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -17,6 +19,7 @@ import org.zkoss.calendar.impl.SimpleCalendarEvent;
 	@TypeDef(name = "encryptedString", typeClass = EncryptedStringType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "strongHibernateStringEncryptor") }),
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
+@Getter
 public class BusinessCalendarEventParent extends SimpleCalendarEvent {
 	
 	private static final long serialVersionUID = 1L;
@@ -35,17 +38,9 @@ public class BusinessCalendarEventParent extends SimpleCalendarEvent {
 	
 	private Date endDate;
 
-	public String getContent() {
-		return content;
-	}
-
 	public void setContent(String content) {
 		super.setContent(content);
 		this.content = content;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public void setTitle(String title) {
@@ -53,17 +48,9 @@ public class BusinessCalendarEventParent extends SimpleCalendarEvent {
 		this.title = title;
 	}
 
-	public String getHeaderColor() {
-		return headerColor;
-	}
-
 	public void setHeaderColor(String headerColor) {
 		super.setHeaderColor(headerColor);
 		this.headerColor = headerColor;
-	}
-
-	public String getContentColor() {
-		return contentColor;
 	}
 
 	public void setContentColor(String contentColor) {
@@ -71,23 +58,14 @@ public class BusinessCalendarEventParent extends SimpleCalendarEvent {
 		this.contentColor = contentColor;
 	}
 
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
 	public void setBeginDate(Date beginDate) {
 		super.setBeginDate(beginDate);
 		this.beginDate = beginDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
 	}
 
 	public void setEndDate(Date endDate) {
 		super.setEndDate(endDate);
 		this.endDate = endDate;
 	}
-	
 
 }

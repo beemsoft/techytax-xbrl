@@ -25,6 +25,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -40,20 +43,13 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@NamedQuery(name = Kostmatch.FOR_TYPE, query = "SELECT cm FROM Kostmatch cm WHERE cm.costType = :costType")
 })
 @Table(name = "kostmatch")
+@Getter
+@Setter
 public class Kostmatch extends CostMatchParent {
 	
 	public static final String FOR_TYPE = "org.techytax.domain.Kostmatch.FOR_TYPE";
 	
 	@Column(name = "match_text")
 	protected String matchText;
-
-	public void setMatchText(String matchText) {
-		this.matchText = matchText;
-	}	
-
-	public String getMatchText() {
-		return matchText;
-	}
-	
 
 }

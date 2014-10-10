@@ -31,6 +31,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.hibernate.annotations.Type;
 
@@ -41,6 +44,8 @@ import org.hibernate.annotations.Type;
 		@NamedQuery(name = Cost.FOR_PERIOD_AND_VAT_DECLARABLE, query = "SELECT c FROM Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType.btwVerrekenbaar = true AND c.user = :user"),
 		@NamedQuery(name = Cost.FOR_PERIOD_AND_ACCOUNT, query = "SELECT c FROM Cost c WHERE c.date >= :beginDate AND c.date <= :endDate AND c.costType.balansMeetellen = true AND c.user = :user") })
 @Table(name = "kosten")
+@Getter
+@Setter
 public class Cost extends UserObject implements Serializable {
 
 	private static final long serialVersionUID = 6493376166158299239L;
@@ -69,48 +74,12 @@ public class Cost extends UserObject implements Serializable {
 	@Type(type = "encryptedString")
 	private String description;
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
-
-	public BigDecimal getVat() {
-		return vat;
-	}
-
-	public Date getDate() {
-		return date;
-	}
-
 	public long getCostTypeId() {
 		return costType.getId();
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
 	public boolean isIncoming() {
 		return costType.isBijschrijving();
-	}
-
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
-
-	public void setVat(BigDecimal vat) {
-		this.vat = vat;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public void setCostType(CostType costType) {
-		this.costType = costType;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public void roundValues() {
@@ -136,10 +105,6 @@ public class Cost extends UserObject implements Serializable {
 		equalsBuilder.append(vat, other.vat);
 		equalsBuilder.append(costType, other.costType);
 		return equalsBuilder.isEquals();
-	}
-
-	public CostType getCostType() {
-		return costType;
 	}
 
 	public String getStyle() {

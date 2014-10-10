@@ -25,10 +25,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 
 @Entity(name = "org.techytax.domain.Account")
 @Table(name = "accounts")
+@Getter
+@Setter
 public class Account extends UserObject {
 
 	@Column(name = "date_closed")
@@ -48,55 +53,4 @@ public class Account extends UserObject {
 	
 	private AccountType type;
 
-	public Date getDateClosed() {
-		return dateClosed;
-	}
-
-	public Date getDateOpened() {
-		return dateOpened;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setDateClosed(Date dateClosed) {
-		this.dateClosed = dateClosed;
-	}
-
-	public void setDateOpened(Date dateOpened) {
-		this.dateOpened = dateOpened;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public AccountType getType() {
-		return type;
-	}
-
-	public void setType(AccountType type) {
-		this.type = type;
-	}
 }

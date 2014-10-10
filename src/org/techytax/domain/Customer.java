@@ -25,10 +25,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "customer")
+@Getter
+@Setter
 public class Customer extends UserObject {
 
 	@Type(type = "encryptedString")
@@ -73,26 +78,6 @@ public class Customer extends UserObject {
 	@Type(type = "encryptedString")
 	private String website;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
 	public String getFullAddress() {
 		StringBuffer fullAddress = new StringBuffer();
 		fullAddress.append(address);
@@ -111,87 +96,4 @@ public class Customer extends UserObject {
 		return fullAddress.toString();
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-	public String getEmailInvoice() {
-		return emailInvoice;
-	}
-
-	public void setEmailInvoice(String emailInvoice) {
-		this.emailInvoice = emailInvoice;
-	}
-
-	public BigInteger getCommerceNr() {
-		return commerceNr;
-	}
-
-	public void setCommerceNr(BigInteger commerceNr) {
-		this.commerceNr = commerceNr;
-	}
-
-	public BigInteger getNumber() {
-		return number;
-	}
-
-	public void setNumber(BigInteger number) {
-		this.number = number;
-	}
-
-	public String getNumberExtension() {
-		return numberExtension;
-	}
-
-	public void setNumberExtension(String numberExtension) {
-		this.numberExtension = numberExtension;
-	}
-
-	public String getPostalCode() {
-		return postalCode;
-	}
-
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getFax() {
-		return fax;
-	}
-
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-
-	public String getWebsite() {
-		return website;
-	}
-
-	public void setWebsite(String website) {
-		this.website = website;
-	}
 }

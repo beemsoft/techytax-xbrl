@@ -21,19 +21,14 @@ package org.techytax.domain;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class BookValueHistory {
 	
 	private List<BookValue> bookValues;
 	
 	public BookValueHistory(List<BookValue> bookValues) {
-		this.bookValues = bookValues;
-	}
-
-	public List<BookValue> getBookValues() {
-		return bookValues;
-	}
-
-	public void setBookValues(List<BookValue> bookValues) {
 		this.bookValues = bookValues;
 	}
 

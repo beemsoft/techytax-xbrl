@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,27 +21,14 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
+import lombok.Data;
+
+@Data
 public class DeductableCostGroup implements Comparable<DeductableCostGroup> {
 	private BigDecimal aftrekbaarBedrag;
 
 	private CostType kostenSoort;
 	
-	public BigDecimal getAftrekbaarBedrag() {
-		return aftrekbaarBedrag;
-	}
-
-	public CostType getKostenSoort() {
-		return kostenSoort;
-	}
-
-	public void setAftrekbaarBedrag(BigDecimal aftrekbaarBedrag) {
-		this.aftrekbaarBedrag = aftrekbaarBedrag;
-	}
-
-	public void setKostenSoort(CostType kostenSoort) {
-		this.kostenSoort = kostenSoort;
-	}
-
 	public int compareTo(DeductableCostGroup o) {
 		return (int) (this.kostenSoort.getId() - o.kostenSoort.getId());
 	}

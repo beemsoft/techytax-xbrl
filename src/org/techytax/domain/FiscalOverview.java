@@ -23,9 +23,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
+import lombok.Data;
+
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.helper.FiscalReportHelper;
 
+@Data
 public class FiscalOverview {
 
 	private Map<BalanceType,FiscalBalance> activaMap;
@@ -38,6 +41,7 @@ public class FiscalOverview {
 
 	private BigInteger afschrijvingOverig = BigInteger.ZERO;
 
+	// Will be removed in 2017
 	@Deprecated
 	private BigInteger afschrijvingOverigCorrectie = BigInteger.ZERO;
 
@@ -69,249 +73,20 @@ public class FiscalOverview {
 		return FiscalReportHelper.getActivaReport(activaMap);
 	}
 
-	public BigInteger getAfschrijvingAuto() {
-		return afschrijvingAuto;
-	}
-
-	@Deprecated
-	public BigInteger getAfschrijvingAutoCorrectie() {
-		return afschrijvingAutoCorrectie;
-	}
-
-	public BigInteger getAfschrijvingOverig() {
-		return afschrijvingOverig;
-	}
-
-	@Deprecated
-	// Will be removed in 2017
-	public BigInteger getAfschrijvingOverigCorrectie() {
-		return afschrijvingOverigCorrectie;
-	}
-
-	public BigInteger getAfschrijvingTotaal() {
-		return afschrijvingTotaal;
-	}
-
-	public BigInteger getBijtellingAuto() {
-		return bijtellingAuto;
-	}
-
-	public BigInteger getBookTotalBegin() {
-		return bookTotalBegin;
-	}
-
-	public BigInteger getBookTotalEnd() {
-		return bookTotalEnd;
-	}
-
 	public BigInteger getCarAndTransportCosts() {
 		return kostenAutoAftrekbaar.subtract(kostenOverigTransport);
-	}
-
-	public BigInteger getEnterpriseCapital() {
-		return enterpriseCapital;
-	}
-
-	public BigInteger getInterestFromBusinessSavings() {
-		return interestFromBusinessSavings;
-	}
-
-	public BigInteger getInvestmentDeduction() {
-		return investmentDeduction;
-	}
-
-	public int getJaar() {
-		return jaar;
-	}
-
-	public BigInteger getKostenAuto() {
-		return kostenAuto;
-	}
-
-	public BigInteger getKostenAutoAftrekbaar() {
-		return kostenAutoAftrekbaar;
-	}
-
-	public BigInteger getKostenOverig() {
-		return kostenOverig;
-	}
-
-	public BigInteger getKostenOverigTransport() {
-		return kostenOverigTransport;
-	}
-
-	public BigInteger getNettoOmzet() {
-		return nettoOmzet;
-	}
-
-	public PrivateWithdrawal getOnttrekking() {
-		return onttrekking;
 	}
 
 	public BigInteger getOtherCostsTotal() {
 		return getCarAndTransportCosts().subtract(kostenOverig.add(settlementCosts));
 	}
 
-	public BigInteger getOudedagsReserveMaximaal() {
-		return oudedagsReserveMaximaal;
-	}
-
 	public BalanceReport getPassivaReport() {
 		return FiscalReportHelper.getPassivaReport(passivaMap);
 	}
 
-	public PrepaidTax getPrepaidTax() {
-		return prepaidTax;
-	}
-
-	public BigInteger getPrivateDeposit() {
-		return privateDeposit;
-	}
-
-	public BigInteger getProfit() {
-		return profit;
-	}
-
-	public BigInteger getRepurchase() {
-		return repurchase;
-	}
-
-	public BigInteger getSettlementCosts() {
-		return settlementCosts;
-	}
-
-	public BigInteger getSettlementDepreciation() {
-		return settlementDepreciation;
-	}
-
-	public BigDecimal getTurnOverUnpaid() {
-		return turnOverUnpaid;
-	}
-
 	public BigInteger getWinst() {
 		return profit;
-	}
-
-	public void setAfschrijvingAuto(BigInteger afschrijvingAuto) {
-		this.afschrijvingAuto = afschrijvingAuto;
-	}
-
-	@Deprecated
-	public void setAfschrijvingAutoCorrectie(BigInteger afschrijvingAutoCorrectie) {
-		this.afschrijvingAutoCorrectie = afschrijvingAutoCorrectie;
-	}
-
-	public void setAfschrijvingOverig(BigInteger afschrijvingOverig) {
-		this.afschrijvingOverig = afschrijvingOverig;
-	}
-
-	@Deprecated
-	public void setAfschrijvingOverigCorrectie(BigInteger afschrijvingOverigCorrectie) {
-		this.afschrijvingOverigCorrectie = afschrijvingOverigCorrectie;
-	}
-
-	public void setAfschrijvingTotaal(BigInteger afschrijvingTotaal) {
-		this.afschrijvingTotaal = afschrijvingTotaal;
-	}
-
-	public void setBijtellingAuto(BigInteger bijtellingAuto) {
-		this.bijtellingAuto = bijtellingAuto;
-	}
-
-	public void setBookTotalBegin(BigInteger bookTotalBegin) {
-		this.bookTotalBegin = bookTotalBegin;
-	}
-
-	public void setBookTotalEnd(BigInteger bookTotalEnd) {
-		this.bookTotalEnd = bookTotalEnd;
-	}
-
-	public void setEnterpriseCapital(BigInteger enterpriseCapital) {
-		this.enterpriseCapital = enterpriseCapital;
-	}
-
-	public void setInterestFromBusinessSavings(BigInteger interestFromBusinessSavings) {
-		this.interestFromBusinessSavings = interestFromBusinessSavings;
-	}
-
-	public void setInvestmentDeduction(BigInteger investmentDeduction) {
-		this.investmentDeduction = investmentDeduction;
-	}
-
-	public void setJaar(int jaar) {
-		this.jaar = jaar;
-	}
-
-	public void setKostenAuto(BigInteger kostenAuto) {
-		this.kostenAuto = kostenAuto;
-	}
-
-	public void setKostenAutoAftrekbaar(BigInteger kostenAutoAftrekbaar) {
-		this.kostenAutoAftrekbaar = kostenAutoAftrekbaar;
-	}
-
-	public void setKostenOverig(BigInteger kostenOverig) {
-		this.kostenOverig = kostenOverig;
-	}
-
-	public void setKostenOverigTransport(BigInteger kostenOverigTransport) {
-		this.kostenOverigTransport = kostenOverigTransport;
-	}
-
-	public void setNettoOmzet(BigInteger nettoOmzet) {
-		this.nettoOmzet = nettoOmzet;
-	}
-
-	public void setOnttrekking(PrivateWithdrawal onttrekking) {
-		this.onttrekking = onttrekking;
-	}
-
-	public void setOudedagsReserveMaximaal(BigInteger oudedagsReserveMaximaal) {
-		this.oudedagsReserveMaximaal = oudedagsReserveMaximaal;
-	}
-
-	public void setPrepaidTax(PrepaidTax prepaidTax) {
-		this.prepaidTax = prepaidTax;
-	}
-
-	public void setPrivateDeposit(BigInteger privateDeposit) {
-		this.privateDeposit = privateDeposit;
-	}
-
-	public void setProfit(BigInteger winst) {
-		this.profit = winst;
-	}
-
-	public void setRepurchase(BigInteger repurchase) {
-		this.repurchase = repurchase;
-	}
-
-	public void setSettlementCosts(BigInteger settlementCosts) {
-		this.settlementCosts = settlementCosts;
-	}
-
-	public void setSettlementDepreciation(BigInteger settlementDepreciation) {
-		this.settlementDepreciation = settlementDepreciation;
-	}
-
-	public void setTurnOverUnpaid(BigDecimal turnOverUnpaid) {
-		this.turnOverUnpaid = turnOverUnpaid;
-	}
-
-	public void setActivaMap(Map<BalanceType, FiscalBalance> activaMap) {
-		this.activaMap = activaMap;
-	}
-
-	public Map<BalanceType, FiscalBalance> getPassivaMap() {
-		return passivaMap;
-	}
-
-	public void setPassivaMap(Map<BalanceType, FiscalBalance> passivaMap) {
-		this.passivaMap = passivaMap;
-	}
-
-	public Map<BalanceType, FiscalBalance> getActivaMap() {
-		return activaMap;
 	}
 
 }

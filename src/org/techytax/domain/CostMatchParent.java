@@ -27,6 +27,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 
+import lombok.Data;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -40,19 +42,12 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
 @MappedSuperclass
+@Data
 public class CostMatchParent {
 
 	@Id
 	@GeneratedValue
 	protected Long id = 0L;
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
 	
 	@ManyToOne
 	@JoinColumn(name="kostensoort_id")
@@ -60,21 +55,5 @@ public class CostMatchParent {
 
 	@OneToOne(mappedBy = "publicCostMatch", cascade = CascadeType.ALL)
 	private VatMatch vatMatch;
-
-	public VatMatch getVatMatch() {
-		return vatMatch;
-	}
-
-	public void setVatMatch(VatMatch vatMatch) {
-		this.vatMatch = vatMatch;
-	}	
-
-	public CostType getCostType() {
-		return costType;
-	}
-	
-	public void setCostType(CostType costType) {
-		this.costType = costType;
-	}
 
 }
