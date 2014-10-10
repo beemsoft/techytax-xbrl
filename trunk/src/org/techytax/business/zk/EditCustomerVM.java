@@ -79,25 +79,25 @@ public class EditCustomerVM {
 	@NotifyChange("customer")
 	@Command
 	public void checkKvK() throws Exception {
-		String postalCode = customer.getPostalCode();
-		String kvkUrl = "http://api.openkvk.nl/json/SELECT%20*%20FROM%20kvk%20WHERE%20postcode%20=%20'" + postalCode + "';";
-		URL obj = new URL(kvkUrl);
-		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		JSONParser parser = new JSONParser();
-		JSONArray map = (JSONArray) parser.parse(in);
-		Map map2 = (HashMap) map.get(0);
-		Map map3 = (HashMap) map2.get("RESULT");
-		JSONArray array = (JSONArray) map3.get("ROWS");
-		if (array != null && array.size() > 0) {
-			List<Customer> customers = getCustomers(array);
-			Map<String, Object> arguments = new HashMap<>();
-			arguments.put("customers", customers);
-			String template = "select-customer.zul";
-			Window window = (Window) Executions.createComponents(template, null, arguments);
-			window.doModal();
-		} else {
-		}
+//		String postalCode = customer.getPostalCode();
+//		String kvkUrl = "http://api.openkvk.nl/json/SELECT%20*%20FROM%20kvk%20WHERE%20postcode%20=%20'" + postalCode + "';";
+//		URL obj = new URL(kvkUrl);
+//		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+//		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//		JSONParser parser = new JSONParser();
+//		JSONArray map = (JSONArray) parser.parse(in);
+//		Map map2 = (HashMap) map.get(0);
+//		Map map3 = (HashMap) map2.get("RESULT");
+//		JSONArray array = (JSONArray) map3.get("ROWS");
+//		if (array != null && array.size() > 0) {
+//			List<Customer> customers = getCustomers(array);
+//			Map<String, Object> arguments = new HashMap<>();
+//			arguments.put("customers", customers);
+//			String template = "select-customer.zul";
+//			Window window = (Window) Executions.createComponents(template, null, arguments);
+//			window.doModal();
+//		} else {
+//		}
 	}
 
 	@NotifyChange("customer")
