@@ -29,6 +29,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 
 @MappedSuperclass
 public class User implements Serializable {
@@ -60,6 +61,7 @@ public class User implements Serializable {
 	
     @Temporal(TemporalType.TIMESTAMP)
 	private Date latestOnlineTime;
+    
 	private String password;
 	private String username;
 	private String phoneNumber;
@@ -72,6 +74,50 @@ public class User implements Serializable {
 	private VatPeriodType vatPeriodType = VatPeriodType.PER_QUARTER;
 	
 	private String accountNumber;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Date getLatestOnlineTime() {
+		return latestOnlineTime;
+	}
+
+	public void setLatestOnlineTime(Date latestOnlineTime) {
+		this.latestOnlineTime = latestOnlineTime;
+	}
+
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
+	}
+
+	public boolean isAdmin() {
+		return role.equals("admin");
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public boolean passwordMatch(String pwd) {
+		return password.equals(pwd);
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
 
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -93,64 +139,16 @@ public class User implements Serializable {
 		return companyName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public String getFullName() {
-		StringBuffer sb = new StringBuffer();
-		sb.append(initials);
-		if (prefix != null) {
-			sb.append(" ");			
-			sb.append(prefix);
-		}
-		sb.append(" ");		
-		sb.append(surname);
-		return sb.toString();
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public Date getLatestOnlineTime() {
-		return latestOnlineTime;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public boolean isBlocked() {
-		return blocked;
-	}
-
-	public boolean passwordMatch(String pwd) {
-		return password.equals(pwd);
-	}
-
-	public void setBlocked(boolean blocked) {
-		this.blocked = blocked;
-	}
-
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public void setLatestOnlineTime(Date latestOnlineTime) {
-		this.latestOnlineTime = latestOnlineTime;
 	}
 
 	public void setPassword(String password) {
@@ -201,6 +199,18 @@ public class User implements Serializable {
 		this.vatPeriodType = vatPeriodType;
 	}
 
+	public String getFullName() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(initials);
+		if (prefix != null) {
+			sb.append(" ");			
+			sb.append(prefix);
+		}
+		sb.append(" ");		
+		sb.append(surname);
+		return sb.toString();
+	}
+
 	public String getInitials() {
 		return initials;
 	}
@@ -231,14 +241,6 @@ public class User implements Serializable {
 
 	public void setChamberOfCommerceNumber(Long chamberOfCommerceNumber) {
 		this.chamberOfCommerceNumber = chamberOfCommerceNumber;
-	}
-	
-	public boolean isAdmin() {
-		return role.equals("admin");
-	}
-	
-	public void setRole(String role) {
-		this.role = role;
 	}
 	
 }

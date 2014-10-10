@@ -24,8 +24,11 @@ import static java.math.BigInteger.ZERO;
 import java.math.BigInteger;
 import java.util.Date;
 
+import lombok.Data;
+
 import org.apache.commons.lang.Validate;
 
+@Data
 public class VatDeclarationData {
 
 	private final User user;
@@ -59,90 +62,6 @@ public class VatDeclarationData {
 	public VatDeclarationData(User user) {
 		Validate.notNull(user);
 		this.user = user;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public BigInteger getValueAddedTaxOwed() {
-		return valueAddedTaxOwed;
-	}
-
-	public void setValueAddedTaxOwed(BigInteger valueAddedTaxOwed) {
-		this.valueAddedTaxOwed = valueAddedTaxOwed;
-	}
-
-	public BigInteger getValueAddedTaxOwedToBePaidBack() {
-		return valueAddedTaxOwedToBePaidBack;
-	}
-
-	public void setValueAddedTaxOwedToBePaidBack(BigInteger valueAddedTaxOwedToBePaidBack) {
-		this.valueAddedTaxOwedToBePaidBack = valueAddedTaxOwedToBePaidBack;
-	}
-
-	public BigInteger getValueAddedTaxPrivateUse() {
-		return valueAddedTaxPrivateUse;
-	}
-
-	public void setValueAddedTaxPrivateUse(BigInteger valueAddedTaxPrivateUse) {
-		this.valueAddedTaxPrivateUse = valueAddedTaxPrivateUse;
-	}
-
-	public BigInteger getTaxedTurnoverSuppliesServicesGeneralTariff() {
-		return taxedTurnoverSuppliesServicesGeneralTariff;
-	}
-
-	public void setTaxedTurnoverSuppliesServicesGeneralTariff(BigInteger taxedTurnoverSuppliesServicesGeneralTariff) {
-		this.taxedTurnoverSuppliesServicesGeneralTariff = taxedTurnoverSuppliesServicesGeneralTariff;
-	}
-
-	public BigInteger getValueAddedTaxSuppliesServicesGeneralTariff() {
-		return valueAddedTaxSuppliesServicesGeneralTariff;
-	}
-
-	public void setValueAddedTaxSuppliesServicesGeneralTariff(BigInteger valueAddedTaxSuppliesServicesGeneralTariff) {
-		this.valueAddedTaxSuppliesServicesGeneralTariff = valueAddedTaxSuppliesServicesGeneralTariff;
-	}
-
-	public BigInteger getValueAddedTaxOnInput() {
-		return valueAddedTaxOnInput;
-	}
-
-	public void setValueAddedTaxOnInput(BigInteger valueAddedTaxOnInput) {
-		this.valueAddedTaxOnInput = valueAddedTaxOnInput;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public BigInteger getTurnoverFromTaxedSuppliesFromCountriesWithinTheEC() {
-		return turnoverFromTaxedSuppliesFromCountriesWithinTheEC;
-	}
-
-	public void setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC) {
-		this.turnoverFromTaxedSuppliesFromCountriesWithinTheEC = turnoverFromTaxedSuppliesFromCountriesWithinTheEC;
-	}
-
-	public BigInteger getValueAddedTaxOnSuppliesFromCountriesWithinTheEC() {
-		return valueAddedTaxOnSuppliesFromCountriesWithinTheEC;
-	}
-
-	public void setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC) {
-		this.valueAddedTaxOnSuppliesFromCountriesWithinTheEC = valueAddedTaxOnSuppliesFromCountriesWithinTheEC;
 	}
 
 }

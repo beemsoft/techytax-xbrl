@@ -24,19 +24,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity(name = "org.techytax.domain.VatMatch")
 @Table(name = "btwmatch")
+@Getter
+@Setter
 public class VatMatch extends VatMatchParent {
 	
 	@OneToOne
 	@JoinColumn(name = "kostmatch_id")
 	private Kostmatch publicCostMatch;
 
-	public Kostmatch getPublicCostMatch() {
-		return publicCostMatch;
-	}
-	public void setPublicCostMatch(Kostmatch costMatch) {
-		this.publicCostMatch = costMatch;
-	}
-	
+
 }

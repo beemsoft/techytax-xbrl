@@ -35,6 +35,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 import org.techytax.helper.DepreciationHelper;
 
@@ -47,6 +50,8 @@ import org.techytax.helper.DepreciationHelper;
 		@NamedQuery(name = Activum.ACTIVE_ACTIVA_FOR_TYPE, query = "SELECT act FROM org.techytax.domain.Activum act WHERE act.balanceType = :balanceType AND act.user = :user AND act.endDate = null AND (act.startDate = null OR act.startDate <= :startDate) ORDER BY act.cost.date ASC") })
 @Table(name = "activa")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class Activum extends UserObject {
 
 	public static final String NEW_ACTIVA = "org.techytax.domain.Activum.NEW_ACTIVA";
@@ -76,52 +81,8 @@ public class Activum extends UserObject {
 
 	private int nofYearsForDepreciation;
 
-	public BalanceType getBalanceType() {
-		return balanceType;
-	}
-
-	public void setBalanceType(BalanceType balanceType) {
-		this.balanceType = balanceType;
-	}
-
-	public String getOmschrijving() {
-		return balanceType.getKey();
-	}
-
-	public BigInteger getRemainingValue() {
-		return remainingValue;
-	}
-
-	public RemainingValue getRestwaarde() {
-		return restwaardeOld;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public Cost getCost() {
-		return cost;
-	}
-
-	public void setCost(Cost cost) {
-		this.cost = cost;
-	}
-
 	public long getCostId() {
 		return cost.getId();
-	}
-
-	public int getNofYearsForDepreciation() {
-		return nofYearsForDepreciation;
-	}
-
-	public void setNofYearsForDepreciation(int nofYearsForDepreciation) {
-		this.nofYearsForDepreciation = nofYearsForDepreciation;
 	}
 
 	public Date getStartDate() {
@@ -131,14 +92,10 @@ public class Activum extends UserObject {
 			return cost.getDate();
 		}
 	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public void setRemainingValue(BigInteger remainingValue) {
-		this.remainingValue = remainingValue;
-	}
+	
+	public String getOmschrijving() {
+		return balanceType.getKey();
+	}	
 
 	public BigInteger getDepreciation() {
 		DepreciationHelper depreciationHelper = new DepreciationHelper();

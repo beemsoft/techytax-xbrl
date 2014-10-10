@@ -28,11 +28,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 
 @Entity
 @NamedQuery(name=AccountBalance.BY_ACCOUNT, query="SELECT ab FROM AccountBalance ab WHERE ab.account = :account AND ab.user = :user")
 @Table(name = "account_balance")
+@Getter
+@Setter
 public class AccountBalance extends UserObject implements Comparable<AccountBalance> {
 	
 	public final static String BY_ACCOUNT = "org.techytax.domain.AccountBalance.BY_ACCOUNT";
@@ -45,30 +50,6 @@ public class AccountBalance extends UserObject implements Comparable<AccountBala
 	private BigDecimal balance;
 
 	private Date datum;
-
-	public Account getAccount() {
-		return account;
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public Date getDatum() {
-		return datum;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
-
-	public void setDatum(Date datum) {
-		this.datum = datum;
-	}
 
 	public int compareTo(AccountBalance o) {
 		return datum.compareTo(o.getDatum());

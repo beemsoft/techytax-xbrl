@@ -26,8 +26,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "splitmatch_private") 
+@Data
 public class SplitMatch {
 	
 	@Id
@@ -39,30 +42,5 @@ public class SplitMatch {
 	private PrivateCostMatch privateCostMatch;
 
 	private int percentage;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public int getPercentage() {
-		return percentage;
-	}
-
-	public void setPercentage(int percentage) {
-		this.percentage = percentage;
-	}
-
-	public PrivateCostMatch getPrivateCostMatch() {
-		return privateCostMatch;
-	}
-
-	public void setPrivateCostMatch(PrivateCostMatch privateCostMatch) {
-		this.privateCostMatch = privateCostMatch;
-	}
-
 
 }

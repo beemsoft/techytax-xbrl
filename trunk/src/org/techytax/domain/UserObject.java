@@ -24,6 +24,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlTransient;
+
+import lombok.Data;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.TypeDef;
@@ -38,6 +41,7 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 	@TypeDef(name = "encryptedBigDecimal", typeClass = EncryptedBigDecimalType.class, parameters = { @Parameter(name = "encryptorRegisteredName", value = "bigDecimalEncryptor"),
 			@Parameter(name = "decimalScale", value = "2") }) })
 @MappedSuperclass
+@Data
 public class UserObject {
 	
 	@Id
@@ -48,6 +52,7 @@ public class UserObject {
 	@JoinColumn(name = "user_id", updatable=false)
 	private UserEntity user;
 	
+	@XmlTransient
 	public User getUser() {
 		return user;
 	}
@@ -56,12 +61,4 @@ public class UserObject {
 		this.user = new UserEntity(user);
 	}
 	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}	
-
 }

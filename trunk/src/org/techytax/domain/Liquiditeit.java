@@ -1,5 +1,5 @@
 /**
- * Copyright 2009 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -21,6 +21,9 @@ package org.techytax.domain;
 
 import java.math.BigDecimal;
 
+import lombok.Data;
+
+@Data
 public class Liquiditeit {
 
 	BigDecimal overigeKosten;
@@ -30,37 +33,5 @@ public class Liquiditeit {
 	BigDecimal rekeningBalans;
 
 	BigDecimal spaarBalans;
-
-	public BigDecimal getOverigeKosten() {
-		return overigeKosten;
-	}
-
-	public BigDecimal getPriveBalans() {
-		return priveBalans;
-	}
-
-	public BigDecimal getRekeningBalans() {
-		return rekeningBalans;
-	}
-
-	public BigDecimal getSpaarBalans() {
-		return spaarBalans;
-	}
-
-	public void setOverigeKosten(BigDecimal overigeKosten) {
-		this.overigeKosten = overigeKosten;
-	}
-
-	public void setPriveBalans(BigDecimal priveBalans) {
-		this.priveBalans = priveBalans;
-	}
-
-	public void setRekeningBalans(BigDecimal rekeningBalans) {
-		this.rekeningBalans = rekeningBalans;
-	}
-
-	public void setSpaarBalans(BigDecimal spaarBalans) {
-		this.spaarBalans = spaarBalans;
-	}
 
 }

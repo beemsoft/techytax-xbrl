@@ -27,6 +27,9 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -45,6 +48,8 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 @NamedQuery(name = Settlement.GET, query = "SELECT s FROM Settlement s WHERE s.user = :user")
 @Table(name = "settlement")
 @DiscriminatorValue("S")
+@Getter
+@Setter
 public class Settlement extends Activum {
 	
 	public static final String GET = "org.techytax.domain.Settlement.GET";
@@ -71,85 +76,5 @@ public class Settlement extends Activum {
 //	
 //	@Type(type = "encryptedInteger")
 //	private BigInteger fictiefRendement;
-
-	public int getNofSquareMetersBusiness() {
-		return nofSquareMetersBusiness;
-	}
-
-	public void setNofSquareMetersBusiness(int nofSquareMetersBusiness) {
-		this.nofSquareMetersBusiness = nofSquareMetersBusiness;
-	}
-
-	public int getNofSquareMetersPrivate() {
-		return nofSquareMetersPrivate;
-	}
-
-	public void setNofSquareMetersPrivate(int nofSquareMetersTotal) {
-		this.nofSquareMetersPrivate = nofSquareMetersTotal;
-	}
-
-	public BigInteger getWozValue() {
-		return wozValue;
-	}
-
-	public void setWozValue(BigInteger wozValue) {
-		this.wozValue = wozValue;
-	}
-
-	public BigInteger getTerrainValue() {
-		return terrainValue;
-	}
-
-	public void setTerrainValue(BigInteger terrainValue) {
-		this.terrainValue = terrainValue;
-	}
-
-//	public BigInteger getFictiefRendement() {
-//		return fictiefRendement;
-//	}
-//
-//	public void setFictiefRendement(BigInteger fictiefRendement) {
-//		this.fictiefRendement = fictiefRendement;
-//	}
-//
-//	public BigInteger getEigenWoningForfaitBusiness() {
-//		return eigenWoningForfaitBusiness;
-//	}
-//
-//	public void setEigenWoningForfaitBusiness(BigInteger eigenWoningForfaitBusiness) {
-//		this.eigenWoningForfaitBusiness = eigenWoningForfaitBusiness;
-//	}
-//
-//	public BigInteger getEigenWoningForfaitPrivate() {
-//		return eigenWoningForfaitPrivate;
-//	}
-//
-//	public void setEigenWoningForfaitPrivate(BigInteger eigenWoningForfaitPrivate) {
-//		this.eigenWoningForfaitPrivate = eigenWoningForfaitPrivate;
-//	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public BigDecimal getStartupCosts() {
-		return startupCosts;
-	}
-
-	public void setStartupCosts(BigDecimal startupCosts) {
-		this.startupCosts = startupCosts;
-	}
-
-	public BigInteger getPurchasePrice() {
-		return purchasePrice;
-	}
-
-	public void setPurchasePrice(BigInteger purchasePrice) {
-		this.purchasePrice = purchasePrice;
-	}
 
 }

@@ -30,6 +30,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 import org.hibernate.annotations.Immutable;
 import org.techytax.external.domain.ExternalCostType;
 import org.zkoss.util.resource.Labels;
@@ -39,6 +41,7 @@ import org.zkoss.util.resource.Labels;
 @NamedQueries({ @NamedQuery(name = CostType.FOR_MATCHING, query = "SELECT ct FROM CostType ct WHERE ct.balansMeetellen = true OR ct IN :costTypes"),
 		@NamedQuery(name = CostType.FOR_TYPES, query = "SELECT ct FROM CostType ct WHERE ct IN :costTypes") })
 @Table(name = "kostensoort")
+@Data
 public class CostType {
 
 	public static final String FOR_MATCHING = "org.techytax.domain.CostType.FOR_MATCHING";
@@ -71,22 +74,6 @@ public class CostType {
 		this.id = id;
 	}
 
-	public boolean isInvestering() {
-		return investering;
-	}
-
-	public boolean isAftrekbaar() {
-		return aftrekbaar;
-	}
-
-	public boolean isBalansMeetellen() {
-		return balansMeetellen;
-	}
-
-	public boolean isBijschrijving() {
-		return bijschrijving;
-	}
-
 	public boolean isForSettlement() {
 		return this.equals(SETTLEMENT);
 	}
@@ -95,24 +82,12 @@ public class CostType {
 		return btwVerrekenbaar;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getOmschrijving() {
 		if (omschrijving != null) {
 			return Labels.getLabel(omschrijving);
 		} else {
 			return "Onbekend";
 		}
-	}
-
-	public ExternalCostType getExternalCostType() {
-		return externalCostType;
 	}
 
 	@Override

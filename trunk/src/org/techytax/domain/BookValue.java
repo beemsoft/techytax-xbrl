@@ -29,6 +29,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -38,6 +41,8 @@ import org.hibernate.annotations.Type;
 		@NamedQuery(name = BookValue.GET, query = "SELECT bv FROM BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType"),
 		@NamedQuery(name = BookValue.FOR_YEAR_AND_TYPES, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.jaar = :year AND bv.balanceType IN :balanceTypes ORDER BY bv.balanceType asc") })
 @Table(name = "boekwaarde")
+@Getter
+@Setter
 public class BookValue extends UserObject {
 
 	public static final String HISTORY = "org.techytax.domain.BookValue.HISTORY";
@@ -61,30 +66,6 @@ public class BookValue extends UserObject {
 	public BookValue(BalanceType balanceType, int jaar, BigInteger saldo) {
 		this.balanceType = balanceType;
 		this.jaar = jaar;
-		this.saldo = saldo;
-	}
-
-	public BalanceType getBalanceType() {
-		return balanceType;
-	}
-
-	public int getJaar() {
-		return jaar;
-	}
-
-	public BigInteger getSaldo() {
-		return saldo;
-	}
-
-	public void setBalanceType(BalanceType balanceType) {
-		this.balanceType = balanceType;
-	}
-
-	public void setJaar(int jaar) {
-		this.jaar = jaar;
-	}
-
-	public void setSaldo(BigInteger saldo) {
 		this.saldo = saldo;
 	}
 

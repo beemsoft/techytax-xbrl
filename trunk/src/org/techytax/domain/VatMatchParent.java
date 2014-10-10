@@ -26,7 +26,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import lombok.Data;
+
 @MappedSuperclass
+@Data
 public class VatMatchParent {
 	
 	@Id
@@ -36,20 +39,5 @@ public class VatMatchParent {
 	@Column(name = "btw_type")
 	@Enumerated(EnumType.ORDINAL)	
 	private VatType vatType;
-
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public VatType getVatType() {
-		return vatType;
-	}
-
-	public void setVatType(VatType vatType) {
-		this.vatType = vatType;
-	}
 
 }

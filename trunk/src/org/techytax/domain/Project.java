@@ -30,10 +30,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "project")
+@Getter
+@Setter
 public class Project extends UserObject {
 
 	@ManyToOne
@@ -63,70 +68,6 @@ public class Project extends UserObject {
 	@Enumerated(EnumType.ORDINAL)
 	private VatType vatType = VatType.HIGH;
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getProjectDescription() {
-		return projectDescription;
-	}
-
-	public void setProjectDescription(String projectDescription) {
-		this.projectDescription = projectDescription;
-	}
-
-	public String getActivityDescription() {
-		return activityDescription;
-	}
-
-	public void setActivityDescription(String activityDescription) {
-		this.activityDescription = activityDescription;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public BigDecimal getRate() {
-		return rate;
-	}
-
-	public void setRate(BigDecimal rate) {
-		this.rate = rate;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public VatType getVatType() {
-		return vatType;
-	}
-
-	public void setVatType(VatType vatType) {
-		this.vatType = vatType;
-	}
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Project)) {

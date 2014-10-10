@@ -21,30 +21,14 @@ package org.techytax.domain;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class FiscalPeriod {
 
 	private Date beginDate;
 	private Date endDate;
 	
-	public FiscalPeriod(Date beginDate, Date endDate) {
-		this.beginDate = beginDate;
-		this.endDate = endDate;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDatum(Date beginDatum) {
-		this.beginDate = beginDatum;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEindDatum(Date eindDatum) {
-		this.endDate = eindDatum;
-	}
-
 }

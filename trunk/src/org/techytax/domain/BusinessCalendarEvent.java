@@ -30,6 +30,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -43,6 +46,8 @@ import org.jasypt.hibernate4.type.EncryptedStringType;
 			@Parameter(name = "decimalScale", value = "2") }) })
 @Entity
 @Table(name = "calendar_event")
+@Getter
+@Setter
 public class BusinessCalendarEvent extends BusinessCalendarEventParent {
 	
     private static final long serialVersionUID = 1L;
@@ -147,68 +152,8 @@ public class BusinessCalendarEvent extends BusinessCalendarEventParent {
 		}		
 	}
     
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project; 
-	}
-
-	public boolean isBillable() {
-		return isBillable;
-	}
-
-	public void setBillable(boolean isBillable) {
-		this.isBillable = isBillable;
-	}
-
-	public BigDecimal getTravelingByCarCostDeclaration() {
-		return travelingByCarCostDeclaration;
-	}
-
-	public void setTravelingByCarCostDeclaration(BigDecimal travelingByCarCostDeclaration) {
-		this.travelingByCarCostDeclaration = travelingByCarCostDeclaration;
-	}
-
-	public BigDecimal getOtherCostDeclaration() {
-		return otherCostDeclaration;
-	}
-
-	public void setOtherCostDeclaration(BigDecimal otherCostDeclaration) {
-		this.otherCostDeclaration = otherCostDeclaration;
-	}
-
-	public VatType getVatTypeForOtherCostDeclaration() {
-		return vatTypeForOtherCostDeclaration;
-	}
-
-	public void setVatTypeForOtherCostDeclaration(VatType vatTypeForOtherCostDeclaration) {
-		this.vatTypeForOtherCostDeclaration = vatTypeForOtherCostDeclaration;
-	}
-
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public UserEntity getUser() {
-		return user;
-	}
-
 	public void setUser(User user) {
 		this.user = new UserEntity(user);
 	}
 
-	public float getUnitsOfWork() {
-		return unitsOfWork;
-	}
-
-	public void setUnitsOfWork(float unitsOfWork) {
-		this.unitsOfWork = unitsOfWork;
-	}
-	
 }

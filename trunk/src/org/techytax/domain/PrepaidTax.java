@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,25 +19,13 @@
  */
 package org.techytax.domain;
 
+import lombok.Data;
+
+@Data
 public class PrepaidTax {
 
 	int prepaidIncome;
 	
 	int prepaidHealth;
 
-	public int getPrepaidIncome() {
-		return prepaidIncome;
-	}
-
-	public void setPrepaidIncome(int prepaidIncome) {
-		this.prepaidIncome = prepaidIncome;
-	}
-
-	public int getPrepaidHealth() {
-		return prepaidHealth;
-	}
-
-	public void setPrepaidHealth(int prepaidHealth) {
-		this.prepaidHealth = prepaidHealth;
-	}
 }
