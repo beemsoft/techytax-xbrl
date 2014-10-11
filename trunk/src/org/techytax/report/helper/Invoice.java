@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,6 +28,7 @@ public class Invoice {
 	private String consumerName;
 	private int vat;
 	private String vatIdNr;
+	private String chamberOfCommerceNumber;
 	private String email;
 	private String emailBcc;
 	private String emailCc;
@@ -35,11 +36,14 @@ public class Invoice {
 	private int year;
 	private String month;
 	private BigDecimal netAmount;
+
 	private String activityDescription;
 	private BigDecimal rate;
 	private BigDecimal totalAmount;
-
 	private BigDecimal vatAmount;
+	private int discountPercentage;
+	private BigDecimal discount;
+	private BigDecimal netAmountAfterDiscount;	
 
 	public float getUnitsOfWork() {
 		return unitsOfWork;
@@ -167,6 +171,38 @@ public class Invoice {
 
 	public void setVatAmount(BigDecimal vatAmount) {
 		this.vatAmount = vatAmount;
+	}
+
+	public int getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(int discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+
+	public BigDecimal getNetAmountAfterDiscount() {
+		return netAmountAfterDiscount;
+	}
+
+	public void setNetAmountAfterDiscount(BigDecimal netAmountAfterDiscount) {
+		this.netAmountAfterDiscount = netAmountAfterDiscount;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
+	}
+
+	public String getChamberOfCommerceNumber() {
+		return chamberOfCommerceNumber;
+	}
+
+	public void setChamberOfCommerceNumber(String chamberOfCommerceNumber) {
+		this.chamberOfCommerceNumber = chamberOfCommerceNumber;
 	}
 
 }
