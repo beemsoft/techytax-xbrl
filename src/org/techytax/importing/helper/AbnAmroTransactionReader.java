@@ -37,6 +37,10 @@ import com.Ostermiller.util.CSVParser;
 
 public class AbnAmroTransactionReader extends BaseTransactionReader {
 
+	public AbnAmroTransactionReader() throws IllegalAccessException {
+		super();
+	}
+
 	private static CSVParser parser = null;
 
 	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
