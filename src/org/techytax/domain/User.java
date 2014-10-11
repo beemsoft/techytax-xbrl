@@ -29,9 +29,11 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlTransient;
+
+import lombok.Data;
 
 @MappedSuperclass
+@Data
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
@@ -75,128 +77,12 @@ public class User implements Serializable {
 	
 	private String accountNumber;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Date getLatestOnlineTime() {
-		return latestOnlineTime;
-	}
-
-	public void setLatestOnlineTime(Date latestOnlineTime) {
-		this.latestOnlineTime = latestOnlineTime;
-	}
-
-	public boolean isBlocked() {
-		return blocked;
-	}
-
-	public void setBlocked(boolean blocked) {
-		this.blocked = blocked;
-	}
-
 	public boolean isAdmin() {
 		return role.equals("admin");
 	}
 
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public boolean passwordMatch(String pwd) {
 		return password.equals(pwd);
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public String getFiscalNumber() {
-		return fiscalNumber;
-	}
-
-	public void setFiscalNumber(String fiscalNumber) {
-		this.fiscalNumber = fiscalNumber;
-	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getCompanyAddress() {
-		return companyAddress;
-	}
-
-	public void setCompanyAddress(String companyAddress) {
-		this.companyAddress = companyAddress;
-	}
-	
-	public String getCompanyZipCode() {
-		return companyZipCode;
-	}
-
-	public void setCompanyZipCode(String companyZipCode) {
-		this.companyZipCode = companyZipCode;
-	}
-
-	public String getCompanyCity() {
-		return companyCity;
-	}
-
-	public void setCompanyCity(String companyCity) {
-		this.companyCity = companyCity;
-	}
-	
-	public String getAccountNumber() {
-		return accountNumber;
-	}
-
-	public void setAccountNumber(String accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-	
-	public VatPeriodType getVatPeriodType() {
-		return vatPeriodType;
-	}
-
-	public void setVatPeriodType(VatPeriodType vatPeriodType) {
-		this.vatPeriodType = vatPeriodType;
 	}
 
 	public String getFullName() {
@@ -211,36 +97,4 @@ public class User implements Serializable {
 		return sb.toString();
 	}
 
-	public String getInitials() {
-		return initials;
-	}
-
-	public void setInitials(String initials) {
-		this.initials = initials;
-	}
-
-	public String getPrefix() {
-		return prefix;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-	
-	public Long getChamberOfCommerceNumber() {
-		return chamberOfCommerceNumber;
-	}
-
-	public void setChamberOfCommerceNumber(Long chamberOfCommerceNumber) {
-		this.chamberOfCommerceNumber = chamberOfCommerceNumber;
-	}
-	
 }
