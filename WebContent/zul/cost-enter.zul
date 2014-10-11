@@ -44,7 +44,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					<row>
 						<label value="${c:l('date')}" />
 						<hlayout> 
-							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost') @validator(vm.creationDateValidator)"/>
+							<datebox value="@bind(vm.selected.date) @save(vm.selected.date, before='saveCost')"/>
 							<label value="@load(vmsgs[cdbox])" sclass="red" />
 						</hlayout>	
 					</row>				

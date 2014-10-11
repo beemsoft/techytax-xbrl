@@ -95,7 +95,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 					</row>
 					<row>
 						<label value="${c:l('balance')}" />
-						<doublebox value="@load(vm.selectedAccountBalance.balance) @save(vm.selectedAccountBalance.balance,before='saveAccountBalance')" format="###,##0.00" />
+						<doublebox value="@bind(vm.selectedAccountBalance.balance)" format="###,##0.00" />
 					</row>					
 				</rows>
 			</grid>
