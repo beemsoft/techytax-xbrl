@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,10 +27,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.techytax.domain.User;
+
 public class EntityManagerHelper {
 
 	private static EntityManagerFactory emf = null;
 	private static ThreadLocal<EntityManager> threadLocal = new ThreadLocal<EntityManager>();
+	private static ThreadLocal<User> threadLocalUser = new ThreadLocal<User>();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static EntityManagerFactory getEntityManagerFactory() {
@@ -39,7 +42,7 @@ public class EntityManagerHelper {
 			try {
 				properties.load(EntityManagerHelper.class.getResourceAsStream("/hibernate.properties"));
 				Map<String, String> propMap = new HashMap<>((Map) properties);
-				emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
+				emf = Persistence.createEntityManagerFactory("techyTaxPersistenceUnit", propMap);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -66,6 +69,14 @@ public class EntityManagerHelper {
 			em.close();
 			threadLocal.set(null);
 		}
+	}
+	
+	public static User getUser() {
+		return threadLocalUser.get();
+	}
+	
+	public static void setUser(User user) {
+		threadLocalUser.set(user);
 	}
 
 	public static void closeEntityManagerFactory() {
