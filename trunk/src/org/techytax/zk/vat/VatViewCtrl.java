@@ -31,8 +31,12 @@ import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
 import static org.techytax.log.AuditType.VAT_OVERVIEW;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -191,7 +195,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private List<Cost> readTransactions() throws IOException, Exception {
 		String firstLine = getFirstLine();
-		reader = new BufferedReader(media.getReaderData());
+		InputStream is = new ByteArrayInputStream(media.getStringData().getBytes()); 
+		Reader reader2 = new InputStreamReader(is);
+		reader = new BufferedReader(reader2);
+//		reader = new BufferedReader(media.getReaderData());
 		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
 		List<Cost> result = importTransactions.readFile(reader);
 		boolean unmatchedTransactions = listContainsUnmatchedTransactions(result);
@@ -210,7 +217,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private String getFirstLine() throws IOException {
-		reader = new BufferedReader(media.getReaderData());
+		InputStream is = new ByteArrayInputStream(media.getStringData().getBytes()); 
+		Reader reader2 = new InputStreamReader(is);
+		reader = new BufferedReader(reader2);
+//		reader = new BufferedReader(media.getReaderData());
 		String firstLine = reader.readLine();
 		return firstLine;
 	}
