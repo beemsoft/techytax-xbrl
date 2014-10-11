@@ -30,6 +30,7 @@ import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
 import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
 import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE;
@@ -67,6 +68,7 @@ import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
+import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.Liquiditeit;
@@ -182,7 +184,7 @@ public class BalanceCalculator {
 							totalKost = totalKost.subtract(obj.getVat());
 							if (costType.equals(TO_SAVINGS_ACCOUNT)) {
 								totalSparen = totalSparen.add(obj.getAmount());
-							} else if (costType.equals(TO_PRIVATE_ACCOUNT) || costType.equals(WITHDRAWAL)) {
+							} else if (costType.equals(TO_PRIVATE_ACCOUNT) || costType.equals(WITHDRAWAL) || costType.equals(EXPENSE_CURRENT_ACCOUNT_IGNORE)) {
 								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
