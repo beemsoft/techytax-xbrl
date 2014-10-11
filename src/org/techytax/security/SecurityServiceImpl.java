@@ -32,13 +32,16 @@ import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.entities.EntityManagerHelper;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
+import org.techytax.zk.login.Sha;
 import org.zkoss.util.resource.Labels;
 
 public class SecurityServiceImpl implements SecurityService {
 
+	@Override
 	public User authenticate(String username, String password) throws Exception {
 
 		GenericDao<UserEntity> userDao = new GenericDao<>(UserEntity.class);
@@ -71,11 +74,40 @@ public class SecurityServiceImpl implements SecurityService {
 		return user;
 	}
 
+	@Override
+	public User authenticateForService(String username, String password) throws Exception {
+		GenericDao<UserEntity> userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), UserEntity.class);
+		List<UserEntity> users = null;
+		try {
+			users = userDao.findByNamedQuery("UserEntity.findByName", username);
+		} catch (NoResultException nre) {
+			return null;
+		}
+		if (CollectionUtils.isEmpty(users)) {
+			throw new AuthenticationException(Labels.getLabel("warning.unknown.user"));
+		}
+		UserEntity user = users.get(0);
+		boolean passwordIsValid = user.passwordMatch(Sha.SHA1(password));
+		if (!passwordIsValid) {
+			throw new AuthenticationException(Labels.getLabel("warning.invalid.password"));
+		}
+		if (user.isBlocked()) {
+			throw new AuthenticationException("Deze gebruiker is geblokkeerd");
+		}
+		try {
+			initEncryption();
+			AuditLogger.log(AuditType.LOGON_FOR_SERVICE, new UserEntity(user));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
 	private void initEncryption() {
 		StandardPBEStringEncryptor strongEncryptor = new StandardPBEStringEncryptor();
 		StandardPBEBigDecimalEncryptor bigDecimalEncryptor = new StandardPBEBigDecimalEncryptor();
 		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
-
+	
 		try {
 			String encryptionPassword = PropsFactory.getProperty("security.password");
 			strongEncryptor.setPassword(encryptionPassword);
@@ -85,7 +117,7 @@ public class SecurityServiceImpl implements SecurityService {
 			e.printStackTrace();
 			throw new RuntimeException("TechyTax properties not found!");
 		}
-
+	
 		HibernatePBEEncryptorRegistry registry = HibernatePBEEncryptorRegistry.getInstance();
 		registry.registerPBEStringEncryptor("strongHibernateStringEncryptor", strongEncryptor);
 		registry.registerPBEBigDecimalEncryptor("bigDecimalEncryptor", bigDecimalEncryptor);

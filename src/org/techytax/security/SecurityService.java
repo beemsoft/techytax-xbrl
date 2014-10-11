@@ -1,5 +1,5 @@
 /**
- * Copyright 2011 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,5 +22,9 @@ package org.techytax.security;
 import org.techytax.domain.User;
 
 public interface SecurityService {
+	
 	public User authenticate(String username, String password) throws Exception;
+	
+	public User authenticateForService(String username, String password) throws Exception;
+	
 }
