@@ -28,7 +28,35 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 		<servlet-name>TechyTaxChart</servlet-name>
 		<servlet-class>org.techytax.chart.ChartGeneratorServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
-	</servlet>	
+	</servlet>
+	
+	<!-- CXF -->
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>CXFServlet</servlet-name> -->
+<!-- 				<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class> -->
+<!-- <! 		<servlet-class>org.techytax.service.MobileServlet</servlet-class>  -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>jaxrs.serviceClasses</param-name> -->
+<!-- 			<param-value>org.techytax.service.MobileServiceImpl</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>jaxrs.address</param-name> -->
+<!-- 			<param-value>/rest</param-value> -->
+<!-- 		</init-param> -->
+<!--          <init-param> -->
+<!--               <param-name>jaxrs.inInterceptors</param-name> -->
+<!--               <param-value>org.techytax.service.BasicAuthenticationInterceptor,org.apache.cxf.interceptor.LoggingInInterceptor</param-value> -->
+<!--          </init-param> -->
+<!--          <init-param> -->
+<!--               <param-name>jaxrs.outInterceptors</param-name> -->
+<!--               <param-value>org.apache.cxf.interceptor.LoggingOutInterceptor</param-value> -->
+<!--          </init-param> -->
+<!-- 		<load-on-startup>1</load-on-startup> -->
+<!-- 	</servlet> -->
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>CXFServlet</servlet-name> -->
+<!-- 		<url-pattern>/service/*</url-pattern> -->
+<!-- 	</servlet-mapping>	 -->
 	
 	<!-- ZK -->
 	<listener>
