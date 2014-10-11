@@ -12,7 +12,6 @@ import javax.persistence.Persistence;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.jpa.entities.EntityManagerHelper;
@@ -21,7 +20,7 @@ import org.techytax.log.AuditType;
 
 public class LogDaoTest {
 	private GenericDao<LogRecord> logDao;
-	private GenericDao<User> userDao;
+	private GenericDao<UserEntity> userDao;
 	private EntityManagerFactory emf;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -31,32 +30,31 @@ public class LogDaoTest {
 		try {
 			properties.load(LogDaoTest.class.getResourceAsStream("/hibernate-test.properties"));
 			Map<String, String> propMap = new HashMap<>((Map) properties);
-			emf = Persistence.createEntityManagerFactory("TechyTaxDB", propMap);
+			emf = Persistence.createEntityManagerFactory("techyTaxPersistenceUnit", propMap);
 			EntityManagerHelper.setEntityManagerFactory(emf);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
-		userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), User.class);
+		userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), UserEntity.class);
 	}
 
 	@Test
 	public void testStoreAndGetLogRecord() throws IllegalAccessException {
-		addLogRecord();
-		Collection<LogRecord> logRecords = logDao.findAll(null);
+		UserEntity user = new UserEntity();
+		user.setId(1L);
+		addLogRecord(user);
+		Collection<LogRecord> logRecords = logDao.findAll(user);
 		assertEquals(1, logRecords.size());
 	}
 
-	private void addLogRecord() {
-		EntityManagerHelper.beginTransaction();
+	private void addLogRecord(UserEntity user) {
 		LogRecord logRecord = new LogRecord();
 		logRecord.setAuditType(AuditType.CHECK_ACCOUNT);
-		User user = new User();
-		user.setId(1L);
+
 		userDao.persistEntity(user);
-		logRecord.setUser((UserEntity) user);
+		logRecord.setUser(user);
 		logDao.persistEntity(logRecord);
-		EntityManagerHelper.commit();
 	}
 
 }
