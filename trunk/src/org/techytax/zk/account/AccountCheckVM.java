@@ -143,7 +143,7 @@ public class AccountCheckVM extends CostVM {
 
 	@NotifyChange({ "costs", "accountCheck", "accountCheckData" })
 	public void setBeginDate(Date beginDate) {
-		periode.setBeginDatum(beginDate);
+		periode.setBeginDate(beginDate);
 	}
 
 	public Date getBeginDate() {
@@ -152,7 +152,7 @@ public class AccountCheckVM extends CostVM {
 
 	@NotifyChange({ "costs", "accountCheck", "accountCheckData" })
 	public void setEndDate(Date endDate) {
-		periode.setEindDatum(endDate);
+		periode.setEndDate(endDate);
 	}
 
 	public Date getEndDate() {
