@@ -43,7 +43,10 @@ arg0="/WEB-INF/layout/template.zul"?>
 			        </template>
     			</listbox>
                 <button id="resetFilter" label="${c:l('reset')}"/>
-                <button id="invoiceButton" label="${c:l('invoice')}" tooltiptext="${c:l('invoice.tooltip')}"/><span>
+                <button id="invoiceButton" label="${c:l('invoice')}" tooltiptext="${c:l('invoice.tooltip')}"/>
+                <label value="${c:l('discount')}:" />
+                <textbox id="discount"/>
+                <span>
 			    <window id="invoiceWindow" visible="false" border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" >
 			    <button id="sendInvoiceButton" label="${c:l('invoice.send')}"/>
 				<borderlayout height="100%">
