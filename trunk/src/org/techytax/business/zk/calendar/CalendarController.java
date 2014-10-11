@@ -356,27 +356,29 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setActivityDescription(selectedProject.getActivityDescription());
 			invoice.setRate(selectedProject.getRate());
 
-			BigDecimal bd = new BigDecimal(invoice.getUnitsOfWork() * invoice.getRate().floatValue());
-			bd = AmountHelper.round(bd);
+			BigDecimal netAmount = new BigDecimal(invoice.getUnitsOfWork() * invoice.getRate().floatValue());
+			netAmount = AmountHelper.round(netAmount);
 
-			BigDecimal btwBedrag = new BigDecimal(bd.doubleValue() * invoice.getVat() / 100.0d);
 
-			btwBedrag = AmountHelper.round(btwBedrag);
-			BigDecimal totaalBedrag = bd.add(btwBedrag);
-			totaalBedrag = AmountHelper.round(totaalBedrag);
-
-			invoice.setNetAmount(bd);
-			invoice.setVatAmount(btwBedrag);
-			invoice.setTotalAmount(totaalBedrag);
-			invoice.setTotalAmountAfterDiscount(totaalBedrag);
+			invoice.setNetAmount(netAmount);
 			invoice.setEmail(customer.getEmailInvoice());
+			BigDecimal netAmountAfterDiscount = netAmount;
 			if (StringUtils.isNotEmpty(discount.getValue())) {
 				int discountPercentage = Integer.parseInt(discount.getValue());
 				invoice.setDiscountPercentage(discountPercentage);
-				BigDecimal discount = new BigDecimal(totaalBedrag.doubleValue() * discountPercentage / 100.0d);
+				BigDecimal discount = new BigDecimal(netAmount.doubleValue() * discountPercentage / 100.0d);
 				invoice.setDiscount(discount);
-				invoice.setTotalAmountAfterDiscount(totaalBedrag.subtract(discount));
+				netAmountAfterDiscount = netAmount.subtract(discount);
+				invoice.setNetAmountAfterDiscount(netAmountAfterDiscount);
 			}
+			BigDecimal btwBedrag = new BigDecimal(netAmountAfterDiscount.doubleValue() * invoice.getVat() / 100.0d);
+			btwBedrag = AmountHelper.round(btwBedrag);
+			BigDecimal totaalBedrag = netAmountAfterDiscount.add(btwBedrag);
+			totaalBedrag = AmountHelper.round(totaalBedrag);
+			invoice.setVatAmount(btwBedrag);
+			invoice.setTotalAmount(totaalBedrag);
+			
+			invoice.setNetAmountAfterDiscount(netAmountAfterDiscount);
 			invoiceBuf = org.techytax.report.helper.PdfInvoiceHelper.createPdfInvoice(invoice, user);
 
 			// prepare the AMedia for iframe
