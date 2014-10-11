@@ -5,7 +5,7 @@
     <html><![CDATA[
  <body>
 <h2>Release Notes TechyTax</h2>
-<h4>2.2.1 -in progress</h4>
+<h4>2.3</h4>
 <p>
 Changes:
 </p>
@@ -14,6 +14,21 @@ Changes:
 <li>Added VAT radiogroup to edit project page.</li>
 <li>End date of project can be empty.</li>
 <li>Fixed adding private costtype match in vat page.</li>
+<li>Corrected low VAT value.</li>
+<li>Fixed saving VAT type for private VAT match.</li>
+<li>Fixed importing of TravelChipCard costs.</li>
+<li>Fixed saving of new account balance.</li>
+<li>Fixed rounding issue when saving account balance.</li>
+<li>Corrected account check regarding costtype for expenses inside the EU.</li>
+<li>Corrected VAT balance regarding costtype for expenses inside the EU.</li>
+<li>Fixed invoice numbering.</li>
+<li>Disabled OpenKvk call.</li>
+<li>Introduced Lombok.</li>
+<li>Fixed performance issue.</li>
+<li>Improved invoice.</li>
+<li>Added Bookyear closed check.</li>
+<li>Preparing for mobile integration.</li>
+<li>Fixed ZK Media issue.</li>
 </ul>
 <h4>2.2 (2014-06-08)</h4>
 <p>
