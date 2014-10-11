@@ -228,7 +228,7 @@ public class AllCostsVM extends CostVM {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setBeginDate(Date beginDate) {
-		periode.setBeginDatum(beginDate);
+		periode.setBeginDate(beginDate);
 	}
 
 	public Date getBeginDate() {
@@ -237,7 +237,7 @@ public class AllCostsVM extends CostVM {
 
 	@NotifyChange({ "costs", "listWithUnhandledInvestments" })
 	public void setEndDate(Date endDate) {
-		periode.setEindDatum(endDate);
+		periode.setEndDate(endDate);
 	}
 
 	public Date getEndDate() {
