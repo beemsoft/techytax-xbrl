@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -28,6 +28,7 @@ import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.entities.EntityManagerHelper;
 import org.techytax.jpa.entities.LogRecord;
 import org.techytax.util.DateHelper;
 import org.zkoss.zkplus.jpa.JpaUtil;
@@ -35,7 +36,7 @@ import org.zkoss.zkplus.jpa.JpaUtil;
 public class AuditLogger {
 
 	public static void log(AuditType auditType, User user) {
-		GenericDao<LogRecord> logDao = new GenericDao<>(LogRecord.class);
+		GenericDao<LogRecord> logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
 		LogRecord logRecord = new LogRecord();
 		UserEntity userEntity = new UserEntity(user);
 		logRecord.setUser(userEntity);
