@@ -21,7 +21,7 @@ package org.techytax.importing.helper;
 
 public class TransactionReaderFactory {
 
-	public static TransactionReader getTransactionReader(String firstLine) {
+	public static TransactionReader getTransactionReader(String firstLine) throws IllegalAccessException {
 		TransactionReader transactionReader = null;
 		if (firstLine.startsWith("\"Datum\",\"Naam")) {
 			transactionReader = new IngTransactionReader();

@@ -39,6 +39,10 @@ import com.Ostermiller.util.LabeledCSVParser;
 
 public class IngTransactionReader extends BaseTransactionReader {
 
+	public IngTransactionReader() throws IllegalAccessException {
+		super();
+	}
+
 	private static LabeledCSVParser parser = null;
 	
 	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
@@ -94,6 +98,13 @@ public class IngTransactionReader extends BaseTransactionReader {
 				omschrijving = omschrijving.replace("SEPA Incasso, eerste IBAN:", "");
 				omschrijving = omschrijving.replace("SEPA Incasso, doorlopendIBAN:", "");
 				omschrijving = omschrijving.replace("SEPA Incasso, doorlopend IBAN:", "");
+				omschrijving = omschrijving.replace("TLS BV inzake OV-Chipkaart", "");
+				omschrijving = omschrijving.replace("MEER INFO WWW.BELASTINGDIENST.NL", "");
+				int lastIndex = omschrijving.lastIndexOf("TUSSENPERS.HYPOTHEKER");
+				if (lastIndex > 0) {
+					omschrijving = omschrijving.substring(0, lastIndex);
+				}
+				
 				int index = omschrijving.indexOf("Mandaat:");
 				if (index > 0) {
 					omschrijving = omschrijving.substring(0, index);
@@ -109,12 +120,6 @@ public class IngTransactionReader extends BaseTransactionReader {
 			e.printStackTrace();
 		}
 
-	}
-
-	public static void main(String[] args) throws NumberFormatException, Exception {
-		FileInputStream fis = new FileInputStream("test.bat");
-		BaseTransactionReader rekeningFileHelper = new IngTransactionReader();
-		List<Cost> result = rekeningFileHelper.readFile(new BufferedReader(new InputStreamReader(fis)));
 	}
 
 }

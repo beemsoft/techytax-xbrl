@@ -41,6 +41,10 @@ import com.Ostermiller.util.LabeledCSVParser;
 
 public class TravelChipCardTransactionReader extends BaseTransactionReader {
 
+	public TravelChipCardTransactionReader() throws IllegalAccessException {
+		super();
+	}
+
 	private LabeledCSVParser parser = null;
 
 	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {

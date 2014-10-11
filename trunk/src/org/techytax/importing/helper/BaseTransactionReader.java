@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
@@ -59,7 +60,14 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
 	protected PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);	
 	protected List<Cost> kostLijst = new ArrayList<>();
+	List<PrivateCostMatch> privateCostMatchList;
+	List<Kostmatch> kostmatchList;
 
+	public BaseTransactionReader() throws IllegalAccessException {
+		privateCostMatchList = privateCostMatchDao.findAll();
+		kostmatchList = kostmatchDao.findAll();
+	}
+	
 	public AccountType getAccountType(String fileName) throws Exception {
 		int index = fileName.indexOf("_");
 		String accountNumber = fileName.substring(0, index);
@@ -67,7 +75,6 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected CostMatchParent findCostMatch(String omschrijving) throws Exception {
-		List<PrivateCostMatch> privateCostMatchList = privateCostMatchDao.findAll();
 		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
 		while (iterator.hasNext()) {
 			PrivateCostMatch kostmatch = iterator.next();
@@ -75,7 +82,6 @@ public abstract class BaseTransactionReader implements TransactionReader {
 				return kostmatch;
 			}
 		}
-		List<Kostmatch> kostmatchList = kostmatchDao.findAll();
 		Iterator<Kostmatch> iterator2 = kostmatchList.iterator();
 		while (iterator2.hasNext()) {
 			Kostmatch kostmatch = iterator2.next();
@@ -154,9 +160,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
 		if (cost.getCostType().equals(SETTLEMENT)) {
-			splitCost.setCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE);
+			splitCost.setCostType(CostTypeCache.getCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE.getId()));
 		} else {
-			splitCost.setCostType(INCOME_CURRENT_ACCOUNT_IGNORE);
+			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getId()));
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());
