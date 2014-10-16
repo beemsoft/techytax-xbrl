@@ -68,7 +68,6 @@ import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
-import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.Liquiditeit;

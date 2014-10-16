@@ -21,7 +21,7 @@ package org.techytax.zk.rss;
 
 import java.io.Serializable;
 
-import org.zkoss.zrss.RssEntry;
+import org.zkoss.zrss.RssFeedEntry;
 import org.zkoss.zrss.RssFeed;
 
 public class RssReader implements Serializable {
@@ -29,7 +29,7 @@ public class RssReader implements Serializable {
 	private static final long serialVersionUID = -5208262237527059554L;
 	
 	private RssFeed selected;
-	private RssEntry selectEntry;
+	private RssFeedEntry selectEntry;
 	protected String feedUrl;
 
 	protected void init() {
@@ -47,11 +47,11 @@ public class RssReader implements Serializable {
 		return selected;
 	}
 
-	public RssEntry getSelectedEntry() {
+	public RssFeedEntry getSelectedEntry() {
 		return selectEntry;
 	}
 
-	public void setSelectedEntry(RssEntry selectedEntry) {
+	public void setSelectedEntry(RssFeedEntry selectedEntry) {
 		this.selectEntry = selectedEntry;
 	}
 }

@@ -112,9 +112,10 @@ public class BasicAuthenticationInterceptor extends AbstractInDatabindingInterce
 	{
 		Exchange exchange = inMessage.getExchange();
 		EndpointReferenceType target = exchange.get(EndpointReferenceType.class);
-		Conduit conduit = exchange.getDestination().getBackChannel(inMessage, null, target);
-		exchange.setConduit(conduit);
-		return conduit;
+//		Conduit conduit = exchange.getDestination().getBackChannel(inMessage, null, target);
+//		exchange.setConduit(conduit);
+//		return conduit;
+		return null;
 	}
 
 	private void close(Message outMessage) throws IOException
