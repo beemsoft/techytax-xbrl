@@ -5,7 +5,6 @@
     <borderlayout>
         <west width="220px" collapsible="true" title="${c:l('rss.belastingdienst')}">
             <div>
-                <image src="@load(vm.selectedFeed.feedImageLink)" />
                 <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" height="350px"
                     selectedItem="@bind(vm.selectedEntry)"  >
                     <template name="model" var="feed">
