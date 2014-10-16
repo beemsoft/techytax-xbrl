@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.techytax</groupId>
+    <artifactId>techytax-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>TechyTax</name>
+
+    <modules>
+        <module>techytax-data</module>    
+        <module>techytax-domain</module> 
+        <module>techytax-web</module>
+        <module>techytax-xbrl</module>
+        <module>techytax-cxf</module>
+        <module>techytax-audit</module>
+        <module>techytax-saas</module>        
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+	   <dependency>
+	<groupId>org.apache.logging.log4j</groupId>
+	<artifactId>log4j-api</artifactId>
+	<version>2.0.2</version>
+</dependency>
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>1.7.7</version>
+</dependency>
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-jcl</artifactId>
+	<version>1.7.7</version>
+</dependency>    
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.14.8</version>
+		</dependency>
+<dependency>
+    <groupId>commons-lang</groupId>
+    <artifactId>commons-lang</artifactId>
+    <version>2.4</version>
+</dependency>		    
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <version>2.3.0-SNAPSHOT</version>
+    <url>www.techytax.org</url>
+    <scm>
+    	<url>https://svn.code.sf.net/p/techytax/code/trunk</url>
+    	<developerConnection>Hans Beemsterboer</developerConnection>
+    </scm>
+    
+<repositories>
+        <repository>
+            <id>ZK CE</id>
+            <name>ZK CE Repository</name>
+            <url>http://mavensync.zkoss.org/maven2</url>
+        </repository>
+        <repository>
+            <id>ZK EE</id>
+            <url>https://maven.zkoss.org/repo/zk/ee</url>
+        </repository>        
+        <repository>
+             <id>ZK RSS</id>
+            <name>ZK RSS Repository</name>
+            <url>http://support.audaxis.com/maven2</url>
+        </repository>
+    </repositories>     
+</project>
