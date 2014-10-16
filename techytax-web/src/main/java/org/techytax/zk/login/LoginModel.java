@@ -60,7 +60,7 @@ public class LoginModel {
 			Executions.sendRedirect("/zul/zk_calendar.zul");
 		} catch (AuthenticationException e) {
 			Messagebox.show(e.getMessage(), null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION, null);
-		}
+		}	
 	}
 
 	@Command
