@@ -183,7 +183,7 @@ public class BalanceCalculator {
 							totalKost = totalKost.subtract(obj.getVat());
 							if (costType.equals(TO_SAVINGS_ACCOUNT)) {
 								totalSparen = totalSparen.add(obj.getAmount());
-							} else if (costType.equals(TO_PRIVATE_ACCOUNT) || costType.equals(WITHDRAWAL) || costType.equals(EXPENSE_CURRENT_ACCOUNT_IGNORE)) {
+							} else if (costType.equals(TO_PRIVATE_ACCOUNT) || costType.equals(WITHDRAWAL)) {
 								totalOpname = totalOpname.add(obj.getAmount());
 							}
 						}
