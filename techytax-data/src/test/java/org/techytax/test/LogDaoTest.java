@@ -28,7 +28,7 @@ public class LogDaoTest {
 	public void before() {
 		Properties properties = new Properties();
 		try {
-			properties.load(LogDaoTest.class.getResourceAsStream("/hibernate-test.properties"));
+			properties.load(LogDaoTest.class.getResourceAsStream("/hibernate.properties"));
 			Map<String, String> propMap = new HashMap<>((Map) properties);
 			emf = Persistence.createEntityManagerFactory("techyTaxPersistenceUnit", propMap);
 			EntityManagerHelper.setEntityManagerFactory(emf);

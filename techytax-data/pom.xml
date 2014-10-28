@@ -1,39 +1,43 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>techytax-data</artifactId>
-    <name>TechyTax Data</name>
+	<artifactId>techytax-data</artifactId>
+	<name>TechyTax Data</name>
 
-    <dependencies>
-    <dependency>
-      <groupId>org.zkoss.zk</groupId>
-      <artifactId>zkplus</artifactId>
-      <version>7.0.2</version>
-    </dependency>
-    	<dependency>
-      <groupId>org.techytax</groupId>
-      <artifactId>techytax-domain</artifactId>
-      <version>2.3.0-SNAPSHOT</version>
-    	</dependency>    
-        		<dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkplus</artifactId>
+			<version>7.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.techytax</groupId>
+			<artifactId>techytax-domain</artifactId>
+			<version>2.3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
 			<scope>compile</scope>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <parent>
-    	<groupId>org.techytax</groupId>
-    	<artifactId>techytax-parent</artifactId>
-    	<version>2.3.0-SNAPSHOT</version>
-    </parent>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>4.3.5.Final</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>${org.hsqldb.version}</version>
+			<scope>test</scope>
+		</dependency>				
+	</dependencies>
+	<parent>
+		<groupId>org.techytax</groupId>
+		<artifactId>techytax-parent</artifactId>
+		<version>2.3.0-SNAPSHOT</version>
+	</parent>
 </project>
