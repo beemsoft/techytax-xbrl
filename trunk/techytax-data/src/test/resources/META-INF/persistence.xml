@@ -1,0 +1,30 @@
+<persistence version="2.1" 
+     xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_2_1.xsd">
+
+ <persistence-unit name="techyTaxPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+ 	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+ 	<class>org.techytax.domain.UserEntity</class>
+ 	<class>org.techytax.jpa.entities.VatDeclaration</class>
+ 	<class>org.techytax.domain.BusinessCalendarEvent</class>
+ 	<class>org.techytax.domain.Project</class>
+ 	<class>org.techytax.domain.Customer</class>
+ 	<class>org.techytax.jpa.entities.LogRecord</class>
+ 	<class>nl.beemsoft.techytax.domain.SaasUser</class>
+ 	<class>org.techytax.domain.CostType</class>
+ 	<class>org.techytax.external.domain.ExternalCostType</class>
+ 	<class>org.techytax.domain.PrivateCostMatch</class>
+ 	<class>org.techytax.domain.VatMatch</class>
+ 	<class>org.techytax.domain.VatMatchPrivate</class>
+ 	<class>org.techytax.domain.Kostmatch</class>
+ 	<class>org.techytax.domain.SplitMatch</class>
+ 	<class>org.techytax.domain.Cost</class>
+ 	<class>org.techytax.domain.BookValue</class>
+ 	<class>org.techytax.domain.Activum</class>
+ 	<class>org.techytax.domain.RemainingValue</class>
+ 	<class>org.techytax.domain.Settlement</class>
+ 	<class>org.techytax.domain.Account</class>
+ 	<class>org.techytax.domain.AccountBalance</class> 	
+ </persistence-unit>
+</persistence>
