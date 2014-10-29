@@ -1,15 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.techytax</groupId>
 	<artifactId>techytax-xbrl</artifactId>
 	<name>TechyTax XBRL</name>
-	<version>8.0-SNAPSHOT</version>
+	<version>8.0</version>
 	<packaging>jar</packaging>
 	
 	<scm>
-		<url>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</url>
-		<developerConnection>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
+		<url>scm:svn:https://svn.code.sf.net/p/techytax/code/tags/techytax-xbrl-8.0</url>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/techytax/code/tags/techytax-xbrl-8.0</developerConnection>
 	</scm>
     <distributionManagement>
         <repository>
