@@ -6,4 +6,15 @@
 	<name>TechyTax XBRL</name>
 	<version>8.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
+	
+	<scm>
+		<url>https://svn.code.sf.net/p/techytax/code/trunk</url>
+		<developerConnection>https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
+	</scm>
+    <distributionManagement>
+        <repository>
+              <id>repository</id>
+              <url>file:C:/repository/</url>
+        </repository>
+    </distributionManagement>	
 </project>
