@@ -8,8 +8,8 @@
 	<packaging>jar</packaging>
 	
 	<scm>
-		<url>https://svn.code.sf.net/p/techytax/code/trunk</url>
-		<developerConnection>https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
+		<url>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</url>
+		<developerConnection>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
 	</scm>
     <distributionManagement>
         <repository>
