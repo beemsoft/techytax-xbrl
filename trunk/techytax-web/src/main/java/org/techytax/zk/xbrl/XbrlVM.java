@@ -61,6 +61,7 @@ public class XbrlVM implements Serializable {
 	public XbrlVM() throws IOException {
 		if (user != null) {
 			String digipoort = PropsFactory.getProperty("digipoort");
+			digipoort = "prod";
 			if (digipoort.equals("prod")) {
 				isTestEnvironment = false;
 			} else {

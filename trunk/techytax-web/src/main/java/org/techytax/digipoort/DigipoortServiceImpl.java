@@ -157,6 +157,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	private URL getWsdlUrlForStatus() throws IOException {
 		String digipoort = PropsFactory.getProperty("digipoort");
+		digipoort = "prod";
 		String wsdlName = null;
 		URL wsdlURL = null;
 		if (digipoort.equals("prod")) {

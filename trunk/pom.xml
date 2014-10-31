@@ -11,7 +11,6 @@
 		<module>techytax-data</module>
 		<module>techytax-domain</module>
 		<module>techytax-web</module>
-		<module>techytax-xbrl</module>
 		<module>techytax-audit</module>
 		<module>techytax-saas</module>
 	</modules>
@@ -79,8 +78,14 @@
 	<url>www.techytax.org</url>
 	<scm>
 		<url>https://svn.code.sf.net/p/techytax/code/trunk</url>
-		<developerConnection>Hans Beemsterboer</developerConnection>
+		<developerConnection>https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
 	</scm>
+    <distributionManagement>
+        <repository>
+              <id>repository</id>
+              <url>file:C:/repository/</url>
+        </repository>
+    </distributionManagement>	
 
 	<repositories>
 		<repository>
