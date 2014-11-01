@@ -157,7 +157,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	private URL getWsdlUrlForStatus() throws IOException {
 		String digipoort = PropsFactory.getProperty("digipoort");
-		digipoort = "prod";
+
 		String wsdlName = null;
 		URL wsdlURL = null;
 		if (digipoort.equals("prod")) {
@@ -229,7 +229,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);
 			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setTijdstempelVanaf(DateHelper.getDateForXml(vatDeclarationData.getStartDate()));
@@ -268,7 +268,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 			GetProcessenRequest request = objectFactory.createGetProcessenRequest();
 			request.setBerichtsoort(OMZETBELASTING);
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);
@@ -304,7 +304,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		try {
 			GetBerichtsoortenRequest request = objectFactory.createGetBerichtsoortenRequest();
 			IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-			identiteitType.setNummer(vatDeclarationData.getUser().getFiscalNumber());
+			identiteitType.setNummer(vatDeclarationData.getFiscalNumber());
 			identiteitType.setType(FISCAL_TYPE);
 			request.setIdentiteitBelanghebbende(identiteitType);
 			request.setAutorisatieAdres(AUTORISATIE_ADRES);

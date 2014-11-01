@@ -42,7 +42,6 @@ import nl.nltaxonomie._7_0.domein.bd.tuples.bd_ob_tuples.ValueAddedTaxDeclaratio
 
 import org.techytax.domain.Balance;
 import org.techytax.domain.FiscalPeriod;
-import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.AmountHelper;
@@ -100,7 +99,7 @@ public class XbrlHelper {
 			ContextEntityType contextEntityType = xbrlObjectFactory.createContextEntityType();
 			Identifier identifier = xbrlObjectFactory.createContextEntityTypeIdentifier();
 			identifier.setScheme("www.belastingdienst.nl/omzetbelastingnummer");
-			identifier.setValue(vatDeclarationData.getUser().getFiscalNumber());
+			identifier.setValue(vatDeclarationData.getFiscalNumber());
 			ContextPeriodType period = xbrlObjectFactory.createContextPeriodType();
 			period.setStartDate(DateHelper.getDate(vatDeclarationData.getStartDate()));
 			period.setEndDate(DateHelper.getDate(vatDeclarationData.getEndDate()));
@@ -171,11 +170,11 @@ public class XbrlHelper {
 			nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory bdAlgObjectFactory = new nl.nltaxonomie._7_0.domein.bd.tuples.bd_alg_tuples.ObjectFactory();
 			CorrespondentDeclarant declarant = bdAlgObjectFactory.createCorrespondentDeclarant();
 			Anstring35VItemType name = bdTypeObjectFactory.createAnstring35VItemType();
-			name.setValue(vatDeclarationData.getUser().getFullName());
+			name.setValue(vatDeclarationData.getFullName());
 			name.setContextRef(context);
 			declarant.setNameContactSupplier(name);
 			Anstring25VItemType phoneNumber = bdTypeObjectFactory.createAnstring25VItemType();
-			phoneNumber.setValue(vatDeclarationData.getUser().getPhoneNumber());
+			phoneNumber.setValue(vatDeclarationData.getPhoneNumber());
 			phoneNumber.setContextRef(context);
 			declarant.setTelephoneNumberContactSupplier(phoneNumber);
 			vatDeclaration.setCorrespondentDeclarant(declarant);
@@ -235,21 +234,14 @@ public class XbrlHelper {
 	}	
 	
 	public static void main(String[] args) {
-		User user = new User();
-		user.setFiscalNumber(TEST_FISCAL_NUMBER);
-		user.setInitials("A.");
-		user.setSurname("Tester");
-		user.setPhoneNumber("12345678");
 		createTestXbrlInstance();
 	}
 
 	public static String createTestXbrlInstance() {
-		User user = new User();
-		user.setFiscalNumber(TEST_FISCAL_NUMBER);
-		user.setInitials("A.");
-		user.setSurname("Tester");
-		user.setPhoneNumber("12345678");
-		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
+		vatDeclarationData.setFiscalNumber(TEST_FISCAL_NUMBER);
+		vatDeclarationData.setFullName("Tester");
+		vatDeclarationData.setPhoneNumber("12345678");
 		FiscalPeriod period = DateHelper
 				.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 		vatDeclarationData.setStartDate(period.getBeginDate());
