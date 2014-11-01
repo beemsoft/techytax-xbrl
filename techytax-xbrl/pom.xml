@@ -5,15 +5,23 @@
 	<name>TechyTax XBRL</name>
 	<version>9.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
 	<scm>
 		<url>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</url>
 		<developerConnection>scm:svn:https://svn.code.sf.net/p/techytax/code/trunk</developerConnection>
 	</scm>
-    <distributionManagement>
-        <repository>
-              <id>repository</id>
-              <url>file:C:/repository/</url>
-        </repository>
-    </distributionManagement>	
+	<distributionManagement>
+		<repository>
+			<id>repository</id>
+			<url>file:C:/repository/</url>
+		</repository>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.techytax</groupId>
+			<artifactId>techytax-domain</artifactId>
+			<version>2.3.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>
