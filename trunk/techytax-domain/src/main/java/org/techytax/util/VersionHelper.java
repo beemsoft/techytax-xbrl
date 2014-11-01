@@ -22,7 +22,7 @@ package org.techytax.util;
 public class VersionHelper {
 	
 	public static String getVersion() {
-		return "2.3";
+		return VersionHelper.class.getPackage().getImplementationVersion();
 	}
 	
 	public static boolean isSaasVersion() {
