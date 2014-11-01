@@ -68,7 +68,10 @@ public class PdfReportHelper {
 			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
 			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
-			VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
+			VatDeclarationData vatDeclarationData = new VatDeclarationData();
+			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+			vatDeclarationData.setFullName(user.getFullName());
+			vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 			vatDeclarationData.setStartDate(period.getBeginDate());
 			vatDeclarationData.setEndDate(period.getEndDate());
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
@@ -225,11 +228,11 @@ public class PdfReportHelper {
 
 	private void addVatDeclarationData(PdfPTable subTable, VatDeclarationData vatDeclarationData) {
 		addCell(subTable, "Naam");
-		addCell(subTable, vatDeclarationData.getUser().getFullName());
+		addCell(subTable, vatDeclarationData.getFullName());
 		addCell(subTable, "Fiscaal nummer");
-		addCell(subTable, vatDeclarationData.getUser().getFiscalNumber());
+		addCell(subTable, vatDeclarationData.getFiscalNumber());
 		addCell(subTable, "Telefoonnummer");
-		addCell(subTable, vatDeclarationData.getUser().getPhoneNumber());
+		addCell(subTable, vatDeclarationData.getPhoneNumber());
 		addCell(subTable, "Begindatum");
 		addCell(subTable, DateHelper.getDate(vatDeclarationData.getStartDate()));
 		addCell(subTable, "Einddatum");

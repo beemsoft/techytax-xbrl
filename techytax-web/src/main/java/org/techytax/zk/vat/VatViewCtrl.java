@@ -277,7 +277,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
 		vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
-		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
 		} else {
@@ -345,7 +345,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
 		DigipoortService digipoortService = new DigipoortServiceImpl();
 		if (digipoortEnvironment.equals("prod")) {
-			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getUser().getFiscalNumber());
+			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getFiscalNumber());
 		} else {
 			return digipoortService.aanleveren(xbrlInstance, XbrlNtp8Helper.getTestFiscalNumber());
 		}
@@ -366,7 +366,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private VatDeclarationData createVatDeclarationData() throws Exception {
-		VatDeclarationData vatDeclarationData = new VatDeclarationData(user);
+		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(roundDownToInteger(vatBalanceWithinEu.getNettoOmzet()));
 		} else {

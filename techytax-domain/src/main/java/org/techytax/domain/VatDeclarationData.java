@@ -26,12 +26,15 @@ import java.util.Date;
 
 import lombok.Data;
 
-import org.apache.commons.lang.Validate;
-
 @Data
 public class VatDeclarationData {
 
-	private final User user;
+	private String fiscalNumber;
+	private String prefix;
+	private String initials;
+	private String surname;
+	private String fullName;
+	private String phoneNumber;
 	private Date startDate;
 	private Date endDate;
 
@@ -58,10 +61,5 @@ public class VatDeclarationData {
 	private BigInteger turnoverFromTaxedSuppliesFromCountriesWithinTheEC = ZERO;
 	
 	private BigInteger valueAddedTaxOnSuppliesFromCountriesWithinTheEC = ZERO;
-
-	public VatDeclarationData(User user) {
-		Validate.notNull(user);
-		this.user = user;
-	}
 
 }
