@@ -18,7 +18,7 @@
 	</modules>
 
 	<properties>
-		<zk.version>3.2.8.RELEASE</zk.version>
+		<zk.version>7.0.2</zk.version>
 		<org.slf4j.version>1.7.7</org.slf4j.version>
 		<javax.servlet-api.version>3.0-alpha-1</javax.servlet-api.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
