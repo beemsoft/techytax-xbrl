@@ -13,7 +13,6 @@
 		<module>techytax-domain</module>
 		<module>techytax-web</module>
 		<module>techytax-audit</module>
-		<module>techytax-saas</module>
 		<module>techytax-xbrl</module>
 	</modules>
 
