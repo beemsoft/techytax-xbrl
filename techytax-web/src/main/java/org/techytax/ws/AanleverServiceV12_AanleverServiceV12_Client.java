@@ -65,8 +65,8 @@ public final class AanleverServiceV12_AanleverServiceV12_Client {
 				SERVICE_NAME);
 		AanleverServiceV12 port = ss.getAanleverServiceV12();
 
-		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
-		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));	
+		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("/client_sign.properties"));
+		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("/client_verify.properties"));	
 		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
 		String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
 		ClientPasswordCallback.setKeyStorePassword(keyStorePassword);

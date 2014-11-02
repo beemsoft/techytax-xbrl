@@ -79,8 +79,8 @@ public class DigipoortServiceImpl implements DigipoortService {
 	
 	public DigipoortServiceImpl() {
 		try {
-			keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
-			trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));
+			keyProperties.load(this.getClass().getResourceAsStream("/client_sign.properties"));
+			trustProperties.load(this.getClass().getResourceAsStream("/client_verify.properties"));
 			String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
 			ClientPasswordCallback.setKeyStorePassword(keyStorePassword);
 		} catch (IOException e) {
