@@ -5,6 +5,7 @@
 
  <persistence-unit name="techyTaxPersistenceUnit" transaction-type="RESOURCE_LOCAL">
  	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+ 	<non-jta-data-source>java:comp/env/jdbc/TechyTaxDB</non-jta-data-source>
  	<class>org.techytax.domain.UserEntity</class>
  	<class>org.techytax.jpa.entities.VatDeclaration</class>
  	<class>org.techytax.domain.BusinessCalendarEvent</class>
