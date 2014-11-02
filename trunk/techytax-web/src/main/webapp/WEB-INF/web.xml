@@ -149,5 +149,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<welcome-file-list>
 		<welcome-file>/zul/login.zul</welcome-file>
 	</welcome-file-list>
+	
+	<resource-ref>
+	  <res-ref-name>jdbc/TechyTaxDB</res-ref-name>
+	   <res-type>javax.sql.DataSource</res-type>
+	   <res-auth>Container</res-auth>
+	</resource-ref>	
     
 </web-app>
