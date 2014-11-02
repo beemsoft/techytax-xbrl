@@ -16,7 +16,6 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
-import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.ws.IdentiteitType;
@@ -57,8 +56,8 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, SERVICE_NAME);
         StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();  
         
-		keyProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_sign.properties"));
-		trustProperties.load(DigipoortServiceImpl.class.getResourceAsStream("client_verify.properties"));	
+		keyProperties.load(StatusinformatieServiceV12_StatusinformatieServiceV12_Client.class.getResourceAsStream("/client_sign.properties"));
+		trustProperties.load(StatusinformatieServiceV12_StatusinformatieServiceV12_Client.class.getResourceAsStream("/client_verify.properties"));	
 		SecureConnectionHelper.setupTLS(port, keyProperties, trustProperties);
 		String keyStorePassword = keyProperties.getProperty("org.apache.ws.security.crypto.merlin.keystore.password");
 		ClientPasswordCallback.setKeyStorePassword(keyStorePassword);
