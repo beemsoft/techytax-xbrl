@@ -13,6 +13,7 @@
  	<class>org.techytax.domain.Customer</class>
  	<class>org.techytax.jpa.entities.LogRecord</class>
  	<class>nl.beemsoft.techytax.domain.SaasUser</class>
+ 	<class>nl.beemsoft.techytax.log.SaasLogRecord</class>
  	<class>org.techytax.domain.CostType</class>
  	<class>org.techytax.external.domain.ExternalCostType</class>
  	<class>org.techytax.domain.PrivateCostMatch</class>
