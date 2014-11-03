@@ -143,9 +143,9 @@ public class DigipoortServiceImpl implements DigipoortService {
 		String wsdlName = null;
 		URL wsdlURL = null;
 		if (digipoort.equals("prod")) {
-			wsdlName = "Aanleverservice_Digipoort_WUS 2.0 Bedrijven_v1.2_prod.wsdl";
+			wsdlName = "/Aanleverservice_Digipoort_WUS 2.0 Bedrijven_v1.2_prod.wsdl";
 		} else {
-			wsdlName = "aanlever_test.wsdl";
+			wsdlName = "/aanlever_test.wsdl";
 		}
 		wsdlURL = this.getClass().getResource(wsdlName);
 		if (wsdlURL == null) {
@@ -161,9 +161,9 @@ public class DigipoortServiceImpl implements DigipoortService {
 		String wsdlName = null;
 		URL wsdlURL = null;
 		if (digipoort.equals("prod")) {
-			wsdlName = "Statusinformatieservice_Digipoort_WUS 2.0 Bedrijven_v1.2_prod.wsdl";
+			wsdlName = "/Statusinformatieservice_Digipoort_WUS 2.0 Bedrijven_v1.2_prod.wsdl";
 		} else {
-			wsdlName = "status_test.wsdl";
+			wsdlName = "/status_test.wsdl";
 		}
 		wsdlURL = this.getClass().getResource(wsdlName);
 		if (wsdlURL == null) {

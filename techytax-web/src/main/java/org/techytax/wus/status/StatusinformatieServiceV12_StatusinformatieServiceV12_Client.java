@@ -107,10 +107,8 @@ public final class StatusinformatieServiceV12_StatusinformatieServiceV12_Client 
         try {
         	_getBerichtsoorten_getBerichtsoortenRequest = objectFactory.createGetBerichtsoortenRequest();
         	IdentiteitType identiteitType = objectFactory.createIdentiteitType();
-//        	identiteitType.setNummer("30216247");
-//        	identiteitType.setType("KvK");
-    	identiteitType.setNummer("174006275B01");
-    	identiteitType.setType("Fi");
+        	identiteitType.setNummer("174006275B01");
+        	identiteitType.setType("Fi");
         	_getBerichtsoorten_getBerichtsoortenRequest.setIdentiteitBelanghebbende(identiteitType);
         	_getBerichtsoorten_getBerichtsoortenRequest.setAutorisatieAdres("http://geenausp.nl");
             org.techytax.ws.GetBerichtsoortenResponse _getBerichtsoorten__return = port.getBerichtsoorten(_getBerichtsoorten_getBerichtsoortenRequest);
