@@ -31,7 +31,7 @@ import java.util.Map;
 
 import org.techytax.cache.CostCache;
 import org.techytax.dao.AccountDao;
-import org.techytax.dao.CostDao;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balance;
@@ -41,31 +41,37 @@ import org.techytax.domain.Liquiditeit;
 import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.dao.AccountBalanceDao;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.cost.CostVM;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 public class AccountCheckVM extends CostVM {
 
-	private AccountDao accountDao = new AccountDao(Account.class);
-	private CostDao costDao = new CostDao(Cost.class);
-	private User user = UserCredentialManager.getUser();
+	private AccountDao accountDao;
+	private CostDao costDao;
 	private BigDecimal businessAccountBalance;
 
 	protected FiscalPeriod periode;
-	private CostCache costCache = new CostCache();
+	private CostCache costCache;
 
 	protected List<Cost> costList;
 	private AccountCheckData accountCheckData = new AccountCheckData();
-	private GenericDao<AccountBalance> genericAccountBalanceDao = new GenericDao<>(AccountBalance.class);
+	
+	private AccountBalanceDao accountBalanceDao;
+	
+	BalanceCalculator balanceCalculator;
 
-	public AccountCheckVM() {
+	@AfterCompose
+	public void afterCompose() {
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			if (isTimeForUsingLatestYearPeriod()) {
 				periode = getPeriodPreviousYear();
@@ -76,6 +82,11 @@ public class AccountCheckVM extends CostVM {
 			periode = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
 			Executions.sendRedirect("login.zul");
 		}
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		accountDao = (AccountDao) SpringUtil.getBean("accountDao");
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		costCache = (CostCache) SpringUtil.getBean("costCache");
+		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
 	}
 
 	public ListModelList<Cost> getCosts() throws Exception {
@@ -96,16 +107,16 @@ public class AccountCheckVM extends CostVM {
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			BigDecimal actualBalance = BalanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDate()), DateHelper.getDate(periode.getEndDate()));
-			Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(costList);
+			BigDecimal actualBalance = balanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDate()), DateHelper.getDate(periode.getEndDate()));
+			Liquiditeit liquiditeit = balanceCalculator.calculateAccountBalance(costList);
 			List<Cost> result2 = costDao.getVatCostsInPeriod(periode);
-			Balance balans = BalanceCalculator.calculateVatBalance(result2, true);
-			BigDecimal totalPaidInvoices = BalanceCalculator.calculateTotalPaidInvoices(costList);
+			Balance balans = balanceCalculator.calculateVatBalance(result2, true);
+			BigDecimal totalPaidInvoices = balanceCalculator.calculateTotalPaidInvoices(costList);
 			BigDecimal brutoOmzet = balans.getBrutoOmzet().add(totalPaidInvoices);
 			List<Cost> taxCosts = costCache.getTaxCosts();
-			BigDecimal taxBalance = BalanceCalculator.calculateTaxBalance(taxCosts).getTotaleKosten();
+			BigDecimal taxBalance = balanceCalculator.calculateTaxBalance(taxCosts).getTotaleKosten();
 			List<Cost> costsOnCurrentAccount = costCache.getCostListCurrentAccount();
-			BigDecimal costBalance = BalanceCalculator.calculateCostBalanceCurrentAccount(costsOnCurrentAccount, true).getTotaleKosten();
+			BigDecimal costBalance = balanceCalculator.calculateCostBalanceCurrentAccount(costsOnCurrentAccount, true).getTotaleKosten();
 			BigDecimal interest = costCache.getInterest();
 			BigDecimal costIgnoreBalance = costCache.getCostCurrentAccountIgnore();
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
@@ -172,13 +183,14 @@ public class AccountCheckVM extends CostVM {
 	@NotifyChange({ "accountCheck", "accountCheckData" })
 	@Command
 	public void saveAccountBalance() throws Exception {
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			AccountBalance accountBalance = new AccountBalance();
 			accountBalance.setBalance(businessAccountBalance);
 			accountBalance.setDatum(periode.getEndDate());
 			Account businessAccount = accountDao.getBusinessAccount();
 			accountBalance.setAccount(businessAccount);
-			genericAccountBalanceDao.persistEntity(accountBalance);
+			accountBalanceDao.persistEntity(accountBalance);
 			getCosts();
 		}
 	}

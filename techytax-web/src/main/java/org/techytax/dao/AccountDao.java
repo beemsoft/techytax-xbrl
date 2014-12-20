@@ -21,15 +21,17 @@ package org.techytax.dao;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountType;
+import org.techytax.jpa.dao.GenericDao;
 
-public class AccountDao extends BaseDao<Account> {
+@Component
+public class AccountDao extends GenericDao<Account> {
 	
-	public AccountDao(Class<Account> persistentClass) {
-		super(persistentClass);
-	}
-
+	@Transactional
 	public AccountType getAccountType(String accountNumber) throws Exception {
 		for (Account account: findAll()) {
 			if (account.getNumber().equals(accountNumber)) {
@@ -39,6 +41,7 @@ public class AccountDao extends BaseDao<Account> {
 		return null;
 	}
 	
+	@Transactional
 	public Account getBusinessAccount() throws IllegalAccessException {
 		List<Account> accounts = findAll();
 		for (Account account: accounts) {

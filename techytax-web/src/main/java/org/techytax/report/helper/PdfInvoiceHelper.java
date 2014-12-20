@@ -12,6 +12,7 @@ import org.techytax.util.DateHelper;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -20,14 +21,14 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 
 public class PdfInvoiceHelper {
 
-	private static void addSpace(PdfPTable table) {
+	private void addSpace(PdfPTable table) {
 		PdfPCell cell = new PdfPCell();
 		cell.setFixedHeight(15f);
 		cell.setBorder(PdfPCell.NO_BORDER);
 		table.addCell(cell);
 	}
 
-	public static String formatDecimal(BigDecimal b) {
+	public String formatDecimal(BigDecimal b) {
 
 		Locale loc = new Locale("nl", "NL", "EURO");
 		NumberFormat n = NumberFormat.getCurrencyInstance(loc);
@@ -37,14 +38,9 @@ public class PdfInvoiceHelper {
 
 	}
 
-	public static void main(String[] args) {
-		BigDecimal payment = new BigDecimal("1234523423.67");
-		System.out.println(formatDecimal(payment));
-	}
+	public byte[] createPdfInvoice(Invoice factuur, User user) {
 
-	public static byte[] createPdfInvoice(Invoice factuur, User user) {
-
-		Document document = new Document();
+		Document document = new Document(PageSize.A4);
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
 		try {
 			PdfWriter.getInstance(document, byteOutputStream);

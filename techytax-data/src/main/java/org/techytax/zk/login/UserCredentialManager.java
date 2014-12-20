@@ -25,7 +25,8 @@ import org.zkoss.zk.ui.Sessions;
 
 public class UserCredentialManager {
 
-	private static final String KEY_USER_MODEL = UserCredentialManager.class.getName() + "_MODEL";
+	private static final String KEY_USER_MODEL = UserCredentialManager.class
+			.getName() + "_MODEL";
 
 	private UserCredentialManager() {
 	}
@@ -35,9 +36,12 @@ public class UserCredentialManager {
 	}
 
 	public static User getUser(Session zkSession) {
-		synchronized (zkSession) {
-			return (User) zkSession.getAttribute(KEY_USER_MODEL);
+		if (zkSession != null) {
+			synchronized (zkSession) {
+				return (User) zkSession.getAttribute(KEY_USER_MODEL);
+			}
 		}
+		return null;
 	}
 
 	public static void setUser(User user) {

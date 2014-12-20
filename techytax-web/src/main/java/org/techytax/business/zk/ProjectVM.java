@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,23 +22,23 @@ package org.techytax.business.zk;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Project;
-import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.ProjectDao;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 public class ProjectVM {
-
-	private User user = UserCredentialManager.getUser();
-	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
 
 	protected ListModelList<Project> projects;
 
@@ -48,6 +48,13 @@ public class ProjectVM {
 
 	public String getDeleteMessage() {
 		return deleteMessage;
+	}
+	
+	private ProjectDao projectDao;
+	
+	@AfterCompose
+	public void afterCompose() {
+		projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
 	}
 
 	@NotifyChange({ "selected", "projects", "deleteMessage" })
@@ -72,7 +79,7 @@ public class ProjectVM {
 
 	public ListModelList<Project> getProjects() throws Exception {
 		try {
-			projects = new ListModelList<>(projectDao.findAll(user));
+			projects = new ListModelList<>(projectDao.findAll(UserCredentialManager.getUser()));
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}
@@ -101,7 +108,7 @@ public class ProjectVM {
 	@GlobalCommand
 	@NotifyChange({ "projects", "selected" })
 	public void refreshvalues(@BindingParam("project") Project project) throws Exception {
-		project.setUser(new UserEntity(user));
+		project.setUser(new UserEntity(UserCredentialManager.getUser()));
 		projectDao.merge(project);
 	}
 

@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.PrivateCostMatchDao;
@@ -44,6 +46,7 @@ import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zkplus.spring.SpringUtil;
 
 public class CostTypeViewModel {
 
@@ -56,12 +59,17 @@ public class CostTypeViewModel {
 	private List<CostType> costTypes = new ArrayList<>();
 	private List<Kostmatch> publicMatches = new ArrayList<>();
 	private List<PrivateCostMatch> privateMatches = new ArrayList<>();
-	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
-	private PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);
-	private CostTypeDao kostensoortDao = new CostTypeDao(CostType.class);
+	private KostmatchDao kostmatchDao;
+	private PrivateCostMatchDao privateCostMatchDao;
+	private CostTypeDao kostensoortDao;
+	
+	private AuditLogger auditLogger;	
 
 	@Init
 	public void init() throws Exception {
+		kostmatchDao = (KostmatchDao) SpringUtil.getBean("kostmatchDao");
+		privateCostMatchDao = (PrivateCostMatchDao) SpringUtil.getBean("privateCostMatchDao");
+		kostensoortDao = (CostTypeDao) SpringUtil.getBean("costTypeDao");
 		costTypes = kostensoortDao.getCostTypesForTransactionMatching();
 		selectedCostType = costTypes.get(0); // Selected First One
 		setPrivateMatches(selectedCostType);
@@ -118,7 +126,7 @@ public class CostTypeViewModel {
 	public void saveMatch() throws Exception {
 		if (user != null) {
 			SplitMatch splitMatch = selectedPrivateMatch.getSplitMatch();
-			AuditLogger.log(MATCH_TRANSACTION, user);
+			auditLogger.log(MATCH_TRANSACTION, user);
 			handleSplitMatchPercentage(splitMatch);
 			insertOrUpdatePrivateCostMatch();
 		}

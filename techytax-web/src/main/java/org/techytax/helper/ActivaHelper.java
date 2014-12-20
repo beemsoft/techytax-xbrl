@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.cache.CostCache;
 import org.techytax.dao.ActivumDao;
 import org.techytax.dao.BookValueDao;
@@ -45,25 +47,41 @@ import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.FiscalBalance;
 import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.Liquiditeit;
-import org.techytax.domain.User;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 
+@Component
 public class ActivaHelper {
 
-	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
-	private ActivumDao activumDao = new ActivumDao(Activum.class);
-	private User user = UserCredentialManager.getUser();
+	public FiscalOverview getFiscalOverview() {
+		return fiscalOverview;
+	}
+
+	public void setFiscalOverview(FiscalOverview fiscalOverview) {
+		this.fiscalOverview = fiscalOverview;
+	}
+
+	public CostCache getCostCache() {
+		return costCache;
+	}
+
+	public void setCostCache(CostCache costCache) {
+		this.costCache = costCache;
+	}
+
+	@Autowired
+	private BookValueDao bookValueDao;
+	
+	@Autowired
+	private ActivumDao activumDao;
+	
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
-	private int bookYear;
+	private int bookYear = DateHelper.getYear(new Date()) - 1;
 	private Map<BalanceType, FiscalBalance> activaMap = new HashMap<>();
-
-	public ActivaHelper(FiscalOverview fiscalOverview, CostCache costCache) {
-		this.fiscalOverview = fiscalOverview;
-		this.costCache = costCache;
-		bookYear = DateHelper.getYear(new Date()) - 1;
-	}
+	
+	@Autowired
+	private BalanceCalculator balanceCalculator;
 
 	public Map<BalanceType, FiscalBalance> handleActiva(Properties props, List<DeductableCostGroup> deductableCosts, List<Cost> rekeningLijst) throws Exception {
 
@@ -95,7 +113,7 @@ public class ActivaHelper {
 		if (turnOverUnpaid != null && turnOverUnpaid.compareTo(BigDecimal.ZERO) != 0) {
 			BigInteger saldo = AmountHelper.roundToInteger(turnOverUnpaid);
 			BookValue newBookValue = new BookValue(INVOICES_TO_BE_PAID, bookYear, saldo);
-			newBookValue.setUser(user);
+			newBookValue.setUser(UserCredentialManager.getUser());
 
 			if (currentBookValue == null) {
 				bookValueDao.persistEntity(newBookValue);
@@ -122,7 +140,7 @@ public class ActivaHelper {
 			if (currentBookValue == null) {
 				if (previousBookValue == null) {
 					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
-					newBookValue.setUser(user);
+					newBookValue.setUser(UserCredentialManager.getUser());
 					bookValueDao.persistEntity(newBookValue);
 				} else {
 					BookValue newBookValue = new BookValue(STOCK, bookYear, fiscalOverview.getRepurchase());
@@ -161,7 +179,7 @@ public class ActivaHelper {
 			if (currentBookValue == null) {
 				BookValue newValue = new BookValue();
 				newValue.setBalanceType(CAR);
-				newValue.setUser(user);
+				newValue.setUser(UserCredentialManager.getUser());
 				newValue.setJaar(bookYear);
 				newValue.setSaldo(carBookValue.subtract(carDepreciation));
 				bookValueDao.persistEntity(newValue);
@@ -235,7 +253,7 @@ public class ActivaHelper {
 
 	private Activum createActivum(BalanceType balanceType) {
 		Activum activum = new Activum();
-		activum.setUser(user);
+		activum.setUser(UserCredentialManager.getUser());
 		activum.setBalanceType(balanceType);
 		return activum;
 	}
@@ -244,7 +262,7 @@ public class ActivaHelper {
 		BookValue bookValue = new BookValue();
 		bookValue.setJaar(bookYear);
 		bookValue.setBalanceType(balanceType);
-		bookValue.setUser(user);
+		bookValue.setUser(UserCredentialManager.getUser());
 		return bookValue;
 	}
 
@@ -260,7 +278,7 @@ public class ActivaHelper {
 		BigInteger totalCost = AmountHelper.roundToInteger(totalCostForActivum);
 
 		if (previousBookValue != null) {
-			BigDecimal depreciationSettlement = BalanceCalculator.getDepreciationSettlement(deductableCosts);
+			BigDecimal depreciationSettlement = balanceCalculator.getDepreciationSettlement(deductableCosts);
 			BigInteger newSaldo = previousBookValue.getSaldo().subtract(depreciationSettlement.toBigInteger());
 			if (currentBookValue == null) {
 			} else {
@@ -272,7 +290,7 @@ public class ActivaHelper {
 			if (totalCost.compareTo(BigInteger.ZERO) == 1) {
 				if (currentBookValue == null) {
 					BookValue newBookValue = new BookValue(OFFICE, bookYear, totalCost);
-					newBookValue.setUser(user);
+					newBookValue.setUser(UserCredentialManager.getUser());
 					bookValueDao.persistEntity(newBookValue);
 				} else {
 					currentBookValue.setSaldo(totalCost);
@@ -290,14 +308,14 @@ public class ActivaHelper {
 	}
 
 	private void handleCurrentAssets(Properties props, List<Cost> rekeningLijst) throws Exception {
-		Liquiditeit liquiditeit = BalanceCalculator.calculateAccountBalance(rekeningLijst);
+		Liquiditeit liquiditeit = balanceCalculator.calculateAccountBalance(rekeningLijst);
 		BookValue previousBookValue = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear - 1);
 		BookValue currentBookValue = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear);
 		if (currentBookValue == null) {
 			BigInteger saldo = liquiditeit.getRekeningBalans().toBigInteger();
 			saldo = saldo.add(liquiditeit.getSpaarBalans().toBigInteger());
 			BookValue newBookValue = new BookValue(CURRENT_ASSETS, bookYear, saldo);
-			newBookValue.setUser(user);
+			newBookValue.setUser(UserCredentialManager.getUser());
 			bookValueDao.persistEntity(newBookValue);
 		} else {
 			BigInteger saldo = BigInteger.ZERO;

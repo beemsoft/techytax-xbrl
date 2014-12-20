@@ -56,8 +56,10 @@ import nl.auditfiles.xaf._3.Debitcredittype;
 import nl.auditfiles.xaf._3.ObjectFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.cache.CostTypeCache;
-import org.techytax.dao.CostDao;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostType;
@@ -65,33 +67,44 @@ import org.techytax.domain.Customer;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.external.domain.ExternalCostType;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.CustomerDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
 import org.techytax.util.VersionHelper;
 import org.zkoss.zul.Filedownload;
 
+@Component
 public class DutchAuditFileHelper {
+	
+	@Autowired
+	private AuditLogger auditLogger;
+	
+	@Autowired
+	private CustomerDao customerDao;
+	
+	@Autowired
+	private CostDao costDao;
+	
+	@Autowired
+	CostTypeCache costTypeCache;
 
-	public static void sendAuditFile(User user, FiscalPeriod fiscalPeriod) {
-		AuditLogger.log(SEND_AUDIT_FILE, user);
+	public void sendAuditFile(User user, FiscalPeriod fiscalPeriod) {
+		auditLogger.log(SEND_AUDIT_FILE, user);
 		try {
 			List<Cost> allCosts = new ArrayList<>();
 			if (fiscalPeriod != null) {
-				CostDao costDao = new CostDao(Cost.class);				
 				allCosts = costDao.getCostsInPeriod(fiscalPeriod);
 				// TODO: sort costs
 			}
-			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
 			List<Customer> customers = customerDao.findAll(user);
-			String message = DutchAuditFileHelper.createAuditFile(allCosts, customers, user);
+			String message = createAuditFile(allCosts, customers, user);
 			Filedownload.save(message, "XAF", user.getCompanyName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static Transaction createTransaction(Cost cost) throws Exception {
+	private Transaction createTransaction(Cost cost) throws Exception {
 		ObjectFactory objectFactory = new ObjectFactory();
 		Transaction transaction = objectFactory.createAuditfileCompanyTransactionsJournalTransaction();
 		transaction.setAmnt(cost.getAmount());
@@ -119,7 +132,7 @@ public class DutchAuditFileHelper {
 		return transaction;
 	}
 
-	public static String createAuditFile(List<Cost> costList, List<Customer> customers, User user) throws DatatypeConfigurationException {
+	public String createAuditFile(List<Cost> costList, List<Customer> customers, User user) throws DatatypeConfigurationException {
 
 		JAXBContext jc = null;
 		Marshaller m = null;
@@ -176,7 +189,7 @@ public class DutchAuditFileHelper {
 
 			GeneralLedger generalLedger = objectFactory.createAuditfileCompanyGeneralLedger();
 			
-			for (CostType costType : CostTypeCache.getCostTypes()) {
+			for (CostType costType : costTypeCache.getCostTypes()) {
 				LedgerAccount ledgerAccount = objectFactory.createAuditfileCompanyGeneralLedgerLedgerAccount();
 				ExternalCostType externalCostType = costType.getExternalCostType();
 				if (externalCostType != null) {
@@ -251,7 +264,7 @@ public class DutchAuditFileHelper {
 		return null;
 	}
 
-	private static Header createHeader(List<Cost> costList, ObjectFactory objectFactory) throws Exception {
+	private Header createHeader(List<Cost> costList, ObjectFactory objectFactory) throws Exception {
 		Header header = objectFactory.createAuditfileHeader();
 		header.setCurCode(CurrencycodeIso4217.EUR);
 		int year = 0;
@@ -279,10 +292,8 @@ public class DutchAuditFileHelper {
 		return header;
 	}
 	
-	public static void importAuditFile(InputStream inputStream, User user) throws DatatypeConfigurationException {
+	public void importAuditFile(InputStream inputStream, User user) throws DatatypeConfigurationException {
 
-		GenericDao<Cost> costDao = new GenericDao<>(Cost.class);
-		
 		JAXBContext jc = null;
 		Unmarshaller m = null;
 		try {
@@ -301,7 +312,7 @@ public class DutchAuditFileHelper {
 					Cost importedCost = new Cost();
 					importedCost.setAmount(transaction.getAmnt());
 					if (StringUtils.isNotEmpty(accID)) {
-						importedCost.setCostType(CostTypeCache.getCostType(Long.parseLong(accID)));
+						importedCost.setCostType(costTypeCache.getCostType(Long.parseLong(accID)));
 					}
 					importedCost.setDate(transaction.getTrDt().toGregorianCalendar().getTime());
 					importedCost.setDescription(transaction.getDesc());

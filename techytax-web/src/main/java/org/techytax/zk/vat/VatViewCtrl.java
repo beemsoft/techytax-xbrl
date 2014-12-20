@@ -45,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.dao.CostDao;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.XbrlHelper;
@@ -59,7 +58,8 @@ import org.techytax.helper.AmountHelper;
 import org.techytax.helper.BalanceCalculator;
 import org.techytax.importing.helper.TransactionReader;
 import org.techytax.importing.helper.TransactionReaderFactory;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.CostDao;
+import org.techytax.jpa.dao.VatDeclarationDao;
 import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
 import org.techytax.props.PropsFactory;
@@ -69,6 +69,7 @@ import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.GlobalCommandEvent;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -81,6 +82,7 @@ import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zkmax.ui.select.annotation.Subscribe;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
@@ -99,7 +101,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private User user = UserCredentialManager.getUser();
 
-	private CostDao costDao = new CostDao(Cost.class);
+	private CostDao costDao;
 
 	@Wire
 	private Grid costGrid;
@@ -138,10 +140,35 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	private Button reloadBtn;
 	@Wire
 	private Button importBtn;
+	
+	private AuditLogger auditLogger;
+	
+	private VatDeclarationDao vatDeclarationDao;
+	
+	private BalanceCalculator balanceCalculator;
+	
+	@Override
+	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
+		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
+		if (user == null) {
+			Executions.sendRedirect("login.zul");
+		}
+		return componentInfo;
+	}
+
+	@Override
+	public void doAfterCompose(Window comp) throws Exception {
+		super.doAfterCompose(comp);
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+		vatDeclarationDao = (VatDeclarationDao) SpringUtil.getBean("vatDeclarationDao");
+		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
+		digipoortBtn.setDisabled(disableDigipoort());
+	}
 
 	@Listen("onUpload=#uploadBtn")
 	public void upload(UploadEvent event) throws WrongValueException, AuthenticationException, NoSuchAlgorithmException, IOException {
-		AuditLogger.log(UPLOAD_TRANSACTIONS, user);
+		auditLogger.log(UPLOAD_TRANSACTIONS, user);
 		try {
 			media = event.getMedia();
 			List<Cost> result = readTransactions();
@@ -240,7 +267,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onClick=#importBtn")
 	public void importTransactions(Event event) throws Exception {
-		AuditLogger.log(IMPORT_TRANSACTIONS, user);
+		auditLogger.log(IMPORT_TRANSACTIONS, user);
 		ListModel<Cost> result = costGrid.getModel();
 		if (result != null) {
 			Cost kost = null;
@@ -270,13 +297,13 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void createVatOverview() throws Exception {
-		AuditLogger.log(VAT_OVERVIEW, user);
+		auditLogger.log(VAT_OVERVIEW, user);
 		List<Cost> vatCosts = costDao.getVatCostsInPeriod(DateHelper.getLatestVatPeriod(user.getVatPeriodType()));
 		ListModelList<Cost> costModel = new ListModelList<>(vatCosts);
 		vatGrid.setModel(costModel);
 		vatGrid.setRowRenderer(new CostRowRenderer());
 
-		vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
+		vatBalanceWithinEu = balanceCalculator.calculateVatBalance(vatCosts, false);
 		VatDeclarationData vatDeclarationData = new VatDeclarationData();
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
@@ -297,7 +324,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	private void creatYearlyVatDeclarationForSmallEnterprise(FiscalPeriod vatPeriod, VatDeclarationData vatDeclarationData) {
 		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod);
-		BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
+		BigDecimal turnover = balanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 		vatBalanceWithinEu.setNettoOmzet(turnover);
 		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
 	}
@@ -310,7 +337,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 						switch (e.getButton()) {
 						case OK:
 							try {
-								AuditLogger.log(SEND_VAT_DECLARATION, user);
+								auditLogger.log(SEND_VAT_DECLARATION, user);
 								AanleverResponse aanleverResponse = doAanleveren();
 								digipoortBtn.setDisabled(true);
 								if (aanleverResponse != null) {
@@ -331,7 +358,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	}
 
 	private void storeDeclarationFeature(String declarationFeature) throws Exception {
-		GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<>(VatDeclaration.class);
 		VatDeclaration vatDeclaration = new VatDeclaration();
 		vatDeclaration.setDeclarationFeature(declarationFeature);
 		vatDeclaration.setTimeStampDeclared(new Date());
@@ -394,7 +420,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	public boolean disableDigipoort() {
 		Date declarationTime;
 		try {
-			declarationTime = AuditLogger.getVatDeclarationTimeForLatestVatPeriod(user);
+			declarationTime = auditLogger.getVatDeclarationTimeForLatestVatPeriod();
 			if (declarationTime != null && user.getFiscalNumber() != null) {
 				return true;
 			} else if (declarationTime == null && user.getFiscalNumber() == null) {
@@ -406,21 +432,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		return false;
 	}
 
-	@Override
-	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
-		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
-		if (user == null) {
-			Executions.sendRedirect("login.zul");
-		}
-		return componentInfo;
-	}
-
-	@Override
-	public void doAfterCompose(Window comp) throws Exception {
-		super.doAfterCompose(comp);
-		digipoortBtn.setDisabled(disableDigipoort());
-	}
-
 	@Subscribe("queueName")
 	public void updateVatOverview(Event evt) throws Exception {
 		if (evt instanceof GlobalCommandEvent) {
@@ -430,12 +441,12 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				Cost originalCost = (Cost) costDao.getEntity(updatedCost, Long.valueOf(updatedCost.getId()));
 				if (!updatedCost.equals(originalCost)) {
 					updatedCost.setUser(user);
-					AuditLogger.log(UPDATE_COST, user);
+					auditLogger.log(UPDATE_COST, user);
 					costDao.merge(updatedCost);
 
 					Cost splitCost = (Cost) arguments.get("splitcost");
 					if (splitCost != null) {
-						AuditLogger.log(SPLIT_COST, user);
+						auditLogger.log(SPLIT_COST, user);
 						costDao.insertSplitCost(originalCost, splitCost);
 					}
 					createVatOverview();

@@ -19,20 +19,25 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.domain.CostConstants.BUSINESS_CAR_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
+import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
+import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.CostType;
+import org.techytax.jpa.dao.GenericDao;
 
-public class CostTypeDao extends BaseDao<CostType> {
-
-	public CostTypeDao(Class<CostType> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class CostTypeDao extends GenericDao<CostType> {
+	
+	protected static final List<CostType> COSTS_FROM_OTHER_ACCOUNT = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT);
 
 	public List<CostType> getCostTypesForTransactionMatching() throws Exception {
 		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT_IGNORE, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);

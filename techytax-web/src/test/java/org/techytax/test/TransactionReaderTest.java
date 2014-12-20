@@ -45,8 +45,8 @@ public class TransactionReaderTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
-		userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), UserEntity.class);
+//		logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
+//		userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), UserEntity.class);
 		
 		initEncryption();
 	}

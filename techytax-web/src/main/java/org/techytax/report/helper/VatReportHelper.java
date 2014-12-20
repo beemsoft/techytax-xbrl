@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.techytax.dao.CostDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.VatPeriodType;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatJournals;
 import org.techytax.report.domain.VatReportData;
@@ -119,7 +119,7 @@ public class VatReportHelper {
 
 	public static void main(String[] args) throws Exception {
 		FiscalPeriod period = DateHelper.getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-		CostDao costDao = new CostDao(Cost.class);
+		CostDao costDao = new CostDao();
 		List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 		createReportData(vatCosts);
 	}

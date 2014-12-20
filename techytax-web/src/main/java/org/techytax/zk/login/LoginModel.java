@@ -23,17 +23,21 @@ import java.util.List;
 
 import org.apache.cxf.common.util.CollectionUtils;
 import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.VatDeclarationDao;
 import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.security.AuthenticationException;
 import org.techytax.security.SecurityService;
-import org.techytax.security.SecurityServiceImpl;
 import org.techytax.util.VersionHelper;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -42,25 +46,37 @@ public class LoginModel {
 	private String username = "";
 
 	private String password = "";
-	
+
+	private VatDeclarationDao vatDeclarationDao;
+
+	private AuditLogger auditLogger;
+
+	private SecurityService securityService;
+
+	@AfterCompose
+	public void initSetup(@ContextParam(ContextType.VIEW) Component view) {
+		securityService = (SecurityService) SpringUtil.getBean("securityService");
+		vatDeclarationDao = (VatDeclarationDao) SpringUtil.getBean("vatDeclarationDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+	}
+
 	public boolean isSaasVersion() {
 		return VersionHelper.isSaasVersion();
 	}
-	
+
 	public String getVersion() {
 		return VersionHelper.getVersion();
 	}
 
 	@Command
 	public void login() throws Exception {
-		SecurityService securityService = new SecurityServiceImpl();
 		try {
 			User user = securityService.authenticate(username, Sha.SHA1(password));
 			UserCredentialManager.setUser(user);
 			Executions.sendRedirect("/zul/zk_calendar.zul");
 		} catch (AuthenticationException e) {
 			Messagebox.show(e.getMessage(), null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION, null);
-		}	
+		}
 	}
 
 	@Command
@@ -100,13 +116,13 @@ public class LoginModel {
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doPopup();
 	}
-	
+
 	@Command
 	public void question() {
 		String template = "~./saas/question.zul";
 		Window window = (Window) Executions.createComponents(template, null, null);
 		window.doModal();
-	}	
+	}
 
 	public boolean getLoggedOn() {
 		return UserCredentialManager.getUser() != null;
@@ -115,8 +131,7 @@ public class LoginModel {
 	public boolean getDisplayVatWarning() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			GenericDao<VatDeclaration> vatDeclarationDao = new GenericDao<>(VatDeclaration.class);
-			List<VatDeclaration> vatDeclarationsUnpaid = vatDeclarationDao.findByNamedQuery("VatDeclaration.findUnpaid", user);
+			List<VatDeclaration> vatDeclarationsUnpaid = vatDeclarationDao.findByNamedQuery("VatDeclaration.findUnpaid");
 			if (!CollectionUtils.isEmpty(vatDeclarationsUnpaid)) {
 				return true;
 			}
@@ -145,7 +160,7 @@ public class LoginModel {
 	@Command
 	public void logout() {
 		User user = UserCredentialManager.getUser();
-		AuditLogger.log(AuditType.LOGOFF, user);
+		auditLogger.log(AuditType.LOGOFF, user);
 		UserCredentialManager.setUser(null);
 		Executions.sendRedirect("login.zul");
 	}

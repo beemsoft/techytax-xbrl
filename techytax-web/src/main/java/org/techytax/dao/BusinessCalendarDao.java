@@ -22,26 +22,27 @@ package org.techytax.dao;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.BusinessCalendarEvent;
-import org.zkoss.zkplus.jpa.JpaUtil;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
 
-public class BusinessCalendarDao extends BaseDao<BusinessCalendarEvent> {
+@Component
+public class BusinessCalendarDao extends GenericDao<BusinessCalendarEvent> {
 
-	public BusinessCalendarDao(Class<BusinessCalendarEvent> persistentClass) {
-		super(persistentClass);
-	}
-
+	@Transactional
 	public void insertBusinessCalendarEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
-		event.setUser(user);
+		event.setUser(UserCredentialManager.getUser());
 		persistEntity(event);
 	}
 
 	public List<BusinessCalendarEvent> getEvents() throws Exception {
-		TypedQuery<BusinessCalendarEvent> query = JpaUtil.getEntityManager().createQuery("SELECT e FROM BusinessCalendarEvent e WHERE e.user = :user",
+		TypedQuery<BusinessCalendarEvent> query = getEntityManager().createQuery("SELECT e FROM BusinessCalendarEvent e WHERE e.user = :user",
 				BusinessCalendarEvent.class);
-		query.setParameter("user", user);
+		query.setParameter("user", UserCredentialManager.getUser());
 		List<BusinessCalendarEvent> result = query.getResultList();
 		return result;
 	}

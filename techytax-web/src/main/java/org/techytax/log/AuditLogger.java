@@ -23,20 +23,26 @@ import java.util.Date;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
-import org.techytax.jpa.dao.GenericDao;
-import org.techytax.jpa.entities.EntityManagerHelper;
+import org.techytax.jpa.dao.LogRecordDao;
 import org.techytax.jpa.entities.LogRecord;
 import org.techytax.util.DateHelper;
 import org.zkoss.zkplus.jpa.JpaUtil;
 
+@Component
 public class AuditLogger {
+	
+	@Autowired
+	private LogRecordDao logDao;
 
-	public static void log(AuditType auditType, User user) {
-		GenericDao<LogRecord> logDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), LogRecord.class);
+	@Transactional
+	public void log(AuditType auditType, User user) {
 		LogRecord logRecord = new LogRecord();
 		UserEntity userEntity = new UserEntity(user);
 		logRecord.setUser(userEntity);
@@ -45,30 +51,8 @@ public class AuditLogger {
 		logDao.persistEntity(logRecord);
 	}
 
-	public static Date getVatDeclarationTimeForLatestVatPeriod(User user) throws IllegalAccessException {
-		if (user == null) {
-			throw new IllegalAccessException();
-		}
-		FiscalPeriod latestVatPeriod = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		FiscalPeriod latestVatPeriodTillToday = DateHelper.getLatestVatPeriodTillToday();
-		TypedQuery<LogRecord> query = JpaUtil.getEntityManager().createQuery(
-				"SELECT lr FROM LogRecord lr WHERE lr.timeStamp > :beginTime AND lr.timeStamp <= :endTime AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user= :user",
-				LogRecord.class);
-		query.setParameter("beginTime", latestVatPeriod.getEndDate());
-		query.setParameter("endTime", latestVatPeriodTillToday.getEndDate());
-		query.setParameter("user", user);
-		LogRecord result = null;
-		try {
-			result = query.getSingleResult();
-		} catch (NoResultException nre) {
-			return null;
-		}
-		return result.getTimeStamp();
+	public Date getVatDeclarationTimeForLatestVatPeriod() throws IllegalAccessException {
+		return logDao.getVatDeclarationTimeForLatestVatPeriod();
 	}
 
-	public static void main(String[] args) throws IllegalAccessException {
-		User user = new User();
-		user.setId(1L);
-		System.out.println(getVatDeclarationTimeForLatestVatPeriod(user));
-	}
 }

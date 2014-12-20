@@ -43,6 +43,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
@@ -66,7 +67,8 @@ public class ModelWindowVM {
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (cost != null && costTypes == null) {
-			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
+			CostTypeCache costTypeCache = (CostTypeCache) SpringUtil.getBean("costTypeCache");
+			Collection<CostType> vatCostTypes = costTypeCache.getCostTypes();
 			costTypes = new ListModelList<>(vatCostTypes);
 			for (CostType costType : costTypes) {
 				if (costType.equals(cost.getCostType())) {

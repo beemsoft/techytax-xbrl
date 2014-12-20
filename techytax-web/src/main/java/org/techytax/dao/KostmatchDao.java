@@ -19,18 +19,17 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
+import org.techytax.jpa.dao.GenericDao;
 
-public class KostmatchDao extends BaseDao<Kostmatch> {
-
-	public KostmatchDao(Class<Kostmatch> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class KostmatchDao extends GenericDao<Kostmatch> {
 
 	public List<Kostmatch> getKostmatchLijstForCostType(CostType costType) {
 		return findByNamedQuery(Kostmatch.FOR_TYPE, with("costType", costType).parameters());

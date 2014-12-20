@@ -19,19 +19,18 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Account;
 import org.techytax.domain.AccountBalance;
+import org.techytax.jpa.dao.GenericDao;
 
-public class AccountBalanceDao extends BaseDao<AccountBalance> {
+@Component
+public class AccountBalanceDao extends GenericDao<AccountBalance> {
 	
-	public AccountBalanceDao(Class<AccountBalance> persistentClass) {
-		super(persistentClass);
-	}
-
 	public List<AccountBalance> getAccountBalances(Account account) {
 		return findByNamedQuery(AccountBalance.BY_ACCOUNT, with("account", account).parameters());
 	}

@@ -31,17 +31,19 @@ import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 
 public class SettlementVM {
 
 	private User user = UserCredentialManager.getUser();
-	private SettlementDao settlementDao = new SettlementDao(Settlement.class);
+	private SettlementDao settlementDao;
 	private Settlement settlement = new Settlement();
 	private Date startDate;
-	
+
 	@Init
 	public void init() throws Exception {
 		if (user != null) {
+			settlementDao = (SettlementDao) SpringUtil.getBean("settlementDao");
 			settlement = settlementDao.getSettlement();
 			if (settlement != null) {
 				startDate = settlement.getStartDate();
@@ -52,14 +54,14 @@ public class SettlementVM {
 			Executions.sendRedirect("login.zul");
 		}
 	}
-	
+
 	@Command
 	public void save() throws Exception {
 		settlement.setStartDate(startDate);
 		settlement.setBalanceType(OFFICE);
 		settlementDao.merge(settlement);
-	}	
-	
+	}
+
 	public String getAddress() {
 		if (user == null) {
 			Executions.sendRedirect("login.zul");

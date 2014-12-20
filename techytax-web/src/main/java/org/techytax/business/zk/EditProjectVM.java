@@ -26,7 +26,7 @@ import org.techytax.domain.Customer;
 import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.domain.VatType;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.CustomerDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.Command;
@@ -38,6 +38,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
@@ -54,17 +55,19 @@ public class EditProjectVM {
 	private ListModelList<Customer> customers;
 
 	private VatType selectedVatType;
+	
+	private CustomerDao customerDao;
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("project") Project project) {
 		Selectors.wireComponents(view, this, false);
 		this.project = project;
 		setSelectedVatType(project.getVatType().name());
+		customerDao = (CustomerDao) SpringUtil.getBean("customerDao");
 	}
 
 	public ListModelList<Customer> getCustomers() throws IllegalAccessException {
 		try {
-			GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
 			customers = new ListModelList<>(customerDao.findAll(user));
 			selectCustomerIfPresent();
 		} catch (IllegalAccessException e) {

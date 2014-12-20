@@ -18,10 +18,10 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
         <value>techyTaxPersistenceUnit</value>
     </preference>
     <!-- Specify JPA "OpenEntityManagerInView" Listener -->
-    <listener>
-        <description>JPA "OpenEntityManagerInView" Listener</description>
-        <listener-class>org.zkoss.zkplus.jpa.OpenEntityManagerInViewListener</listener-class>
-    </listener>
+<!--     <listener> -->
+<!--         <description>JPA "OpenEntityManagerInView" Listener</description> -->
+<!--         <listener-class>org.zkoss.zkplus.jpa.OpenEntityManagerInViewListener</listener-class> -->
+<!--     </listener> -->
     
 	<!-- Defines the application's name -->
 	<preference>

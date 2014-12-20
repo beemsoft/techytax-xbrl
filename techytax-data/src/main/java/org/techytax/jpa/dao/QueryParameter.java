@@ -1,4 +1,4 @@
-package org.techytax.dao;
+package org.techytax.jpa.dao;
 
 import java.util.HashMap;
 import java.util.Map;

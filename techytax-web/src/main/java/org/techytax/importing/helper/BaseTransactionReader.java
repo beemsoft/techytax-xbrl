@@ -31,13 +31,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.AccountDao;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.dao.KostmatchDao;
 import org.techytax.dao.PrivateCostMatchDao;
 import org.techytax.dao.SettlementDao;
-import org.techytax.domain.Account;
 import org.techytax.domain.AccountType;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
@@ -45,21 +46,36 @@ import org.techytax.domain.CostMatchParent;
 import org.techytax.domain.CostType;
 import org.techytax.domain.Kostmatch;
 import org.techytax.domain.PrivateCostMatch;
-import org.techytax.domain.Settlement;
 import org.techytax.domain.SplitMatch;
 import org.techytax.domain.VatMatchParent;
 import org.techytax.domain.VatType;
 import org.techytax.helper.CostSplitter;
 
+@Component
 public abstract class BaseTransactionReader implements TransactionReader {
 
+	@Autowired
+	protected SettlementDao settlementDao;
+	
 	protected static Vector<String[]> regels = null;
-	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
-	protected SettlementDao settlementDao = new SettlementDao(Settlement.class);
-	private AccountDao accountDao = new AccountDao(Account.class);
-	private KostmatchDao kostmatchDao = new KostmatchDao(Kostmatch.class);
-	protected PrivateCostMatchDao privateCostMatchDao = new PrivateCostMatchDao(PrivateCostMatch.class);	
+	
+	@Autowired
+	protected CostTypeDao costTypeDao;
+	
+	@Autowired
+	private AccountDao accountDao;
+	
+	@Autowired
+	private KostmatchDao kostmatchDao;
+	
+	@Autowired
+	protected PrivateCostMatchDao privateCostMatchDao;
+	
+	@Autowired
+	CostTypeCache costTypeCache;
+	
 	protected List<Cost> kostLijst = new ArrayList<>();
+	
 	List<PrivateCostMatch> privateCostMatchList;
 	List<Kostmatch> kostmatchList;
 
@@ -160,9 +176,9 @@ public abstract class BaseTransactionReader implements TransactionReader {
 		splitCost.setAmount(cost.getAmount());
 		splitCost.setVat(cost.getVat());
 		if (cost.getCostType().equals(SETTLEMENT)) {
-			splitCost.setCostType(CostTypeCache.getCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE.getId()));
+			splitCost.setCostType(costTypeCache.getCostType(EXPENSE_CURRENT_ACCOUNT_IGNORE.getId()));
 		} else {
-			splitCost.setCostType(CostTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getId()));
+			splitCost.setCostType(costTypeCache.getCostType(INCOME_CURRENT_ACCOUNT_IGNORE.getId()));
 		}
 		splitCost.setDate(cost.getDate());
 		splitCost.setDescription(cost.getDescription());

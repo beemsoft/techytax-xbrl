@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -26,32 +26,38 @@ import java.util.Map;
 import org.apache.cxf.common.util.StringUtils;
 import org.techytax.domain.BusinessCalendarEvent;
 import org.techytax.domain.Project;
-import org.techytax.domain.User;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.ProjectDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.Property;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 
 public class CalendarEditorViewModel {
 
 	private BusinessCalendarEvent calendarEventData = new BusinessCalendarEvent();
 
-	private User user = UserCredentialManager.getUser();
-
-	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
+	@WireVariable
+	private ProjectDao projectDao;
 
 	private Project selectedProject;
 
 	private boolean visible = false;
+	
+	@AfterCompose
+	   public void initSetup() {
+	     projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
+	  }	
 
 	public BusinessCalendarEvent getCalendarEvent() {
 		return calendarEventData;
@@ -59,7 +65,7 @@ public class CalendarEditorViewModel {
 
 	public ListModelList<Project> getProjects() {
 		try {
-			List<Project> projects = projectDao.findAll(user);
+			List<Project> projects = projectDao.findAll(UserCredentialManager.getUser());
 			for (Project project : projects) {
 				if (project.equals(calendarEventData.getProject())) {
 					selectedProject = project;

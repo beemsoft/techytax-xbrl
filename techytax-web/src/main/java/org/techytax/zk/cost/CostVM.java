@@ -28,27 +28,28 @@ import java.util.Date;
 import java.util.List;
 
 import org.techytax.cache.CostCache;
-import org.techytax.dao.CostDao;
+import org.techytax.cache.CostTypeCache;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 
 public class CostVM {
-
-	protected User user = UserCredentialManager.getUser();
 
 	protected ListModelList<Cost> costs;
 
@@ -58,15 +59,28 @@ public class CostVM {
 
 	protected CostType selectedCostType;
 
-	protected CostDao costDao = new CostDao(Cost.class);
+	protected CostDao costDao;
 	
-	protected CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
+	protected CostTypeDao costTypeDao;
 
-	protected CostCache costCache = new CostCache();
+	protected CostCache costCache;
+	
+	protected AuditLogger auditLogger;
+	
+	protected CostTypeCache costTypeCache;
 	
 	String deleteMessage;
 	
 	String deleteAllMessage;
+	
+	@Init
+	public void init() {
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+		costCache = (CostCache) SpringUtil.getBean("costCache");
+		costTypeDao = (CostTypeDao) SpringUtil.getBean("costTypeDao");
+		costTypeCache = (CostTypeCache) SpringUtil.getBean("costTypeCache");
+	}
 	
 	
 	public String getDeleteMessage(){
@@ -84,8 +98,9 @@ public class CostVM {
 	@NotifyChange({"selected","costs","deleteMessage"})
 	@Command
 	public void deleteCost() throws Exception {
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			AuditLogger.log(DELETE_COST, user);
+			auditLogger.log(DELETE_COST, user);
 			selected.setUser(user);
 			costDao.deleteEntity(selected);
 			getCosts().remove(selected);
@@ -98,8 +113,9 @@ public class CostVM {
 	@NotifyChange({"costs","deleteAllMessage"})
 	@Command
 	public void deleteAllCosts() throws Exception{
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			AuditLogger.log(DELETE_ALL_COSTS, user);
+			auditLogger.log(DELETE_ALL_COSTS, user);
 			for (Cost cost : getSelectedCosts()) {
 				costDao.deleteEntity(cost);				
 			}
@@ -135,6 +151,7 @@ public class CostVM {
 	}	
 
 	public ListModelList<Cost> getCosts() throws Exception {
+		User user = UserCredentialManager.getUser();
 		if (user == null) {
 			Executions.sendRedirect("login.zul");
 		} else if (costs == null) {
@@ -161,7 +178,7 @@ public class CostVM {
 	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void newCost() throws Exception {
-		AuditLogger.log(ENTER_COST, user);
+		auditLogger.log(ENTER_COST, UserCredentialManager.getUser());
 		Cost cost = new Cost();
 		cost.setDate(new Date());
 		getCosts().add(cost);
@@ -171,16 +188,17 @@ public class CostVM {
 	@NotifyChange({ "selected", "costs" })
 	@Command
 	public void saveCost() throws Exception {
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			selected.setUser(user);
 			selected.setCostType(selectedCostType);
 			Cost cost = (Cost) costDao.getEntity(selected, Long.valueOf(selected.getId()));
 			selected.roundValues();
 			if (cost == null) {
-				AuditLogger.log(ENTER_COST, user);
+				auditLogger.log(ENTER_COST, user);
 				costDao.persistEntity(selected);
 			} else {
-				AuditLogger.log(UPDATE_COST, user);
+				auditLogger.log(UPDATE_COST, user);
 				costDao.merge(selected);
 			}
 			costCache.invalidate();

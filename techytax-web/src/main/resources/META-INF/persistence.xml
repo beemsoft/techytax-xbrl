@@ -6,27 +6,5 @@
  <persistence-unit name="techyTaxPersistenceUnit" transaction-type="RESOURCE_LOCAL">
  	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
  	<non-jta-data-source>java:comp/env/jdbc/TechyTaxDB</non-jta-data-source>
- 	<class>org.techytax.domain.UserEntity</class>
- 	<class>org.techytax.jpa.entities.VatDeclaration</class>
- 	<class>org.techytax.domain.BusinessCalendarEvent</class>
- 	<class>org.techytax.domain.Project</class>
- 	<class>org.techytax.domain.Customer</class>
- 	<class>org.techytax.jpa.entities.LogRecord</class>
- 	<class>nl.beemsoft.techytax.domain.SaasUser</class>
- 	<class>nl.beemsoft.techytax.log.SaasLogRecord</class>
- 	<class>org.techytax.domain.CostType</class>
- 	<class>org.techytax.external.domain.ExternalCostType</class>
- 	<class>org.techytax.domain.PrivateCostMatch</class>
- 	<class>org.techytax.domain.VatMatch</class>
- 	<class>org.techytax.domain.VatMatchPrivate</class>
- 	<class>org.techytax.domain.Kostmatch</class>
- 	<class>org.techytax.domain.SplitMatch</class>
- 	<class>org.techytax.domain.Cost</class>
- 	<class>org.techytax.domain.BookValue</class>
- 	<class>org.techytax.domain.Activum</class>
- 	<class>org.techytax.domain.RemainingValue</class>
- 	<class>org.techytax.domain.Settlement</class>
- 	<class>org.techytax.domain.Account</class>
- 	<class>org.techytax.domain.AccountBalance</class> 	
  </persistence-unit>
 </persistence>

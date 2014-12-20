@@ -33,20 +33,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.dao.CostTypeDao;
 import org.techytax.domain.CostType;
 
+@Component
 public class CostTypeCache {
 
-	private static final List<CostType> COST_TYPES_SKIP = Arrays.asList(VAT_CORRECTION_CAR_DEPRECIATION, BUSINESS_TRAVEL_CREDIT_CARD, BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT, DEPRECIATION_CAR,
+	@Autowired
+	CostTypeDao costTypeDao;
+
+	private final List<CostType> COST_TYPES_SKIP = Arrays.asList(VAT_CORRECTION_CAR_DEPRECIATION, BUSINESS_TRAVEL_CREDIT_CARD, BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT, DEPRECIATION_CAR,
 			DEPRECIATION_SETTLEMENT, DEPRECIATION_MACHINE, VAT_PAID_BACK_ON_OTHER_ACCOUNT);
-	private static Map<Long, CostType> costTypeMap = null;
+	private Map<Long, CostType> costTypeMap = null;
 
-	private CostTypeCache() {
-		//
-	}
-
-	public static CostType getCostType(long id) throws Exception {
+	public CostType getCostType(long id) throws Exception {
 
 		if (costTypeMap == null) {
 			fill();
@@ -54,9 +58,9 @@ public class CostTypeCache {
 		return costTypeMap.get(id);
 	}
 
-	private static void fill() throws Exception {
+	@Transactional
+	private void fill() throws Exception {
 		costTypeMap = new HashMap<>();
-		CostTypeDao costTypeDao = new CostTypeDao(CostType.class);
 		for (CostType costType : costTypeDao.findAll()) {
 			if (!COST_TYPES_SKIP.contains(costType)) {
 				costTypeMap.put(costType.getId(), costType);
@@ -64,7 +68,8 @@ public class CostTypeCache {
 		}
 	}
 
-	public static Collection<CostType> getCostTypes() throws Exception {
+	@Transactional
+	public Collection<CostType> getCostTypes() throws Exception {
 		if (costTypeMap == null) {
 			fill();
 		}

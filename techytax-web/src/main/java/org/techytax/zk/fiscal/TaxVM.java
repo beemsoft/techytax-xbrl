@@ -36,6 +36,7 @@ import org.techytax.report.domain.ReportBalance;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 
@@ -44,15 +45,16 @@ public class TaxVM {
 	private User user = UserCredentialManager.getUser();
 	private FiscalOverview overview;
 	private int fiscalYear;
-
+	
 	public TaxVM() throws Exception {
 		if (user != null && overview == null) {
 			FiscalPeriod previousFiscalPeriod = DateHelper.getPeriodPreviousYear();
 			fiscalYear = DateHelper.getYear(previousFiscalPeriod.getBeginDate());
 			try {
-				FiscalOverviewHelper fiscalOverviewHelper = new FiscalOverviewHelper();
+				FiscalOverviewHelper fiscalOverviewHelper = (FiscalOverviewHelper) SpringUtil.getBean("fiscalOverviewHelper");
 				overview = fiscalOverviewHelper.createFiscalOverview(previousFiscalPeriod.getBeginDate(), previousFiscalPeriod.getEndDate());
-				AuditLogger.log(AuditType.TAX_OVERVIEW, user);
+				AuditLogger auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+				auditLogger.log(AuditType.TAX_OVERVIEW, user);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Messagebox.show(e.getMessage(), null, 0, Messagebox.ERROR);
