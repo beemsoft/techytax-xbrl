@@ -1,55 +1,12 @@
 <zk>
-	<!--
-		Copyright 2014 Hans Beemsterboer
-		
-		This file is part of the TechyTax program.
-		
-		TechyTax is free software; you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
-		the Free Software Foundation; either version 3 of the License, or
-		(at your option) any later version.
-		
-		TechyTax is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
-		
-		You should have received a copy of the GNU General Public License
-		along with TechyTax; if not, write to the Free Software
-		Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-	-->
     <toolbarbutton onClick="reportWindow.doPopup()" image="/images/report.png" tooltiptext="${c:l('vat.pdf')}" height="155px" /><span>
-    <window id="reportWindow" visible="false" onCreate="doReport()"  border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" >
+    <window id="reportWindow" visible="false"  border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" 
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.vat.ReportVM')" >
 	<borderlayout height="100%">
 		<center border="none" flex="true">
-			<iframe id="reportFrame" />
+			<iframe id="reportFrame" content="@load(vm.report)"/>
 		</center>
 	</borderlayout>    
-	<zscript><![CDATA[
-	import java.io.*;
-	import org.zkoss.util.media.AMedia;
-	void doReport() {
-		InputStream is = null;
-		try {
-
-			final byte[] buf = org.techytax.report.helper.PdfReportHelper.createVatReport();
-			if (buf != null) {
-				//prepare the AMedia for iframe
-				final InputStream mediais = new ByteArrayInputStream(buf);
-				final AMedia amedia = new AMedia("VatReport.pdf", "pdf", "application/pdf", mediais);
-	
-				//set iframe content
-				reportFrame.setContent(amedia);
-			}
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		} finally {
-			if (is != null) {
-				is.close();
-			}
-		}
-	}
-]]></zscript>    
     </window>
     </span>
 </zk>

@@ -1,62 +1,63 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>techytax-domain</artifactId>
-    <name>TechyTax Domain</name>
+	<artifactId>techytax-domain</artifactId>
+	<name>TechyTax Domain</name>
 
-    <dependencies>
-    <dependency>
-      <groupId>org.zkoss.common</groupId>
-      <artifactId>zcommon</artifactId>
-      <version>${zk.version}</version>
-      <exclusions>
-      	<exclusion>
-      		<artifactId>slf4j-jdk14</artifactId>
-      		<groupId>org.slf4j</groupId>
-      	</exclusion>
-      </exclusions>
-    </dependency> 
+	<dependencies>
 		<dependency>
-		    <groupId>org.hibernate.common</groupId>
-		    <artifactId>hibernate-commons-annotations</artifactId>
-		    <version>4.0.5.Final</version>
+			<groupId>org.zkoss.common</groupId>
+			<artifactId>zcommon</artifactId>
+			<version>${zk.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-<dependency>
-    <groupId>org.hibernate</groupId>
-    <artifactId>hibernate-core</artifactId>
-    <version>4.3.6.Final</version>
-</dependency>	
-<dependency>
-            <groupId>org.zkoss.calendar</groupId>
-            <artifactId>calendar</artifactId>
-            <version>2.1.2</version>
-        </dependency>		
-<dependency>
-    <groupId>commons-net</groupId>
-    <artifactId>commons-net</artifactId>
-    <version>3.3</version>
-</dependency>  		       
-<dependency>
-    <groupId>org.jasypt</groupId>
-    <artifactId>jasypt-hibernate4</artifactId>
-    <version>1.9.2</version>
-</dependency>    
+		<dependency>
+			<groupId>org.hibernate.common</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<version>4.0.5.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.6.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.zkoss.calendar</groupId>
+			<artifactId>calendar</artifactId>
+			<version>2.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jasypt</groupId>
+			<artifactId>jasypt-hibernate4</artifactId>
+			<version>1.9.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
 			<scope>compile</scope>
 		</dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <parent>
-    	<groupId>org.techytax</groupId>
-    	<artifactId>techytax-parent</artifactId>
-    	<version>2.3.1-SNAPSHOT</version>
-    </parent>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<parent>
+		<groupId>org.techytax</groupId>
+		<artifactId>techytax-parent</artifactId>
+		<version>2.3.1-SNAPSHOT</version>
+	</parent>
 </project>

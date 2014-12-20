@@ -31,26 +31,28 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.CostDao;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 
 public class InvoiceVM {
 
 	private ListModelList<InvoiceCheck> invoices;
 	private InvoiceCheck selected;
-	private CostDao costDao = new CostDao(Cost.class);
-	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);	
+	private CostDao costDao;
+	private BookValueDao bookValueDao;
 	private User user = UserCredentialManager.getUser();
 	private Date balanceDate = new Date();
 	private BigDecimal totalIncome = BigDecimal.ZERO;
@@ -58,9 +60,18 @@ public class InvoiceVM {
 	private BigDecimal paidInvoicesWithoutMatch = BigDecimal.ZERO;
 	private BigDecimal unpaidInvoicesFromThisYear = BigDecimal.ZERO;
 
+	private AuditLogger auditLogger;
+
+	@Init
+	public void init() {
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		bookValueDao = (BookValueDao) SpringUtil.getBean("bookValueDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+	}
+
 	public ListModelList<InvoiceCheck> getInvoices() throws Exception {
 		if (user != null) {
-			AuditLogger.log(INVOICE_OVERVIEW, user);
+			auditLogger.log(INVOICE_OVERVIEW, user);
 			FiscalPeriod period = DateHelper.getPeriodTillDate(balanceDate);
 			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(period);
 			invoices = new ListModelList<>();
@@ -69,7 +80,7 @@ public class InvoiceVM {
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				InvoiceCheck invoiceCheck = new InvoiceCheck();
- 				if (cost.getCostType().equals(INVOICE_SENT)) {
+				if (cost.getCostType().equals(INVOICE_SENT)) {
 					invoiceCheck.setDateSent(cost.getDate());
 					invoiceCheck.setInvoiceNumber(getInvoiceNumber(cost.getDescription()));
 					invoiceCheck.setNetAmount(cost.getAmount());

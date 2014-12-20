@@ -36,8 +36,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.techytax.dao.BusinessCalendarDao;
-import org.techytax.dao.CostDao;
 import org.techytax.domain.BusinessCalendarEvent;
 import org.techytax.domain.Cost;
 import org.techytax.domain.Customer;
@@ -45,10 +45,12 @@ import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.Project;
 import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.CostDao;
+import org.techytax.jpa.dao.ProjectDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.mail.MailHelper;
 import org.techytax.report.helper.Invoice;
+import org.techytax.report.helper.PdfInvoiceHelper;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.calendar.Calendars;
@@ -63,7 +65,9 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zkmax.ui.select.annotation.Subscribe;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Iframe;
 import org.zkoss.zul.ListModel;
@@ -98,11 +102,13 @@ public class CalendarController extends SelectorComposer<Component> {
 	// the in editing calendar ui event
 	private CalendarsEvent calendarsEvent = null;
 
-	private User user = UserCredentialManager.getUser();
-
-	private GenericDao<Project> projectDao = new GenericDao<>(Project.class);
-	private BusinessCalendarDao businessCalendarDao = new BusinessCalendarDao(BusinessCalendarEvent.class);
-	private CostDao costDao = new CostDao(Cost.class);
+	@WireVariable
+	private ProjectDao projectDao;
+	
+	@WireVariable
+	private BusinessCalendarDao businessCalendarDao;
+	
+	private CostDao costDao;
 
 	private ListModel<Project> projectsModel;
 
@@ -119,14 +125,31 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	private Invoice invoice;
 	private byte[] invoiceBuf;
-
+	
+	@WireVariable
+	private AuditLogger auditLogger;
+	
+	@WireVariable
+	private CalendarService calendarService;
+	
+	private User getUser() {
+		return 	UserCredentialManager.getUser();
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
+	     projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
+	     businessCalendarDao = (BusinessCalendarDao) SpringUtil.getBean("businessCalendarDao");	     
+	     auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+	     costDao = (CostDao) SpringUtil.getBean("costDao");
+	     calendarService = (CalendarService) SpringUtil.getBean("calendarService");
+		
+		final User user = getUser();
 		if (user != null) {
-			List<BusinessCalendarEvent> calendarEvents = businessCalendarDao.getEvents();
+			List<BusinessCalendarEvent> calendarEvents = calendarService.getEvents();
 			calendarModel = new BusinessCalendarModel(calendarEvents);
 			calendars.setModel(this.calendarModel);
 			invoiceButton.setDisabled(true);
@@ -141,7 +164,7 @@ public class CalendarController extends SelectorComposer<Component> {
 				private void sendInvoice() throws Exception {
 					MailHelper.sendInvoice(invoice, invoiceBuf, user);
 					registerInvoice();
-					AuditLogger.log(SEND_INVOICE, user);
+					auditLogger.log(SEND_INVOICE, user);
 					alert(Labels.getLabel("invoice.sent"));
 				}
 
@@ -256,12 +279,13 @@ public class CalendarController extends SelectorComposer<Component> {
 	// listen to queue message from other controller
 	@SuppressWarnings("incomplete-switch")
 	@Subscribe(value = QueueUtil.QUEUE_NAME)
+	@Transactional
 	public void handleQueueMessage(QueueMessage message) throws Exception {
 		BusinessCalendarEvent calendarEvent = (BusinessCalendarEvent) message.getData();
 		switch (message.getType()) {
 		case DELETE:
 			calendarModel.remove((BusinessCalendarEvent) message.getData());
-			businessCalendarDao.deleteEntity(calendarEvent);
+			calendarService.delete(calendarEvent);
 			// clear the shadow of the event after editingMaak een PDF factuur.
 			calendarsEvent.clearGhost();
 			calendarsEvent = null;
@@ -272,7 +296,7 @@ public class CalendarController extends SelectorComposer<Component> {
 				businessCalendarDao.updateEvent(calendarEvent);
 			} else {
 				calendarModel.add(calendarEvent);
-				businessCalendarDao.insertBusinessCalendarEvent(calendarEvent);
+				calendarService.add(calendarEvent);
 			}
 		case CANCEL:
 			// clear the shadow of the event after editing
@@ -283,7 +307,9 @@ public class CalendarController extends SelectorComposer<Component> {
 	}
 
 	public ListModel<Project> getProjectsModel() throws IllegalAccessException {
+		final User user = getUser();
 		if (user != null) {
+			projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
 			projectsModel = new ListModelList<>(projectDao.findAll(user));
 		}
 		return projectsModel;
@@ -379,7 +405,8 @@ public class CalendarController extends SelectorComposer<Component> {
 			invoice.setTotalAmount(totaalBedrag);
 			
 			invoice.setNetAmountAfterDiscount(netAmountAfterDiscount);
-			invoiceBuf = org.techytax.report.helper.PdfInvoiceHelper.createPdfInvoice(invoice, user);
+			PdfInvoiceHelper pdfInvoiceHelper = new PdfInvoiceHelper();
+			invoiceBuf = pdfInvoiceHelper.createPdfInvoice(invoice, getUser());
 
 			// prepare the AMedia for iframe
 			final InputStream mediais = new ByteArrayInputStream(invoiceBuf);

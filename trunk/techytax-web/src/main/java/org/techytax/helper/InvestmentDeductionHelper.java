@@ -23,23 +23,25 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.dao.ActivumDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
-import org.techytax.domain.User;
 import org.techytax.zk.login.UserCredentialManager;
 
+@Component
 public class InvestmentDeductionHelper {
 
-	private User user = UserCredentialManager.getUser();
+	@Autowired
+	private ActivumDao activumDao;
 
 	public BigInteger getInvestmentDeduction(List<Cost> costList) throws Exception {
 		BigInteger totalInvestmentDeduction = BigInteger.ZERO;
-		ActivumDao activumDao = new ActivumDao(Activum.class);
 		for (Cost cost : costList) {
 			Activum activum = new Activum();
-			activum.setUser(user);
+			activum.setUser(UserCredentialManager.getUser());
 			activum.setCost(cost);
 			activum = activumDao.getActivumForCost(cost);
 			if (activum != null && activum.getBalanceType() == BalanceType.MACHINERY) {
@@ -49,7 +51,7 @@ public class InvestmentDeductionHelper {
 		return totalInvestmentDeduction;
 	}
 
-	private static BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {
+	private BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {
 		BigInteger totalInvestmentRounded = totalInvestment.setScale(0, BigDecimal.ROUND_UP).toBigInteger();
 		if (totalInvestmentRounded.compareTo(new BigInteger("2300")) == -1 || totalInvestmentRounded.compareTo(new BigInteger("306931")) == 1) {
 			return BigInteger.ZERO;

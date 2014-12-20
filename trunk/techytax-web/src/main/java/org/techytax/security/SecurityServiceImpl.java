@@ -29,22 +29,29 @@ import org.jasypt.encryption.pbe.StandardPBEBigDecimalEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEBigIntegerEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
-import org.techytax.jpa.dao.GenericDao;
-import org.techytax.jpa.entities.EntityManagerHelper;
+import org.techytax.jpa.dao.UserEntityDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
 import org.techytax.props.PropsFactory;
 import org.techytax.zk.login.Sha;
 import org.zkoss.util.resource.Labels;
 
+@Service("securityService")
 public class SecurityServiceImpl implements SecurityService {
 
+	@Autowired
+	private UserEntityDao userDao;
+	
+	@Autowired
+	private AuditLogger auditLogger;	
+	
 	@Override
 	public User authenticate(String username, String password) throws Exception {
 
-		GenericDao<UserEntity> userDao = new GenericDao<>(UserEntity.class);
 		List<UserEntity> users = null;
 		try {
 			users = userDao.findByNamedQuery("UserEntity.findByName", username);
@@ -67,7 +74,7 @@ public class SecurityServiceImpl implements SecurityService {
 			user.setLatestOnlineTime(currentDate);
 			userDao.merge(user);
 			initEncryption();
-			AuditLogger.log(AuditType.LOGON, new UserEntity(user));
+			auditLogger.log(AuditType.LOGON, new UserEntity(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,7 +83,6 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public User authenticateForService(String username, String password) throws Exception {
-		GenericDao<UserEntity> userDao = new GenericDao<>(EntityManagerHelper.getEntityManager(), UserEntity.class);
 		List<UserEntity> users = null;
 		try {
 			users = userDao.findByNamedQuery("UserEntity.findByName", username);
@@ -96,7 +102,7 @@ public class SecurityServiceImpl implements SecurityService {
 		}
 		try {
 			initEncryption();
-			AuditLogger.log(AuditType.LOGON_FOR_SERVICE, new UserEntity(user));
+			auditLogger.log(AuditType.LOGON_FOR_SERVICE, new UserEntity(user));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

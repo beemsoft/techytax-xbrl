@@ -21,6 +21,8 @@ package org.techytax.zk.account;
 
 import java.math.BigDecimal;
 
+import javax.transaction.Transactional;
+
 import org.techytax.dao.AccountBalanceDao;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
@@ -30,8 +32,10 @@ import org.techytax.domain.User;
 import org.techytax.helper.AmountHelper;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 
 public class AccountVM {
@@ -42,10 +46,17 @@ public class AccountVM {
 	Account selected;
 	AccountType selectedAccountType;
 	AccountBalance selectedAccountBalance;
-	AccountDao accountDao = new AccountDao(Account.class);
-	AccountBalanceDao accountBalanceDao = new AccountBalanceDao(AccountBalance.class);
+	AccountDao accountDao;
+	AccountBalanceDao accountBalanceDao;
 	User user = UserCredentialManager.getUser();
+	
+	@Init
+	public void init() {
+		accountDao = (AccountDao) SpringUtil.getBean("accountDao");
+		accountBalanceDao = (AccountBalanceDao) SpringUtil.getBean("accountBalanceDao");
+	}
 
+	@Transactional
 	public ListModelList<Account> getAccounts() throws Exception {
 		if (accounts == null) {
 			if (user != null) {

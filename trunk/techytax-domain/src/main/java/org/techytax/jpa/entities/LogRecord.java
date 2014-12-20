@@ -24,6 +24,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -38,8 +39,11 @@ import org.techytax.log.AuditType;
 @Table(name = "log_record")
 @Getter
 @Setter
+@NamedQuery(name = LogRecord.GET_VAT_DECLARATION_TIME, query = "SELECT lr FROM LogRecord lr WHERE lr.timeStamp > :beginDate AND lr.timeStamp <= :endDate AND lr.auditType='SEND_VAT_DECLARATION' AND lr.user= :user")
 public class LogRecord extends UserObject {
 
+	public static final String GET_VAT_DECLARATION_TIME = "LogRecord.GET_VAT_DECLARATION_TIME";
+	
 	@Enumerated(EnumType.STRING)
 	private AuditType auditType;
 

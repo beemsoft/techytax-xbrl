@@ -19,21 +19,20 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.Cost;
+import org.techytax.jpa.dao.GenericDao;
 import org.techytax.util.DateHelper;
 
-public class ActivumDao extends BaseDao<Activum> {
-
-	public ActivumDao(Class<Activum> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class ActivumDao extends GenericDao<Activum> {
 
 	public List<Activum> getNewActiva(BalanceType balanceType, Date beginDate, Date endDate) {
 		return findByNamedQuery(Activum.NEW_ACTIVA, with("beginDate", beginDate).and("endDate", endDate).and("startDate", DateHelper.getLastDayOfFiscalYear()).and("balanceType", balanceType)

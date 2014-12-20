@@ -35,7 +35,7 @@ import org.techytax.domain.UserObject;
 
 @Entity
 @Table(name = "vat_declaration")
-@NamedQuery(name="VatDeclaration.findUnpaid", query="SELECT vatDeclaration FROM VatDeclaration vatDeclaration WHERE vatDeclaration.user = ? AND timeStampPaid = null")
+@NamedQuery(name="VatDeclaration.findUnpaid", query="SELECT vatDeclaration FROM VatDeclaration vatDeclaration WHERE vatDeclaration.user = :user AND timeStampPaid = null")
 @Getter
 @Setter
 public class VatDeclaration extends UserObject {

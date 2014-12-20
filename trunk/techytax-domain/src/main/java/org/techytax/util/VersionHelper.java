@@ -22,11 +22,16 @@ package org.techytax.util;
 public class VersionHelper {
 	
 	public static String getVersion() {
-		return VersionHelper.class.getPackage().getImplementationVersion();
+		StringBuilder sb = new StringBuilder();
+		if (isSaasVersion()) {
+			sb.append("SaaS-");
+		}
+		sb.append(VersionHelper.class.getPackage().getImplementationVersion());
+		return sb.toString();
 	}
 	
 	public static boolean isSaasVersion() {
-		return true;
+		return "true".equals(System.getProperty("saas.version"));
 	}
 	
 }

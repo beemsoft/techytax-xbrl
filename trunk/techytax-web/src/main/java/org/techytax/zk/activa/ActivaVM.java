@@ -42,8 +42,10 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.GlobalCommand;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Messagebox.ClickEvent;
@@ -51,14 +53,22 @@ import org.zkoss.zul.Window;
 
 public class ActivaVM {
 
-	private User user = UserCredentialManager.getUser();
 	private List<BookValueHistory> bookValueHistories = new ArrayList<>();
 	private Activum selected;
-	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
-	private ActivumDao activumDao = new ActivumDao(Activum.class);
+	private BookValueDao bookValueDao;
+	private ActivumDao activumDao;
+	
+	private AuditLogger auditLogger;
+	
+	@Init
+	public void init() {
+		bookValueDao = (BookValueDao) SpringUtil.getBean("bookValueDao");
+		activumDao = (ActivumDao) SpringUtil.getBean("activumDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+	}
 
 	public ListModelList<BookValueHistory> getBookValueHistories() throws Exception {
-		if (user != null) {
+		if (UserCredentialManager.getUser() != null) {
 			bookValueHistories = new ArrayList<>();
 			List<BookValue> bookValues = bookValueDao.getBookValuesHistory();
 			BalanceType currentBalanceType = null;
@@ -124,7 +134,7 @@ public class ActivaVM {
 	@NotifyChange("selected")
 	@Command
 	public void saveActivum() throws Exception {
-		if (user != null) {
+		if (UserCredentialManager.getUser() != null) {
 			Activum activum = (Activum) activumDao.getEntity(selected, selected.getId());
 			if (activum == null) {
 				activumDao.persistEntity(selected);
@@ -152,6 +162,7 @@ public class ActivaVM {
 	}
 
 	private void insertOrUpdate(BookValue bookValue) throws Exception {
+		User user = UserCredentialManager.getUser();
 		BookValue originalBookValue = null;
 		if (!checkFiscalPensionLimit(bookValue)) {
 			return;
@@ -160,11 +171,11 @@ public class ActivaVM {
 			originalBookValue = (BookValue) bookValueDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
 		}
 		if (originalBookValue == null && bookValue.getSaldo() != null) {
-			AuditLogger.log(ENTER_BOOKVALUE, user);
+			auditLogger.log(ENTER_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueDao.persistEntity(bookValue);
 		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
-			AuditLogger.log(UPDATE_BOOKVALUE, user);
+			auditLogger.log(UPDATE_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueDao.merge(bookValue);
 		} else if (bookValue.getSaldo() == null) {
@@ -192,7 +203,7 @@ public class ActivaVM {
 	}
 
 	public ListModelList<Activum> getActiva() throws Exception {
-		if (user != null) {
+		if (UserCredentialManager.getUser() != null) {
 			List<Activum> activaList = activumDao.getAllActiva();
 			return new ListModelList<>(activaList);
 		} else {
@@ -213,7 +224,7 @@ public class ActivaVM {
 	@GlobalCommand
 	@NotifyChange("activa")
 	public void refreshvalues(@BindingParam("returnactivum") Activum activum) throws Exception {
-		AuditLogger.log(UPDATE_ACTIVUM, user);
+		auditLogger.log(UPDATE_ACTIVUM, UserCredentialManager.getUser());
 		activumDao.merge(activum);
 	}
 

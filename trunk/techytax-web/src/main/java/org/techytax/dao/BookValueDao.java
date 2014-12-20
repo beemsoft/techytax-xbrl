@@ -19,7 +19,6 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
 import static org.techytax.domain.BalanceType.CAR;
 import static org.techytax.domain.BalanceType.CURRENT_ASSETS;
 import static org.techytax.domain.BalanceType.INVOICES_TO_BE_PAID;
@@ -29,18 +28,18 @@ import static org.techytax.domain.BalanceType.OFFICE;
 import static org.techytax.domain.BalanceType.PENSION;
 import static org.techytax.domain.BalanceType.STOCK;
 import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
+import org.techytax.jpa.dao.GenericDao;
 
-public class BookValueDao extends BaseDao<BookValue> {
-
-	public BookValueDao(Class<BookValue> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class BookValueDao extends GenericDao<BookValue> {
 
 	public List<BookValue> getBookValuesHistory() {
 		return findByNamedQuery(BookValue.HISTORY);

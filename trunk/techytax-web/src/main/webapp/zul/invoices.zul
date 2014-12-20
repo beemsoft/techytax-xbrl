@@ -6,7 +6,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 	apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.fiscal.InvoiceVM')" 
 	validationMessages="@id('vmsgs')">
 	<hbox>
-	<vbox hflex="true" width="650px" height="490px">
+	<vbox width="650px" height="490px">
 		<groupbox>
 			<grid>
 				<columns>
@@ -23,7 +23,7 @@ arg0="/WEB-INF/layout/template.zul"?>
 				</rows>
 			</grid>
 		</groupbox>
-		<listbox model="@load(vm.invoices)" selectedItem="@bind(vm.selected)" hflex="true" height="350px">
+		<listbox model="@load(vm.invoices)" selectedItem="@bind(vm.selected)" height="350px">
 			<listhead>
 				<listheader label="${c:l('date.sent')}"/>
 				<listheader label="${c:l('date.paid')}"/>				

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,47 +19,55 @@
  */
 package org.techytax.jpa.dao;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
+import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.techytax.domain.Activum;
+import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
-import org.techytax.jpa.entities.EntityManagerHelper;
-import org.zkoss.zkplus.jpa.JpaUtil;
+import org.techytax.domain.UserObject;
+import org.techytax.zk.login.UserCredentialManager;
 
-public class GenericDao<T> {
+public abstract class GenericDao<T> {
 
+	@PersistenceContext
 	private EntityManager entityManager;
+	
 	private final Class<T> persistentClass;
-	private boolean isForTesting = false;
 
-	public GenericDao(final Class<T> persistentClass) {
-		entityManager = JpaUtil.getEntityManager();
-		this.persistentClass = persistentClass;
+	public GenericDao() {
+        Type t = getClass().getGenericSuperclass();
+        ParameterizedType pt = (ParameterizedType) t;
+        persistentClass = (Class) pt.getActualTypeArguments()[0];		
 	}
 
 	public GenericDao(final EntityManager entityManager, final Class<T> persistentClass) {
-		this.entityManager = entityManager;
+//		this.entityManager = entityManager;
 		this.persistentClass = persistentClass;
-		isForTesting = true;
 	}
 
-	private void getNewEntityManager() {
-		if (isForTesting) {
-			entityManager = EntityManagerHelper.getEntityManager();
-		} else {
-			entityManager = JpaUtil.getEntityManager();
-		}
+	protected EntityManager getEntityManager() {
+		return entityManager;
 	}
 
 	public void deleteEntity(T entity) {
-		getNewEntityManager();
 		try {
 			entityManager.remove(entityManager.merge(entity));
 			entityManager.flush();
@@ -69,26 +77,19 @@ public class GenericDao<T> {
 	}
 
 	public void persistEntity(T entity) {
-		getNewEntityManager();
 		try {
-			if (isForTesting) {
-				entityManager.getTransaction().begin();
-			}
 			entityManager.persist(entity);
 			entityManager.flush();
 			entityManager.clear();
-			if (isForTesting) {			
-				entityManager.getTransaction().commit();
-			}
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Transactional
 	public void merge(T entity) {
 		try {
-			EntityManager em = JpaUtil.getEntityManager();
-			em.merge(entity);
+			entityManager.merge(entity);
 		} catch (EntityExistsException e) {
 			e.printStackTrace();
 		}
@@ -96,7 +97,6 @@ public class GenericDao<T> {
 
 	public Object getEntity(T entity, Long id) {
 		Object retrievedEntity = null;
-		getNewEntityManager();
 		try {
 			retrievedEntity = entityManager.getReference(entity.getClass(), id);
 			return retrievedEntity;
@@ -106,17 +106,68 @@ public class GenericDao<T> {
 		return retrievedEntity;
 	}
 
+//	@SuppressWarnings("unchecked")
+//	public
+//	List<T> findByNamedQuery(final String name, Object... params) {
+//		Query query = entityManager.createNamedQuery(name);
+//
+//		for (int i = 0; i < params.length; i++) {
+//			query.setParameter(i + 1, params[i]);
+//		}
+//		addUserParameterForUserObjects(query);
+//
+//		return query.getResultList();
+//	}
+	
 	@SuppressWarnings("unchecked")
-	public List<T> findByNamedQuery(final String name, Object... params) {
+	public
+	List<T> findByNamedQuery(final String name, String... params) {
 		Query query = entityManager.createNamedQuery(name);
+
 		for (int i = 0; i < params.length; i++) {
 			query.setParameter(i + 1, params[i]);
 		}
+		addUserParameterForUserObjects(query);
 
-		final List<T> result = (List<T>) query.getResultList();
-		return result;
+		return query.getResultList();
+	}	
+	
+	@Transactional
+	public List<T> findAll() throws IllegalAccessException {
+		return findByCriteria();
+	}
+	
+	List<T> findByCriteria(final Criterion... criterion) throws IllegalAccessException {
+		return findByCriteria(-1, -1, criterion);
 	}
 
+	@SuppressWarnings("unchecked")
+	List<T> findByCriteria(final int firstResult, final int maxResults, final Criterion... criterion) throws IllegalAccessException {
+		Session session = (Session) entityManager.getDelegate();
+		Criteria crit = session.createCriteria(persistentClass);
+
+		if (UserObject.class.isAssignableFrom(persistentClass)) {
+			User user = UserCredentialManager.getUser();
+			crit.add(Restrictions.eq("user", user));
+		}
+
+		for (final Criterion c : criterion) {
+			crit.add(c);
+		}
+
+		if (firstResult > 0) {
+			crit.setFirstResult(firstResult);
+		}
+
+		if (maxResults > 0) {
+			crit.setMaxResults(maxResults);
+		}
+
+		final List<T> result = crit.list();
+		return result;
+	}	
+
+	@Transactional
 	public List<T> findAll(User user) throws IllegalAccessException {
 		return findByCriteria(user);
 	}
@@ -127,8 +178,6 @@ public class GenericDao<T> {
 
 	@SuppressWarnings("unchecked")
 	protected List<T> findByCriteria(final int firstResult, final int maxResults, final User user, final Criterion... criterion) throws IllegalAccessException {
-		// EntityManager em = JpaUtil.getEntityManager();
-		getNewEntityManager();
 		Session session = (Session) entityManager.getDelegate();
 		Criteria crit = session.createCriteria(persistentClass);
 
@@ -153,5 +202,67 @@ public class GenericDao<T> {
 		final List<T> result = crit.list();
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected
+	List<T> findByNamedQuery(String namedQueryName, Map<String, Object> parameters) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = entityManager.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			if (entry.getValue() instanceof Date) {
+				Date dateValue = (Date) entry.getValue();
+				query.setParameter(entry.getKey(), dateValue, TemporalType.DATE);
+			} else {
+				query.setParameter(entry.getKey(), entry.getValue());
+			}
+		}
+		addUserParameterForUserObjects(query);
+		return query.getResultList();
+	}	
+	
+	@SuppressWarnings("unchecked")
+	List<T> findByNamedQueryForPeriod(String namedQueryName, FiscalPeriod period) {
+		Query query = entityManager.createNamedQuery(namedQueryName);
+		query.setParameter("beginDate", period.getBeginDate(), TemporalType.DATE);
+		query.setParameter("endDate", period.getEndDate(), TemporalType.DATE);
+		addUserParameterForUserObjects(query);
+		return query.getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected
+	T findEntityByNamedQuery(String namedQueryName) {
+		Query query = entityManager.createNamedQuery(namedQueryName);
+		addUserParameterForUserObjects(query);
+		try {
+			return (T) query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected
+	T findEntityByNamedQuery(String namedQueryName, Map<String, Object> parameters) {
+		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
+		Query query = entityManager.createNamedQuery(namedQueryName);
+		for (Entry<String, Object> entry : rawParameters) {
+			query.setParameter(entry.getKey(), entry.getValue());
+		}
+		addUserParameterForUserObjects(query);
+		try {
+			return (T) query.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}	
+	
+	private void addUserParameterForUserObjects(Query query) {
+		if (UserObject.class.isAssignableFrom(persistentClass)) {
+			User user = UserCredentialManager.getUser();			
+			query.setParameter("user", user);
+		}
+	}
+	
 
 }

@@ -19,21 +19,21 @@
  */
 package org.techytax.dao;
 
-import static org.techytax.dao.QueryParameter.with;
+import static org.techytax.jpa.dao.QueryParameter.with;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.CostType;
 import org.techytax.domain.PrivateCostMatch;
+import org.techytax.jpa.dao.GenericDao;
+import org.techytax.zk.login.UserCredentialManager;
 
-public class PrivateCostMatchDao extends BaseDao<PrivateCostMatch> {
-
-	public PrivateCostMatchDao(Class<PrivateCostMatch> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class PrivateCostMatchDao extends GenericDao<PrivateCostMatch> {
 
 	public List<PrivateCostMatch> getCostMatchPrivateListForCostType(CostType costType) {
-		return findByNamedQuery(PrivateCostMatch.FOR_TYPE, with("costType", costType).and("user", user).parameters());
+		return findByNamedQuery(PrivateCostMatch.FOR_TYPE, with("costType", costType).and("user", UserCredentialManager.getUser()).parameters());
 	}
 
 	public PrivateCostMatch getCostMatchPrivate(PrivateCostMatch costMatch) throws Exception {

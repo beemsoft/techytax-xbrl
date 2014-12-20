@@ -22,7 +22,8 @@ package org.techytax.report.helper;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-import org.techytax.dao.CostDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
@@ -31,6 +32,7 @@ import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.helper.AmountHelper;
 import org.techytax.helper.BalanceCalculator;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.report.domain.VatJournal;
 import org.techytax.report.domain.VatReportData;
 import org.techytax.util.DateHelper;
@@ -46,28 +48,34 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+@Component
 public class PdfReportHelper {
 
+	@Autowired
+	private CostDao costDao;
+	
+	@Autowired
+	private BalanceCalculator balanceCalculator;
+	
 	private static Font font = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
 	private static Font totalAmountFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
 	private static Font headerFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
 	private static int id = 1;
 
-	private static void addSpace(PdfPTable table) {
+	private void addSpace(PdfPTable table) {
 		PdfPCell cell = new PdfPCell();
 		cell.setFixedHeight(15f);
 		cell.setBorder(PdfPCell.NO_BORDER);
 		table.addCell(cell);
 	}
 
-	public static byte[] createVatReport() throws Exception {
+	public byte[] createVatReport() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-			CostDao costDao = new CostDao(Cost.class);
 			List<Cost> vatCosts = costDao.getVatCostsInPeriod(period);
 			VatReportData vatReportData = VatReportHelper.createReportData(vatCosts);
-			VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(vatCosts, false);
+			VatBalanceWithinEu vatBalanceWithinEu = balanceCalculator.calculateVatBalance(vatCosts, false);
 			VatDeclarationData vatDeclarationData = new VatDeclarationData();
 			vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
 			vatDeclarationData.setFullName(user.getFullName());

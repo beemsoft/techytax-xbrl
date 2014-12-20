@@ -19,13 +19,12 @@
  */
 package org.techytax.dao;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Settlement;
+import org.techytax.jpa.dao.GenericDao;
 
-public class SettlementDao extends BaseDao<Settlement> {
-
-	public SettlementDao(Class<Settlement> persistentClass) {
-		super(persistentClass);
-	}
+@Component
+public class SettlementDao extends GenericDao<Settlement> {
 
 	public long getPercentage() throws Exception {
 		Settlement settlement = getSettlement();

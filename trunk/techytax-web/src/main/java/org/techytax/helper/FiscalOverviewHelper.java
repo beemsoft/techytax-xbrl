@@ -27,14 +27,6 @@ import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
 import static org.techytax.domain.CostConstants.FOR_PERCENTAGE;
 import static org.techytax.domain.CostConstants.MAXIMALE_FOR;
 import static org.techytax.helper.AmountHelper.roundToInteger;
-import static org.techytax.helper.BalanceCalculator.getAfschrijvingAuto;
-import static org.techytax.helper.BalanceCalculator.getAlgemeneKosten;
-import static org.techytax.helper.BalanceCalculator.getDepreciationSettlement;
-import static org.techytax.helper.BalanceCalculator.getFiscaleBijtelling;
-import static org.techytax.helper.BalanceCalculator.getFoodCosts;
-import static org.techytax.helper.BalanceCalculator.getKostenVoorAuto;
-import static org.techytax.helper.BalanceCalculator.getReiskosten;
-import static org.techytax.helper.BalanceCalculator.getSettlementCosts;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -45,10 +37,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.cache.CostCache;
 import org.techytax.dao.ActivumDao;
 import org.techytax.dao.BookValueDao;
-import org.techytax.dao.CostDao;
 import org.techytax.domain.Activum;
 import org.techytax.domain.BalanceType;
 import org.techytax.domain.BookValue;
@@ -61,21 +54,41 @@ import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivateWithdrawal;
 import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 
+@Component
 public class FiscalOverviewHelper {
 
 	private User user = UserCredentialManager.getUser();
-	private ActivumDao activumDao = new ActivumDao(Activum.class);
-	private BookValueDao bookValueDao = new BookValueDao(BookValue.class);
-	private CostCache costCache = new CostCache();
-	private CostDao costDao = new CostDao(Cost.class);
+	
+	@Autowired
+	private ActivumDao activumDao;
+	
+	@Autowired
+	private BookValueDao bookValueDao;
+	
+	@Autowired
+	private CostCache costCache;
+	
+	@Autowired
+	private CostDao costDao;
+	
+	@Autowired
+	private ActivaHelper activaHelper;
+	
 	private FiscalOverview overview = new FiscalOverview();
-	private InvestmentDeductionHelper investmentDeductionHelper = new InvestmentDeductionHelper();
+	
+	@Autowired
+	private InvestmentDeductionHelper investmentDeductionHelper;
+	
 	private int bookYear;
 	private Map<BalanceType, FiscalBalance> passivaMap = new HashMap<>();
+	
+	@Autowired
+	private BalanceCalculator balanceCalculator;
 
 	public FiscalOverviewHelper() throws Exception {
 		bookYear = DateHelper.getFiscalYear();
@@ -89,13 +102,14 @@ public class FiscalOverviewHelper {
 		costCache.setEindDatum(eindDatum);
 		PrivateWithdrawal privatWithdrawal = new PrivateWithdrawal();
 
-		VatBalanceWithinEu vatBalanceWithinEu = BalanceCalculator.calculateVatBalance(costCache.getCosts(), false);
+		VatBalanceWithinEu vatBalanceWithinEu = balanceCalculator.calculateVatBalance(costCache.getCosts(), false);
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
 
 		handleProfitAndLoss(privatWithdrawal, vatBalanceWithinEu, deductableCosts);
 
-		ActivaHelper activaHelper = new ActivaHelper(overview, costCache);
+		activaHelper.setFiscalOverview(overview);
+		activaHelper.setCostCache(costCache);
 		Map<BalanceType, FiscalBalance> activaMap = activaHelper.handleActiva(props, deductableCosts, costCache.getBusinessAccountCosts());
 		overview.setActivaMap(activaMap);
 
@@ -167,7 +181,7 @@ public class FiscalOverviewHelper {
 	private void handleTurnOver(VatBalanceWithinEu vatBalanceWithinEu) throws Exception {
 		if (vatBalanceWithinEu.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
 			List<Cost> balanceCosts = costCache.getBusinessAccountCosts();
-			BigDecimal turnover = BalanceCalculator.calculateTotalPaidInvoices(balanceCosts);
+			BigDecimal turnover = balanceCalculator.calculateTotalPaidInvoices(balanceCosts);
 			vatBalanceWithinEu.setNettoOmzet(turnover);
 		}
 		overview.setNettoOmzet(AmountHelper.roundDownToInteger(vatBalanceWithinEu.getNettoOmzet()));
@@ -305,7 +319,7 @@ public class FiscalOverviewHelper {
 		}
 		overview.setAfschrijvingOverig(totalDeprecationActiva);
 
-		BigInteger depreciationSettlement = roundToInteger(getDepreciationSettlement(deductableCosts));
+		BigInteger depreciationSettlement = roundToInteger(balanceCalculator.getDepreciationSettlement(deductableCosts));
 		overview.setSettlementDepreciation(depreciationSettlement);
 
 		BigInteger totalDepreciation = BigInteger.ZERO; 
@@ -318,13 +332,13 @@ public class FiscalOverviewHelper {
 	}
 
 	private void handleCosts(List<DeductableCostGroup> deductableCosts) {
-		overview.setKostenOverigTransport(roundToInteger(getReiskosten(deductableCosts)));
-		overview.setKostenOverig(roundToInteger(getFoodCosts(deductableCosts).add(getAlgemeneKosten(deductableCosts))));
-		overview.setSettlementCosts(roundToInteger(getSettlementCosts(deductableCosts)));
+		overview.setKostenOverigTransport(roundToInteger(balanceCalculator.getReiskosten(deductableCosts)));
+		overview.setKostenOverig(roundToInteger(balanceCalculator.getFoodCosts(deductableCosts).add(balanceCalculator.getAlgemeneKosten(deductableCosts))));
+		overview.setSettlementCosts(roundToInteger(balanceCalculator.getSettlementCosts(deductableCosts)));
 	}
 
 	private void handleCar(PrivateWithdrawal privatWithdrawal, List<DeductableCostGroup> deductableCosts) throws Exception {
-		BigDecimal afschrijvingAuto = getAfschrijvingAuto(deductableCosts);
+		BigDecimal afschrijvingAuto = balanceCalculator.getAfschrijvingAuto(deductableCosts);
 		BookValue carActivum = bookValueDao.getBookValue(BalanceType.CURRENT_ASSETS, bookYear);
 		if (carActivum != null) {
 			handleBusinessCar(privatWithdrawal, deductableCosts, afschrijvingAuto);
@@ -338,8 +352,8 @@ public class FiscalOverviewHelper {
 			overview.setAfschrijvingAuto(AmountHelper.roundToInteger(afschrijvingAuto));
 		}
 		// TODO: fiscale bijtelling laten invoeren
-		overview.setBijtellingAuto(roundToInteger(getFiscaleBijtelling(deductableCosts)));
-		overview.setKostenAuto(roundToInteger(getKostenVoorAuto(deductableCosts)));
+		overview.setBijtellingAuto(roundToInteger(balanceCalculator.getFiscaleBijtelling(deductableCosts)));
+		overview.setKostenAuto(roundToInteger(balanceCalculator.getKostenVoorAuto(deductableCosts)));
 		handleDepreciationCorrections();
 		BigInteger kostenAutoAftrekbaar = overview.getBijtellingAuto();
 		kostenAutoAftrekbaar = kostenAutoAftrekbaar.subtract(overview.getKostenAuto());
@@ -382,7 +396,7 @@ public class FiscalOverviewHelper {
 	}
 
 	private void handlePrivateCar(List<DeductableCostGroup> deductableCosts) {
-		overview.setKostenAuto(roundToInteger(getKostenVoorAuto(deductableCosts)));
+		overview.setKostenAuto(roundToInteger(balanceCalculator.getKostenVoorAuto(deductableCosts)));
 		BigInteger kostenAutoAftrekbaar = BigInteger.ZERO;
 		kostenAutoAftrekbaar = kostenAutoAftrekbaar.subtract(overview.getKostenAuto());
 		overview.setKostenAutoAftrekbaar(kostenAutoAftrekbaar);

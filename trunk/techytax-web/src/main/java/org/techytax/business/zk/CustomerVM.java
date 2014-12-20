@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2014 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,23 +23,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.techytax.domain.Customer;
-import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.helper.DutchAuditFileHelper;
-import org.techytax.jpa.dao.GenericDao;
+import org.techytax.jpa.dao.CustomerDao;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
 public class CustomerVM {
 
-	private User user = UserCredentialManager.getUser();
-	private GenericDao<Customer> customerDao = new GenericDao<>(Customer.class);
+	private CustomerDao customerDao;
 
 	protected ListModelList<Customer> customers;
 
@@ -47,6 +47,14 @@ public class CustomerVM {
 
 	private String deleteMessage;
 
+	private DutchAuditFileHelper dutchAuditFileHelper;
+	
+	@Init
+	public void init() {
+		customerDao = (CustomerDao) SpringUtil.getBean("customerDao");
+		dutchAuditFileHelper = (DutchAuditFileHelper) SpringUtil.getBean("dutchAuditFileHelper");
+	}
+	
 	public String getDeleteMessage() {
 		return deleteMessage;
 	}
@@ -73,7 +81,7 @@ public class CustomerVM {
 
 	public ListModelList<Customer> getCustomers() throws Exception {
 		try {
-			customers = new ListModelList<>(customerDao.findAll(user));
+			customers = new ListModelList<>(customerDao.findAll(UserCredentialManager.getUser()));
 		} catch (IllegalAccessException e) {
 			Executions.sendRedirect("login.zul");
 		}
@@ -102,13 +110,13 @@ public class CustomerVM {
 	@GlobalCommand
 	@NotifyChange({ "customers", "selected" })
 	public void refreshvalues(@BindingParam("customer") Customer customer) throws Exception {
-		customer.setUser(new UserEntity(user));
+		customer.setUser(new UserEntity(UserCredentialManager.getUser()));
 		customerDao.merge(customer);
 	}
 	
 	@Command
 	public void audit() {
-		DutchAuditFileHelper.sendAuditFile(user, null);
+		dutchAuditFileHelper.sendAuditFile(UserCredentialManager.getUser(), null);
 	}	
 
 	public Customer getSelected() {

@@ -24,14 +24,12 @@ import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.INVESTMENT;
 import static org.techytax.domain.CostConstants.INVESTMENT_MINIMUM_AMOUNT;
 import static org.techytax.domain.CostConstants.INVESTMENT_OTHER_ACCOUNT;
-import static org.techytax.helper.DutchAuditFileHelper.sendAuditFile;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.SPLIT_COST;
 import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.util.DateHelper.getLatestVatPeriod;
 import static org.techytax.util.DateHelper.getPeriodPreviousYear;
 import static org.techytax.util.DateHelper.isTimeForUsingLatestYearPeriod;
-import static org.zkoss.zk.ui.Executions.sendRedirect;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -45,15 +43,18 @@ import java.util.Map;
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
+import org.techytax.cache.CostCache;
 import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
+import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.DutchAuditFileHelper;
-import org.techytax.log.AuditLogger;
+import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -64,6 +65,7 @@ import org.zkoss.util.media.AMedia;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.UploadEvent;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
@@ -80,8 +82,9 @@ public class AllCostsVM extends CostVM {
 	private boolean fileuploaded = false;
 	private AMedia fileContent;
 	
-	public AllCostsVM() throws Exception {
-		super();
+	@AfterCompose
+	public void afterCompose() throws Exception {
+		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			if (isTimeForUsingLatestYearPeriod()) {
 				periode = getPeriodPreviousYear();
@@ -91,34 +94,36 @@ public class AllCostsVM extends CostVM {
 			getCosts();
 		} else {
 			periode = getLatestVatPeriod(VatPeriodType.PER_QUARTER);
-			sendRedirect("login.zul");
-		}
+//			sendRedirect("login.zul");
+		}		
 	}
 	
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
 		Cost originalCost = (Cost) costDao.getEntity(cost, Long.valueOf(cost.getId()));
+		User user = UserCredentialManager.getUser();
 		cost.setUser(user);
 		if (originalCost == null) {
-			AuditLogger.log(ENTER_COST, user);
+			auditLogger.log(ENTER_COST, user);
 			cost.roundValues();
 			costDao.persistEntity(cost);
 			this.selected = cost;
 		} else if (!cost.equals(originalCost)) {
-			AuditLogger.log(UPDATE_COST, user);
+			auditLogger.log(UPDATE_COST, user);
 			cost.roundValues();
 			costDao.merge(cost);
 		}
 		if (splitCost != null) {
-			AuditLogger.log(SPLIT_COST, user);
+			auditLogger.log(SPLIT_COST, user);
 			costDao.insertSplitCost(cost, splitCost);
 		}
 	}		
 
 	@Command
 	public void audit() {
-		sendAuditFile(user, periode);
+		DutchAuditFileHelper dutchAuditFileHelper = (DutchAuditFileHelper) SpringUtil.getBean("dutchAuditFileHelper");
+		dutchAuditFileHelper.sendAuditFile(UserCredentialManager.getUser(), periode);
 	}
 
 	@Command
@@ -131,8 +136,8 @@ public class AllCostsVM extends CostVM {
 		if (upEvent != null) {
 			Media media = upEvent.getMedia();
 			Messagebox.show("File Sucessfully uploaded");
-			
-			DutchAuditFileHelper.importAuditFile(media.getStreamData(), user);
+			DutchAuditFileHelper dutchAuditFileHelper = (DutchAuditFileHelper) SpringUtil.getBean("dutchAuditFileHelper");
+			dutchAuditFileHelper.importAuditFile(media.getStreamData(), UserCredentialManager.getUser());
 			
 			fileuploaded = true;
 			
@@ -156,7 +161,8 @@ public class AllCostsVM extends CostVM {
 	}
 	
 	public ListModelList<Cost> getCosts() throws Exception {
-		if (user != null) {
+		if (UserCredentialManager.getUser() != null) {
+			costCache = (CostCache) SpringUtil.getBean("costCache");
 			costCache.setBeginDatum(periode.getBeginDate());
 			costCache.setEindDatum(periode.getEndDate());
 			List<Cost> allCosts = costCache.getCosts();
@@ -210,7 +216,7 @@ public class AllCostsVM extends CostVM {
 	}
 
 	public ListModelList<Cost> getBusinessCosts() throws Exception {
-		if (user != null && costs == null) {
+		if (UserCredentialManager.getUser() != null && costs == null) {
 			List<Cost> vatCosts = costDao.getCostsOnBusinessAccountInPeriod(periode);
 			costs = new ListModelList<>(vatCosts);
 		}
@@ -219,7 +225,7 @@ public class AllCostsVM extends CostVM {
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
 		if (costTypes == null) {
-			Collection<CostType> vatCostTypes = CostTypeCache.getCostTypes();
+			Collection<CostType> vatCostTypes = costTypeCache.getCostTypes();
 			costTypes = new ListModelList<>(vatCostTypes);
 			selectedCostType = costTypes.get(0);
 		}

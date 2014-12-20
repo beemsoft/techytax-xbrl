@@ -30,7 +30,6 @@ import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
 import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
 import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
-import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE;
@@ -62,6 +61,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.dao.AccountBalanceDao;
 import org.techytax.dao.AccountDao;
 import org.techytax.domain.Account;
@@ -76,9 +77,16 @@ import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatType;
 import org.techytax.util.DateHelper;
 
+@Component
 public class BalanceCalculator {
-
-	public static VatBalanceWithinEu calculateVatBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
+	
+	@Autowired
+	AccountDao accountDao;
+	
+	@Autowired
+	AccountBalanceDao accountBalanceDao;
+	
+	public VatBalanceWithinEu calculateVatBalance(List<Cost> res, boolean isForAccountBalance) throws Exception {
 
 		BigDecimal totalVatOut = BigDecimal.ZERO;
 		BigDecimal totalVatIn = BigDecimal.ZERO;
@@ -130,9 +138,7 @@ public class BalanceCalculator {
 		return balanceWithinEu;
 	}
 
-	public static BigDecimal getActualAccountBalance(String beginDatum, String eindDatum) throws Exception {
-		AccountDao accountDao = new AccountDao(Account.class);
-		AccountBalanceDao accountBalanceDao = new AccountBalanceDao(AccountBalance.class);
+	public BigDecimal getActualAccountBalance(String beginDatum, String eindDatum) throws Exception {
 		Account businessAccount = accountDao.getBusinessAccount();
 		if (businessAccount != null) {
 			List<AccountBalance> accountBalances = accountBalanceDao.getAccountBalances(businessAccount);
@@ -156,7 +162,7 @@ public class BalanceCalculator {
 		return null;
 	}
 
-	public static Liquiditeit calculateAccountBalance(List<Cost> res) throws Exception {
+	public Liquiditeit calculateAccountBalance(List<Cost> res) throws Exception {
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalInleg = new BigDecimal(0);
 		BigDecimal totalOpname = new BigDecimal(0);
@@ -197,7 +203,7 @@ public class BalanceCalculator {
 		return liquiditeit;
 	}
 
-	public static Balance calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
+	public Balance calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
 
 		BigDecimal totalKost = new BigDecimal(0);
 		if (res != null) {
@@ -224,7 +230,7 @@ public class BalanceCalculator {
 		return balans;
 	}
 
-	public static BigDecimal calculateTotalPaidInvoices(List<Cost> res) {
+	public BigDecimal calculateTotalPaidInvoices(List<Cost> res) {
 		BigDecimal total = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
@@ -241,7 +247,7 @@ public class BalanceCalculator {
 		return total;
 	}
 
-	public static TravelCosts calculatTravelCostBalance(List<Cost> res) {
+	public TravelCosts calculatTravelCostBalance(List<Cost> res) {
 		TravelCosts reiskosten = new TravelCosts();
 		BigDecimal totalKostOV = new BigDecimal(0);
 		BigDecimal totalKostAuto = new BigDecimal(0);
@@ -272,7 +278,7 @@ public class BalanceCalculator {
 		return reiskosten;
 	}
 
-	public static Balance calculateTaxBalance(List<Cost> res) throws Exception {
+	public Balance calculateTaxBalance(List<Cost> res) throws Exception {
 		BigDecimal total = new BigDecimal(0);
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
@@ -292,7 +298,7 @@ public class BalanceCalculator {
 		return balans;
 	}
 
-	public static BigDecimal getAfschrijvingAuto(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getAfschrijvingAuto(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
@@ -303,7 +309,7 @@ public class BalanceCalculator {
 		return null;
 	}
 
-	public static BigInteger getRepurchase(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigInteger getRepurchase(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal repurchases = BigDecimal.ZERO;
 		while (iterator.hasNext()) {
@@ -315,7 +321,7 @@ public class BalanceCalculator {
 		return repurchases.toBigInteger();
 	}
 
-	public static BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
@@ -326,7 +332,7 @@ public class BalanceCalculator {
 		return BigDecimal.ZERO;
 	}
 
-	public static BigDecimal getFiscaleBijtelling(List<DeductableCostGroup> aftrekpostenLijst) throws Exception {
+	public BigDecimal getFiscaleBijtelling(List<DeductableCostGroup> aftrekpostenLijst) throws Exception {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		while (iterator.hasNext()) {
 			DeductableCostGroup aftrekpost = iterator.next();
@@ -337,7 +343,7 @@ public class BalanceCalculator {
 		return BigDecimal.ZERO;
 	}
 
-	public static BigDecimal getKostenVoorAuto(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getKostenVoorAuto(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal kosten = BigDecimal.ZERO;
 		List<CostType> costTypes = Arrays.asList(BUSINESS_CAR, BUSINESS_CAR_OTHER_ACCOUNT, ROAD_TAX);
@@ -350,7 +356,7 @@ public class BalanceCalculator {
 		return kosten;
 	}
 
-	public static BigDecimal getReiskosten(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getReiskosten(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal reiskosten = BigDecimal.ZERO;
 		List<CostType> costTypes = Arrays.asList(TRAVEL_WITH_PUBLIC_TRANSPORT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT);
@@ -363,7 +369,7 @@ public class BalanceCalculator {
 		return reiskosten;
 	}
 
-	public static BigDecimal getAlgemeneKosten(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getAlgemeneKosten(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal kosten = BigDecimal.ZERO;
 		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, EXPENSE_OTHER_ACCOUNT, EXPENSE_CREDIT_CARD, ADVERTORIAL, ADVERTORIAL_NO_VAT);
@@ -376,7 +382,7 @@ public class BalanceCalculator {
 		return kosten;
 	}
 
-	public static BigDecimal getFoodCosts(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getFoodCosts(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal kosten = BigDecimal.ZERO;
 		List<CostType> costTypes = Arrays.asList(BUSINESS_FOOD, BUSINESS_FOOD_OTHER_ACCOUNT);
@@ -389,7 +395,7 @@ public class BalanceCalculator {
 		return kosten.multiply(BigDecimal.valueOf(FOOD_TAXFREE_PERCENTAGE));
 	}
 
-	public static BigDecimal getSettlementCosts(List<DeductableCostGroup> aftrekpostenLijst) {
+	public BigDecimal getSettlementCosts(List<DeductableCostGroup> aftrekpostenLijst) {
 		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
 		BigDecimal kosten = BigDecimal.ZERO;
 		List<CostType> costTypes = Arrays.asList(SETTLEMENT, SETTLEMENT_INTEREST, SETTLEMENT_OTHER_ACCOUNT);
@@ -404,7 +410,7 @@ public class BalanceCalculator {
 		return kosten;
 	}
 
-	public static BigDecimal calculatMonthlyPrivateExpenses(List<Cost> res) throws Exception {
+	public BigDecimal calculatMonthlyPrivateExpenses(List<Cost> res) throws Exception {
 		BigDecimal monthlyExpenses = new BigDecimal(0);
 		int nofMonths = 0;
 		int lastMonth = -1;

@@ -55,14 +55,19 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.techytax.dao.CostDao;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.PrepaidTax;
+import org.techytax.jpa.dao.CostDao;
 import org.techytax.util.DateHelper;
 
+@Component
 public class CostCache {
 
 	private List<Cost> costs = null;
@@ -70,6 +75,12 @@ public class CostCache {
 	private Date beginDatum;
 
 	private Date eindDatum;
+	
+	@Autowired
+	private CostDao costDao;
+	
+	@Autowired
+	CostTypeCache costTypeCache;
 
 	public List<Cost> getCosts() throws Exception {
 
@@ -80,7 +91,6 @@ public class CostCache {
 	}
 
 	private void fillCosts() throws Exception {
-		CostDao costDao = new CostDao(Cost.class);
 		costs = costDao.getCostsInPeriod(new FiscalPeriod(beginDatum, eindDatum));
 	}
 
@@ -88,6 +98,7 @@ public class CostCache {
 		costs = null;
 	}
 
+	@Transactional
 	public List<DeductableCostGroup> getDeductableCosts() throws Exception {
 		List<DeductableCostGroup> deductableCostList = new ArrayList<>();
 		for (Cost cost : costs) {
@@ -125,10 +136,11 @@ public class CostCache {
 		return groupedDeducatableCostList;
 	}
 
+	@Transactional
 	public List<Cost> getBusinessAccountCosts() throws Exception {
 		List<Cost> filteredCostList = new ArrayList<>();
 		for (Cost cost : costs) {
-			CostType costType = CostTypeCache.getCostType(cost.getCostTypeId());
+			CostType costType = costTypeCache.getCostType(cost.getCostTypeId());
 			if (costType != null && costType.isBalansMeetellen()) {
 				filteredCostList.add(cost);
 			}
@@ -136,6 +148,7 @@ public class CostCache {
 		return filteredCostList;
 	}
 
+	@Transactional
 	public List<Cost> getInvestments() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
@@ -149,6 +162,7 @@ public class CostCache {
 		return filteredCosts;
 	}
 
+	@Transactional
 	public List<Cost> getTaxCosts() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
 		List<CostType> costTypes = Arrays.asList(VAT, INCOME_TAX, INCOME_TAX_PAID_BACK, ROAD_TAX, VAT_PAID_BACK_ON_OTHER_ACCOUNT);
@@ -160,6 +174,7 @@ public class CostCache {
 		return filteredCosts;
 	}
 
+	@Transactional
 	public List<Cost> getCostListCurrentAccount() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
 		List<CostType> costTypes = Arrays.asList(EXPENSE_CURRENT_ACCOUNT, EXPENSE_CURRENT_ACCOUNT_IGNORE, TRAVEL_WITH_PUBLIC_TRANSPORT, BUSINESS_FOOD, BUSINESS_CAR, INVESTMENT, ADVERTORIAL,
@@ -172,6 +187,7 @@ public class CostCache {
 		return filteredCosts;
 	}
 
+	@Transactional
 	public BigDecimal getCostsWithPrivateMoney() throws Exception {
 		BigDecimal costsWithPrivateMoney = ZERO;
 		List<CostType> costTypes = Arrays.asList(EXPENSE_OTHER_ACCOUNT, TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT);
@@ -184,6 +200,7 @@ public class CostCache {
 		return costsWithPrivateMoney;
 	}
 
+	@Transactional
 	public BigDecimal getInterest() throws Exception {
 		BigDecimal interest = ZERO;
 		for (Cost cost : costs) {
@@ -195,6 +212,7 @@ public class CostCache {
 	}
 
 	@Deprecated
+	@Transactional
 	public List<Cost> getVatCorrectionDepreciation() throws Exception {
 		List<Cost> filteredCosts = new ArrayList<>();
 		for (Cost cost : costs) {
@@ -205,6 +223,7 @@ public class CostCache {
 		return filteredCosts;
 	}
 
+	@Transactional
 	public PrepaidTax getPrepaidTax() throws Exception {
 		PrepaidTax prepaidTax = new PrepaidTax();
 		List<Cost> filteredCostList = new ArrayList<>();
@@ -229,6 +248,7 @@ public class CostCache {
 		return prepaidTax;
 	}
 
+	@Transactional
 	public BigDecimal getRepurchases() throws Exception {
 		BigDecimal repurchases = ZERO;
 		for (Cost cost : costs) {
@@ -239,6 +259,7 @@ public class CostCache {
 		return repurchases;
 	}
 
+	@Transactional
 	public BigDecimal getCostCurrentAccountIgnore() throws Exception {
 		BigDecimal totalCost = ZERO;
 		for (Cost cost : costs) {

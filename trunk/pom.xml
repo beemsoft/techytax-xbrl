@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.techytax</groupId>
@@ -15,7 +16,7 @@
 	</modules>
 
 	<properties>
-		<zk.version>7.0.2</zk.version>
+		<zk.version>7.0.3.2</zk.version>
 		<org.slf4j.version>1.7.7</org.slf4j.version>
 		<javax.servlet-api.version>3.0-alpha-1</javax.servlet-api.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
@@ -94,9 +95,18 @@
 			<id>repository</id>
 			<url>file:C:/repository/</url>
 		</repository>
-	</distributionManagement>	
+	</distributionManagement>
 
 	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>ZK CE</id>
 			<name>ZK CE Repository</name>
