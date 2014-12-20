@@ -12,7 +12,7 @@
 		<module>techytax-domain</module>
 		<module>techytax-web</module>
 		<module>techytax-audit</module>
-		<module>techytax-xbrl</module>
+<!-- 		<module>techytax-xbrl</module> -->
 	</modules>
 
 	<properties>
