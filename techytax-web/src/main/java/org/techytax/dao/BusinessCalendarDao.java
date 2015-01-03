@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -47,6 +47,7 @@ public class BusinessCalendarDao extends GenericDao<BusinessCalendarEvent> {
 		return result;
 	}
 
+	@Transactional
 	public void updateEvent(BusinessCalendarEvent event) throws Exception {
 		event.roundValues();
 		merge(event);
