@@ -39,7 +39,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.techytax.domain.Activum;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserObject;
@@ -76,6 +75,7 @@ public abstract class GenericDao<T> {
 		}
 	}
 
+	@Transactional
 	public void persistEntity(T entity) {
 		try {
 			entityManager.persist(entity);
