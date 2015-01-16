@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -27,5 +27,7 @@ import org.techytax.domain.Cost;
 public interface TransactionReader {
 
 	public abstract List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception;
+	
+	public abstract void reset();
 
 }

@@ -100,6 +100,10 @@ public class CostVM {
 	public void deleteCost() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
+			costDao = (CostDao) SpringUtil.getBean("costDao");
+			auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+			costCache = (CostCache) SpringUtil.getBean("costCache");
+			
 			auditLogger.log(DELETE_COST, user);
 			selected.setUser(user);
 			costDao.deleteEntity(selected);

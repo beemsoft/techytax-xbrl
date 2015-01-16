@@ -62,14 +62,15 @@ public class CostTypeViewModel {
 	private KostmatchDao kostmatchDao;
 	private PrivateCostMatchDao privateCostMatchDao;
 	private CostTypeDao kostensoortDao;
-	
-	private AuditLogger auditLogger;	
+	private AuditLogger auditLogger;
 
 	@Init
 	public void init() throws Exception {
 		kostmatchDao = (KostmatchDao) SpringUtil.getBean("kostmatchDao");
 		privateCostMatchDao = (PrivateCostMatchDao) SpringUtil.getBean("privateCostMatchDao");
 		kostensoortDao = (CostTypeDao) SpringUtil.getBean("costTypeDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+
 		costTypes = kostensoortDao.getCostTypesForTransactionMatching();
 		selectedCostType = costTypes.get(0); // Selected First One
 		setPrivateMatches(selectedCostType);

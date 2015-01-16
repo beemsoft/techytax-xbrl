@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -24,9 +24,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostMatchParent;
@@ -35,11 +37,8 @@ import org.techytax.util.DateHelper;
 
 import com.Ostermiller.util.CSVParser;
 
+@Component
 public class AbnAmroTransactionReader extends BaseTransactionReader {
-
-	public AbnAmroTransactionReader() throws IllegalAccessException {
-		super();
-	}
 
 	private static CSVParser parser = null;
 
@@ -106,10 +105,15 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 		}
 	}
 
+	@Override
+	public void reset() {
+		kostLijst = new ArrayList<Cost>();
+	}
+
 	public static void main(String[] args) throws NumberFormatException, Exception {
 		FileInputStream fis = new FileInputStream("test.bat");
 		AbnAmroTransactionReader rekeningFileAbnAmroHelper = new AbnAmroTransactionReader();
 		List<Cost> result = rekeningFileAbnAmroHelper.readFile(new BufferedReader(new InputStreamReader(fis)));
-	}
+	}	
 
 }
