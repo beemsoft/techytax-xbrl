@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -36,10 +36,8 @@ public class DutchTaxCodeHelper {
 			endIndex = description.indexOf("AC");
 		}
 		if (endIndex != -1) {
-			String taxCode = cost.getDescription().substring(endIndex - 16,
-					endIndex);
+			String taxCode = cost.getDescription().substring(description.length() - 16, description.length());
 			if (StringUtils.isNumeric(taxCode)) {
-				description = description.substring(0, endIndex);
 				String convertedTaxCode = DutchTaxCodeConverter
 						.convertPaymentFeatureToHumanReadableDescription(taxCode);
 				String fullDescription = "";
@@ -78,12 +76,6 @@ public class DutchTaxCodeHelper {
 		}
 		return cost;
 
-	}
-
-	public static void main(String[] args) {
-		Cost cost = new Cost();
-		cost.setDescription("taxcode");
-		System.out.println(convertTaxCode(cost).getDescription());
 	}
 
 }

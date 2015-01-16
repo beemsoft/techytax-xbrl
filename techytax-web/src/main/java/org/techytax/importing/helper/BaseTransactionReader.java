@@ -79,11 +79,6 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	List<PrivateCostMatch> privateCostMatchList;
 	List<Kostmatch> kostmatchList;
 
-	public BaseTransactionReader() throws IllegalAccessException {
-		privateCostMatchList = privateCostMatchDao.findAll();
-		kostmatchList = kostmatchDao.findAll();
-	}
-	
 	public AccountType getAccountType(String fileName) throws Exception {
 		int index = fileName.indexOf("_");
 		String accountNumber = fileName.substring(0, index);
@@ -91,6 +86,10 @@ public abstract class BaseTransactionReader implements TransactionReader {
 	}
 
 	protected CostMatchParent findCostMatch(String omschrijving) throws Exception {
+		if (kostmatchList == null || kostmatchList.size() < 1) {
+			privateCostMatchList = privateCostMatchDao.findAll();
+			kostmatchList = kostmatchDao.findAll();
+		}
 		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
 		while (iterator.hasNext()) {
 			PrivateCostMatch kostmatch = iterator.next();

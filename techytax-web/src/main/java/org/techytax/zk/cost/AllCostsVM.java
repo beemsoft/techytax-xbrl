@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -44,13 +44,14 @@ import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.techytax.cache.CostCache;
-import org.techytax.cache.CostTypeCache;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.DutchAuditFileHelper;
+import org.techytax.jpa.dao.CostDao;
+import org.techytax.log.AuditLogger;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
@@ -101,6 +102,8 @@ public class AllCostsVM extends CostVM {
 	@GlobalCommand
 	@NotifyChange({ "costs", "selected" })
 	public void refreshvalues(@BindingParam("returncost") Cost cost, @BindingParam("splitcost") Cost splitCost) throws Exception {
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
 		Cost originalCost = (Cost) costDao.getEntity(cost, Long.valueOf(cost.getId()));
 		User user = UserCredentialManager.getUser();
 		cost.setUser(user);

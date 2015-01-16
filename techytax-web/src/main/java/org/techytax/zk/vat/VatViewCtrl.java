@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -69,7 +69,6 @@ import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
 import org.zkoss.bind.GlobalCommandEvent;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -147,6 +146,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	
 	private BalanceCalculator balanceCalculator;
 	
+	private TransactionReaderFactory transactionReaderFactory;
+	
 	@Override
 	public ComponentInfo doBeforeCompose(Page page, Component parent, ComponentInfo compInfo) {
 		ComponentInfo componentInfo = super.doBeforeCompose(page, parent, compInfo);
@@ -163,6 +164,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
 		vatDeclarationDao = (VatDeclarationDao) SpringUtil.getBean("vatDeclarationDao");
 		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
+		transactionReaderFactory = (TransactionReaderFactory) SpringUtil.getBean("transactionReaderFactory");
 		digipoortBtn.setDisabled(disableDigipoort());
 	}
 
@@ -226,7 +228,8 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		Reader reader2 = new InputStreamReader(is);
 		reader = new BufferedReader(reader2);
 //		reader = new BufferedReader(media.getReaderData());
-		TransactionReader importTransactions = TransactionReaderFactory.getTransactionReader(firstLine);
+		TransactionReader importTransactions = transactionReaderFactory.getTransactionReader(firstLine);
+		importTransactions.reset();
 		List<Cost> result = importTransactions.readFile(reader);
 		boolean unmatchedTransactions = listContainsUnmatchedTransactions(result);
 		boolean longDescriptions = listContainsLongDescriptions(result);
@@ -401,6 +404,10 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDate());
 		vatDeclarationData.setEndDate(period.getEndDate());
+		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
+		vatDeclarationData.setInitials(user.getInitials());
+		vatDeclarationData.setSurname(user.getSurname());
+		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 		return vatDeclarationData;
 	}
 

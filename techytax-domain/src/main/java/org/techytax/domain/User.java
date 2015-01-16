@@ -87,14 +87,18 @@ public class User implements Serializable {
 
 	public String getFullName() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(initials);
-		if (prefix != null) {
-			sb.append(" ");			
-			sb.append(prefix);
+		if (surname != null) {
+			sb.append(initials);
+			if (prefix != null) {
+				sb.append(" ");			
+				sb.append(prefix);
+			}
+			sb.append(" ");		
+			sb.append(surname);
+			return sb.toString();
+		} else {
+			return "user";
 		}
-		sb.append(" ");		
-		sb.append(surname);
-		return sb.toString();
 	}
 
 }

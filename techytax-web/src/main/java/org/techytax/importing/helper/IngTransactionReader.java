@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -22,13 +22,13 @@ package org.techytax.importing.helper;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostMatchParent;
 import org.techytax.helper.DutchTaxCodeHelper;
@@ -37,11 +37,8 @@ import org.techytax.util.DateHelper;
 import com.Ostermiller.util.CSVParser;
 import com.Ostermiller.util.LabeledCSVParser;
 
+@Component
 public class IngTransactionReader extends BaseTransactionReader {
-
-	public IngTransactionReader() throws IllegalAccessException {
-		super();
-	}
 
 	private static LabeledCSVParser parser = null;
 	
@@ -89,7 +86,12 @@ public class IngTransactionReader extends BaseTransactionReader {
 			}
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			kost.setAmount(bedrag);
-			String omschrijving = line[1] + " " + line[8];
+			String omschrijving = null;
+			if (line[8].contains(line[1])) {
+				omschrijving = line[8];
+			} else {
+				omschrijving = line[1] + " " + line[8];
+			}
 			if (omschrijving.trim().equals("")) {
 				kost.setCostType(UNDETERMINED);
 				kost.setVat(BigDecimal.ZERO);
@@ -98,9 +100,19 @@ public class IngTransactionReader extends BaseTransactionReader {
 				omschrijving = omschrijving.replace("SEPA Incasso, eerste IBAN:", "");
 				omschrijving = omschrijving.replace("SEPA Incasso, doorlopendIBAN:", "");
 				omschrijving = omschrijving.replace("SEPA Incasso, doorlopend IBAN:", "");
-				omschrijving = omschrijving.replace("TLS BV inzake OV-Chipkaart", "");
+				omschrijving = omschrijving.replace("Europese Incasso, doorlopend IBAN:", "");
+				omschrijving = omschrijving.replace("SEPA ID machtiging:", "");
+				omschrijving = omschrijving.replace("ID begunstigde:", "");
+				omschrijving = omschrijving.replace("TLS BV inzake", "");
+				omschrijving = omschrijving.replace("Omschrijving:", "");
+				omschrijving = omschrijving.replace("Omschr ijving:", "");
+				omschrijving = omschrijving.replace("Omschrijv ing  Klantnummer", "");
+				omschrijving = omschrijving.replace("Kenmerk:", "");
+				omschrijving = omschrijving.replace("Kenmerk", "");	
+				omschrijving = omschrijving.replace("Naam:", "");
 				omschrijving = omschrijving.replace("MEER INFO WWW.BELASTINGDIENST.NL", "");
-				int lastIndex = omschrijving.lastIndexOf("TUSSENPERS.HYPOTHEKER");
+				omschrijving = omschrijving.replace("AEGON NEDERLAND NV", "");
+				int lastIndex = omschrijving.lastIndexOf("TUSSENPERS.HYPOTH EKER UTRECHT LEIDSCHE RIJN");
 				if (lastIndex > 0) {
 					omschrijving = omschrijving.substring(0, lastIndex);
 				}
@@ -109,6 +121,17 @@ public class IngTransactionReader extends BaseTransactionReader {
 				if (index > 0) {
 					omschrijving = omschrijving.substring(0, index);
 				}
+				
+				index = omschrijving.indexOf("OV-Chipkaart");
+				if (index > 0) {
+					omschrijving = "OV-Chipkaart";
+				}
+				
+				index = omschrijving.indexOf("BIC:");
+				if (index > 0) {
+					omschrijving = omschrijving.substring(0, index) + omschrijving.substring(index + 13, omschrijving.length());
+				}
+				
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
@@ -120,6 +143,11 @@ public class IngTransactionReader extends BaseTransactionReader {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void reset() {
+		kostLijst = new ArrayList<Cost>();
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,16 +19,29 @@
  */
 package org.techytax.importing.helper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class TransactionReaderFactory {
 
-	public static TransactionReader getTransactionReader(String firstLine) throws IllegalAccessException {
+	@Autowired
+	private IngTransactionReader ingTransactionReader;
+
+	@Autowired
+	private TravelChipCardTransactionReader travelChipCardTransactionReader;
+
+	@Autowired
+	private AbnAmroTransactionReader abnAmroTransactionReader;
+
+	public TransactionReader getTransactionReader(String firstLine) throws IllegalAccessException {
 		TransactionReader transactionReader = null;
 		if (firstLine.startsWith("\"Datum\",\"Naam")) {
-			transactionReader = new IngTransactionReader();
+			transactionReader = ingTransactionReader;
 		} else if (firstLine.startsWith("\"Datum\";\"Check")) {
-			transactionReader = new TravelChipCardTransactionReader();
+			transactionReader = travelChipCardTransactionReader;
 		} else {
-			transactionReader = new AbnAmroTransactionReader();
+			transactionReader = abnAmroTransactionReader;
 		}
 		return transactionReader;
 	}

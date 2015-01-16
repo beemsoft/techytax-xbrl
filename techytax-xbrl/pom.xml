@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-domain</artifactId>
-			<version>2.3.1-SNAPSHOT</version>
+			<version>2.3.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

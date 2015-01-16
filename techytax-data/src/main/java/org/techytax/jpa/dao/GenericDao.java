@@ -66,6 +66,7 @@ public abstract class GenericDao<T> {
 		return entityManager;
 	}
 
+	@Transactional
 	public void deleteEntity(T entity) {
 		try {
 			entityManager.remove(entityManager.merge(entity));
