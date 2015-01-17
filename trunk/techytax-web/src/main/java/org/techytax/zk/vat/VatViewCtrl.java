@@ -21,54 +21,27 @@ package org.techytax.zk.vat;
 
 import static org.techytax.domain.CostConstants.EXPENSE_OTHER_ACCOUNT_IGNORE;
 import static org.techytax.domain.CostConstants.UNDETERMINED;
-import static org.techytax.helper.AmountHelper.formatWithEuroSymbol;
-import static org.techytax.helper.AmountHelper.roundDownToInteger;
 import static org.techytax.log.AuditType.IMPORT_TRANSACTIONS;
-import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
-import static org.techytax.log.AuditType.SPLIT_COST;
-import static org.techytax.log.AuditType.UPDATE_COST;
 import static org.techytax.log.AuditType.UPLOAD_TRANSACTIONS;
-import static org.techytax.log.AuditType.VAT_OVERVIEW;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.techytax.digipoort.DigipoortService;
-import org.techytax.digipoort.DigipoortServiceImpl;
-import org.techytax.digipoort.XbrlHelper;
-import org.techytax.digipoort.XbrlNtp8Helper;
 import org.techytax.domain.Cost;
-import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
-import org.techytax.domain.VatBalanceWithinEu;
-import org.techytax.domain.VatDeclarationData;
-import org.techytax.helper.AmountHelper;
-import org.techytax.helper.BalanceCalculator;
 import org.techytax.importing.helper.TransactionReader;
 import org.techytax.importing.helper.TransactionReaderFactory;
 import org.techytax.jpa.dao.CostDao;
-import org.techytax.jpa.dao.VatDeclarationDao;
-import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
-import org.techytax.props.PropsFactory;
 import org.techytax.security.AuthenticationException;
-import org.techytax.util.DateHelper;
-import org.techytax.ws.AanleverResponse;
-import org.techytax.ws.AanleverServiceFault;
 import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.bind.GlobalCommandEvent;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -80,18 +53,13 @@ import org.zkoss.zk.ui.metainfo.ComponentInfo;
 import org.zkoss.zk.ui.select.SelectorComposer;
 import org.zkoss.zk.ui.select.annotation.Listen;
 import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zkmax.ui.select.annotation.Subscribe;
 import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Grid;
-import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Messagebox.ClickEvent;
-import org.zkoss.zul.Popup;
 import org.zkoss.zul.Tab;
-import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 public class VatViewCtrl extends SelectorComposer<Window> {
@@ -105,46 +73,19 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 	@Wire
 	private Grid costGrid;
 	@Wire
-	private Grid vatGrid;
-	@Wire
-	private Label vatOut;
-	@Wire
-	private Label vatIn;
-	@Wire
-	private Label vatForPaymentWithinEu;
-	@Wire
-	private Label vatBalance;
-	@Wire
-	private Label turnoverGross;
-	@Wire
-	private Label turnoverNet;
-	@Wire
-	private Label vatCorrection;
-	@Wire
-	private Label totalOfPaymentsWithinEu;
-	@Wire
 	private Tab matchTab;
 	@Wire
 	private Tab controleTab;
-	@Wire
-	private Popup sbrPopup;
-	@Wire
-	private Label msg;
-	@Wire
-	private Toolbarbutton digipoortBtn;
+
 	private Media media = null;
 	private BufferedReader reader = null;
-	private VatBalanceWithinEu vatBalanceWithinEu = null;
+
 	@Wire
 	private Button reloadBtn;
 	@Wire
 	private Button importBtn;
 	
 	private AuditLogger auditLogger;
-	
-	private VatDeclarationDao vatDeclarationDao;
-	
-	private BalanceCalculator balanceCalculator;
 	
 	private TransactionReaderFactory transactionReaderFactory;
 	
@@ -162,10 +103,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 		super.doAfterCompose(comp);
 		costDao = (CostDao) SpringUtil.getBean("costDao");
 		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
-		vatDeclarationDao = (VatDeclarationDao) SpringUtil.getBean("vatDeclarationDao");
-		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
 		transactionReaderFactory = (TransactionReaderFactory) SpringUtil.getBean("transactionReaderFactory");
-		digipoortBtn.setDisabled(disableDigipoort());
 	}
 
 	@Listen("onUpload=#uploadBtn")
@@ -283,7 +221,6 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 				}
 			}
 		}
-		createVatOverview();
 		clearMatchListAfterImporting();
 	}
 
@@ -296,169 +233,7 @@ public class VatViewCtrl extends SelectorComposer<Window> {
 
 	@Listen("onClick=#controleTab")
 	public void displayVatOverview(Event event) throws Exception {
-		createVatOverview();
-	}
-
-	private void createVatOverview() throws Exception {
-		auditLogger.log(VAT_OVERVIEW, user);
-		List<Cost> vatCosts = costDao.getVatCostsInPeriod(DateHelper.getLatestVatPeriod(user.getVatPeriodType()));
-		ListModelList<Cost> costModel = new ListModelList<>(vatCosts);
-		vatGrid.setModel(costModel);
-		vatGrid.setRowRenderer(new CostRowRenderer());
-
-		vatBalanceWithinEu = balanceCalculator.calculateVatBalance(vatCosts, false);
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
-			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
-		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
-		}
-		vatOut.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxSuppliesServicesGeneralTariff()));
-		vatIn.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOnInput()));
-		vatBalance.setValue(formatWithEuroSymbol(vatDeclarationData.getValueAddedTaxOwedToBePaidBack()));
-		turnoverGross.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getBrutoOmzet().toBigInteger()));
-		turnoverNet.setValue(formatWithEuroSymbol(roundDownToInteger(vatBalanceWithinEu.getNettoOmzet())));
-		vatCorrection.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getCorrection().toBigInteger()));
-		vatForPaymentWithinEu.setValue(formatWithEuroSymbol(vatBalanceWithinEu.getVatOutEu()));
-		totalOfPaymentsWithinEu.setValue(formatWithEuroSymbol(AmountHelper.roundToInteger(vatBalanceWithinEu.getTurnoverNetEu())));
-		
 		controleTab.setSelected(true);
 	}
 
-	private void creatYearlyVatDeclarationForSmallEnterprise(FiscalPeriod vatPeriod, VatDeclarationData vatDeclarationData) {
-		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod);
-		BigDecimal turnover = balanceCalculator.calculateTotalPaidInvoices(balanceCosts);
-		vatBalanceWithinEu.setNettoOmzet(turnover);
-		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(AmountHelper.roundToInteger(turnover));
-	}
-
-	@Listen("onClick=#digipoortBtn")
-	public void aanleveren() throws FileNotFoundException, IOException, GeneralSecurityException {
-		Messagebox.show("Weet u zeker dat u wilt aanleveren?", "Vraag", new Messagebox.Button[] { Messagebox.Button.OK, Messagebox.Button.CANCEL }, Messagebox.QUESTION,
-				new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {
-					public void onEvent(ClickEvent e) throws Exception {
-						switch (e.getButton()) {
-						case OK:
-							try {
-								auditLogger.log(SEND_VAT_DECLARATION, user);
-								AanleverResponse aanleverResponse = doAanleveren();
-								digipoortBtn.setDisabled(true);
-								if (aanleverResponse != null) {
-									Messagebox.show("Uw aanlevering is gelukt en heeft als kenmerk: " + aanleverResponse.getKenmerk(), null, new Messagebox.Button[] { Messagebox.Button.OK },
-											Messagebox.INFORMATION, null);
-									storeDeclarationFeature(aanleverResponse.getKenmerk());
-								} else {
-									Messagebox.show("Aanlevering is mislukt!", null, 0, Messagebox.ERROR);
-								}
-							} catch (AanleverServiceFault asf) {
-								Messagebox.show(asf.getFaultInfo().getFoutbeschrijving(), null, 0, Messagebox.ERROR);
-							}
-						case CANCEL:
-						default:
-						}
-					}
-				});
-	}
-
-	private void storeDeclarationFeature(String declarationFeature) throws Exception {
-		VatDeclaration vatDeclaration = new VatDeclaration();
-		vatDeclaration.setDeclarationFeature(declarationFeature);
-		vatDeclaration.setTimeStampDeclared(new Date());
-		vatDeclaration.setUser(user);
-		vatDeclarationDao.persistEntity(vatDeclaration);
-	}
-
-	private AanleverResponse doAanleveren() throws Exception {
-		VatDeclarationData vatDeclarationData = createVatDeclarationData();
-		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
-		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
-		DigipoortService digipoortService = new DigipoortServiceImpl();
-		if (digipoortEnvironment.equals("prod")) {
-			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getFiscalNumber());
-		} else {
-			return digipoortService.aanleveren(xbrlInstance, XbrlNtp8Helper.getTestFiscalNumber());
-		}
-	}
-
-	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) throws Exception {
-		String xbrlInstance = null;
-		if (digipoort.equals("prod")) {
-			if (DateHelper.isBefore2014(vatDeclarationData.getEndDate())) {
-				xbrlInstance = XbrlHelper.createXbrlInstance(vatDeclarationData);
-			} else {
-				xbrlInstance = XbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
-			}
-		} else {
-			xbrlInstance = XbrlNtp8Helper.createTestXbrlInstance();
-		}
-		return xbrlInstance;
-	}
-
-	private VatDeclarationData createVatDeclarationData() throws Exception {
-		VatDeclarationData vatDeclarationData = new VatDeclarationData();
-		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
-			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(roundDownToInteger(vatBalanceWithinEu.getNettoOmzet()));
-		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
-		}
-		FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
-		vatDeclarationData.setStartDate(period.getBeginDate());
-		vatDeclarationData.setEndDate(period.getEndDate());
-		vatDeclarationData.setFiscalNumber(user.getFiscalNumber());
-		vatDeclarationData.setInitials(user.getInitials());
-		vatDeclarationData.setSurname(user.getSurname());
-		vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
-		return vatDeclarationData;
-	}
-
-	@Listen("onClick=#sbrBtn")
-	public void showSbrMessage() throws Exception {
-		VatDeclarationData vatDeclarationData = createVatDeclarationData();
-		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
-		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
-		msg.setValue(xbrlInstance);
-		sbrPopup.open(this.getPage().getFirstRoot());
-	}
-
-	/**
-	 * If the vat declaration has not yet been sent and the user has a fiscal
-	 * number, then the button can be enabled.
-	 */
-	public boolean disableDigipoort() {
-		Date declarationTime;
-		try {
-			declarationTime = auditLogger.getVatDeclarationTimeForLatestVatPeriod();
-			if (declarationTime != null && user.getFiscalNumber() != null) {
-				return true;
-			} else if (declarationTime == null && user.getFiscalNumber() == null) {
-				return true;
-			}
-		} catch (IllegalAccessException e) {
-			Executions.sendRedirect("login.zul");
-		}
-		return false;
-	}
-
-	@Subscribe("queueName")
-	public void updateVatOverview(Event evt) throws Exception {
-		if (evt instanceof GlobalCommandEvent) {
-			if ("refreshvalues".equals(((GlobalCommandEvent) evt).getCommand())) {
-				Map<String, Object> arguments = ((GlobalCommandEvent) evt).getArgs();
-				Cost updatedCost = (Cost) arguments.get("returncost");
-				Cost originalCost = (Cost) costDao.getEntity(updatedCost, Long.valueOf(updatedCost.getId()));
-				if (!updatedCost.equals(originalCost)) {
-					updatedCost.setUser(user);
-					auditLogger.log(UPDATE_COST, user);
-					costDao.merge(updatedCost);
-
-					Cost splitCost = (Cost) arguments.get("splitcost");
-					if (splitCost != null) {
-						auditLogger.log(SPLIT_COST, user);
-						costDao.insertSplitCost(originalCost, splitCost);
-					}
-					createVatOverview();
-				}
-			}
-		}
-	}
 }

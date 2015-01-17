@@ -150,70 +150,7 @@
 						<include src="cost-enter.zul" />
 					</tabpanel>
 					<tabpanel>
-						<hbox>
-							<grid width="230px" height="180px" >
-								<columns>
-									<column />
-									<column width="90px" />
-								</columns>
-								<rows>
-									<row>
-										<label value="${c:l('vat.out')}" />
-										<label id="vatOut" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('vat.in')}" />
-										<label id="vatIn" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('vat.balance')}" />
-										<label id="vatBalance" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('turnover.gross')}" />
-										<label id="turnoverGross" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('turnover.net')}" />
-										<label id="turnoverNet" style="float:right;" />
-									</row>
-							</rows>
-							</grid>
-							<grid width="230px" height="180px" >
-								<columns>
-									<column />
-									<column width="90px" />
-								</columns>
-								<rows>
-									<row>
-										<label value="${c:l('costtype.vat.correction.private')}" />
-										<label id="vatCorrection" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('net.payments.eu')}" />
-										<label id="totalOfPaymentsWithinEu" style="float:right;" />
-									</row>
-									<row>
-										<label value="${c:l('vat.eu')}" />
-										<label id="vatForPaymentWithinEu" style="float:right;" />
-									</row>
-								</rows>
-							</grid>							
-							<toolbarbutton id="digipoortBtn" disabled="true" image="/images/Digipoort_w176.JPG" tooltiptext="${c:l('vat.send')}" height="155px"/>
-							<include src="vat-report.zul"/>
-							<toolbarbutton id="sbrBtn" image="/images/SBR_button_blue_klein.jpg" tooltiptext="${c:l('vat.sbr')}" height="155px"/>															
-						</hbox>
-						<vbox>
-							<grid id="vatGrid" mold="paging" pageSize="6" >
-								<columns sizable="true">
-									<column label="${c:l('description')}" width="690px" />
-									<column label="${c:l('date')}" width="90px" />
-									<column label="${c:l('amount')}" width="90px" align="right"/>
-									<column label="${c:l('vat')}" width="90px" align="right" />
-									<column label="${c:l('type')}" width="180px" />
-								</columns>
-							</grid>
-						</vbox>
+						<include src="vat-overview.zul" />
 					</tabpanel>
 				</tabpanels>
 			</tabbox>
@@ -223,9 +160,6 @@
 		</popup>
 		<popup id="import" width="300px">
 			<html><![CDATA[${c:l('import')}]]></html>
-		</popup>
-		<popup id="sbrPopup">
-    		<label id="msg"></label>
 		</popup>
 	</window>
 </zk>

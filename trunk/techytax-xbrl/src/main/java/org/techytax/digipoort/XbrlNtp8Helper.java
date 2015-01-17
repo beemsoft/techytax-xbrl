@@ -247,8 +247,8 @@ public class XbrlNtp8Helper {
 	public static void addBalanceData(VatDeclarationData vatDeclarationData, VatBalanceWithinEu vatBalanceWithinEu) throws Exception {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(vatBalanceWithinEu.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(vatBalanceWithinEu.getCorrection());
-		BigDecimal turnover = AmountHelper.roundDown(vatBalanceWithinEu.getNettoOmzet());
-		BigInteger totaleBaten = AmountHelper.roundDownToInteger(turnover.multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
+		BigInteger turnover = vatBalanceWithinEu.getNettoOmzet();
+		BigInteger totaleBaten = AmountHelper.roundDownToInteger(new BigDecimal(turnover).multiply(BigDecimal.valueOf(VatType.HIGH.getValue(new Date()))));
 		BigInteger vatOutEu = vatBalanceWithinEu.getVatOutEu();
 		BigInteger owed = totaleBaten.add(correction).add(vatOutEu);
 		BigInteger owedToBePaidBack = owed.subtract(totaleKosten.add(vatOutEu));
@@ -257,8 +257,8 @@ public class XbrlNtp8Helper {
 		vatDeclarationData.setValueAddedTaxOwedToBePaidBack(owedToBePaidBack);
 		vatDeclarationData.setValueAddedTaxPrivateUse(correction);
 		vatDeclarationData.setValueAddedTaxSuppliesServicesGeneralTariff(totaleBaten);
-		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(turnover.toBigInteger());
-		vatDeclarationData.setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(AmountHelper.roundToInteger(vatBalanceWithinEu.getTurnoverNetEu()));
+		vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(turnover);
+		vatDeclarationData.setTurnoverFromTaxedSuppliesFromCountriesWithinTheEC(vatBalanceWithinEu.getTurnoverNetEu());
 		vatDeclarationData.setValueAddedTaxOnSuppliesFromCountriesWithinTheEC(vatOutEu);
 	}
 
@@ -279,8 +279,8 @@ public class XbrlNtp8Helper {
 		VatBalanceWithinEu balans = new VatBalanceWithinEu();
 		balans.setTotaleKosten(BigDecimal.valueOf(95));
 		balans.setCorrection(BigDecimal.valueOf(5));
-		balans.setNettoOmzet(BigDecimal.valueOf(191));
-		balans.setTurnoverNetEu(BigDecimal.ZERO);
+		balans.setNettoOmzet(BigInteger.valueOf(191));
+		balans.setTurnoverNetEu(BigInteger.ZERO);
 		balans.setVatOutEu(BigInteger.ZERO);
 		addBalanceData(vatDeclarationData, balans);
 		return createXbrlInstance(vatDeclarationData);
