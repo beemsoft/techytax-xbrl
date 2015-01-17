@@ -33,10 +33,10 @@ Copyright (C) 2006 Potix Corporation. All Rights Reserved.
     	<name>org.zkoss.bind.DebuggerFactory.enable</name>
     	<value>false</value>
 	</library-property>
-	<library-property>
-    	<name>org.zkoss.theme.preferred</name>
-    	<value>atlantic</value>
-	</library-property>
+<!-- 	<library-property> -->
+<!--     	<name>org.zkoss.theme.preferred</name> -->
+<!--     	<value>atlantic</value> -->
+<!-- 	</library-property> -->
 
 	<!-- Turn on if you want to debug JavaScript.
 		Once turned on, the uncompressed JavaScript files will be loaded.
