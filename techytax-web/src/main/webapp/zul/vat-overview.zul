@@ -1,0 +1,83 @@
+<zk>
+	<window border="normal" width="100%" apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.techytax.zk.vat.VatOverviewVM')"
+			binder="@init(queueName='queueName',queueScope='desktop')">
+		<hbox>
+			<grid width="230px" height="180px">
+				<columns>
+					<column />
+					<column width="90px" />
+				</columns>
+				<rows>
+					<row>
+						<label value="${c:l('vat.out')}" />
+						<label value="@load(vm.vatDeclarationData.valueAddedTaxSuppliesServicesGeneralTariff)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('vat.in')}" />
+						<label value="@load(vm.vatDeclarationData.valueAddedTaxOnInput)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('vat.balance')}" />
+						<label value="@load(vm.vatDeclarationData.valueAddedTaxOwedToBePaidBack)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('turnover.gross')}" />
+						<label value="@load(vm.vatBalanceWithinEu.brutoOmzet)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('turnover.net')}" />
+						<label value="@load(vm.vatBalanceWithinEu.nettoOmzet)" style="float:right;" />
+					</row>
+				</rows>
+			</grid>
+			<grid width="230px" height="180px">
+				<columns>
+					<column />
+					<column width="90px" />
+				</columns>
+				<rows>
+					<row>
+						<label value="${c:l('costtype.vat.correction.private')}" />
+						<label value="@load(vm.vatBalanceWithinEu.correction)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('net.payments.eu')}" />
+						<label value="@load(vm.vatBalanceWithinEu.turnoverNetEu)" style="float:right;" />
+					</row>
+					<row>
+						<label value="${c:l('vat.eu')}" />
+						<label value="@load(vm.vatBalanceWithinEu.vatOutEu)" style="float:right;" />
+					</row>
+				</rows>
+			</grid>
+			<vbox>
+			<label value="@load(vm.vatDeclaration.timeStampDeclared) @converter('formatedDate', format='yyyy/MM/dd')" />
+			<hbox>
+			<toolbarbutton disabled="@load(vm.digipoortDisabled)" onClick="@command('aanleveren')" image="/images/Digipoort_w176.JPG" tooltiptext="${c:l('vat.send')}" height="155px" />
+			<include src="vat-report.zul" />
+			<include src="vat-sbr.zul" />
+			</hbox>
+			</vbox>
+		</hbox>
+		<vbox>
+			<listbox model="@load(vm.costs)" selectedItem="@bind(vm.selected)" height="490px">
+				<listhead>
+					<listheader label="${c:l('date')}" align="center" width="100px" sortAscending="${cDateAsc}" sortDescending="${cDateDsc}" />
+					<listheader label="${c:l('amount')}" align="center" width="80px" sortAscending="${cAmountAsc}" sortDescending="${cAmountDsc}" />
+					<listheader label="${c:l('vat')}" align="center" width="80px" sortAscending="${cVatAsc}" sortDescending="${cVatDsc}" />
+					<listheader label="${c:l('description')}" width="400px" sortAscending="${cDescrAsc}" sortDescending="${cDescrDsc}" />
+					<listheader label="${c:l('type')}" width="300px" sortAscending="${cTypeAsc}" sortDescending="${cTypeDsc}" />
+				</listhead>
+				<template name="model" var="item">
+					<listitem onDoubleClick="@command('onDoubleClicked')" sclass="@load(item.style)">
+						<listcell label="@load(item.date) @converter('formatedDate', format='yyyy/MM/dd')" />
+						<listcell label="@load(item.amount) @converter('formatedNumber', format='###,##0.00')" />
+						<listcell label="@load(item.vat) @converter('formatedNumber', format='###,##0.00')" />
+						<listcell label="@load(item.description)" />
+						<listcell label="@load(item.costType.omschrijving)" />
+					</listitem>
+				</template>
+			</listbox>
+		</vbox>
+	</window>
+</zk>

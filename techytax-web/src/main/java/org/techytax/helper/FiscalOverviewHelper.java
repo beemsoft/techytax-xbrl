@@ -182,9 +182,9 @@ public class FiscalOverviewHelper {
 		if (vatBalanceWithinEu.getBrutoOmzet().compareTo(BigDecimal.ZERO) == 0) {
 			List<Cost> balanceCosts = costCache.getBusinessAccountCosts();
 			BigDecimal turnover = balanceCalculator.calculateTotalPaidInvoices(balanceCosts);
-			vatBalanceWithinEu.setNettoOmzet(turnover);
+			vatBalanceWithinEu.setNettoOmzet(AmountHelper.roundDownToInteger(turnover));
 		}
-		overview.setNettoOmzet(AmountHelper.roundDownToInteger(vatBalanceWithinEu.getNettoOmzet()));
+		overview.setNettoOmzet(vatBalanceWithinEu.getNettoOmzet());
 	}
 
 	private void handleRepurchase() throws Exception {

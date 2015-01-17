@@ -131,9 +131,9 @@ public class BalanceCalculator {
 		balanceWithinEu.setTotaleBaten(totalVatIn);
 		balanceWithinEu.setTotaleKosten(totalVatOut);
 		balanceWithinEu.setBrutoOmzet(turnoverGross);
-		balanceWithinEu.setNettoOmzet(turnoverNet);
+		balanceWithinEu.setNettoOmzet(AmountHelper.roundDownToInteger(turnoverNet));
 		balanceWithinEu.setCorrection(totalVatCorrection);
-		balanceWithinEu.setTurnoverNetEu(turnoverNetEu);
+		balanceWithinEu.setTurnoverNetEu(AmountHelper.roundToInteger(turnoverNetEu));
 		balanceWithinEu.setVatOutEu(vatOutEu);
 		return balanceWithinEu;
 	}

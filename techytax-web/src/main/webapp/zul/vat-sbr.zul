@@ -1,0 +1,13 @@
+<zk>
+	<toolbarbutton onClick="sbrWindow.doPopup()" image="/images/SBR_button_blue_klein.jpg" tooltiptext="${c:l('vat.sbr')}" height="155px" />
+	<span>
+		<window id="sbrWindow" visible="false" border="normal" position="center" width="800px" height="700px" contentStyle="overflow:auto" apply="org.zkoss.bind.BindComposer"
+			viewModel="@id('vm') @init('org.techytax.zk.vat.VatOverviewVM')">
+			<borderlayout height="100%">
+				<center border="none" flex="true">
+					<iframe id="sbrFrame" content="@load(vm.sbr)" />
+				</center>
+			</borderlayout>
+		</window>
+	</span>
+</zk>

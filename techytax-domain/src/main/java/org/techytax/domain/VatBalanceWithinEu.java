@@ -19,7 +19,6 @@
  */
 package org.techytax.domain;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import lombok.Getter;
@@ -29,7 +28,7 @@ import lombok.Setter;
 @Setter
 public class VatBalanceWithinEu extends Balance {
 	
-	BigDecimal turnoverNetEu;
+	BigInteger turnoverNetEu;
 	
 	BigInteger vatOutEu;
 

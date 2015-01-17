@@ -20,6 +20,7 @@
 package org.techytax.domain;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class Balance {
 
 	BigDecimal correction;
 
-	BigDecimal nettoOmzet;
+	BigInteger nettoOmzet;
 
 	BigDecimal totaleBaten;
 	
