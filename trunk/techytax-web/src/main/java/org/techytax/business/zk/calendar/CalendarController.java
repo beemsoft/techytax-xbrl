@@ -93,7 +93,7 @@ public class CalendarController extends SelectorComposer<Component> {
 	private Calendars calendars;
 	@Wire
 	private Textbox filter;
-	
+
 	@Wire
 	private Textbox discount;
 
@@ -104,10 +104,10 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	@WireVariable
 	private ProjectDao projectDao;
-	
+
 	@WireVariable
 	private BusinessCalendarDao businessCalendarDao;
-	
+
 	private CostDao costDao;
 
 	private ListModel<Project> projectsModel;
@@ -125,28 +125,28 @@ public class CalendarController extends SelectorComposer<Component> {
 
 	private Invoice invoice;
 	private byte[] invoiceBuf;
-	
+
 	@WireVariable
 	private AuditLogger auditLogger;
-	
+
 	@WireVariable
 	private CalendarService calendarService;
-	
+
 	private User getUser() {
-		return 	UserCredentialManager.getUser();
+		return UserCredentialManager.getUser();
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 
-	     projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
-	     businessCalendarDao = (BusinessCalendarDao) SpringUtil.getBean("businessCalendarDao");	     
-	     auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
-	     costDao = (CostDao) SpringUtil.getBean("costDao");
-	     calendarService = (CalendarService) SpringUtil.getBean("calendarService");
-		
+		projectDao = (ProjectDao) SpringUtil.getBean("projectDao");
+		businessCalendarDao = (BusinessCalendarDao) SpringUtil.getBean("businessCalendarDao");
+		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
+		costDao = (CostDao) SpringUtil.getBean("costDao");
+		calendarService = (CalendarService) SpringUtil.getBean("calendarService");
+
 		final User user = getUser();
 		if (user != null) {
 			List<BusinessCalendarEvent> calendarEvents = calendarService.getEvents();
@@ -154,7 +154,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			calendars.setModel(this.calendarModel);
 			invoiceButton.setDisabled(true);
 			discount.setDisabled(true);
-			
+
 			sendInvoiceButton = (Button) Path.getComponent("/win/invoiceWindow/sendInvoiceButton");
 			sendInvoiceButton.addEventListener("onClick", new EventListener() {
 				public void onEvent(Event event) throws Exception {
@@ -178,7 +178,7 @@ public class CalendarController extends SelectorComposer<Component> {
 					cost.setCostType(INVOICE_SENT);
 					costDao.persistEntity(cost);
 				}
-			});			
+			});
 		}
 	}
 
@@ -353,13 +353,14 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (maand < 10) {
 				factuurNummerString += "0";
 			}
+			factuurNummerString += Integer.toString(maand);
+
 			List<Cost> sentAndPaidInvoicesInPeriod = costDao.getInvoicesSentAndPaid(new FiscalPeriod(beginDate, new Date()));
 			List<Cost> invoices = new ArrayList<>();
 
 			for (Cost cost : sentAndPaidInvoicesInPeriod) {
 				if (cost.getCostType().equals(INVOICE_SENT)) {
-					String monthStr = Integer.toString(maand);
-					if (cost.getDescription().contains(monthStr)) {
+					if (cost.getDescription().contains(factuurNummerString)) {
 						invoices.add(cost);
 					}
 				}
@@ -370,11 +371,11 @@ public class CalendarController extends SelectorComposer<Component> {
 			if (factuurAantal < 10) {
 				factuurAantalString = "0" + factuurAantalString;
 			}
-			factuurNummerString += Integer.toString(maand) + factuurAantalString;
+			factuurNummerString += factuurAantalString;
 			invoice.setInvoiceNumber(Integer.parseInt(factuurNummerString));
 
 			Customer customer = selectedProject.getCustomer();
-			sendInvoiceButton.setLabel(Labels.getLabel("send.invoice.to") +": " + customer.getEmailInvoice());
+			sendInvoiceButton.setLabel(Labels.getLabel("send.invoice.to") + ": " + customer.getEmailInvoice());
 
 			invoice.setConsumerAddress(customer.getFullAddress());
 			invoice.setConsumerName(customer.getName());
@@ -384,7 +385,6 @@ public class CalendarController extends SelectorComposer<Component> {
 
 			BigDecimal netAmount = new BigDecimal(invoice.getUnitsOfWork() * invoice.getRate().floatValue());
 			netAmount = AmountHelper.round(netAmount);
-
 
 			invoice.setNetAmount(netAmount);
 			invoice.setEmail(customer.getEmailInvoice());
@@ -403,7 +403,7 @@ public class CalendarController extends SelectorComposer<Component> {
 			totaalBedrag = AmountHelper.round(totaalBedrag);
 			invoice.setVatAmount(btwBedrag);
 			invoice.setTotalAmount(totaalBedrag);
-			
+
 			invoice.setNetAmountAfterDiscount(netAmountAfterDiscount);
 			PdfInvoiceHelper pdfInvoiceHelper = new PdfInvoiceHelper();
 			invoiceBuf = pdfInvoiceHelper.createPdfInvoice(invoice, getUser());
