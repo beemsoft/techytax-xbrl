@@ -13,7 +13,8 @@
 							<toolbarbutton label="@load(vm.user)" onClick="@command('editUser')" sclass="loggedOnUserButton"/>
 							<button label="${c:l('mainMenu.logoff')}" onClick="@command('logout')" />
 						</hbox>
-					</div>				
+					</div>
+					<image sclass="complex-layout-header-img" src="/images/business107_32.png"/>
 					<label sclass="complex-layout-header-label" value="TechyTax" />
 					<label sclass="complex-layout-header3-label" value="Version ${vm.version}" />
 					<label sclass="complex-layout-header2-label" value="@load(vm.loggedOnText)" />
@@ -51,8 +52,8 @@
 				<hbox self="@insert(content)" />
 				</vlayout>
 			</center>
-			<south size="30px" border="0" >
-				<include src="~./saas/footer.zul" if="${vm.saasVersion}" />
+			<south size="60px" border="0" >
+				<include src="~./saas/footer-login.zul" if="${vm.saasVersion}" />
 			</south>
 		</borderlayout>
 	</div>
