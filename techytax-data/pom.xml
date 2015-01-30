@@ -13,7 +13,7 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-domain</artifactId>
-			<version>2.3.2</version>
+			<version>2.3.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
@@ -57,6 +57,6 @@
 	<parent>
 		<groupId>org.techytax</groupId>
 		<artifactId>techytax-parent</artifactId>
-		<version>2.3.2</version>
+		<version>2.3.3-SNAPSHOT</version>
 	</parent>
 </project>
