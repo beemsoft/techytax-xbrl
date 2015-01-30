@@ -15,6 +15,6 @@
 	<parent>
 		<groupId>org.techytax</groupId>
 		<artifactId>techytax-parent</artifactId>
-		<version>2.3.2-SNAPSHOT</version>
+		<version>2.3.2</version>
 	</parent>
 </project>
