@@ -20,9 +20,7 @@
 package org.techytax.importing.helper;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +92,19 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 				kost.setCostType(CostConstants.UNDETERMINED);
 				kost.setVat(BigDecimal.ZERO);
 			} else {
+				omschrijving = omschrijving.replace(" Kenmerk: ", "");
+				omschrijving = omschrijving.replace(" BETALINGSKENM. ", "");
+				omschrijving = omschrijving.replace(" Omschrijving: ", "");
+				omschrijving = omschrijving.replace("BIC: RABONL2U", "");
+				omschrijving = omschrijving.replace("BIC: INGBNL2A", "");
+				omschrijving = omschrijving.replace("SEPA Overboeking", "");
+				omschrijving = omschrijving.replace("IBAN: ", "");
+				omschrijving = omschrijving.replace("SEPA Incasso algemeen doorlopend Incassant: ", "");
+				omschrijving = omschrijving.replace("SEPA Incasso algemeen doorlopend", "");
+				omschrijving = omschrijving.replace("VANWEGE ONVOLDOENDE BESTEDINGSRUIMTE", "");
+				omschrijving = omschrijving.replace("zie my.vodafone.nl", "");
+				omschrijving = omschrijving.replace("zie my.vodafone.n l", "");
+
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST")) {
 					DutchTaxCodeHelper.convertTaxCode(kost);
@@ -111,11 +122,5 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 		kostLijst = new ArrayList<Cost>();
 		kostmatchList = new ArrayList<Kostmatch>();
 	}
-
-	public static void main(String[] args) throws NumberFormatException, Exception {
-		FileInputStream fis = new FileInputStream("test.bat");
-		AbnAmroTransactionReader rekeningFileAbnAmroHelper = new AbnAmroTransactionReader();
-		List<Cost> result = rekeningFileAbnAmroHelper.readFile(new BufferedReader(new InputStreamReader(fis)));
-	}	
 
 }
