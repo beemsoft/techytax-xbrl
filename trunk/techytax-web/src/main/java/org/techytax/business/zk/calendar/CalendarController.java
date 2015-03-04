@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -373,6 +373,9 @@ public class CalendarController extends SelectorComposer<Component> {
 			}
 			factuurNummerString += factuurAantalString;
 			invoice.setInvoiceNumber(Integer.parseInt(factuurNummerString));
+			invoice.setInvoiceDate(DateHelper.getInvoiceDateString(new Date()));
+			invoice.setNofDays(44);
+			invoice.setExpiryDate(DateHelper.getInvoiceDateString(DateHelper.getDateAfterDays(44)));
 
 			Customer customer = selectedProject.getCustomer();
 			sendInvoiceButton.setLabel(Labels.getLabel("send.invoice.to") + ": " + customer.getEmailInvoice());
@@ -403,7 +406,6 @@ public class CalendarController extends SelectorComposer<Component> {
 			totaalBedrag = AmountHelper.round(totaalBedrag);
 			invoice.setVatAmount(btwBedrag);
 			invoice.setTotalAmount(totaalBedrag);
-
 			invoice.setNetAmountAfterDiscount(netAmountAfterDiscount);
 			PdfInvoiceHelper pdfInvoiceHelper = new PdfInvoiceHelper();
 			invoiceBuf = pdfInvoiceHelper.createPdfInvoice(invoice, getUser());
