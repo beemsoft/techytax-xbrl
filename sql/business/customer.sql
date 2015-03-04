@@ -19,6 +19,8 @@ ALTER TABLE customer ADD COLUMN number_extension varchar(60) AFTER number;
 ALTER TABLE customer ADD COLUMN postal_code varchar(60) AFTER number_extension;
 ALTER TABLE customer ADD COLUMN city varchar(100) AFTER postal_code;
 
+ALTER TABLE customer MODIFY COLUMN number decimal(60);
+
 
 ALTER TABLE customer drop column commerceNr;
 ALTER TABLE customer drop COLUMN telephone;
