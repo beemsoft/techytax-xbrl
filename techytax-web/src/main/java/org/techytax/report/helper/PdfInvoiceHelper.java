@@ -38,7 +38,7 @@ public class PdfInvoiceHelper {
 
 	}
 
-	public byte[] createPdfInvoice(Invoice factuur, User user) {
+	public byte[] createPdfInvoice(Invoice invoice, User user) {
 
 		Document document = new Document(PageSize.A4);
 		ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
@@ -62,21 +62,33 @@ public class PdfInvoiceHelper {
 			cell = new PdfPCell(new Paragraph("Nummer"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(Integer.toString(factuur.getInvoiceNumber())));
+			cell = new PdfPCell(new Paragraph(Integer.toString(invoice.getInvoiceNumber())));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph("Datum"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(DateHelper.getInvoiceDateString(new Date())));
+			cell = new PdfPCell(new Paragraph(invoice.getInvoiceDate()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph("Maand"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(factuur.getMonth()));
+			cell = new PdfPCell(new Paragraph(invoice.getMonth()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph("Betalingstermijn"));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph(invoice.getNofDays() + " dagen"));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph("Vervaldatum"));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph(invoice.getExpiryDate()));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);			
 
 			PdfPTable table = new PdfPTable(1);
 			table.setWidthPercentage(75);
@@ -104,19 +116,25 @@ public class PdfInvoiceHelper {
 			chunk = new Paragraph("Leverancier", font);
 			subTable = new PdfPTable(2);
 
-			cell = new PdfPCell(new Paragraph("Naam"));
+			cell = new PdfPCell(new Paragraph("Bedrijfsnaam"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph(user.getCompanyName()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph("Naam"));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);
+			cell = new PdfPCell(new Paragraph(user.getFullName()));
+			cell.setBorder(PdfPCell.NO_BORDER);
+			subTable.addCell(cell);			
 			cell = new PdfPCell(new Paragraph("Adres"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph(user.getCompanyAddress()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph("BTW-id-nr"));
+			cell = new PdfPCell(new Paragraph("btw-nr"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph("NL " + user.getFiscalNumber()));
@@ -131,7 +149,11 @@ public class PdfInvoiceHelper {
 			cell = new PdfPCell(new Paragraph("Rekening"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(user.getAccountNumber() + ", t.n.v. " + user.getFullName()));
+			if (user.isBusinessAccount()) {
+				cell = new PdfPCell(new Paragraph(user.getAccountNumber()));
+			} else {
+				cell = new PdfPCell(new Paragraph(user.getAccountNumber() + ", t.n.v. " + user.getFullName()));
+			}
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(chunk);
@@ -148,13 +170,13 @@ public class PdfInvoiceHelper {
 			cell = new PdfPCell(new Paragraph("Naam"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(factuur.getConsumerName()));
+			cell = new PdfPCell(new Paragraph(invoice.getConsumerName()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			cell = new PdfPCell(new Paragraph("Adres"));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(factuur.getConsumerAddress()));
+			cell = new PdfPCell(new Paragraph(invoice.getConsumerAddress()));
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 
@@ -190,31 +212,31 @@ public class PdfInvoiceHelper {
 			cell.setBackgroundColor(color);
 			subTable.addCell(cell);
 			
-			cell = new PdfPCell(new Paragraph(factuur.getActivityDescription() + ", " + factuur.getMonth() + " " + factuur.getYear()));
+			cell = new PdfPCell(new Paragraph(invoice.getActivityDescription() + ", " + invoice.getMonth() + " " + invoice.getYear()));
 			cell.setGrayFill(0.9f);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(Float.toString(factuur.getUnitsOfWork())));
+			cell = new PdfPCell(new Paragraph(Float.toString(invoice.getUnitsOfWork())));
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(factuur.getRate().toString()));
+			cell = new PdfPCell(new Paragraph(invoice.getRate().toString()));
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(formatDecimal(factuur.getNetAmount())));
+			cell = new PdfPCell(new Paragraph(formatDecimal(invoice.getNetAmount())));
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			
-			if (factuur.getDiscountPercentage() > 0) {
-				cell = new PdfPCell(new Paragraph("Korting: "+factuur.getDiscountPercentage()+"% (Versneld betalen)"));
+			if (invoice.getDiscountPercentage() > 0) {
+				cell = new PdfPCell(new Paragraph("Korting: "+invoice.getDiscountPercentage()+"% (Versneld betalen)"));
 				cell.setGrayFill(0.9f);
 				subTable.addCell(cell);
 				cell = new PdfPCell();
 				cell.setBorder(PdfPCell.NO_BORDER);
 				subTable.addCell(cell);
 				subTable.addCell(cell);
-				Paragraph chunkMoney = new Paragraph("- "+formatDecimal(factuur.getDiscount()));
+				Paragraph chunkMoney = new Paragraph("- "+formatDecimal(invoice.getDiscount()));
 				cell = new PdfPCell(chunkMoney);
 				cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 				cell.setBorder(PdfPCell.NO_BORDER);
@@ -227,7 +249,7 @@ public class PdfInvoiceHelper {
 				cell.setBorder(PdfPCell.NO_BORDER);
 				subTable.addCell(cell);
 				subTable.addCell(cell);
-				chunkMoney = new Paragraph(formatDecimal(factuur.getNetAmountAfterDiscount()));
+				chunkMoney = new Paragraph(formatDecimal(invoice.getNetAmountAfterDiscount()));
 				cell = new PdfPCell(chunkMoney);
 				cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 				cell.setBorder(PdfPCell.NO_BORDER);
@@ -235,14 +257,14 @@ public class PdfInvoiceHelper {
 				
 			}			
 			
-			cell = new PdfPCell(new Paragraph("btw (" + factuur.getVat() + "%)"));
+			cell = new PdfPCell(new Paragraph("btw (" + invoice.getVat() + "%)"));
 			cell.setGrayFill(0.9f);
 			subTable.addCell(cell);
 			cell = new PdfPCell();
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			subTable.addCell(cell);
-			cell = new PdfPCell(new Paragraph(formatDecimal(factuur.getVatAmount())));
+			cell = new PdfPCell(new Paragraph(formatDecimal(invoice.getVatAmount())));
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
@@ -254,7 +276,7 @@ public class PdfInvoiceHelper {
 			cell.setBorder(PdfPCell.NO_BORDER);
 			subTable.addCell(cell);
 			subTable.addCell(cell);
-			Paragraph chunkMoney = new Paragraph(formatDecimal(factuur.getTotalAmount()), totalAmountFont);
+			Paragraph chunkMoney = new Paragraph(formatDecimal(invoice.getTotalAmount()), totalAmountFont);
 			cell = new PdfPCell(chunkMoney);
 			cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 			cell.setBorder(PdfPCell.NO_BORDER);

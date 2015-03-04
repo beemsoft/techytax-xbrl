@@ -227,6 +227,13 @@ public class DateHelper {
 		}
 		return lastDay;
 	}
+	
+	public static Date getDateAfterDays(int nofDays) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.add(Calendar.DAY_OF_MONTH, nofDays);
+		return cal.getTime();
+	}
 
 	public static FiscalPeriod getLatestVatPeriodTillToday() {
 		Calendar cal = new GregorianCalendar();

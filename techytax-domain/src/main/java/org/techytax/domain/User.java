@@ -77,6 +77,10 @@ public class User implements Serializable {
 	
 	private String accountNumber;
 
+	public boolean isBusinessAccount() {
+		return true;
+	}
+
 	public boolean isAdmin() {
 		return role.equals("admin");
 	}

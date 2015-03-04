@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -20,6 +20,7 @@
 package org.techytax.report.helper;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -36,6 +37,10 @@ public class Invoice {
 	private String emailBcc;
 	private String emailCc;
 	private int invoiceNumber;
+	private String invoiceDate;
+	private int nofDays;
+	private String expiryDate;
+	
 	private int year;
 	private String month;
 	private BigDecimal netAmount;
