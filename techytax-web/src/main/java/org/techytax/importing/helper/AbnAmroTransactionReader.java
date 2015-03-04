@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostMatchParent;
+import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -108,6 +109,7 @@ public class AbnAmroTransactionReader extends BaseTransactionReader {
 	@Override
 	public void reset() {
 		kostLijst = new ArrayList<Cost>();
+		kostmatchList = new ArrayList<Kostmatch>();
 	}
 
 	public static void main(String[] args) throws NumberFormatException, Exception {

@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostMatchParent;
+import org.techytax.domain.Kostmatch;
 import org.techytax.helper.DutchTaxCodeHelper;
 import org.techytax.util.DateHelper;
 
@@ -148,6 +149,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 	@Override
 	public void reset() {
 		kostLijst = new ArrayList<Cost>();
+		kostmatchList = new ArrayList<Kostmatch>();
 	}
 
 }
