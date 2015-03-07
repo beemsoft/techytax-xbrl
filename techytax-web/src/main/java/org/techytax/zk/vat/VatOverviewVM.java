@@ -34,7 +34,6 @@ import org.techytax.jpa.dao.VatDeclarationDao;
 import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
 import org.techytax.props.PropsFactory;
-import org.techytax.report.helper.PdfReportHelper;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
@@ -136,7 +135,7 @@ public class VatOverviewVM {
 		vatBalanceWithinEu = balanceCalculator.calculateVatBalance(vatCosts, false);
 		vatDeclarationData = new VatDeclarationData();
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
-			creatYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
+			createYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
 		} else {
 			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
@@ -159,7 +158,7 @@ public class VatOverviewVM {
 		return vatDeclarationData;
 	}
 
-	private void creatYearlyVatDeclarationForSmallEnterprise(FiscalPeriod vatPeriod, VatDeclarationData vatDeclarationData) {
+	private void createYearlyVatDeclarationForSmallEnterprise(FiscalPeriod vatPeriod, VatDeclarationData vatDeclarationData) {
 		List<Cost> balanceCosts = costDao.getCostsOnBusinessAccountInPeriod(vatPeriod);
 		BigInteger turnover = AmountHelper.roundDownToInteger(balanceCalculator.calculateTotalPaidInvoices(balanceCosts));
 		vatBalanceWithinEu.setNettoOmzet(turnover);
