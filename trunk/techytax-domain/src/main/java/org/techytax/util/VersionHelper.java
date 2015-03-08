@@ -29,6 +29,10 @@ public class VersionHelper {
 		sb.append(VersionHelper.class.getPackage().getImplementationVersion());
 		return sb.toString();
 	}
+
+    public static String getXbrlVersion() {
+        return getVersion().replace("-SNAPSHOT", "");
+    }
 	
 	public static boolean isSaasVersion() {
 		return "true".equals(System.getProperty("saas.version"));
