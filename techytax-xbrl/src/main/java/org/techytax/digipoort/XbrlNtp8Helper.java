@@ -66,7 +66,7 @@ public class XbrlNtp8Helper {
 	private static final String ISO_EURO = "iso4217:EUR";
 	private static final String UNIT_ID = "u0";
 	private static final String DECIMALS_TYPE = "INF";
-	private static final String PACKAGE_VERSION = VersionHelper.getVersion();
+	private static final String PACKAGE_VERSION = VersionHelper.getXbrlVersion();
 	private static final String PACKAGE_NAME = "TechyTax";
 	private static final String BELASTING_PLICHTIGE = "BPL";
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
