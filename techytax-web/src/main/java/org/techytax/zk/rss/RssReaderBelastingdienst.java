@@ -27,7 +27,7 @@ public class RssReaderBelastingdienst extends RssReader {
 
 	@Init
 	public void init() {
-		feedUrl = "http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/nieuws/rss/nieuwsfeed_actueel_zakelijk.xml";
+		feedUrl = "http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/berichten/nieuws/rss/nieuwsfeed_actueel_zakelijk.xml";
 		super.init();
 	}
 
