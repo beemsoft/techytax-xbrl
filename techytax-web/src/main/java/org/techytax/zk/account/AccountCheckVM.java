@@ -37,7 +37,7 @@ import org.techytax.domain.AccountBalance;
 import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
-import org.techytax.domain.Liquiditeit;
+import org.techytax.domain.Liquidity;
 import org.techytax.domain.User;
 import org.techytax.domain.VatPeriodType;
 import org.techytax.helper.BalanceCalculator;
@@ -92,8 +92,8 @@ public class AccountCheckVM extends CostVM {
 	public ListModelList<Cost> getCosts() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
-			costCache.setBeginDatum(periode.getBeginDate());
-			costCache.setEindDatum(periode.getEndDate());
+			costCache.setBeginDate(periode.getBeginDate());
+			costCache.setEndDate(periode.getEndDate());
 			costCache.getCosts();
 			costList = costCache.getBusinessAccountCosts();
 			costs = new ListModelList<>(costList);
@@ -108,7 +108,7 @@ public class AccountCheckVM extends CostVM {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
 			BigDecimal actualBalance = balanceCalculator.getActualAccountBalance(DateHelper.getDate(periode.getBeginDate()), DateHelper.getDate(periode.getEndDate()));
-			Liquiditeit liquiditeit = balanceCalculator.calculateAccountBalance(costList);
+			Liquidity liquidity = balanceCalculator.calculateAccountBalance(costList);
 			List<Cost> result2 = costDao.getVatCostsInPeriod(periode);
 			Balance balans = balanceCalculator.calculateVatBalance(result2, true);
 			BigDecimal totalPaidInvoices = balanceCalculator.calculateTotalPaidInvoices(costList);
@@ -121,15 +121,15 @@ public class AccountCheckVM extends CostVM {
 			BigDecimal costIgnoreBalance = costCache.getCostCurrentAccountIgnore();
 			accountCheckData.setCostIgnoreBalance(costIgnoreBalance);
 			BigDecimal doubleCheck = balans.getBrutoOmzet().add(totalPaidInvoices).subtract(taxBalance).subtract(costBalance)
-					.subtract(liquiditeit.getSpaarBalans().subtract(liquiditeit.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
+					.subtract(liquidity.getSpaarBalans().subtract(liquidity.getPriveBalans()).subtract(interest)).add(costIgnoreBalance);
 
-			accountCheckData.setAccountBalance(liquiditeit.getRekeningBalans());
+			accountCheckData.setAccountBalance(liquidity.getRekeningBalans());
 			accountCheckData.setCostBalance(costBalance);
 			accountCheckData.setGrossIncome(brutoOmzet);
 			accountCheckData.setInterest(interest);
 			accountCheckData.setPaidInvoices(totalPaidInvoices);
-			accountCheckData.setPrivateWithdrawalBalance(liquiditeit.getPriveBalans());
-			accountCheckData.setSavingBalance(liquiditeit.getSpaarBalans());
+			accountCheckData.setPrivateWithdrawalBalance(liquidity.getPriveBalans());
+			accountCheckData.setSavingBalance(liquidity.getSpaarBalans());
 			accountCheckData.setTaxBalance(taxBalance);
 			accountCheckData.setDoubleCheck(doubleCheck);
 			accountCheckData.setActualBalance(actualBalance);

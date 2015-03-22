@@ -27,7 +27,6 @@ import static org.techytax.domain.CostConstants.BUSINESS_FOOD;
 import static org.techytax.domain.CostConstants.BUSINESS_FOOD_OTHER_ACCOUNT;
 import static org.techytax.domain.CostConstants.DEPOSIT;
 import static org.techytax.domain.CostConstants.DEPRECIATION_CAR;
-import static org.techytax.domain.CostConstants.DEPRECIATION_SETTLEMENT;
 import static org.techytax.domain.CostConstants.EXPENSE_CREDIT_CARD;
 import static org.techytax.domain.CostConstants.EXPENSE_CURRENT_ACCOUNT;
 import static org.techytax.domain.CostConstants.EXPENSE_INSIDE_EU;
@@ -71,7 +70,7 @@ import org.techytax.domain.Balance;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostType;
 import org.techytax.domain.DeductableCostGroup;
-import org.techytax.domain.Liquiditeit;
+import org.techytax.domain.Liquidity;
 import org.techytax.domain.TravelCosts;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.domain.VatType;
@@ -162,12 +161,12 @@ public class BalanceCalculator {
 		return null;
 	}
 
-	public Liquiditeit calculateAccountBalance(List<Cost> res) throws Exception {
+	public Liquidity calculateAccountBalance(List<Cost> res) throws Exception {
 		BigDecimal totalKost = new BigDecimal(0);
 		BigDecimal totalInleg = new BigDecimal(0);
 		BigDecimal totalOpname = new BigDecimal(0);
 		BigDecimal totalSparen = new BigDecimal(0);
-		Liquiditeit liquiditeit = new Liquiditeit();
+		Liquidity liquidity = new Liquidity();
 		if (res != null) {
 			for (int i = 0; i < res.size(); i++) {
 				Cost obj = null;
@@ -197,10 +196,10 @@ public class BalanceCalculator {
 				}
 			}
 		}
-		liquiditeit.setPriveBalans(totalInleg.subtract(totalOpname));
-		liquiditeit.setRekeningBalans(totalKost);
-		liquiditeit.setSpaarBalans(totalSparen);
-		return liquiditeit;
+		liquidity.setPriveBalans(totalInleg.subtract(totalOpname));
+		liquidity.setRekeningBalans(totalKost);
+		liquidity.setSpaarBalans(totalSparen);
+		return liquidity;
 	}
 
 	public Balance calculateCostBalanceCurrentAccount(List<Cost> res, boolean isIncludingVat) {
@@ -319,17 +318,6 @@ public class BalanceCalculator {
 			}
 		}
 		return repurchases.toBigInteger();
-	}
-
-	public BigDecimal getDepreciationSettlement(List<DeductableCostGroup> aftrekpostenLijst) {
-		Iterator<DeductableCostGroup> iterator = aftrekpostenLijst.iterator();
-		while (iterator.hasNext()) {
-			DeductableCostGroup aftrekpost = iterator.next();
-			if (aftrekpost.getKostenSoort().equals(DEPRECIATION_SETTLEMENT)) {
-				return aftrekpost.getAftrekbaarBedrag();
-			}
-		}
-		return BigDecimal.ZERO;
 	}
 
 	public BigDecimal getFiscaleBijtelling(List<DeductableCostGroup> aftrekpostenLijst) throws Exception {

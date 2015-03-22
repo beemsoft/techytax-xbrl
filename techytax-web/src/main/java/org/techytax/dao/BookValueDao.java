@@ -65,16 +65,4 @@ public class BookValueDao extends GenericDao<BookValue> {
 		return findByNamedQuery(BookValue.FOR_YEAR_AND_TYPES, with("year", year).and("balanceTypes", balanceTypes).parameters());
 	}
 	
-	@Override
-	public void persistEntity(BookValue entity) {
-		throw new IllegalStateException("Bookyear closed!");
-//		super.persistEntity(entity);
-	}
-	
-	@Override
-	public void merge(BookValue entity) {
-		throw new IllegalStateException("Bookyear closed!");
-//		super.merge(entity);
-	}
-
 }

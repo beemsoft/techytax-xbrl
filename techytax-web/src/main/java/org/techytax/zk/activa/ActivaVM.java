@@ -51,6 +51,8 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Window;
 
+import javax.transaction.Transactional;
+
 public class ActivaVM {
 
 	private List<BookValueHistory> bookValueHistories = new ArrayList<>();
@@ -59,8 +61,8 @@ public class ActivaVM {
 	private ActivumDao activumDao;
 	
 	private AuditLogger auditLogger;
-	
-	@Init
+
+    @Init
 	public void init() {
 		bookValueDao = (BookValueDao) SpringUtil.getBean("bookValueDao");
 		activumDao = (ActivumDao) SpringUtil.getBean("activumDao");
@@ -77,8 +79,8 @@ public class ActivaVM {
 			for (BookValue bookValue : bookValues) {
 				BalanceType balanceType = bookValue.getBalanceType();
 				if (balanceType != currentBalanceType) {
-					if (firstYear < bookValue.getJaar()) {
-						firstYear = bookValue.getJaar();
+					if (firstYear < bookValue.getYear()) {
+						firstYear = bookValue.getYear();
 					}
 				}
 			}
@@ -95,11 +97,11 @@ public class ActivaVM {
 					}
 					bookValuesForBalanceType = new ArrayList<>();
 
-					int bookYear = bookValue.getJaar();
+					int bookYear = bookValue.getYear();
 					int year = firstYear;
 					while (year > bookYear) {
 						BookValue emptyBookValue = new BookValue();
-						emptyBookValue.setJaar(year);
+						emptyBookValue.setYear(year);
 						emptyBookValue.setBalanceType(bookValue.getBalanceType());
 						bookValuesForBalanceType.add(emptyBookValue);
 						year--;
@@ -168,13 +170,13 @@ public class ActivaVM {
 			return;
 		}
 		if (bookValue.getId() > 0) {
-			originalBookValue = (BookValue) bookValueDao.getEntity(bookValue, Long.valueOf(bookValue.getId()));
+			originalBookValue = bookValueDao.getBookValue(bookValue.getBalanceType(), bookValue.getYear());
 		}
 		if (originalBookValue == null && bookValue.getSaldo() != null) {
 			auditLogger.log(ENTER_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueDao.persistEntity(bookValue);
-		} else if (!bookValue.equals(originalBookValue) && bookValue.getSaldo() != null) {
+		} else if (bookValue.getSaldo() != null && !bookValue.getSaldo().equals(originalBookValue.getSaldo())) {
 			auditLogger.log(UPDATE_BOOKVALUE, user);
 			bookValue.setUser(user);
 			bookValueDao.merge(bookValue);
@@ -185,7 +187,7 @@ public class ActivaVM {
 
 	private boolean checkFiscalPensionLimit(BookValue bookValue) throws Exception {
 		if (bookValue.getBalanceType() == BalanceType.PENSION) {
-			BookValue nonCurrentAssets = bookValueDao.getBookValue(BalanceType.NON_CURRENT_ASSETS, bookValue.getJaar());
+			BookValue nonCurrentAssets = bookValueDao.getBookValue(BalanceType.NON_CURRENT_ASSETS, bookValue.getYear());
 			if (bookValue.getSaldo() != null && bookValue.getSaldo().compareTo(nonCurrentAssets.getSaldo()) > 0) {
 				Messagebox.show("FOR mag niet hoger worden dan eigen vermogen.", null, new Messagebox.Button[] { Messagebox.Button.OK }, Messagebox.EXCLAMATION,
 						new org.zkoss.zk.ui.event.EventListener<ClickEvent>() {

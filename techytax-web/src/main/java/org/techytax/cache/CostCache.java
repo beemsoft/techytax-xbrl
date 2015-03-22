@@ -72,9 +72,9 @@ public class CostCache {
 
 	private List<Cost> costs = null;
 
-	private Date beginDatum;
+	private Date beginDate;
 
-	private Date eindDatum;
+	private Date endDate;
 	
 	@Autowired
 	private CostDao costDao;
@@ -91,7 +91,7 @@ public class CostCache {
 	}
 
 	private void fillCosts() throws Exception {
-		costs = costDao.getCostsInPeriod(new FiscalPeriod(beginDatum, eindDatum));
+		costs = costDao.getCostsInPeriod(new FiscalPeriod(beginDate, endDate));
 	}
 
 	public void invalidate() {
@@ -234,7 +234,7 @@ public class CostCache {
 		}
 		int prepaidIncomeTax = 0;
 		int prepaidHealthTax = 0;
-		int year = DateHelper.getYear(beginDatum);
+		int year = DateHelper.getYear(beginDate);
 		for (Cost tax : filteredCostList) {
 			if (tax.getDescription().contains("Inkomstenbelasting " + year)) {
 				prepaidIncomeTax += tax.getAmount().intValue();
@@ -270,26 +270,26 @@ public class CostCache {
 		return totalCost;
 	}
 
-	public Date getBeginDatum() {
-		return beginDatum;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setBeginDatum(Date beginDatum) {
-		if (!beginDatum.equals(this.beginDatum)) {
+	public void setBeginDate(Date beginDate) {
+		if (!beginDate.equals(this.beginDate)) {
 			costs = null;
 		}
-		this.beginDatum = beginDatum;
+		this.beginDate = beginDate;
 	}
 
-	public Date getEindDatum() {
-		return eindDatum;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setEindDatum(Date eindDatum) {
-		if (!eindDatum.equals(this.eindDatum)) {
+	public void setEndDate(Date endDate) {
+		if (!endDate.equals(this.endDate)) {
 			costs = null;
 		}
-		this.eindDatum = eindDatum;
+		this.endDate = endDate;
 	}
 
 }

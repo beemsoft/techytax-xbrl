@@ -78,7 +78,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Afschrijvingen apparaten", "", "", "-" + format(overview.getAfschrijvingOverig()), ""));
 			items.add(new ReportTableItem("Afschrijving bedrijfsruimte", "", "", "-" + format(overview.getSettlementDepreciation()), ""));
 			items.add(new ReportTableItem("Totale afschrijving", "", "", "", "-" + format(overview.getAfschrijvingTotaal())));
-			items.add(new ReportTableItem("Bijtelling privégebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
+			items.add(new ReportTableItem("Bijtelling privï¿½gebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
 			items.add(new ReportTableItem("Autokosten", "-" + format(overview.getKostenAuto()), "", "", ""));
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
 			items.add(new ReportTableItem("Overige transportkosten", "", "-" + format(overview.getKostenOverigTransport()), "", ""));
@@ -99,7 +99,7 @@ public class TaxVM {
 			BalanceReport report = overview.getActivaReport();
 			List<ReportBalance> balanceList = report.getBalanceList();
 			for (ReportBalance balance : balanceList) {
-				items.add(new ReportTableItem(balance.getOmschrijving(), formatDecimal(balance.getAanschafKosten()), format(balance.getBookValueBegin()), format(balance.getBookValueEnd()),
+				items.add(new ReportTableItem(balance.getDescription(), formatDecimal(balance.getAanschafKosten()), format(balance.getBookValueBegin()), format(balance.getBookValueEnd()),
 						format(balance.getRestwaarde())));
 			}
 			items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
@@ -114,10 +114,10 @@ public class TaxVM {
 			List<ReportBalance> balanceList = report.getBalanceList();
 			if (balanceList != null) {
 				for (ReportBalance balance : balanceList) {
-					items.add(new ReportTableItem(balance.getOmschrijving(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()), ""));
+					items.add(new ReportTableItem(balance.getDescription(), "", format(balance.getBookValueBegin()), format(balance.getBookValueEnd()), ""));
 				}
 				items.add(new ReportTableItem("Totaal", "", format(report.getTotalBeginValue()), format(report.getTotalEndValue()), ""));
-				items.add(new ReportTableItem("Ondernemingsvermogen", "", "", format(overview.getEnterpriseCapital()), ""));
+				items.add(new ReportTableItem("Ondernemingsvermogen", "", format(overview.getEnterpriseCapitalPreviousYear()), format(overview.getEnterpriseCapital()), ""));
 			}
 		}
 		return new ListModelList<>(items);
@@ -127,7 +127,7 @@ public class TaxVM {
 		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Onttrekking in contanten", format(overview.getOnttrekking().getWithdrawalCash())));
-			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
+			items.add(new ReportTableItem("Onttrekking voor privï¿½gebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
 			items.add(new ReportTableItem("Totale onttrekking", format(overview.getOnttrekking().getTotaleOnttrekking())));
 		}
 		return new ListModelList<>(items);
@@ -136,7 +136,7 @@ public class TaxVM {
 	public ListModelList<ReportTableItem> getPrivatDepositTableItems() {
 		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
-			items.add(new ReportTableItem("Privéstortingen", format(overview.getPrivateDeposit())));
+			items.add(new ReportTableItem("Privï¿½stortingen", format(overview.getPrivateDeposit())));
 		}
 		return new ListModelList<>(items);
 	}

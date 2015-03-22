@@ -32,19 +32,21 @@ import org.techytax.domain.FiscalBalance;
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.domain.ReportBalance;
 
+import static java.math.BigInteger.ZERO;
+
 public class FiscalReportHelper {
 
 	public static BalanceReport getActivaReport(Map<BalanceType, FiscalBalance> activaMap) {
 		BalanceReport report = new BalanceReport();
 		List<ReportBalance> reportActiva = new ArrayList<>();
-		BigInteger totalBegin = BigInteger.ZERO;
-		BigInteger totalEnd = BigInteger.ZERO;
+		BigInteger totalBegin = ZERO;
+		BigInteger totalEnd = ZERO;
 		Iterator<Entry<BalanceType, FiscalBalance>> iterator = activaMap.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<BalanceType, FiscalBalance> entry = iterator.next();
 			ReportBalance reportActivum = new ReportBalance();
 			BalanceType activum = entry.getKey();
-			reportActivum.setOmschrijving(activum.getKey());
+			reportActivum.setDescription(activum.getKey());
 			FiscalBalance fiscalBalance = entry.getValue();
 			reportActivum.setBookValueBegin(fiscalBalance.getBeginSaldo());
 			reportActivum.setBookValueEnd(fiscalBalance.getEndSaldo());
@@ -68,7 +70,7 @@ public class FiscalReportHelper {
 			}
 			reportActiva.add(reportActivum);
 		}
-		report.setActiva(reportActiva);
+		report.setBalanceList(reportActiva);
 		report.setTotalBeginValue(totalBegin);
 		report.setTotalEndValue(totalEnd);
 		return report;
@@ -77,8 +79,8 @@ public class FiscalReportHelper {
 	public static BalanceReport getPassivaReport(Map<BalanceType, FiscalBalance> passivaMap) {
 		BalanceReport report = new BalanceReport();
 		List<ReportBalance> reportBalance = new ArrayList<>();
-		BigInteger totalBegin = BigInteger.ZERO;
-		BigInteger totalEnd = BigInteger.ZERO;
+		BigInteger totalBegin = ZERO;
+		BigInteger totalEnd = ZERO;
 
 		if (passivaMap != null) {
 			Iterator<Entry<BalanceType, FiscalBalance>> iterator = passivaMap.entrySet().iterator();
@@ -87,7 +89,7 @@ public class FiscalReportHelper {
 				ReportBalance reportPassivum = new ReportBalance();
 				FiscalBalance fiscalBalance = entry.getValue();
 				BalanceType passivum = entry.getKey();
-				reportPassivum.setOmschrijving(passivum.getKey());
+				reportPassivum.setDescription(passivum.getKey());
 				reportPassivum.setBookValueBegin(fiscalBalance.getBeginSaldo());
 				reportPassivum.setBookValueEnd(fiscalBalance.getEndSaldo());
 				if (reportPassivum.getBookValueBegin() != null) {
@@ -98,9 +100,11 @@ public class FiscalReportHelper {
 				}
 				reportBalance.add(reportPassivum);
 			}
-			report.setActiva(reportBalance);
+			report.setBalanceList(reportBalance);
 			report.setTotalBeginValue(totalBegin);
 			report.setTotalEndValue(totalEnd);
+
+
 		}
 		return report;
 	}

@@ -96,6 +96,7 @@ public abstract class GenericDao<T> {
 		}
 	}
 
+    @Transactional
 	public Object getEntity(T entity, Long id) {
 		Object retrievedEntity = null;
 		try {
@@ -107,20 +108,6 @@ public abstract class GenericDao<T> {
 		return retrievedEntity;
 	}
 
-//	@SuppressWarnings("unchecked")
-//	public
-//	List<T> findByNamedQuery(final String name, Object... params) {
-//		Query query = entityManager.createNamedQuery(name);
-//
-//		for (int i = 0; i < params.length; i++) {
-//			query.setParameter(i + 1, params[i]);
-//		}
-//		addUserParameterForUserObjects(query);
-//
-//		return query.getResultList();
-//	}
-	
-	@SuppressWarnings("unchecked")
 	public
 	List<T> findByNamedQuery(final String name, String... params) {
 		Query query = entityManager.createNamedQuery(name);
@@ -142,7 +129,6 @@ public abstract class GenericDao<T> {
 		return findByCriteria(-1, -1, criterion);
 	}
 
-	@SuppressWarnings("unchecked")
 	List<T> findByCriteria(final int firstResult, final int maxResults, final Criterion... criterion) throws IllegalAccessException {
 		Session session = (Session) entityManager.getDelegate();
 		Criteria crit = session.createCriteria(persistentClass);
@@ -177,7 +163,6 @@ public abstract class GenericDao<T> {
 		return findByCriteria(-1, -1, user, criterion);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected List<T> findByCriteria(final int firstResult, final int maxResults, final User user, final Criterion... criterion) throws IllegalAccessException {
 		Session session = (Session) entityManager.getDelegate();
 		Criteria crit = session.createCriteria(persistentClass);
@@ -204,7 +189,6 @@ public abstract class GenericDao<T> {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected
 	List<T> findByNamedQuery(String namedQueryName, Map<String, Object> parameters) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();
@@ -221,7 +205,6 @@ public abstract class GenericDao<T> {
 		return query.getResultList();
 	}	
 	
-	@SuppressWarnings("unchecked")
 	List<T> findByNamedQueryForPeriod(String namedQueryName, FiscalPeriod period) {
 		Query query = entityManager.createNamedQuery(namedQueryName);
 		query.setParameter("beginDate", period.getBeginDate(), TemporalType.DATE);
@@ -230,7 +213,6 @@ public abstract class GenericDao<T> {
 		return query.getResultList();
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected
 	T findEntityByNamedQuery(String namedQueryName) {
 		Query query = entityManager.createNamedQuery(namedQueryName);
@@ -242,7 +224,6 @@ public abstract class GenericDao<T> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected
 	T findEntityByNamedQuery(String namedQueryName, Map<String, Object> parameters) {
 		Set<Entry<String, Object>> rawParameters = parameters.entrySet();

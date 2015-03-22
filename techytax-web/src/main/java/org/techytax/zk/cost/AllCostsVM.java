@@ -166,8 +166,8 @@ public class AllCostsVM extends CostVM {
 	public ListModelList<Cost> getCosts() throws Exception {
 		if (UserCredentialManager.getUser() != null) {
 			costCache = (CostCache) SpringUtil.getBean("costCache");
-			costCache.setBeginDatum(periode.getBeginDate());
-			costCache.setEindDatum(periode.getEndDate());
+			costCache.setBeginDate(periode.getBeginDate());
+			costCache.setEndDate(periode.getEndDate());
 			List<Cost> allCosts = costCache.getCosts();
 			unhandledCosts = new ArrayList<>();
 			filteredCosts = new ArrayList<>();

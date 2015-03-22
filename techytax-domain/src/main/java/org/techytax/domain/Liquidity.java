@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class Liquiditeit {
+public class Liquidity {
 
 	BigDecimal overigeKosten;
 

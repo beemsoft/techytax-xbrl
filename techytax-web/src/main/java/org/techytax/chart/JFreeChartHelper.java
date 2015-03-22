@@ -111,7 +111,7 @@ public class JFreeChartHelper {
 		int categoryYear = 0;
 		String balanceType = null;
 		for (BookValue bookValue : bookValues) {
-			int thisYear = bookValue.getJaar();
+			int thisYear = bookValue.getYear();
 			if (thisYear != categoryYear) {
 				categoryYear = thisYear;
 			}
@@ -179,10 +179,10 @@ public class JFreeChartHelper {
 		String title2 = Integer.toString(overview.getJaar());		
 		for (ReportBalance activum : report.getBalanceList()) {
 			if (activum.getBookValueBegin().compareTo(new BigInteger("0")) != 0) {
-				dataset.addValue(activum.getBookValueBegin().abs(), title1, activum.getOmschrijving());
+				dataset.addValue(activum.getBookValueBegin().abs(), title1, activum.getDescription());
 			}
 			if (activum.getBookValueEnd().compareTo(new BigInteger("0")) != 0 ) {
-				dataset.addValue(activum.getBookValueEnd().abs(), title2, activum.getOmschrijving());
+				dataset.addValue(activum.getBookValueEnd().abs(), title2, activum.getDescription());
 			}
 		}
  		return dataset;
@@ -210,10 +210,10 @@ public class JFreeChartHelper {
 		String title2 = Integer.toString(overview.getJaar());		
 		for (ReportBalance passivum : report.getBalanceList()) {
 			if (passivum.getBookValueBegin().compareTo(new BigInteger("0")) != 0) {
-				dataset.addValue(passivum.getBookValueBegin().abs(), title1, passivum.getOmschrijving());
+				dataset.addValue(passivum.getBookValueBegin().abs(), title1, passivum.getDescription());
 			}
 			if (passivum.getBookValueEnd().compareTo(new BigInteger("0")) != 0) {
-				dataset.addValue(passivum.getBookValueEnd().abs(), title2, passivum.getOmschrijving());
+				dataset.addValue(passivum.getBookValueEnd().abs(), title2, passivum.getDescription());
 			}
 		}
  		return dataset;

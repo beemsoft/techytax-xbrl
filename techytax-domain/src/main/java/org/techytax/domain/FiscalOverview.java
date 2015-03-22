@@ -28,45 +28,48 @@ import lombok.Data;
 import org.techytax.report.domain.BalanceReport;
 import org.techytax.report.helper.FiscalReportHelper;
 
+import static java.math.BigInteger.ZERO;
+
 @Data
 public class FiscalOverview {
 
 	private Map<BalanceType,FiscalBalance> activaMap;
 	private Map<BalanceType,FiscalBalance> passivaMap;
 	
-	private BigInteger afschrijvingAuto = BigInteger.ZERO;
+	private BigInteger afschrijvingAuto = ZERO;
 
 	@Deprecated
-	private BigInteger afschrijvingAutoCorrectie = BigInteger.ZERO;
+	private BigInteger afschrijvingAutoCorrectie = ZERO;
 
-	private BigInteger afschrijvingOverig = BigInteger.ZERO;
+	private BigInteger afschrijvingOverig = ZERO;
 
 	// Will be removed in 2017
 	@Deprecated
-	private BigInteger afschrijvingOverigCorrectie = BigInteger.ZERO;
+	private BigInteger afschrijvingOverigCorrectie = ZERO;
 
-	private BigInteger afschrijvingTotaal = BigInteger.ZERO;
-	private BigInteger bijtellingAuto = BigInteger.ZERO;
-	private BigInteger bookTotalBegin = BigInteger.ZERO;
-	private BigInteger bookTotalEnd = BigInteger.ZERO;
-	private BigInteger enterpriseCapital = BigInteger.ZERO;
-	private BigInteger interestFromBusinessSavings = BigInteger.ZERO;
-	private BigInteger investmentDeduction = BigInteger.ZERO;
+	private BigInteger afschrijvingTotaal = ZERO;
+	private BigInteger bijtellingAuto = ZERO;
+	private BigInteger bookTotalBegin = ZERO;
+	private BigInteger bookTotalEnd = ZERO;
+	private BigInteger enterpriseCapital = ZERO;
+    private BigInteger enterpriseCapitalPreviousYear = ZERO;
+	private BigInteger interestFromBusinessSavings = ZERO;
+	private BigInteger investmentDeduction = ZERO;
 	private int jaar;
-	private BigInteger kostenAuto = BigInteger.ZERO;
-	private BigInteger kostenAutoAftrekbaar = BigInteger.ZERO;
-	private BigInteger kostenOverig = BigInteger.ZERO;
-	private BigInteger kostenOverigTransport = BigInteger.ZERO;
-	private BigInteger nettoOmzet = BigInteger.ZERO;
+	private BigInteger kostenAuto = ZERO;
+	private BigInteger kostenAutoAftrekbaar = ZERO;
+	private BigInteger kostenOverig = ZERO;
+	private BigInteger kostenOverigTransport = ZERO;
+	private BigInteger nettoOmzet = ZERO;
 	private PrivateWithdrawal onttrekking;
-	private BigInteger oudedagsReserveMaximaal = BigInteger.ZERO;
+	private BigInteger oudedagsReserveMaximaal = ZERO;
 
 	private PrepaidTax prepaidTax;
-	private BigInteger privateDeposit = BigInteger.ZERO;
-	private BigInteger profit = BigInteger.ZERO;
-	private BigInteger repurchase = BigInteger.ZERO;
-	private BigInteger settlementCosts = BigInteger.ZERO;
-	private BigInteger settlementDepreciation = BigInteger.ZERO;
+	private BigInteger privateDeposit = ZERO;
+	private BigInteger profit = ZERO;
+	private BigInteger repurchase = ZERO;
+	private BigInteger settlementCosts = ZERO;
+	private BigInteger settlementDepreciation = ZERO;
 	private BigDecimal turnOverUnpaid = BigDecimal.ZERO;
 
 	public BalanceReport getActivaReport() {

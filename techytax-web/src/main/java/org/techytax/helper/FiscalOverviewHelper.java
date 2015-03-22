@@ -26,6 +26,7 @@ import static org.techytax.domain.BalanceType.PENSION;
 import static org.techytax.domain.BalanceType.VAT_TO_BE_PAID;
 import static org.techytax.domain.CostConstants.FOR_PERCENTAGE;
 import static org.techytax.domain.CostConstants.MAXIMALE_FOR;
+import static org.techytax.helper.AmountHelper.roundDownToInteger;
 import static org.techytax.helper.AmountHelper.roundToInteger;
 
 import java.math.BigDecimal;
@@ -35,7 +36,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,18 +52,14 @@ import org.techytax.domain.FiscalOverview;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.PrepaidTax;
 import org.techytax.domain.PrivateWithdrawal;
-import org.techytax.domain.User;
 import org.techytax.domain.VatBalanceWithinEu;
 import org.techytax.jpa.dao.CostDao;
-import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.zk.login.UserCredentialManager;
 
 @Component
 public class FiscalOverviewHelper {
 
-	private User user = UserCredentialManager.getUser();
-	
 	@Autowired
 	private ActivumDao activumDao;
 	
@@ -96,10 +92,8 @@ public class FiscalOverviewHelper {
 
 	public FiscalOverview createFiscalOverview(Date beginDatum, Date eindDatum) throws Exception {
 
-		// Load properties
-		Properties props = PropsFactory.loadProperties();
-		costCache.setBeginDatum(beginDatum);
-		costCache.setEindDatum(eindDatum);
+		costCache.setBeginDate(beginDatum);
+		costCache.setEndDate(eindDatum);
 		PrivateWithdrawal privatWithdrawal = new PrivateWithdrawal();
 
 		VatBalanceWithinEu vatBalanceWithinEu = balanceCalculator.calculateVatBalance(costCache.getCosts(), false);
@@ -110,7 +104,7 @@ public class FiscalOverviewHelper {
 
 		activaHelper.setFiscalOverview(overview);
 		activaHelper.setCostCache(costCache);
-		Map<BalanceType, FiscalBalance> activaMap = activaHelper.handleActiva(props, deductableCosts, costCache.getBusinessAccountCosts());
+		Map<BalanceType, FiscalBalance> activaMap = activaHelper.handleActiva(costCache.getBusinessAccountCosts(), overview);
 		overview.setActivaMap(activaMap);
 
 		List<BookValue> activumListThisYear = bookValueDao.getActivaList(bookYear);
@@ -127,7 +121,7 @@ public class FiscalOverviewHelper {
 
 		BigDecimal privateDeposit = handlePrivateDeposits();
 
-		handlePrivateWithdrawals(privatWithdrawal, passivaList, enterpriseCapital, privateDeposit);
+		handlePrivateWithdrawals(privatWithdrawal, enterpriseCapital, privateDeposit);
 
 		handlePrepaidTaxes();
 
@@ -204,22 +198,22 @@ public class FiscalOverviewHelper {
 	private void handleNonCurrentAssets(BigInteger fiscalPension, BigDecimal vatDebt) throws Exception {
 		BookValue currentBookValue = bookValueDao.getBookValue(NON_CURRENT_ASSETS, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(NON_CURRENT_ASSETS, bookYear - 1);
-		BigInteger bookTotalNonCurrentAssets = overview.getBookTotalEnd();
-		bookTotalNonCurrentAssets = bookTotalNonCurrentAssets.subtract(fiscalPension);
-		bookTotalNonCurrentAssets = bookTotalNonCurrentAssets.subtract(roundToInteger(vatDebt));
+		BigInteger newSaldo = overview.getBookTotalEnd();
+		newSaldo = newSaldo.subtract(fiscalPension);
+		newSaldo = newSaldo.subtract(roundDownToInteger(vatDebt));
 		if (currentBookValue == null) {
-			BookValue newValue = new BookValue(NON_CURRENT_ASSETS, bookYear, bookTotalNonCurrentAssets);
-			newValue.setUser(user);
+			BookValue newValue = new BookValue(NON_CURRENT_ASSETS, bookYear, newSaldo);
+			newValue.setUser(UserCredentialManager.getUser());
 			bookValueDao.persistEntity(newValue);
 		} else {
-			currentBookValue.setSaldo(bookTotalNonCurrentAssets);
+			currentBookValue.setSaldo(newSaldo);
 		}
 		if (previousBookValue != null || currentBookValue != null) {
 			FiscalBalance fiscalBalance = new FiscalBalance();
 			if (previousBookValue != null) {
 				fiscalBalance.setBeginSaldo(previousBookValue.getSaldo());
 			}
-			fiscalBalance.setEndSaldo(currentBookValue.getSaldo());
+			fiscalBalance.setEndSaldo(newSaldo);
 			passivaMap.put(NON_CURRENT_ASSETS, fiscalBalance);
 		}
 	}
@@ -227,25 +221,24 @@ public class FiscalOverviewHelper {
 	private BigDecimal handleVatToBePaid() throws Exception {
 		BookValue currentBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(VAT_TO_BE_PAID, bookYear - 1);
-		BigDecimal vatDebt = getVatDebtFromPreviousYear(DateHelper.getLastVatPeriodPreviousYear());
-
-		if (vatDebt != null && vatDebt.compareTo(BigDecimal.ZERO) == 1) {
+        BigDecimal newSaldo = getVatDebtFromPreviousYear(DateHelper.getLastVatPeriodPreviousYear());
+		if (newSaldo != null && newSaldo.compareTo(BigDecimal.ZERO) == 1) {
 
 			if (currentBookValue == null) {
-				BookValue newValue = new BookValue(VAT_TO_BE_PAID, bookYear, vatDebt.toBigInteger());
-				newValue.setUser(user);
+				BookValue newValue = new BookValue(VAT_TO_BE_PAID, bookYear, newSaldo.toBigInteger());
+				newValue.setUser(UserCredentialManager.getUser());
 				bookValueDao.persistEntity(newValue);
 			} else {
-				currentBookValue.setSaldo(vatDebt.toBigInteger());
+				currentBookValue.setSaldo(newSaldo.toBigInteger());
 			}
 		}
 		if (previousBookValue != null || currentBookValue != null) {
 			FiscalBalance fiscalBalance = new FiscalBalance();
 			fiscalBalance.setBeginSaldo(previousBookValue.getSaldo());
-			fiscalBalance.setEndSaldo(currentBookValue.getSaldo());
+			fiscalBalance.setEndSaldo(newSaldo.toBigInteger());
 			passivaMap.put(VAT_TO_BE_PAID, fiscalBalance);
 		}
-		return vatDebt;
+		return newSaldo;
 	}
 	
 	private BigDecimal getVatDebtFromPreviousYear(FiscalPeriod period) {
@@ -258,26 +251,27 @@ public class FiscalOverviewHelper {
 	}
 
 	private BigInteger handleFiscalPension() throws Exception {
-		BigInteger fiscalPension = BigInteger.ZERO;
 		BookValue currentBookValue = bookValueDao.getBookValue(PENSION, bookYear);
 		BookValue previousBookValue = bookValueDao.getBookValue(PENSION, bookYear - 1);
+
+        BigInteger newSaldo = BigInteger.ZERO;
 		if (currentBookValue == null) {
 			if (previousBookValue != null) {
-				fiscalPension = previousBookValue.getSaldo();
-				BookValue newValue = new BookValue(PENSION, bookYear, fiscalPension);
-				newValue.setUser(user);
+                newSaldo = previousBookValue.getSaldo();
+				BookValue newValue = new BookValue(PENSION, bookYear, newSaldo);
+				newValue.setUser(UserCredentialManager.getUser());
 				bookValueDao.persistEntity(newValue);
 			}
 		} else {
-			fiscalPension = currentBookValue.getSaldo();
+            newSaldo = currentBookValue.getSaldo();
 		}
 		if (previousBookValue != null || currentBookValue != null) {
 			FiscalBalance fiscalBalance = new FiscalBalance();
 			fiscalBalance.setBeginSaldo(previousBookValue.getSaldo());
-			fiscalBalance.setEndSaldo(currentBookValue.getSaldo());
+			fiscalBalance.setEndSaldo(newSaldo);
 			passivaMap.put(PENSION, fiscalBalance);
 		}
-		return fiscalPension;
+		return newSaldo;
 	}
 
 	private BigDecimal handlePrivateDeposits() throws Exception {
@@ -291,9 +285,10 @@ public class FiscalOverviewHelper {
 		overview.setPrepaidTax(prepaidTax);
 	}
 
-	private void handlePrivateWithdrawals(PrivateWithdrawal privateWithdrawal, List<BookValue> passivaLijst, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
+	private void handlePrivateWithdrawals(PrivateWithdrawal privateWithdrawal, BigInteger enterpriseCapital, BigDecimal privateDeposit) throws Exception {
 		List<BookValue> passivaListPreviousYear = bookValueDao.getPassivaList(bookYear - 1);
 		BigInteger enterpriseCapitalPreviousYear = getEnterpriseCapital(passivaListPreviousYear);
+        overview.setEnterpriseCapitalPreviousYear(enterpriseCapitalPreviousYear);
 		BigInteger totalWithdrawal = overview.getProfit();
 		totalWithdrawal = totalWithdrawal.subtract(enterpriseCapital.subtract(enterpriseCapitalPreviousYear));
 		totalWithdrawal = totalWithdrawal.add(roundToInteger(privateDeposit));
@@ -319,10 +314,7 @@ public class FiscalOverviewHelper {
 		}
 		overview.setAfschrijvingOverig(totalDeprecationActiva);
 
-		BigInteger depreciationSettlement = roundToInteger(balanceCalculator.getDepreciationSettlement(deductableCosts));
-		overview.setSettlementDepreciation(depreciationSettlement);
-
-		BigInteger totalDepreciation = BigInteger.ZERO; 
+		BigInteger totalDepreciation = BigInteger.ZERO;
 	    totalDepreciation = totalDepreciation.add(overview.getAfschrijvingAuto());
 		totalDepreciation = totalDepreciation.add(overview.getAfschrijvingAutoCorrectie());
 		totalDepreciation = totalDepreciation.add(overview.getAfschrijvingOverig());
