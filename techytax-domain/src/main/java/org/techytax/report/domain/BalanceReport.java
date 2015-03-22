@@ -19,36 +19,16 @@
  */
 package org.techytax.report.domain;
 
+import lombok.Data;
+
 import java.math.BigInteger;
 import java.util.List;
 
+@Data
 public class BalanceReport {
 
 	private List<ReportBalance> balanceList;
 	private BigInteger totalBeginValue;
 	private BigInteger totalEndValue;
 
-	public List<ReportBalance> getBalanceList() {
-		return balanceList;
-	}
-
-	public void setActiva(List<ReportBalance> balanceList) {
-		this.balanceList = balanceList;
-	}
-
-	public BigInteger getTotalBeginValue() {
-		return totalBeginValue;
-	}
-
-	public void setTotalBeginValue(BigInteger totalBeginValue) {
-		this.totalBeginValue = totalBeginValue;
-	}
-
-	public BigInteger getTotalEndValue() {
-		return totalEndValue;
-	}
-
-	public void setTotalEndValue(BigInteger totalEndValue) {
-		this.totalEndValue = totalEndValue;
-	}
 }
