@@ -36,10 +36,10 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @NamedQueries({
-		@NamedQuery(name = BookValue.HISTORY, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.jaar desc"),
-		@NamedQuery(name = BookValue.FOR_YEAR, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.jaar = :year order by bv.balanceType asc"),
-		@NamedQuery(name = BookValue.GET, query = "SELECT bv FROM BookValue bv WHERE bv.jaar = :year and bv.user = :user and bv.balanceType = :balanceType"),
-		@NamedQuery(name = BookValue.FOR_YEAR_AND_TYPES, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.jaar = :year AND bv.balanceType IN :balanceTypes ORDER BY bv.balanceType asc") })
+		@NamedQuery(name = BookValue.HISTORY, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user order by bv.balanceType asc, bv.year desc"),
+		@NamedQuery(name = BookValue.FOR_YEAR, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.year = :year order by bv.balanceType asc"),
+		@NamedQuery(name = BookValue.GET, query = "SELECT bv FROM BookValue bv WHERE bv.year = :year and bv.user = :user and bv.balanceType = :balanceType"),
+		@NamedQuery(name = BookValue.FOR_YEAR_AND_TYPES, query = "SELECT bv FROM BookValue bv WHERE bv.user = :user AND bv.year = :year AND bv.balanceType IN :balanceTypes ORDER BY bv.balanceType asc") })
 @Table(name = "boekwaarde")
 @Getter
 @Setter
@@ -55,7 +55,7 @@ public class BookValue extends UserObject {
 	private BalanceType balanceType;
 
 	@Column(name = "boekjaar")
-	private int jaar;
+	private int year;
 
 	@Type(type = "encryptedInteger")
 	private BigInteger saldo;
@@ -63,9 +63,9 @@ public class BookValue extends UserObject {
 	public BookValue() {
 	}
 
-	public BookValue(BalanceType balanceType, int jaar, BigInteger saldo) {
+	public BookValue(BalanceType balanceType, int year, BigInteger saldo) {
 		this.balanceType = balanceType;
-		this.jaar = jaar;
+		this.year = year;
 		this.saldo = saldo;
 	}
 
@@ -73,4 +73,8 @@ public class BookValue extends UserObject {
 		return balanceType.getKey();
 	}
 
+    @Override
+    public String toString() {
+        return balanceType + "," + year + "," + saldo;
+    }
 }

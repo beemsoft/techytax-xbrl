@@ -72,7 +72,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 		header.setWidth("150px");
 		header.setParent(lh);
 		for (BookValue bookValue : data.getBookValues()) {
-			createListheader(Integer.toString(bookValue.getJaar())).setParent(lh);
+			createListheader(Integer.toString(bookValue.getYear())).setParent(lh);
 		}
 		return lh;
 	}
@@ -110,7 +110,7 @@ public class InplaceEditingActivumRenderer implements ListitemRenderer<BookValue
 			public void onEvent(Event event) throws ParseException {
 				InputEvent ievent = (InputEvent) event;
 				BigInteger amount = AmountHelper.parse(ievent.getValue());
-				BookValue newBookValue = new BookValue(oldBookValue.getBalanceType(), oldBookValue.getJaar(), amount);
+				BookValue newBookValue = new BookValue(oldBookValue.getBalanceType(), oldBookValue.getYear(), amount);
 				newBookValue.setId(oldBookValue.getId());
 				Events.postEvent(ModelDataChangeEvent.getModelDataChangeEvent(listbox, newBookValue,
 						listitem.getIndex()

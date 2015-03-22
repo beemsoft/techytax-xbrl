@@ -76,7 +76,7 @@ public class ModelWindowVM {
 	public void save() {
 		Map args = new HashMap();
 		bookValue.setBalanceType(selectedBalanceType);
-		bookValue.setJaar(selectedYear);
+		bookValue.setYear(selectedYear);
 		args.put("returnbookvalue", this.bookValue);
 		BindUtils.postGlobalCommand("queueName", null, "refreshvalues2", args);
 		win.detach();

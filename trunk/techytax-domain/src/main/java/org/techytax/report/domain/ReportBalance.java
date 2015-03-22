@@ -19,54 +19,18 @@
  */
 package org.techytax.report.domain;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+@Data
 public class ReportBalance {
 
 	private BigDecimal aanschafKosten;
 	private BigInteger bookValueBegin;
 	private BigInteger bookValueEnd;
-	private String omschrijving;
+	private String description;
 	private BigInteger restwaarde;
 
-	public BigDecimal getAanschafKosten() {
-		return aanschafKosten;
-	}
-
-	public void setAanschafKosten(BigDecimal aanschafKosten) {
-		this.aanschafKosten = aanschafKosten;
-	}
-
-	public BigInteger getBookValueBegin() {
-		return bookValueBegin;
-	}
-
-	public void setBookValueBegin(BigInteger bookValueBegin) {
-		this.bookValueBegin = bookValueBegin;
-	}
-
-	public BigInteger getBookValueEnd() {
-		return bookValueEnd;
-	}
-
-	public void setBookValueEnd(BigInteger bookValueEnd) {
-		this.bookValueEnd = bookValueEnd;
-	}
-
-	public String getOmschrijving() {
-		return omschrijving;
-	}
-
-	public void setOmschrijving(String omschrijving) {
-		this.omschrijving = omschrijving;
-	}
-
-	public BigInteger getRestwaarde() {
-		return restwaarde;
-	}
-
-	public void setRestwaarde(BigInteger restwaarde) {
-		this.restwaarde = restwaarde;
-	}
 }
