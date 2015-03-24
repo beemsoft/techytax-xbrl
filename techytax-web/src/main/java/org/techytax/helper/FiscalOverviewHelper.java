@@ -100,7 +100,7 @@ public class FiscalOverviewHelper {
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
 
-		handleProfitAndLoss(privatWithdrawal, vatBalanceWithinEu, deductableCosts);
+
 
 		activaHelper.setFiscalOverview(overview);
 		activaHelper.setCostCache(costCache);
@@ -110,6 +110,8 @@ public class FiscalOverviewHelper {
 		List<BookValue> activumListThisYear = bookValueDao.getActivaList(bookYear);
 		List<BookValue> activumListPreviousYear = bookValueDao.getActivaList(bookYear - 1);
 		setBalanceTotals(activumListThisYear, activumListPreviousYear);
+
+        handleProfitAndLoss(privatWithdrawal, vatBalanceWithinEu, deductableCosts);
 
 		handlePassiva();
 		overview.setPassivaMap(passivaMap);
