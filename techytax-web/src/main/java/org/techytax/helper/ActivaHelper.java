@@ -240,16 +240,14 @@ public class ActivaHelper {
 	}
 
 	private void insertOrUpdateBookValue(BalanceType balanceType, BookValue currentBookValue, BigInteger newSaldo) {
-		if (newSaldo.compareTo(ZERO) == 1) {
-			if (currentBookValue == null) {
-				BookValue bookValue = createBookValue(balanceType);
-				bookValue.setSaldo(newSaldo);
-                bookValue.setUser(UserCredentialManager.getUser());
-				bookValueDao.persistEntity(bookValue);
-			} else {
-				currentBookValue.setSaldo(newSaldo);
-                bookValueDao.merge(currentBookValue);
-			}
+		if (currentBookValue == null) {
+			BookValue bookValue = createBookValue(balanceType);
+			bookValue.setSaldo(newSaldo);
+			bookValue.setUser(UserCredentialManager.getUser());
+			bookValueDao.persistEntity(bookValue);
+		} else {
+			currentBookValue.setSaldo(newSaldo);
+			bookValueDao.merge(currentBookValue);
 		}
 	}
 
