@@ -75,22 +75,21 @@ public class FiscalOverviewHelper {
 	@Autowired
 	private ActivaHelper activaHelper;
 	
-	private FiscalOverview overview = new FiscalOverview();
+	private FiscalOverview overview;
 	
 	@Autowired
 	private InvestmentDeductionHelper investmentDeductionHelper;
 	
 	private int bookYear;
-	private Map<BalanceType, FiscalBalance> passivaMap = new HashMap<>();
+	private Map<BalanceType, FiscalBalance> passivaMap;
 	
 	@Autowired
 	private BalanceCalculator balanceCalculator;
 
-	public FiscalOverviewHelper() throws Exception {
-		bookYear = DateHelper.getFiscalYear();
-	}
-
 	public FiscalOverview createFiscalOverview(Date beginDatum, Date eindDatum) throws Exception {
+		bookYear = DateHelper.getFiscalYear();
+		overview = new FiscalOverview();
+		passivaMap = new HashMap<>();
 
 		costCache.setBeginDate(beginDatum);
 		costCache.setEndDate(eindDatum);
@@ -99,8 +98,6 @@ public class FiscalOverviewHelper {
 		VatBalanceWithinEu vatBalanceWithinEu = balanceCalculator.calculateVatBalance(costCache.getCosts(), false);
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
-
-
 
 		activaHelper.setFiscalOverview(overview);
 		activaHelper.setCostCache(costCache);
