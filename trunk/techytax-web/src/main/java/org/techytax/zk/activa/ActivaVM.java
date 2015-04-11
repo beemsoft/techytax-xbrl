@@ -166,9 +166,9 @@ public class ActivaVM {
 	private void insertOrUpdate(BookValue bookValue) throws Exception {
 		User user = UserCredentialManager.getUser();
 		BookValue originalBookValue = null;
-		if (!checkFiscalPensionLimit(bookValue)) {
-			return;
-		}
+//		if (!checkFiscalPensionLimit(bookValue)) {
+//			return;
+//		}
 		if (bookValue.getId() > 0) {
 			originalBookValue = bookValueDao.getBookValue(bookValue.getBalanceType(), bookValue.getYear());
 		}
