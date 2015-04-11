@@ -203,7 +203,7 @@ public class ActivaHelper {
 
 		Activum activum = createActivum(balanceType);
 		activum.setEndDate(costCache.getBeginDate());
-		List<Activum> newActiva = activumDao.getNewActiva(balanceType, costCache.getBeginDate(), costCache.getEndDate());
+		List<Activum> newActiva = activumDao.getNewActiva(balanceType);
 		BigDecimal totalCost = BigDecimal.ZERO;
 		for (Activum activum2 : newActiva) {
 			totalCost = totalCost.add(activum2.getCost().getAmount());
