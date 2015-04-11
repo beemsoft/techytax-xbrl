@@ -70,13 +70,15 @@ public class ActivaHelper {
 	
 	private FiscalOverview fiscalOverview;
 	private CostCache costCache;
-	private int bookYear = DateHelper.getYear(new Date()) - 1;
-	private Map<BalanceType, FiscalBalance> activaMap = new HashMap<>();
+	private int bookYear;
+	private Map<BalanceType, FiscalBalance> activaMap;
 	
 	@Autowired
 	private BalanceCalculator balanceCalculator;
 
 	public Map<BalanceType, FiscalBalance> handleActiva(List<Cost> rekeningLijst, FiscalOverview fiscalOverview) throws Exception {
+		bookYear = DateHelper.getYear(new Date()) - 1;
+		activaMap = new HashMap<>();
 
 		handleCurrentAssets(rekeningLijst);
 
