@@ -43,7 +43,7 @@ import org.techytax.helper.DepreciationHelper;
 
 @Entity
 @NamedQueries({
-		@NamedQuery(name = Activum.NEW_ACTIVA, query = "SELECT act FROM Activum act WHERE act.balanceType = :balanceType AND act.cost.date >= :beginDate AND act.cost.date <= :endDate AND (act.startDate = null OR act.startDate <= :startDate) AND act.endDate = null AND act.user = :user"),
+		@NamedQuery(name = Activum.NEW_ACTIVA, query = "SELECT act FROM Activum act WHERE act.balanceType = :balanceType AND ((act.cost.date >= :fiscalStartDate AND act.cost.date <= :fiscalEndDate) OR (act.startDate <= :fiscalStartDate AND act.startDate <= :fiscalEndDate)) AND act.endDate = null AND act.user = :user"),
 		@NamedQuery(name = Activum.ALL_ACTIVA, query = "SELECT act FROM Activum act WHERE act.user = :user ORDER BY act.cost.date ASC"),
 		@NamedQuery(name = Activum.GET_ACTIVUM_FOR_COST, query = "SELECT act FROM Activum act WHERE act.user = :user AND act.cost = :cost"),
 		@NamedQuery(name = Activum.ACTIVE_ACTIVA, query = "SELECT act FROM Activum act WHERE act.user = :user AND act.endDate = null ORDER BY act.cost.date ASC"),
