@@ -1,0 +1,67 @@
+<window id="resultWin" title="${c:l('bookvalues.edit')}" width="500px"
+	height="330px" border="normal" apply="org.zkoss.bind.BindComposer"
+	onCancel="@command('closeThis')"
+	viewModel="@id('vm') @init('org.techytax.zk.fiscal.ModelWindowVM')">
+
+	<button label="${c:l('edit')}" onClick="@command('save')" />
+	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
+	<groupbox width="450px" height="230px" >
+		<hbox>
+			<vbox hflex="true">
+				<grid width="250px">
+					<columns>
+						<column width="90px" />
+						<column />
+					</columns>
+					<rows>
+						<row>
+								<label value="${c:l('year')}" />
+								<hlayout>
+									<listbox id="yearsListbox"
+										mold="select" rows="1"
+										model="@load(vm.yearsList))"
+										selectedItem="@bind(vm.selectedYear)">
+										<template name="model">
+											<listitem>
+												<listcell
+													label="@load(each)" />
+											</listitem>
+										</template>
+									</listbox>
+								</hlayout>
+						</row>
+						<row>
+							<label value="${c:l('balance')}" />
+							<hlayout>
+								<doublebox id="pbox"
+									value="@bind(vm.bookValue.saldo)"
+									format="###,##0" />
+							</hlayout>
+						</row>
+					</rows>
+				</grid>
+			</vbox>
+			<grid hflex="true">
+				<columns>
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<listbox model="@load(vm.balanceTypes)"
+							selectedItem="@bind(vm.selectedBalanceType)" width="180px" >
+							<listhead>
+								<listheader label="${c:l('balance.type')}" />
+							</listhead>
+							<template name="model" var="item">
+								<listitem>
+									<listcell
+										label="@load(item.key)" />
+								</listitem>
+							</template>
+						</listbox>
+					</row>
+				</rows>
+			</grid>
+		</hbox>
+	</groupbox>
+</window>
