@@ -24,84 +24,84 @@ import java.math.BigInteger;
 
 public interface CostConstants {
 
-	public static final CostType UNDETERMINED = new CostType(0);
-	public static final CostType INCOME_CURRENT_ACCOUNT = new CostType(1);
-	public static final CostType EXPENSE_CURRENT_ACCOUNT = new CostType(2);
-	public static final CostType EXPENSE_CURRENT_ACCOUNT_IGNORE = new CostType(3);
-	public static final CostType DEPOSIT = new CostType(4);
-	public static final CostType WITHDRAWAL = new CostType(5);
-	public static final CostType EXPENSE_OTHER_ACCOUNT_IGNORE = new CostType(6);
-	public static final CostType EXPENSE_OTHER_ACCOUNT = new CostType(7);
-	public static final CostType TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT = new CostType(8);
-	public static final CostType TRAVEL_WITH_PUBLIC_TRANSPORT = new CostType(9);
-	public static final CostType TO_SAVINGS_ACCOUNT = new CostType(10);	
-	public static final CostType VAT = new CostType(12);
-	public static final CostType BUSINESS_FOOD = new CostType(13);
-	public static final CostType BUSINESS_CAR = new CostType(14);
-	public static final CostType FROM_SAVINGS_ACCOUNT = new CostType(15);
-	public static final CostType INVESTMENT = new CostType(16);
-	public static final CostType TO_PRIVATE_ACCOUNT = new CostType(17);
-	public static final CostType FROM_PRIVATE_ACCOUNT = new CostType(18);	
-	public static final CostType BUSINESS_CAR_OTHER_ACCOUNT = new CostType(19);	
-	public static final CostType BUSINESS_FOOD_OTHER_ACCOUNT = new CostType(20);
+	CostType UNDETERMINED = new CostType(0);
+	CostType INCOME_CURRENT_ACCOUNT = new CostType(1);
+	CostType EXPENSE_CURRENT_ACCOUNT = new CostType(2);
+	CostType EXPENSE_CURRENT_ACCOUNT_IGNORE = new CostType(3);
+	CostType DEPOSIT = new CostType(4);
+	CostType WITHDRAWAL = new CostType(5);
+	CostType EXPENSE_OTHER_ACCOUNT_IGNORE = new CostType(6);
+	CostType EXPENSE_OTHER_ACCOUNT = new CostType(7);
+	CostType TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT = new CostType(8);
+	CostType TRAVEL_WITH_PUBLIC_TRANSPORT = new CostType(9);
+	CostType TO_SAVINGS_ACCOUNT = new CostType(10);	
+	CostType VAT = new CostType(12);
+	CostType BUSINESS_FOOD = new CostType(13);
+	CostType BUSINESS_CAR = new CostType(14);
+	CostType FROM_SAVINGS_ACCOUNT = new CostType(15);
+	CostType INVESTMENT = new CostType(16);
+	CostType TO_PRIVATE_ACCOUNT = new CostType(17);
+	CostType FROM_PRIVATE_ACCOUNT = new CostType(18);	
+	CostType BUSINESS_CAR_OTHER_ACCOUNT = new CostType(19);	
+	CostType BUSINESS_FOOD_OTHER_ACCOUNT = new CostType(20);
 	
 	@Deprecated
-	public static final CostType BUSINESS_TRAVEL_CREDIT_CARD = new CostType(21);
+	CostType BUSINESS_TRAVEL_CREDIT_CARD = new CostType(21);
 	
 	@Deprecated	
-	public static final CostType BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = new CostType(22);
+	CostType BUSINESS_LITERATURE_CREDIT_CARD_NO_VAT = new CostType(22);
 	
 	@Deprecated
-	public static final CostType DEPRECIATION_CAR = new CostType(23);
+	CostType DEPRECIATION_CAR = new CostType(23);
 	
 	@Deprecated
-	public static final CostType FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE = new CostType(24);
+	CostType FISCAL_TAX_BUSINESS_CAR_PRIVATE_USAGE = new CostType(24);
 	
 	@Deprecated
-	public static final CostType DEPRECIATION_MACHINE = new CostType(25);
+	CostType DEPRECIATION_MACHINE = new CostType(25);
 	
-	public static final CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
-	public static final CostType ADVERTORIAL = new CostType(27);
-	public static final CostType ADVERTORIAL_NO_VAT = new CostType(28);
-	public static final CostType INCOME_TAX = new CostType(29);
-	public static final CostType INCOME_TAX_PAID_BACK = new CostType(30);
-	public static final CostType ROAD_TAX = new CostType(31);
-	public static final CostType EXPENSE_CREDIT_CARD = new CostType(32);
-	public static final CostType INTEREST = new CostType(33);
-	
-	@Deprecated
-	public static final CostType VAT_PAID_BACK_ON_OTHER_ACCOUNT = new CostType(34);	
+	CostType INVESTMENT_OTHER_ACCOUNT = new CostType(26);
+	CostType ADVERTORIAL = new CostType(27);
+	CostType ADVERTORIAL_NO_VAT = new CostType(28);
+	CostType INCOME_TAX = new CostType(29);
+	CostType INCOME_TAX_PAID_BACK = new CostType(30);
+	CostType ROAD_TAX = new CostType(31);
+	CostType EXPENSE_CREDIT_CARD = new CostType(32);
+	CostType INTEREST = new CostType(33);
 	
 	@Deprecated
-	public static final CostType VAT_CORRECTION_CAR_DEPRECIATION = new CostType(35);
-	
-	public static final CostType VAT_CORRECTION_CAR_PRIVATE = new CostType(36);
-	public static final CostType INVOICE_PAID = new CostType(38);	
-	public static final CostType INVOICE_SENT = new CostType(39);
-	public static final CostType REPURCHASES = new CostType(40);
-	public static final CostType SETTLEMENT = new CostType(41);
-	public static final CostType SETTLEMENT_INTEREST = new CostType(42);
+	CostType VAT_PAID_BACK_ON_OTHER_ACCOUNT = new CostType(34);	
 	
 	@Deprecated
-	public static final CostType DEPRECIATION_SETTLEMENT = new CostType(43);
+	CostType VAT_CORRECTION_CAR_DEPRECIATION = new CostType(35);
 	
-	public static final CostType SETTLEMENT_OTHER_ACCOUNT = new CostType(44);
-	public static final CostType SETTLEMENT_DISCOUNT = new CostType(45);
-	public static final CostType INCOME_CURRENT_ACCOUNT_IGNORE = new CostType(46);
-	public static final CostType EXPENSE_INSIDE_EU = new CostType(47);
+	CostType VAT_CORRECTION_CAR_PRIVATE = new CostType(36);
+	CostType INVOICE_PAID = new CostType(38);	
+	CostType INVOICE_SENT = new CostType(39);
+	CostType REPURCHASES = new CostType(40);
+	CostType SETTLEMENT = new CostType(41);
+	CostType SETTLEMENT_INTEREST = new CostType(42);
+	
+	@Deprecated
+	CostType DEPRECIATION_SETTLEMENT = new CostType(43);
+	
+	CostType SETTLEMENT_OTHER_ACCOUNT = new CostType(44);
+	CostType SETTLEMENT_DISCOUNT = new CostType(45);
+	CostType INCOME_CURRENT_ACCOUNT_IGNORE = new CostType(46);
+	CostType EXPENSE_INSIDE_EU = new CostType(47);
 
     /**
      * http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve?projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619
      */
-	public static final BigInteger MAXIMALE_FOR = BigInteger.valueOf(9542);
-	public static final BigDecimal FOR_PERCENTAGE = BigDecimal.valueOf(0.109f);
+	BigInteger MAXIMALE_FOR = BigInteger.valueOf(9542);
+	BigDecimal FOR_PERCENTAGE = BigDecimal.valueOf(0.109f);
 
     /**
      * http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/aftrek_van_kosten
      */
-	public static final float FOOD_TAXFREE_PERCENTAGE = 0.735f;
+	float FOOD_TAXFREE_PERCENTAGE = 0.735f;
 	
-	public static final int INVESTMENT_MINIMUM_AMOUNT = 450;
+	int INVESTMENT_MINIMUM_AMOUNT = 450;
 	
 
 }
