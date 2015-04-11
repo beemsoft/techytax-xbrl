@@ -90,7 +90,6 @@ public class FiscalOverviewHelper {
 		bookYear = DateHelper.getFiscalYear();
 		overview = new FiscalOverview();
 		passivaMap = new HashMap<>();
-
 		costCache.setBeginDate(beginDatum);
 		costCache.setEndDate(eindDatum);
 		PrivateWithdrawal privatWithdrawal = new PrivateWithdrawal();
@@ -98,6 +97,8 @@ public class FiscalOverviewHelper {
 		VatBalanceWithinEu vatBalanceWithinEu = balanceCalculator.calculateVatBalance(costCache.getCosts(), false);
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
+
+		handleDepreciations(deductableCosts);
 
 		activaHelper.setFiscalOverview(overview);
 		activaHelper.setCostCache(costCache);
@@ -290,7 +291,7 @@ public class FiscalOverviewHelper {
         overview.setEnterpriseCapitalPreviousYear(enterpriseCapitalPreviousYear);
 		BigInteger totalWithdrawal = overview.getProfit();
 		totalWithdrawal = totalWithdrawal.subtract(enterpriseCapital.subtract(enterpriseCapitalPreviousYear));
-		totalWithdrawal = totalWithdrawal.add(roundToInteger(privateDeposit));
+		totalWithdrawal = totalWithdrawal.add(roundDownToInteger(privateDeposit));
 		privateWithdrawal.setTotaleOnttrekking(totalWithdrawal);
 		BigInteger withdrawalCash = totalWithdrawal;
 		if (privateWithdrawal.getWithdrawalPrivateUsageBusinessCar() != null) {
