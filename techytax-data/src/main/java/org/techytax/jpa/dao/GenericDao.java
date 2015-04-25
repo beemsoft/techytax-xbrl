@@ -40,6 +40,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.techytax.domain.FiscalPeriod;
+import org.techytax.domain.PrivateCostMatch;
 import org.techytax.domain.User;
 import org.techytax.domain.UserObject;
 import org.techytax.zk.login.UserCredentialManager;
@@ -133,7 +134,7 @@ public abstract class GenericDao<T> {
 		Session session = (Session) entityManager.getDelegate();
 		Criteria crit = session.createCriteria(persistentClass);
 
-		if (UserObject.class.isAssignableFrom(persistentClass)) {
+		if (UserObject.class.isAssignableFrom(persistentClass) || persistentClass.equals(PrivateCostMatch.class)) {
 			User user = UserCredentialManager.getUser();
 			crit.add(Restrictions.eq("user", user));
 		}
