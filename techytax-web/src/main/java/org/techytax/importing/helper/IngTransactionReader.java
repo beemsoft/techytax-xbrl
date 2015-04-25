@@ -43,7 +43,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 
 	private static LabeledCSVParser parser = null;
 	
-	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in) throws Exception {
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			System.out.println(parser.getLabels()[0]);
@@ -51,7 +51,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 
 			Vector<String[]> data = getRegels();
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
-				String[] regel = (String[]) data.get(regelNummer - 1);
+				String[] regel = data.get(regelNummer - 1);
 				processLine(regel, regelNummer);
 			}
 
@@ -65,7 +65,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 		int regelNummer = 0;
 
 		String[] regel = parser.getLine();
-		regels = new Vector<String[]>();
+		regels = new Vector<>();
 		while (regel != null) {
 
 			++regelNummer;
@@ -87,7 +87,7 @@ public class IngTransactionReader extends BaseTransactionReader {
 			}
 			BigDecimal bedrag = new BigDecimal(line[6].replace(',', '.'));
 			kost.setAmount(bedrag);
-			String omschrijving = null;
+			String omschrijving;
 			if (line[8].contains(line[1])) {
 				omschrijving = line[8];
 			} else {
@@ -132,6 +132,11 @@ public class IngTransactionReader extends BaseTransactionReader {
 				if (index > 0) {
 					omschrijving = omschrijving.substring(0, index) + omschrijving.substring(index + 13, omschrijving.length());
 				}
+
+				index = omschrijving.indexOf("Transactie:");
+				if (index > 0) {
+					omschrijving = omschrijving.substring(0, index) + omschrijving.substring(index + 29, omschrijving.length());
+				}
 				
 				kost.setDescription(omschrijving);
 				if (omschrijving.contains("BELASTINGDIENST")) {
@@ -148,8 +153,8 @@ public class IngTransactionReader extends BaseTransactionReader {
 
 	@Override
 	public void reset() {
-		kostLijst = new ArrayList<Cost>();
-		kostmatchList = new ArrayList<Kostmatch>();
+		kostLijst = new ArrayList<>();
+		kostmatchList = new ArrayList<>();
 	}
 
 }

@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 import org.techytax.domain.Cost;
 import org.techytax.domain.CostConstants;
 import org.techytax.domain.CostMatchParent;
+import org.techytax.domain.Kostmatch;
 import org.techytax.helper.CostSplitter;
 import org.techytax.util.DateHelper;
 
@@ -46,7 +47,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 
 	private LabeledCSVParser parser = null;
 
-	public List<Cost> readFile(BufferedReader in) throws NumberFormatException, Exception {
+	public List<Cost> readFile(BufferedReader in) throws Exception {
 		try {
 			parser = new LabeledCSVParser(new CSVParser(in));
 			parser.changeDelimiter(';');
@@ -54,9 +55,9 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 			verwerkRecords();
 
 			Vector<String[]> data = getRegels();
-			Cost cost = null;
+			Cost cost;
 			for (int regelNummer = 1; regelNummer <= data.size(); regelNummer++) {
-				String[] regel = (String[]) data.get(regelNummer - 1);
+				String[] regel = data.get(regelNummer - 1);
 				cost = processLine(regel, regelNummer);
 				if (cost != null && cost.getCostType() != null && (cost.getCostType().equals(TRAVEL_WITH_PUBLIC_TRANSPORT_OTHER_ACCOUNT) || cost.getCostType().equals(UNDETERMINED))) {
 					kostLijst.add(cost);
@@ -73,7 +74,7 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 		int regelNummer = 0;
 
 		String[] regel = parser.getLine();
-		regels = new Vector<String[]>();
+		regels = new Vector<>();
 		while (regel != null) {
 
 			++regelNummer;
@@ -118,10 +119,11 @@ public class TravelChipCardTransactionReader extends BaseTransactionReader {
 	
 	@Override
 	public void reset() {
-		kostLijst = new ArrayList<Cost>();
+		kostLijst = new ArrayList<>();
+		kostmatchList = new ArrayList<>();
 	}	
 
-	public static void main(String[] args) throws NumberFormatException, Exception {
+	public static void main(String[] args) throws Exception {
 		FileInputStream fis = new FileInputStream("test.csv");
 		TravelChipCardTransactionReader helper = new TravelChipCardTransactionReader();
 		List<Cost> result = helper.readFile(new BufferedReader(new InputStreamReader(fis)));
