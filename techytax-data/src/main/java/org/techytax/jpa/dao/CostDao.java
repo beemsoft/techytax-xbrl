@@ -19,11 +19,14 @@ import org.techytax.domain.CostType;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.zk.login.UserCredentialManager;
 
+import javax.transaction.Transactional;
+
 @Component
 public class CostDao extends GenericDao<Cost> {
 	
 	protected static final List<CostType> COSTS_FROM_OTHER_ACCOUNT = Arrays.asList(EXPENSE_OTHER_ACCOUNT, BUSINESS_CAR_OTHER_ACCOUNT, INVESTMENT_OTHER_ACCOUNT, BUSINESS_FOOD_OTHER_ACCOUNT);
-	
+
+	@Transactional
 	public void insertSplitCost(Cost originalCost, Cost splitCost) {
 		splitCost.setDate(originalCost.getDate());
 		splitCost.setCostType(originalCost.getCostType().isBalansMeetellen() ? EXPENSE_CURRENT_ACCOUNT_IGNORE : EXPENSE_OTHER_ACCOUNT_IGNORE);
