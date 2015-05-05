@@ -1,4 +1,4 @@
-# Techytax
+# TechyTax
 TechyTax is a web-based tax and invoicing application for small companies. 
 It calculates VAT returns and generates fiscal overviews. 
 No accounting knowledge is required. 
