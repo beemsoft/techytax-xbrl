@@ -443,17 +443,17 @@ public class DateHelper {
 		return false;
 	}
 	
-	public static boolean isBefore2014(Date date) {
+	public static boolean isBefore2015(Date date) {
 		Calendar cal = new GregorianCalendar();
 		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.YEAR, 2014);
+		cal.set(Calendar.YEAR, 2015);
 		Date fromDate = cal.getTime();
 		if (fromDate.after(date)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
 	public static void main(String[] args) {
 		System.out.println(getLatestVatPeriod(VatPeriodType.PER_QUARTER).getBeginDate());

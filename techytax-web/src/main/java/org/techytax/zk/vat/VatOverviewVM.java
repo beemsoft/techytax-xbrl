@@ -18,10 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.techytax.digipoort.DigipoortService;
-import org.techytax.digipoort.DigipoortServiceImpl;
-import org.techytax.digipoort.XbrlHelper;
-import org.techytax.digipoort.XbrlNtp8Helper;
+import org.techytax.digipoort.*;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
@@ -234,15 +231,15 @@ public class VatOverviewVM {
 	}
 
 	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) throws Exception {
-		String xbrlInstance = null;
+		String xbrlInstance;
 		if (digipoort.equals("prod")) {
-			if (DateHelper.isBefore2014(vatDeclarationData.getEndDate())) {
-				xbrlInstance = XbrlHelper.createXbrlInstance(vatDeclarationData);
-			} else {
+			if (DateHelper.isBefore2015(vatDeclarationData.getEndDate())) {
 				xbrlInstance = XbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
+			} else {
+				xbrlInstance = XbrlNtp9Helper.createXbrlInstance(vatDeclarationData);
 			}
 		} else {
-			xbrlInstance = XbrlNtp8Helper.createTestXbrlInstance();
+			xbrlInstance = XbrlNtp9Helper.createTestXbrlInstance();
 		}
 		return xbrlInstance;
 	}
