@@ -3,9 +3,9 @@
     height="470px">
     <style src="/widgets/application/rss_reader/Style.css" />
     <borderlayout width="490px" >
-        <west width="220px" collapsible="true" title="Techy info">
+        <west width="320px" collapsible="true" title="Techy info">
             <div>
-                <image src="@load(vm.imageLink)" />
+                <image src="@load(vm.imageLink)" height="60px" width="60px" />
                 <listbox id="newsListBox" vflex="1" model="@load(vm.selectedFeed.feedEntries)" width="100%" height="350px"
                     selectedItem="@bind(vm.selectedEntry)"  >
                     <template name="model" var="feed">
@@ -19,7 +19,7 @@
         <center>
             <groupbox hflex="1" vflex="1" closable="false">
                 <div>
-                    <html class="desc" content="@load(vm.selectedEntry.descValue)"  />
+                    <a href="@load(vm.selectedEntry.link)" target="other">See on GitHub</a>
                 </div>
             </groupbox>
         </center>

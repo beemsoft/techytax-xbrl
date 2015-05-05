@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -29,8 +29,8 @@ public class RssReaderTechyTax extends RssReader {
 
 	@Init
 	public void init() {
-		feedUrl = "http://sourceforge.net/p/techytax/code/feed";
-		imageLink = "/images/sf-footer-logo.png";
+		feedUrl = "https://github.com/beemsoft/techytax/commits/master.atom";
+		imageLink = "/images/Octocat.png";
 		super.init();
 	}
 
