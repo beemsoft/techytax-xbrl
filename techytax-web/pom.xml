@@ -9,17 +9,17 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-xbrl</artifactId>
-			<version>9.2</version>
+			<version>9.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-audit</artifactId>
-			<version>2.3.3</version>
+			<version>2.4.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-data</artifactId>
-			<version>2.3.3</version>
+			<version>2.4.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>jcl-over-slf4j</artifactId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-domain</artifactId>
-			<version>2.3.3</version>
+			<version>2.4.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>slf4j-jdk14</artifactId>
@@ -196,7 +196,7 @@
 	<parent>
 		<groupId>org.techytax</groupId>
 		<artifactId>techytax-parent</artifactId>
-		<version>2.3.3</version>
+		<version>2.4.0-SNAPSHOT</version>
 	</parent>
 	<build>
 		<finalName>TechyTax</finalName>
