@@ -6,17 +6,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.zkoss.common</groupId>
-			<artifactId>zcommon</artifactId>
-			<version>${zk.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-jdk14</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.hibernate.common</groupId>
 			<artifactId>hibernate-commons-annotations</artifactId>
 			<version>4.0.5.Final</version>
@@ -25,11 +14,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>4.3.6.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.calendar</groupId>
-			<artifactId>calendar</artifactId>
-			<version>2.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
@@ -54,6 +38,48 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>saas</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.zkoss.common</groupId>
+					<artifactId>zcommon</artifactId>
+					<version>${zk.version}</version>
+					<exclusions>
+						<exclusion>
+							<artifactId>slf4j-jdk14</artifactId>
+							<groupId>org.slf4j</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>default</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zcommon</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zcommon-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/calendar-2.1.4.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 	<parent>
 		<groupId>org.techytax</groupId>
 		<artifactId>techytax-parent</artifactId>

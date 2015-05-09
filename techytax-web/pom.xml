@@ -39,42 +39,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkplus</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zhtml</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkbind</artifactId>
-			<version>${zk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.zk</groupId>
-			<artifactId>zkmax</artifactId>
-			<version>${zk.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jasperreports</artifactId>
-					<groupId>net.sf.jasperreports</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.zkoss.calendar</groupId>
-			<artifactId>calendar</artifactId>
-			<version>2.1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>zrss</groupId>
-			<artifactId>zrss</artifactId>
-			<version>0.9.5</version>
-		</dependency>
-		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
@@ -181,6 +145,11 @@
 			<version>3.3</version>
 		</dependency>
 		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>1.0</version>
@@ -191,7 +160,6 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 	<parent>
 		<groupId>org.techytax</groupId>
@@ -201,18 +169,6 @@
 	<build>
 		<finalName>TechyTax</finalName>
 		<plugins>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
@@ -233,13 +189,166 @@
 				<dependency>
 					<groupId>org.techytax</groupId>
 					<artifactId>techytax-saas</artifactId>
-					<version>2.3.2-SNAPSHOT</version>
+					<version>2.4.0-SNAPSHOT</version>
 					<scope>runtime</scope>
 				</dependency>
+				<dependency>
+					<groupId>org.zkoss.common</groupId>
+					<artifactId>zcommon</artifactId>
+					<version>${zk.version}</version>
+					<exclusions>
+						<exclusion>
+							<artifactId>slf4j-jdk14</artifactId>
+							<groupId>org.slf4j</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkplus</artifactId>
+					<version>${zk.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zhtml</artifactId>
+					<version>${zk.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkbind</artifactId>
+					<version>${zk.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkmax</artifactId>
+					<version>${zk.version}</version>
+					<exclusions>
+						<exclusion>
+							<artifactId>jasperreports</artifactId>
+							<groupId>net.sf.jasperreports</groupId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+				</dependency>
+				<dependency>
+					<groupId>zrss</groupId>
+					<artifactId>zrss</artifactId>
+					<version>0.9.5</version>
+				</dependency>
 			</dependencies>
-			<properties>
-				<saas.version>true</saas.version>
-			</properties>
+		</profile>
+		<profile>
+			<id>default</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/calendar-2.1.4.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zcommon</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zcommon-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zel</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zel-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zhtml</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zhtml-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zk</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zk-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkbind</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zkbind-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkex</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zkex-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkmax</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zkmax-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkplus</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zkplus-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkrss</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zrss-0.9.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zul</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zul-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zweb</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zweb-7.0.5.jar</systemPath>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.1.1</version>
+						<configuration>
+							<webResources>
+								<resource>
+									<directory>${basedir}/../lib/zk</directory>
+									<targetPath>WEB-INF/lib</targetPath>
+									<filtering>false</filtering>
+									<includes>
+										<include>*.jar</include>
+									</includes>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 

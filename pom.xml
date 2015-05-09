@@ -106,19 +106,34 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>ZK CE</id>
-			<name>ZK CE Repository</name>
-			<url>http://mavensync.zkoss.org/maven2</url>
-		</repository>
-		<repository>
-			<id>ZK EE</id>
-			<url>https://maven.zkoss.org/repo/zk/ee</url>
-		</repository>
-		<repository>
-			<id>ZK RSS</id>
-			<name>ZK RSS Repository</name>
-			<url>http://support.audaxis.com/maven2</url>
-		</repository>
 	</repositories>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>saas</id>
+			<modules>
+				<module>techytax-saas</module>
+			</modules>
+			<repositories>
+				<repository>
+					<id>ZK EE</id>
+					<url>https://maven.zkoss.org/repo/zk/ee</url>
+				</repository>
+				<repository>
+					<id>ZK RSS</id>
+					<name>ZK RSS Repository</name>
+					<url>http://support.audaxis.com/maven2</url>
+				</repository>
+			</repositories>
+			<properties>
+				<saas.version>true</saas.version>
+			</properties>
+		</profile>
+	</profiles>
 </project>

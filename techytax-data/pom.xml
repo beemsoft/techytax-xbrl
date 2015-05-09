@@ -54,6 +54,42 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>saas</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zkplus</artifactId>
+					<version>${zk.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>default</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.zkoss.zk</groupId>
+					<artifactId>zk</artifactId>
+					<version>7.0.5</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/zk-7.0.5.jar</systemPath>
+				</dependency>
+				<dependency>
+					<groupId>org.zkoss.calendar</groupId>
+					<artifactId>calendar</artifactId>
+					<version>2.1.4</version>
+					<scope>system</scope>
+					<systemPath>${basedir}/../lib/zk/calendar-2.1.4.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 	<parent>
 		<groupId>org.techytax</groupId>
 		<artifactId>techytax-parent</artifactId>
