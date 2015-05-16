@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -63,6 +63,7 @@ public class Project extends UserObject {
 	private Date endDate;
 	
 	@Type(type = "encryptedBigDecimal")
+	@Column(precision=50, scale=2)
 	private BigDecimal rate;
 	
 	@Enumerated(EnumType.ORDINAL)

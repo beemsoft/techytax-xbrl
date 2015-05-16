@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,13 +23,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -55,11 +49,11 @@ public class Cost extends UserObject implements Serializable {
 	public static final String FOR_PERIOD_AND_VAT_DECLARABLE = "Cost.FOR_PERIOD_AND_VAT_DECLARABLE";
 	public static final String FOR_PERIOD_AND_ACCOUNT = "Cost.FOR_PERIOD_AND_ACCOUNT";
 
-	@Column(name = "bedrag")
+	@Column(name = "bedrag", precision = 50, scale = 2)
 	@Type(type = "encryptedBigDecimal")
 	private BigDecimal amount;
 
-	@Column(name = "btw")
+	@Column(name = "btw", precision = 48, scale = 2)
 	@Type(type = "encryptedBigDecimal")
 	private BigDecimal vat = BigDecimal.ZERO;
 

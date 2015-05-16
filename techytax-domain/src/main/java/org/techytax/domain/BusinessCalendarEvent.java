@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -23,12 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,9 +62,11 @@ public class BusinessCalendarEvent extends BusinessCalendarEventParent {
     private boolean isBillable;
     
 	@Type(type = "encryptedBigDecimal")
+    @Column(precision=50, scale=2)
     private BigDecimal travelingByCarCostDeclaration;
     
 	@Type(type = "encryptedBigDecimal")
+    @Column(precision=50, scale=2)
     private BigDecimal otherCostDeclaration;
     
     private VatType vatTypeForOtherCostDeclaration = VatType.NONE;

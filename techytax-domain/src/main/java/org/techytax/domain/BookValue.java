@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -58,6 +58,7 @@ public class BookValue extends UserObject {
 	private int year;
 
 	@Type(type = "encryptedInteger")
+	@Column(precision = 50)
 	private BigInteger saldo;
 
 	public BookValue() {

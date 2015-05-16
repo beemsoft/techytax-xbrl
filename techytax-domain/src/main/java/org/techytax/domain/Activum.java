@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -64,6 +64,7 @@ public class Activum extends UserObject {
 	private RemainingValue restwaardeOld;
 
 	@Type(type = "encryptedInteger")
+	@Column(precision=50, scale=2)
 	private BigInteger remainingValue;
 
 	@Column(name = "einddatum")
