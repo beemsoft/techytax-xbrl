@@ -22,6 +22,7 @@ package org.techytax.security;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 
 import org.apache.cxf.common.util.CollectionUtils;
@@ -30,13 +31,13 @@ import org.jasypt.encryption.pbe.StandardPBEBigIntegerEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.UserEntityDao;
 import org.techytax.log.AuditLogger;
 import org.techytax.log.AuditType;
-import org.techytax.props.PropsFactory;
 import org.techytax.zk.login.Sha;
 import org.zkoss.util.resource.Labels;
 
@@ -47,8 +48,11 @@ public class SecurityServiceImpl implements SecurityService {
 	private UserEntityDao userDao;
 	
 	@Autowired
-	private AuditLogger auditLogger;	
-	
+	private AuditLogger auditLogger;
+
+	@Resource
+	private Environment environment;
+
 	@Override
 	public User authenticate(String username, String password) throws Exception {
 
@@ -115,7 +119,7 @@ public class SecurityServiceImpl implements SecurityService {
 		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
 	
 		try {
-			String encryptionPassword = PropsFactory.getProperty("security.password");
+			String encryptionPassword = environment.getProperty("security.password");
 			strongEncryptor.setPassword(encryptionPassword);
 			bigDecimalEncryptor.setPassword(encryptionPassword);
 			bigIntegerEncryptor.setPassword(encryptionPassword);
