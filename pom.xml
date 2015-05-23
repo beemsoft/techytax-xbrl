@@ -106,6 +106,11 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>ZK CE</id>
+			<name>ZK CE Repository</name>
+			<url>http://mavensync.zkoss.org/maven2</url>
+		</repository>
 	</repositories>
 
 	<profiles>
@@ -131,9 +136,6 @@
 					<url>http://support.audaxis.com/maven2</url>
 				</repository>
 			</repositories>
-			<properties>
-				<saas.version>true</saas.version>
-			</properties>
 		</profile>
 	</profiles>
 </project>
