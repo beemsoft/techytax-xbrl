@@ -6,3 +6,10 @@ The goal of this project is to make the tax process as easy as possible for smal
 
 ## Compiling
     mvn install
+
+## Running
+    (In directory techytax-web:) mvn jetty:run
+
+    Open the browser: http://localhost:8080/TechyTax
+
+    Log on with user: guest, password: guest
