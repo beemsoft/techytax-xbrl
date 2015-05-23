@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.techytax.digipoort.XbrlNtp8Helper;
+import org.techytax.digipoort.XbrlNtp9Helper;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
@@ -56,6 +56,9 @@ public class PdfReportHelper {
 	
 	@Autowired
 	private BalanceCalculator balanceCalculator;
+
+	@Autowired
+	private XbrlNtp9Helper xbrlNtp9Helper;
 	
 	private static Font font = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
 	private static Font totalAmountFont = new Font(Font.FontFamily.HELVETICA, 8, Font.BOLD);
@@ -82,7 +85,7 @@ public class PdfReportHelper {
 			vatDeclarationData.setPhoneNumber(user.getPhoneNumber());
 			vatDeclarationData.setStartDate(period.getBeginDate());
 			vatDeclarationData.setEndDate(period.getEndDate());
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
+			xbrlNtp9Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 			vatReportData.setVatDeclarationData(vatDeclarationData);
 			PdfReportHelper pdfHelper = new PdfReportHelper();
 			return pdfHelper.createVatReportBytes(vatReportData);
