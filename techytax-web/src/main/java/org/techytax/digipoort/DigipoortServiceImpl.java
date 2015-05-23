@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -36,8 +37,9 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.techytax.domain.VatDeclarationData;
-import org.techytax.props.PropsFactory;
 import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.util.DateHelper;
@@ -64,7 +66,13 @@ import org.techytax.wus.status.StatusinformatieServiceV12;
 import org.techytax.wus.status.StatusinformatieServiceV12_Service;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
+import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
+
+@Component
 public class DigipoortServiceImpl implements DigipoortService {
+
+	@Resource
+	private Environment environment;
 
 	private static final String OMZETBELASTING = "Omzetbelasting";
 	private static final String FISCAL_TYPE = "Fi";
@@ -89,7 +97,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault {
+	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws IOException, GeneralSecurityException, AanleverServiceFault {
 		AanleverServiceV12 port = setupWebServicePort();
 		System.out.println("Invoking aanleveren...");
 		AanleverRequest aanleverRequest = null;
@@ -114,7 +122,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		return aanleverResponse;
 	}
 	
-	private AanleverServiceV12 setupWebServicePort() throws FileNotFoundException, IOException, GeneralSecurityException {
+	private AanleverServiceV12 setupWebServicePort() throws IOException, GeneralSecurityException {
 		URL wsdlURL = getWsdlUrlForAanleveren();
 		AanleverServiceV12_Service ss = new AanleverServiceV12_Service(wsdlURL, AANLEVER_SERVICE_NAME);
 		AanleverServiceV12 port = ss.getAanleverServiceV12();
@@ -126,7 +134,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 		return port;
 	}
 
-	private StatusinformatieServiceV12 setupPortForStatus() throws FileNotFoundException, IOException, GeneralSecurityException {
+	private StatusinformatieServiceV12 setupPortForStatus() throws IOException, GeneralSecurityException {
 		URL wsdlURL = getWsdlUrlForStatus();
 		StatusinformatieServiceV12_Service ss = new StatusinformatieServiceV12_Service(wsdlURL, STATUS_SERVICE_NAME);
 		StatusinformatieServiceV12 port = ss.getStatusinformatieServiceV12();
@@ -139,7 +147,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	private URL getWsdlUrlForAanleveren() throws IOException {
-		String digipoort = PropsFactory.getProperty("digipoort");
+		String digipoort = environment.getProperty(DIGIPOORT);
 		String wsdlName = null;
 		URL wsdlURL = null;
 		if (digipoort.equals("prod")) {
@@ -156,7 +164,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	private URL getWsdlUrlForStatus() throws IOException {
-		String digipoort = PropsFactory.getProperty("digipoort");
+		String digipoort = environment.getProperty(DIGIPOORT);
 
 		String wsdlName = null;
 		URL wsdlURL = null;
@@ -244,7 +252,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 
 	@Override
 	public GetNieuweStatussenProcesResponse getNieuweStatussenProces(VatDeclarationData vatDeclarationData, String kenmerk)
-			throws FileNotFoundException, IOException, GeneralSecurityException {
+			throws IOException, GeneralSecurityException {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
 			GetNieuweStatussenProcesRequest request = objectFactory.createGetNieuweStatussenProcesRequest();
@@ -261,7 +269,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public GetProcessenResponse getProcessen(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException,
+	public GetProcessenResponse getProcessen(VatDeclarationData vatDeclarationData) throws IOException,
 			GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
@@ -281,7 +289,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public GetStatussenProcesResponse getStatussenProces(VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException,
+	public GetStatussenProcesResponse getStatussenProces(VatDeclarationData vatDeclarationData, String kenmerk) throws
 			IOException, GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {
@@ -298,7 +306,7 @@ public class DigipoortServiceImpl implements DigipoortService {
 	}
 
 	@Override
-	public GetBerichtsoortenResponse getBerichtsoorten(VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException,
+	public GetBerichtsoortenResponse getBerichtsoorten(VatDeclarationData vatDeclarationData) throws IOException,
 			GeneralSecurityException, StatusinformatieServiceFault {
 		StatusinformatieServiceV12 port = setupPortForStatus();
 		try {

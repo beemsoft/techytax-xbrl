@@ -25,7 +25,6 @@ import org.techytax.importing.helper.IngTransactionReader;
 import org.techytax.jpa.dao.GenericDao;
 import org.techytax.jpa.entities.EntityManagerHelper;
 import org.techytax.jpa.entities.LogRecord;
-import org.techytax.props.PropsFactory;
 
 @Ignore
 public class TransactionReaderTest {
@@ -65,10 +64,10 @@ public class TransactionReaderTest {
 		StandardPBEBigIntegerEncryptor bigIntegerEncryptor = new StandardPBEBigIntegerEncryptor();
 	
 		try {
-			String encryptionPassword = PropsFactory.getProperty("security.password");
-			strongEncryptor.setPassword(encryptionPassword);
-			bigDecimalEncryptor.setPassword(encryptionPassword);
-			bigIntegerEncryptor.setPassword(encryptionPassword);
+//			String encryptionPassword = PropsFactory.getProperty("security.password");
+//			strongEncryptor.setPassword(encryptionPassword);
+//			bigDecimalEncryptor.setPassword(encryptionPassword);
+//			bigIntegerEncryptor.setPassword(encryptionPassword);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("TechyTax properties not found!");

@@ -64,15 +64,13 @@ public interface DigipoortService {
 	 * of uit de melding dat de aanlevering is mislukt (SOAP fault). Wanneer de
 	 * aanlevering succesvol is, stuurt de Aanleverservice het betreffende
 	 * aanleverbericht naar het onderliggende verwerkingsproces.
-	 * @param vatDeclarationData
-	 * 
 	 * @return
 	 * @throws GeneralSecurityException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 * @throws AanleverServiceFault 
 	 */
-	public AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws FileNotFoundException, IOException, GeneralSecurityException, AanleverServiceFault;
+	AanleverResponse aanleveren(String xbrlInstance, String fiscalNumber) throws IOException, GeneralSecurityException, AanleverServiceFault;
 
 	/**
 	 * Geeft alle statussen voor de belanghebbende die nog niet eerder bij dit
@@ -85,7 +83,7 @@ public interface DigipoortService {
 	 * @throws IOException 
 	 * @throws GeneralSecurityException 
 	 */
-	public GetNieuweStatussenResponse getNieuweStatussen(
+	GetNieuweStatussenResponse getNieuweStatussen(
 			VatDeclarationData vatDeclarationData) throws IOException, GeneralSecurityException;
 
 	/**
@@ -103,8 +101,8 @@ public interface DigipoortService {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public GetNieuweStatussenProcesResponse getNieuweStatussenProces(
-			VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException, IOException, GeneralSecurityException;
+	GetNieuweStatussenProcesResponse getNieuweStatussenProces(
+			VatDeclarationData vatDeclarationData, String kenmerk) throws IOException, GeneralSecurityException;
 
 	/**
 	 * Geeft alle processen voor een bepaalde belanghebbende met een specifieke
@@ -117,8 +115,8 @@ public interface DigipoortService {
 	 * @throws FileNotFoundException 
 	 * @throws StatusinformatieServiceFault 
 	 */
-	public GetProcessenResponse getProcessen(
-			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
+	GetProcessenResponse getProcessen(
+			VatDeclarationData vatDeclarationData) throws IOException, GeneralSecurityException, StatusinformatieServiceFault;
 
 	/**
 	 * Geeft alle statussen die bij een bepaald verwerkingsproces horen. Er kan
@@ -132,8 +130,8 @@ public interface DigipoortService {
 	 * @throws FileNotFoundException 
 	 * @throws StatusinformatieServiceFault 
 	 */
-	public GetStatussenProcesResponse getStatussenProces(
-			VatDeclarationData vatDeclarationData, String kenmerk) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
+	GetStatussenProcesResponse getStatussenProces(
+			VatDeclarationData vatDeclarationData, String kenmerk) throws IOException, GeneralSecurityException, StatusinformatieServiceFault;
 
 	/**
 	 * Geeft alle berichtsoorten waarvoor namens een bepaalde belanghebbende
@@ -146,6 +144,6 @@ public interface DigipoortService {
 	 * @throws FileNotFoundException 
 	 * @throws StatusinformatieServiceFault 
 	 */
-	public GetBerichtsoortenResponse getBerichtsoorten(
-			VatDeclarationData vatDeclarationData) throws FileNotFoundException, IOException, GeneralSecurityException, StatusinformatieServiceFault;
+	GetBerichtsoortenResponse getBerichtsoorten(
+			VatDeclarationData vatDeclarationData) throws IOException, GeneralSecurityException, StatusinformatieServiceFault;
 }

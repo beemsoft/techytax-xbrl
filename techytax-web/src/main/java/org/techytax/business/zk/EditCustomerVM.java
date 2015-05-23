@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -31,10 +30,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
+import org.springframework.core.env.Environment;
 import org.techytax.domain.Customer;
-import org.techytax.props.PropsFactory;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -51,6 +49,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Window;
 
 public class EditCustomerVM {
@@ -63,6 +62,8 @@ public class EditCustomerVM {
 
 	private String postalCodeCheckerSecret;
 
+	private Environment environment;
+
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("customer") Customer customer) throws IOException {
 		Selectors.wireComponents(view, this, false);
@@ -70,9 +71,9 @@ public class EditCustomerVM {
 		if (customer == null) {
 			Executions.sendRedirect("login.zul");
 		}
-		Properties props = PropsFactory.loadProperties();
-		postalCodeCheckerKey = props.getProperty("postalcode.checker.key");
-		postalCodeCheckerSecret = props.getProperty("postalcode.checker.secret");
+		environment = SpringUtil.getApplicationContext().getEnvironment();
+		postalCodeCheckerKey = environment.getProperty("postalcode.checker.key");
+		postalCodeCheckerSecret = environment.getProperty("postalcode.checker.secret");
 	}
 
 	@SuppressWarnings({ "rawtypes" })

@@ -1,5 +1,6 @@
 package org.techytax.zk.vat;
 
+import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
 import static org.techytax.log.AuditType.ENTER_COST;
 import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
 import static org.techytax.log.AuditType.SPLIT_COST;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.env.Environment;
 import org.techytax.digipoort.*;
 import org.techytax.domain.Cost;
 import org.techytax.domain.FiscalPeriod;
@@ -30,7 +32,6 @@ import org.techytax.jpa.dao.CostDao;
 import org.techytax.jpa.dao.VatDeclarationDao;
 import org.techytax.jpa.entities.VatDeclaration;
 import org.techytax.log.AuditLogger;
-import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.AanleverResponse;
 import org.techytax.ws.AanleverServiceFault;
@@ -62,6 +63,8 @@ public class VatOverviewVM {
 
 	private User user = UserCredentialManager.getUser();
 
+	private Environment environment;
+
 	private AuditLogger auditLogger;
 
 	private CostDao costDao;
@@ -88,6 +91,10 @@ public class VatOverviewVM {
 	private ListModelList<Cost> costs;
 	
 	private VatDeclaration vatDeclaration;
+
+	private XbrlNtp8Helper xbrlNtp8Helper;
+
+	private XbrlNtp9Helper xbrlNtp9Helper;
 	
 	protected Cost selected;
 	
@@ -95,7 +102,8 @@ public class VatOverviewVM {
 
 	public AMedia getSbr() throws Exception {
 		VatDeclarationData vatDeclarationData = createVatDeclarationData();
-		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
+        environment = SpringUtil.getApplicationContext().getEnvironment();
+		String digipoortEnvironment = environment.getProperty(DIGIPOORT);
 		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
 		final byte[] buf = xbrlInstance.getBytes();
 		if (buf != null) {
@@ -111,6 +119,8 @@ public class VatOverviewVM {
 		costDao = (CostDao) SpringUtil.getBean("costDao");
 		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
 		vatDeclarationDao = (VatDeclarationDao) SpringUtil.getBean("vatDeclarationDao");
+		xbrlNtp8Helper = (XbrlNtp8Helper) SpringUtil.getBean("xbrlNtp8Helper");
+		xbrlNtp9Helper = (XbrlNtp9Helper) SpringUtil.getBean("xbrlNtp9Helper");
 		isDigipoortDisabled = disableDigipoort();
 
 		createVatOverview();
@@ -134,7 +144,7 @@ public class VatOverviewVM {
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			createYearlyVatDeclarationForSmallEnterprise(DateHelper.getLatestVatPeriod(user.getVatPeriodType()), vatDeclarationData);
 		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
+			xbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
 		
 		List<VatDeclaration> vatDeclarationsUnpaid = vatDeclarationDao.findByNamedQuery("VatDeclaration.findUnpaid");
@@ -220,7 +230,7 @@ public class VatOverviewVM {
 
 	private AanleverResponse doAanleveren() throws Exception {
 		VatDeclarationData vatDeclarationData = createVatDeclarationData();
-		String digipoortEnvironment = PropsFactory.getProperty("digipoort");
+		String digipoortEnvironment = environment.getProperty(DIGIPOORT);
 		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
 		DigipoortService digipoortService = new DigipoortServiceImpl();
 		if (digipoortEnvironment.equals("prod")) {
@@ -234,12 +244,12 @@ public class VatOverviewVM {
 		String xbrlInstance;
 		if (digipoort.equals("prod")) {
 			if (DateHelper.isBefore2015(vatDeclarationData.getEndDate())) {
-				xbrlInstance = XbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
+				xbrlInstance = xbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
 			} else {
-				xbrlInstance = XbrlNtp9Helper.createXbrlInstance(vatDeclarationData);
+				xbrlInstance = xbrlNtp9Helper.createXbrlInstance(vatDeclarationData);
 			}
 		} else {
-			xbrlInstance = XbrlNtp9Helper.createTestXbrlInstance();
+			xbrlInstance = xbrlNtp9Helper.createTestXbrlInstance();
 		}
 		return xbrlInstance;
 	}
@@ -249,7 +259,7 @@ public class VatOverviewVM {
 		if (vatBalanceWithinEu.getBrutoOmzet().equals(BigDecimal.ZERO)) {
 			vatDeclarationData.setTaxedTurnoverSuppliesServicesGeneralTariff(vatBalanceWithinEu.getNettoOmzet());
 		} else {
-			XbrlNtp8Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
+			xbrlNtp9Helper.addBalanceData(vatDeclarationData, vatBalanceWithinEu);
 		}
 		FiscalPeriod period = DateHelper.getLatestVatPeriod(user.getVatPeriodType());
 		vatDeclarationData.setStartDate(period.getBeginDate());

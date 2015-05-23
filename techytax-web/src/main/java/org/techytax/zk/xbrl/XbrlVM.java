@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.core.env.Environment;
 import org.techytax.digipoort.DigipoortService;
 import org.techytax.digipoort.DigipoortServiceImpl;
 import org.techytax.digipoort.DigipoortServiceStub;
 import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.VatDeclarationData;
-import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.ws.ArrayOfBerichtsoortResultaat;
 import org.techytax.ws.ArrayOfProcesResultaat;
@@ -38,15 +38,20 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkplus.spring.SpringUtil;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Popup;
+
+import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
 
 public class XbrlVM implements Serializable {
 
 	private static final long serialVersionUID = -4600263940170016764L;
 	
 	protected User user = UserCredentialManager.getUser();
+
+	private Environment environment;
 	private FiscalPeriod periode = DateHelper.getLatestVatPeriodTillToday();
 	private DigipoortService digipoortService;
 	private List<String> berichtsoorten;
@@ -60,8 +65,8 @@ public class XbrlVM implements Serializable {
 	
 	public XbrlVM() throws IOException {
 		if (user != null) {
-			String digipoort = PropsFactory.getProperty("digipoort");
-
+			environment = SpringUtil.getApplicationContext().getEnvironment();
+			String digipoort = environment.getProperty(DIGIPOORT);
 			if (digipoort.equals("prod")) {
 				isTestEnvironment = false;
 			} else {

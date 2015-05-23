@@ -23,9 +23,10 @@ import nl.nltaxonomie._9_0.basis.bd.types.bd_codes.ContactItemType;
 import nl.nltaxonomie._9_0.basis.bd.types.bd_types.*;
 import nl.nltaxonomie._9_0.basis.bd.types.bd_types.DateTimeItemType;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import org.techytax.domain.*;
 import org.techytax.helper.AmountHelper;
-import org.techytax.props.PropsFactory;
 import org.techytax.util.DateHelper;
 import org.techytax.util.VersionHelper;
 import org.xbrl._2003.instance.*;
@@ -33,6 +34,7 @@ import org.xbrl._2003.instance.ContextEntityType.Identifier;
 import org.xbrl._2003.instance.ObjectFactory;
 import org.xbrl._2003.xlink.SimpleType;
 
+import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
@@ -41,6 +43,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+@Component
 public class XbrlNtp9Helper {
 
 	private static final String CONTEXT_ID = "Msg";
@@ -52,11 +55,10 @@ public class XbrlNtp9Helper {
 	private static final String BELASTING_PLICHTIGE = "BPL";
 	private static final String TEST_FISCAL_NUMBER = "001000045B93";
 
-	public static String getTestFiscalNumber() {
-		return TEST_FISCAL_NUMBER;
-	}
+	@Resource
+	private Environment environment;
 
-	public synchronized static String createXbrlInstance(VatDeclarationData vatDeclarationData) {
+	public String createXbrlInstance(VatDeclarationData vatDeclarationData) {
 		ObjectFactory xbrlObjectFactory;
 		JAXBContext jc;
 		Marshaller m;
@@ -153,7 +155,7 @@ public class XbrlNtp9Helper {
 			packageName.setContextRef(context);
 			xbrl.getItemOrTupleOrContext().add(bdAlgemeenObjectFactory.createSoftwarePackageName(packageName));
 
-			String softwareVendorAccountNumber = "test"; // PropsFactory.getProperty("software.vendor.account.number");
+			String softwareVendorAccountNumber = environment.getProperty("software.vendor.account.number");
 			Anstring8FItemType softwareVendor = bdTypeObjectFactory.createAnstring8FItemType();
 			softwareVendor.setValue(softwareVendorAccountNumber);
 			softwareVendor.setContextRef(context);
@@ -225,7 +227,7 @@ public class XbrlNtp9Helper {
 		return null;
 	}
 
-	public static void addBalanceData(VatDeclarationData vatDeclarationData, VatBalanceWithinEu vatBalanceWithinEu) throws Exception {
+	public void addBalanceData(VatDeclarationData vatDeclarationData, VatBalanceWithinEu vatBalanceWithinEu) throws Exception {
 		BigInteger totaleKosten = AmountHelper.roundToInteger(vatBalanceWithinEu.getTotaleKosten());
 		BigInteger correction = AmountHelper.roundToInteger(vatBalanceWithinEu.getCorrection());
 		BigInteger turnover = vatBalanceWithinEu.getNettoOmzet();
@@ -244,10 +246,10 @@ public class XbrlNtp9Helper {
 	}
 
 	public static void main(String[] args) throws Exception {
-		createTestXbrlInstance();
+		new XbrlNtp9Helper().createTestXbrlInstance();
 	}
 
-	public static String createTestXbrlInstance() throws Exception {
+	public String createTestXbrlInstance() throws Exception {
 		User user = new User();
 		user.setFiscalNumber(TEST_FISCAL_NUMBER);
 		user.setInitials("A.");
