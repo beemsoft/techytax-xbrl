@@ -90,21 +90,22 @@ public abstract class BaseTransactionReader implements TransactionReader {
 			privateCostMatchList = privateCostMatchDao.findAll();
 			kostmatchList = kostmatchDao.findAll();
 		}
-		Iterator<PrivateCostMatch> iterator = privateCostMatchList.iterator();
-		while (iterator.hasNext()) {
-			PrivateCostMatch kostmatch = iterator.next();
-			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
+		for (PrivateCostMatch kostmatch : privateCostMatchList) {
+			if (isMatching(omschrijving, kostmatch.getMatchText())) {
 				return kostmatch;
 			}
 		}
-		Iterator<Kostmatch> iterator2 = kostmatchList.iterator();
-		while (iterator2.hasNext()) {
-			Kostmatch kostmatch = iterator2.next();
-			if (omschrijving.toUpperCase().contains(kostmatch.getMatchText().toUpperCase())) {
+		for (Kostmatch kostmatch : kostmatchList) {
+			if (isMatching(omschrijving, kostmatch.getMatchText())) {
 				return kostmatch;
 			}
 		}
 		return null;
+	}
+
+	private boolean isMatching(String fullText, String matchText) {
+		String oneSpaceText = fullText.trim().replaceAll(" +", " ");
+		return oneSpaceText.toUpperCase().contains(matchText.toUpperCase());
 	}
 
 	protected CostMatchParent matchCost(Cost kost) throws Exception {
