@@ -75,7 +75,7 @@ public class XbrlVM implements Serializable {
 			if (digipoort.equals("stub")) {
 				digipoortService = new DigipoortServiceStub();
 			} else {
-				digipoortService = new DigipoortServiceImpl();
+				digipoortService = (DigipoortService)SpringUtil.getBean("digipoortService");
 			}
 		} else {
 			Executions.sendRedirect("login.zul");

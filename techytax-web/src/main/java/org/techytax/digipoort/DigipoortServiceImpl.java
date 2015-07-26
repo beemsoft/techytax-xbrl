@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Hans Beemsterboer
+ * Copyright 2015 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -19,18 +19,6 @@
  */
 package org.techytax.digipoort;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.xml.namespace.QName;
-import javax.xml.ws.soap.SOAPFaultException;
-
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
@@ -38,37 +26,30 @@ import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.techytax.domain.VatDeclarationData;
 import org.techytax.security.ClientPasswordCallback;
 import org.techytax.security.SecureConnectionHelper;
 import org.techytax.util.DateHelper;
-import org.techytax.ws.AanleverRequest;
-import org.techytax.ws.AanleverResponse;
-import org.techytax.ws.AanleverServiceFault;
-import org.techytax.ws.AanleverServiceV12;
-import org.techytax.ws.AanleverServiceV12_Service;
-import org.techytax.ws.BerichtInhoudType;
-import org.techytax.ws.GetBerichtsoortenRequest;
-import org.techytax.ws.GetBerichtsoortenResponse;
-import org.techytax.ws.GetNieuweStatussenProcesRequest;
-import org.techytax.ws.GetNieuweStatussenProcesResponse;
-import org.techytax.ws.GetNieuweStatussenRequest;
-import org.techytax.ws.GetNieuweStatussenResponse;
-import org.techytax.ws.GetProcessenRequest;
-import org.techytax.ws.GetProcessenResponse;
-import org.techytax.ws.GetStatussenProcesRequest;
-import org.techytax.ws.GetStatussenProcesResponse;
-import org.techytax.ws.IdentiteitType;
-import org.techytax.ws.ObjectFactory;
+import org.techytax.ws.*;
 import org.techytax.wus.status.StatusinformatieServiceFault;
 import org.techytax.wus.status.StatusinformatieServiceV12;
 import org.techytax.wus.status.StatusinformatieServiceV12_Service;
 import org.techytax.xbrl.DynamicWsaSignaturePartsInterceptor;
 
+import javax.annotation.Resource;
+import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.io.IOException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
 
-@Component
+@Service("digipoortService")
 public class DigipoortServiceImpl implements DigipoortService {
 
 	@Resource
