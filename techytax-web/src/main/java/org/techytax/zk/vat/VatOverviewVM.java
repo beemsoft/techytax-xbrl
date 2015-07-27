@@ -115,6 +115,7 @@ public class VatOverviewVM {
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view) throws Exception {
+		environment = SpringUtil.getApplicationContext().getEnvironment();
 		auditLogger = (AuditLogger) SpringUtil.getBean("auditLogger");
 		costDao = (CostDao) SpringUtil.getBean("costDao");
 		balanceCalculator = (BalanceCalculator) SpringUtil.getBean("balanceCalculator");
@@ -232,7 +233,7 @@ public class VatOverviewVM {
 		VatDeclarationData vatDeclarationData = createVatDeclarationData();
 		String digipoortEnvironment = environment.getProperty(DIGIPOORT);
 		String xbrlInstance = createXbrlInstanceForEnvironment(vatDeclarationData, digipoortEnvironment);
-		DigipoortService digipoortService = new DigipoortServiceImpl();
+		DigipoortService digipoortService = (DigipoortService)SpringUtil.getBean("digipoortService");
 		if (digipoortEnvironment.equals("prod")) {
 			return digipoortService.aanleveren(xbrlInstance, vatDeclarationData.getFiscalNumber());
 		} else {
