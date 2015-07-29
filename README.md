@@ -5,10 +5,10 @@ No accounting knowledge is required.
 The goal of this project is to make the tax process as easy as possible for small companies.
 
 ## Compiling
-    mvn install
+    mvn -Pdefault install
 
 ## Running
-    (In directory techytax-web:) mvn jetty:run
+    (In directory techytax-web:) mvn -Pdefault jetty:run
 
     Open the browser: http://localhost:8080/TechyTax
 
