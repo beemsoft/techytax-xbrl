@@ -72,6 +72,9 @@
 		</profile>
 		<profile>
 			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>org.zkoss.zk</groupId>
