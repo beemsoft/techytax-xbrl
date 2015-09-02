@@ -22,13 +22,7 @@ package org.techytax.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import lombok.Data;
 
@@ -37,9 +31,10 @@ import lombok.Data;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -374265857173724138L;
-	
+
 	@Id
-	private long id;
+	@GeneratedValue
+	protected Long id = 0L;
 
 	private String role;
 	
