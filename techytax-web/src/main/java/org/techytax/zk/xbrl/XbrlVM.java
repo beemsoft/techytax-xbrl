@@ -269,7 +269,7 @@ public class XbrlVM implements Serializable {
 	}
 	
 	public Date getRealTimDate() {
-		return DateHelper.getNTPDate();
+		return null; // DateHelper.getNTPDate();
 	}
 
 }
