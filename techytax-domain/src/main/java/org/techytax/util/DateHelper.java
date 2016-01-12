@@ -21,12 +21,7 @@ package org.techytax.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -74,20 +69,12 @@ public class DateHelper {
 
 	public static String getDate(Date date) {
 		SimpleDateFormat format = new SimpleDateFormat(datePattern);
-		String dateString = format.format(date);
-		return dateString;
+		return format.format(date);
 	}
 
-	public static String getTime(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat(timePattern);
-		String timeString = format.format(date);
-		return timeString;
-	}
-
-	public static String getTimeStamp(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat(timePattern2);
-		String timeString = format.format(date);
-		return timeString;
+   public static String getTimeStamp(Date date) {
+	   SimpleDateFormat format = new SimpleDateFormat(timePattern2);
+	   return format.format(date);
 	}
 
 	public static XMLGregorianCalendar getDate(String date_str) throws Exception {
@@ -289,8 +276,7 @@ public class DateHelper {
 	public static int getYear(Date date) {
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.setTime(date);
-		int jaar = cal.get(Calendar.YEAR);
-		return jaar;
+		return cal.get(Calendar.YEAR);
 	}
 	
 	public static int getFiscalYear() {
@@ -321,10 +307,7 @@ public class DateHelper {
 		}
 		cal.add(Calendar.DAY_OF_MONTH, -1);
 		date = getDate(cal.getTime());
-		if (date.equals(date2)) {
-			return true;
-		}
-		return false;
+		return date.equals(date2);
 	}
 
 	public static FiscalPeriod getPeriodTillDate(Date balanceDate) {
@@ -338,7 +321,7 @@ public class DateHelper {
 	}
 
 	public static Date getNTPDate() {
-		List<String> hosts = Arrays.asList("ntp.xs4all.nl");
+		List<String> hosts = Collections.singletonList("nl.pool.ntp.org");
 
 		for (String host : hosts) {
 			TimeTCPClient client = new TimeTCPClient();
@@ -347,20 +330,16 @@ public class DateHelper {
 				client.connect(host);
 				Date ntpDate = client.getDate();
 				client.disconnect();
-				if (ntpDate != null) {
-					return ntpDate;
-				}
-			} catch (java.net.SocketException exp) {
-				exp.printStackTrace();
-			} catch (java.io.IOException exp) {
-				exp.printStackTrace();
+    			return ntpDate;
+			} catch (Exception exp) {
+				System.out.println("NTP connection error");
 			}
 		}
 		return null;
 	}
 
 	public static String getInvoiceDateString(Date date) {
-		SimpleDateFormat df = null;
+		SimpleDateFormat df;
 		String returnValue = "";
 		if (date != null) {
 			df = new SimpleDateFormat(datePatternForInvoice);
@@ -418,11 +397,11 @@ public class DateHelper {
 	public static List<Integer> getLatestSevenYears() {
 		List<Integer> yearList = new ArrayList<>();
 		int yearInt = getCurrentYear();
-		Integer year = new Integer(yearInt);
+		Integer year = yearInt;
 		for (int i = 0; i < 7; i++) {
 			yearList.add(year);
 			yearInt--;
-			year = new Integer(yearInt);
+			year = yearInt;
 		}
 		return yearList;
 	}
@@ -437,10 +416,7 @@ public class DateHelper {
 		cal.set(Calendar.MONTH, Calendar.APRIL);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		Date endDate = cal.getTime();
-		if (currentDate.after(beginDate) && currentDate.before(endDate)) {
-			return true;
-		}
-		return false;
+		return currentDate.after(beginDate) && currentDate.before(endDate);
 	}
 	
 	public static boolean isBefore2015(Date date) {
@@ -449,10 +425,7 @@ public class DateHelper {
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.YEAR, 2015);
 		Date fromDate = cal.getTime();
-		if (fromDate.after(date)) {
-			return true;
-		}
-		return false;
+		return fromDate.after(date);
 	}
 
 	public static void main(String[] args) {
