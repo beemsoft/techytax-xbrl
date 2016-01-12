@@ -34,7 +34,7 @@ public class User implements Serializable {
 
 	@Id
 	@GeneratedValue
-	protected Long id = 0L;
+	protected Long id;
 
 	private String role;
 	
