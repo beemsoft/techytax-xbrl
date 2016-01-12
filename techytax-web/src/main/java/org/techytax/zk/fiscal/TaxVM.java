@@ -78,7 +78,7 @@ public class TaxVM {
 			items.add(new ReportTableItem("Afschrijvingen apparaten", "", "", "-" + format(overview.getAfschrijvingOverig()), ""));
 			items.add(new ReportTableItem("Afschrijving bedrijfsruimte", "", "", "-" + format(overview.getSettlementDepreciation()), ""));
 			items.add(new ReportTableItem("Totale afschrijving", "", "", "", "-" + format(overview.getAfschrijvingTotaal())));
-			items.add(new ReportTableItem("Bijtelling priv�gebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
+			items.add(new ReportTableItem("Bijtelling privégebruik", "+" + format(overview.getBijtellingAuto()), "", "", ""));
 			items.add(new ReportTableItem("Autokosten", "-" + format(overview.getKostenAuto()), "", "", ""));
 			items.add(new ReportTableItem("Aftrekbare autokosten", "", format(overview.getKostenAutoAftrekbaar()), "", ""));
 			items.add(new ReportTableItem("Overige transportkosten", "", "-" + format(overview.getKostenOverigTransport()), "", ""));
@@ -127,7 +127,7 @@ public class TaxVM {
 		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
 			items.add(new ReportTableItem("Onttrekking in contanten", format(overview.getOnttrekking().getWithdrawalCash())));
-			items.add(new ReportTableItem("Onttrekking voor priv�gebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
+			items.add(new ReportTableItem("Onttrekking voor privégebruik zakelijke auto", format(overview.getOnttrekking().getWithdrawalPrivateUsageBusinessCar())));
 			items.add(new ReportTableItem("Totale onttrekking", format(overview.getOnttrekking().getTotaleOnttrekking())));
 		}
 		return new ListModelList<>(items);
@@ -136,7 +136,7 @@ public class TaxVM {
 	public ListModelList<ReportTableItem> getPrivatDepositTableItems() {
 		List<ReportTableItem> items = new ArrayList<>();
 		if (overview != null) {
-			items.add(new ReportTableItem("Priv�stortingen", format(overview.getPrivateDeposit())));
+			items.add(new ReportTableItem("Privéstortingen", format(overview.getPrivateDeposit())));
 		}
 		return new ListModelList<>(items);
 	}
