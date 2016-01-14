@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Hans Beemsterboer
+ * Copyright 2016 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -34,12 +34,17 @@ public class TransactionReaderFactory {
 	@Autowired
 	private AbnAmroTransactionReader abnAmroTransactionReader;
 
+	@Autowired
+	private KnabTransactionReader knabTransactionReader;
+
 	public TransactionReader getTransactionReader(String firstLine) throws IllegalAccessException {
-		TransactionReader transactionReader = null;
+		TransactionReader transactionReader;
 		if (firstLine.startsWith("\"Datum\",\"Naam")) {
 			transactionReader = ingTransactionReader;
 		} else if (firstLine.startsWith("\"Datum\";\"Check")) {
 			transactionReader = travelChipCardTransactionReader;
+		} else if (firstLine.startsWith("KNAB EXPORT")) {
+			transactionReader = knabTransactionReader;
 		} else {
 			transactionReader = abnAmroTransactionReader;
 		}

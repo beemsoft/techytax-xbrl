@@ -19,6 +19,7 @@
 						<hbox>
 							<toolbarbutton href="https://bankieren.mijn.ing.nl/particulier/overzichten/download/index" target="other" image="/images/logo_ing.gif" height="60px"/>
 							<toolbarbutton href="https://www.abnamro.nl/nl/logon/" target="other" image="/images/logo_abn_amro.gif" height="60px" />
+							<toolbarbutton href="https://persoonlijk.knab.nl/account/inloggen" target="other" image="/images/logo_knab.png" height="60px" />
 							<toolbarbutton href="https://www.ov-chipkaart.nl/mijn-ovchipkaart.htm" target="other" image="/images/ov.png" height="60px" />
 						</hbox>
 						<hbox width="500px">
