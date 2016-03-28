@@ -104,6 +104,7 @@ public class AccountCheckVM extends CostVM {
 		return costs;
 	}
 
+	@Deprecated
 	public void getAccountCheck() throws Exception {
 		User user = UserCredentialManager.getUser();
 		if (user != null) {
