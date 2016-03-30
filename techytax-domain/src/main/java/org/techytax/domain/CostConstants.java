@@ -91,10 +91,10 @@ public interface CostConstants {
 	CostType EXPENSE_INSIDE_EU = new CostType(47);
 
     /**
-     * http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve?projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619&projectid=521dd6ba-75a6-4401-8ae3-06c59bd73619
+	 * http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen_inkomstenbelasting_2015/oudedagsreserve_2015
      */
-	BigInteger MAXIMALE_FOR = BigInteger.valueOf(9542);
-	BigDecimal FOR_PERCENTAGE = BigDecimal.valueOf(0.109f);
+	BigInteger MAXIMALE_FOR = BigInteger.valueOf(8631);
+	BigDecimal FOR_PERCENTAGE = BigDecimal.valueOf(0.098f);
 
     /**
      * http://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/aftrek_van_kosten
