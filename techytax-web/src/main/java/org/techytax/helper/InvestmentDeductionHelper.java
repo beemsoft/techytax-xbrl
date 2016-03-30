@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2016 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -53,17 +53,17 @@ public class InvestmentDeductionHelper {
 
 	private BigInteger calculateInvestmentDeduction(BigDecimal totalInvestment) {
 		BigInteger totalInvestmentRounded = totalInvestment.setScale(0, BigDecimal.ROUND_UP).toBigInteger();
-		if (totalInvestmentRounded.compareTo(new BigInteger("2300")) == -1 || totalInvestmentRounded.compareTo(new BigInteger("306931")) == 1) {
+		if (totalInvestmentRounded.compareTo(BigInteger.valueOf(2300)) == -1 || totalInvestmentRounded.compareTo(BigInteger.valueOf(309693)) == 1) {
 			return BigInteger.ZERO;
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("2301")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("55248")) == -1) {
-			return new BigDecimal(totalInvestmentRounded).multiply(new BigDecimal(".28")).setScale(0, BigDecimal.ROUND_UP).toBigInteger();
+		if (totalInvestmentRounded.compareTo(BigInteger.valueOf(2301)) == 1 && totalInvestmentRounded.compareTo(BigInteger.valueOf(55745)) == -1) {
+			return new BigDecimal(totalInvestmentRounded).multiply(BigDecimal.valueOf(.28)).setScale(0, BigDecimal.ROUND_UP).toBigInteger();
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("55249")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("102311")) == -1) {
-			return new BigInteger("15470");
+		if (totalInvestmentRounded.compareTo(BigInteger.valueOf(55746)) == 1 && totalInvestmentRounded.compareTo(BigInteger.valueOf(103231)) == -1) {
+			return BigInteger.valueOf(15609);
 		}
-		if (totalInvestmentRounded.compareTo(new BigInteger("102312")) == 1 && totalInvestmentRounded.compareTo(new BigInteger("306931")) == -1) {
-			return new BigInteger("15470").subtract(new BigDecimal(totalInvestmentRounded.subtract(new BigInteger("102311"))).multiply(new BigDecimal(".0756")).setScale(0, BigDecimal.ROUND_UP)
+		if (totalInvestmentRounded.compareTo(BigInteger.valueOf(103232)) == 1 && totalInvestmentRounded.compareTo(BigInteger.valueOf(309693)) == -1) {
+			return BigInteger.valueOf(15609).subtract(new BigDecimal(totalInvestmentRounded.subtract(BigInteger.valueOf(103231))).multiply(BigDecimal.valueOf(.0756)).setScale(0, BigDecimal.ROUND_UP)
 					.toBigInteger());
 		}
 		return null;
