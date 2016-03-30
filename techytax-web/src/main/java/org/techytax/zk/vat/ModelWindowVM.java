@@ -26,9 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.techytax.cache.CostTypeCache;
-import org.techytax.domain.Cost;
-import org.techytax.domain.CostType;
+import org.techytax.dao.*;
+import org.techytax.domain.*;
 import org.techytax.helper.AmountHelper;
+import org.techytax.zk.login.*;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
@@ -50,11 +51,13 @@ import org.zkoss.zul.Window;
 public class ModelWindowVM {
 	@Wire("#resultWin")
 	private Window win;
+
 	private Cost cost;
 	private Cost splitCost;
 	private Cost originalCost;
 	private ListModelList<CostType> costTypes;
 	private CostType selectedCostType;
+	private ActivumDao activumDao;
 
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("cost") Cost cost) {
@@ -63,6 +66,7 @@ public class ModelWindowVM {
 		if (cost == null) {
 			Executions.sendRedirect("login.zul");
 		}
+		activumDao = (ActivumDao) SpringUtil.getBean("activumDao");
 	}
 
 	public ListModelList<CostType> getCostTypes() throws Exception {
@@ -101,28 +105,6 @@ public class ModelWindowVM {
 	@Command
 	public void cancel() {
 		win.detach();
-	}
-
-	public Validator getCreationDateValidator() {
-		return new AbstractValidator() {
-			public void validate(ValidationContext ctx) {
-				Date creation = (Date) ctx.getProperty().getValue();
-				if (creation == null) {
-					addInvalidMessage(ctx, "must not null");
-				}
-			}
-		};
-	}
-
-	public Validator getPriceValidator() {
-		return new AbstractValidator() {
-			public void validate(ValidationContext ctx) {
-				Double price = (Double) ctx.getProperty().getValue();
-				if (price == null || price < 0) {
-					addInvalidMessage(ctx, "must be equal to or larger than 0");
-				}
-			}
-		};
 	}
 
 	@NotifyChange("cost")
@@ -170,6 +152,15 @@ public class ModelWindowVM {
 		cost.setDescription(originalCost.getDescription());
 		cost.setAmount(originalCost.getAmount());
 		cost.setVat(originalCost.getVat());
+	}
+
+	@Command
+	public void activate() throws Exception {
+		Activum activum = new Activum();
+		activum.setUser(UserCredentialManager.getUser());
+		activum.setBalanceType(BalanceType.MACHINERY);
+		activum.setCost(cost);
+		activumDao.merge(activum);
 	}
 
 	@Command
