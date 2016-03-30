@@ -161,6 +161,7 @@ public class FiscalOverviewHelper {
 		overview.setInvestmentDeduction(investmentDeductionHelper.getInvestmentDeduction(investmentKostList));
 	}
 
+	// TODO: De toevoeging is maximaal het bedrag waarmee het ondernemingsvermogen aan het einde van het kalenderjaar uitkomt boven de oudedagsreserve aan het begin van het kalenderjaar.
 	private void setMaximalFiscalPension() {
 		BigInteger maximaleFor = new BigDecimal(overview.getWinst()).multiply(FOR_PERCENTAGE).toBigInteger();
 		if (maximaleFor.compareTo(MAXIMALE_FOR) == 1) {
