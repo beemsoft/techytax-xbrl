@@ -76,6 +76,8 @@ public class Cost extends UserObject implements Serializable {
 		return costType.isBijschrijving();
 	}
 
+	public boolean isInvestment() { return costType.isInvestering(); }
+
 	public void roundValues() {
 		if (amount != null) {
 			amount = amount.setScale(2, BigDecimal.ROUND_HALF_UP);

@@ -7,7 +7,7 @@
 	<button label="${c:l('cancel')}" onClick="@command('cancel')" />
 	<button label="${c:l('split')}" onClick="@command('split')"	disabled="@load(not empty vm.splitCost)" />
 	<button label="${c:l('cancel.split')}" onClick="@command('unSplit')" disabled="@load(empty vm.splitCost)" />
-	<button label="${c:l('activate')}" onClick="@command('activate')" />
+	<button label="${c:l('activate')}" onClick="@command('activate')" disabled="@load(not vm.isInvestment)" />
 	<groupbox width="1250px">
 		<hbox>
 			<vbox hflex="true">

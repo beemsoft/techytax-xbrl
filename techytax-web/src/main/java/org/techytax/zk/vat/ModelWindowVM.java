@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Hans Beemsterboer
+ * Copyright 2016 Hans Beemsterboer
  * 
  * This file is part of the TechyTax program.
  *
@@ -154,6 +154,10 @@ public class ModelWindowVM {
 		cost.setVat(originalCost.getVat());
 	}
 
+	public boolean getIsInvestment() {
+		return cost.isInvestment();
+	}
+
 	@Command
 	public void activate() throws Exception {
 		Activum activum = new Activum();
@@ -180,7 +184,7 @@ public class ModelWindowVM {
 		return splitCost;
 	}
 
-	public void setSplitCost(Cost splitCost) {
+	private void setSplitCost(Cost splitCost) {
 		this.splitCost = splitCost;
 	}
 
