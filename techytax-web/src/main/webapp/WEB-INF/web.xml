@@ -24,12 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
     version="3.0">
 	<display-name>TechyTax</display-name>
 	<description></description>
-	<servlet>
-		<servlet-name>TechyTaxChart</servlet-name>
-		<servlet-class>org.techytax.chart.ChartGeneratorServlet</servlet-class>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
-	
+
 	<!-- CXF -->
 <!-- 	<servlet> -->
 <!-- 		<servlet-name>CXFServlet</servlet-name> -->
@@ -129,11 +124,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	<servlet-mapping>
 		<servlet-name>auEngine</servlet-name>
 		<url-pattern>/zkau/*</url-pattern>
-	</servlet-mapping>	
-
-	<servlet-mapping>
-		<servlet-name>TechyTaxChart</servlet-name>
-		<url-pattern>/chart</url-pattern>
 	</servlet-mapping>	
 
 	<!-- Never timeout -->
