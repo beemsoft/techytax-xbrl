@@ -107,6 +107,28 @@ public class ModelWindowVM {
 		win.detach();
 	}
 
+	public Validator getCreationDateValidator() {
+		return new AbstractValidator() {
+			public void validate(ValidationContext ctx) {
+				Date creation = (Date) ctx.getProperty().getValue();
+				if (creation == null) {
+					addInvalidMessage(ctx, "must not null");
+				}
+			}
+		};
+	}
+
+	public Validator getPriceValidator() {
+		return new AbstractValidator() {
+			public void validate(ValidationContext ctx) {
+				Double price = (Double) ctx.getProperty().getValue();
+				if (price == null || price < 0) {
+					addInvalidMessage(ctx, "must be equal to or larger than 0");
+				}
+			}
+		};
+	}
+
 	@NotifyChange("cost")
 	@Command
 	public void highVat() throws Exception {
