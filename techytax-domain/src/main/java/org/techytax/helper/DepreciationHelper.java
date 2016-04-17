@@ -29,13 +29,20 @@ import org.techytax.util.DateHelper;
 
 public class DepreciationHelper {
 
+	/* Belastingdienst: De afschrijving is per jaar maximaal 20% op de aanschafkosten van het bedrijfsmiddel.
+	   Voor goodwill geldt een percentage van maximaal 10%.
+	 */
+	private static final int MINIMUM_NUMBER_OF_DEPRECIATION_YEARS = 5;
+
 	public BigInteger getDepreciation(Activum activum) {
 		BigDecimal yearlyDepreciation = BigDecimal.ZERO;
 		int fiscalYear = DateHelper.getFiscalYear();
 		int years = activum.getNofYearsForDepreciation();
 		if ((years > 0 && activum.getEndDate() == null && (isYearForDeprecation(activum.getStartDate(), years)))) {
-			BigDecimal maximumYearlyDepreciation = activum.getCost().getAmount().subtract(BigDecimal.valueOf(activum.getRemainingValue().intValue())).divide(BigDecimal.valueOf(5), 2,
-					RoundingMode.HALF_UP);			
+			BigDecimal maximumYearlyDepreciation = activum.getCost().getAmount().
+					subtract(BigDecimal.valueOf(activum.getRemainingValue().intValue())).
+					divide(BigDecimal.valueOf(MINIMUM_NUMBER_OF_DEPRECIATION_YEARS), 2,
+					RoundingMode.HALF_UP);
 			yearlyDepreciation = activum.getCost().getAmount().subtract(BigDecimal.valueOf(activum.getRemainingValue().intValue())).divide(BigDecimal.valueOf(years), 2,
 					RoundingMode.HALF_UP);
 			double proportion = 1.0d;
@@ -56,10 +63,7 @@ public class DepreciationHelper {
 		if (DateHelper.getMonth(startDate) > 0) {
 			years++;
 		}
-		if (DateHelper.getFiscalYear() >= DateHelper.getYear(startDate) || DateHelper.getFiscalYear() > years + DateHelper.getYear(startDate)) {
-			return true;
-		}
-		return false;
+		return DateHelper.getFiscalYear() >= DateHelper.getYear(startDate) || DateHelper.getFiscalYear() > years + DateHelper.getYear(startDate);
 	}
 
 }
