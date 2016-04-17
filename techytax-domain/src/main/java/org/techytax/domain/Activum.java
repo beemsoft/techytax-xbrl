@@ -80,6 +80,7 @@ public class Activum extends UserObject {
 
 	private Date startDate;
 
+	// TODO: minimum 5 years
 	private int nofYearsForDepreciation;
 
 	public long getCostId() {
