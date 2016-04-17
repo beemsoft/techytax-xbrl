@@ -76,7 +76,7 @@ public class Cost extends UserObject implements Serializable {
 		return costType.isBijschrijving();
 	}
 
-	public boolean isInvestment() { return costType.isInvestering(); }
+	public boolean isInvestment() { return costType != null ? costType.isInvestering(): false; }
 
 	public void roundValues() {
 		if (amount != null) {
