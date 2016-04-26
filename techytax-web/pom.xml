@@ -9,7 +9,7 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-xbrl</artifactId>
-			<version>9.3-20160426.204707-1</version>
+			<version>9.3</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/../lib/xbrl/techytax-xbrl-9.3.jar</systemPath>
 		</dependency>
