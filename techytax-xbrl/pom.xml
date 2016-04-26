@@ -3,13 +3,14 @@
 	<groupId>org.techytax</groupId>
 	<artifactId>techytax-xbrl</artifactId>
 	<name>TechyTax XBRL</name>
-	<version>9.3-SNAPSHOT</version>
+	<version>9.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<scm>
 		<url>scm:git:https://github.com/beemsoft/techytax</url>
 		<developerConnection>scm:git:https://github.com/beemsoft/techytax</developerConnection>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 	<distributionManagement>
 		<repository>
 			<id>repository</id>
