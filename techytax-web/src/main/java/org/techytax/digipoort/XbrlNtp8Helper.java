@@ -269,7 +269,7 @@ public class XbrlNtp8Helper {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new XbrlNtp9Helper().createTestXbrlInstance();
+		new XbrlNtp8Helper().createTestXbrlInstance();
 	}
 
 	public String createTestXbrlInstance() throws Exception {
