@@ -9,7 +9,7 @@
 		<dependency>
 			<groupId>org.techytax</groupId>
 			<artifactId>techytax-xbrl</artifactId>
-			<version>9.3-SNAPSHOT</version>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>org.techytax</groupId>
