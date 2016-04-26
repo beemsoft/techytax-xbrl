@@ -22,6 +22,7 @@
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<org.hsqldb.version>2.3.2</org.hsqldb.version>
 		<junit.version>4.11</junit.version>
+   		<project.scm.id>github</project.scm.id>
 	</properties>
 
 	<build>
