@@ -11,7 +11,7 @@
 			<artifactId>techytax-xbrl</artifactId>
 			<version>9.3-20160426.204707-1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/../lib/xbrl/techytax-xbrl-9.3-20160426.204707-1.jar</systemPath>
+			<systemPath>${basedir}/../lib/xbrl/techytax-xbrl-9.3.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.techytax</groupId>
