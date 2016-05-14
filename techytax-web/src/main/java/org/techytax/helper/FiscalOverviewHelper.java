@@ -98,7 +98,7 @@ public class FiscalOverviewHelper {
 		List<DeductableCostGroup> deductableCosts = costCache.getDeductableCosts();
 		overview.setJaar(bookYear);
 
-		handleDepreciations(deductableCosts);
+		handleDepreciations();
 
 		activaHelper.setFiscalOverview(overview);
 		activaHelper.setCostCache(costCache);
@@ -145,7 +145,7 @@ public class FiscalOverviewHelper {
 
 		handleCar(privatWithdrawal, deductableCosts);
 
-		handleDepreciations(deductableCosts);
+		handleDepreciations();
 
 		handleCosts(deductableCosts);
 
@@ -307,13 +307,13 @@ public class FiscalOverviewHelper {
 		overview.setInterestFromBusinessSavings(interest);
 	}
 
-	private void handleDepreciations(List<DeductableCostGroup> deductableCosts) throws Exception {
-		List<Activum> allActiva = activumDao.getActiveActiva(MACHINERY);
-		BigInteger totalDeprecationActiva = BigInteger.ZERO;
-		for (Activum activum : allActiva) {
-			totalDeprecationActiva = totalDeprecationActiva.add(activum.getDepreciation());
+	private void handleDepreciations() throws Exception {
+		List<Activum> machinery = activumDao.getActiveActiva(MACHINERY);
+		BigInteger totalDeprecationForMachinery = BigInteger.ZERO;
+		for (Activum activum : machinery) {
+			totalDeprecationForMachinery = totalDeprecationForMachinery.add(activum.getDepreciation());
 		}
-		overview.setAfschrijvingOverig(totalDeprecationActiva);
+		overview.setAfschrijvingOverig(totalDeprecationForMachinery);
 
 		BigInteger totalDepreciation = BigInteger.ZERO;
 	    totalDepreciation = totalDepreciation.add(overview.getAfschrijvingAuto());
