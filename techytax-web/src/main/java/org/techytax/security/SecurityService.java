@@ -23,8 +23,8 @@ import org.techytax.domain.User;
 
 public interface SecurityService {
 	
-	public User authenticate(String username, String password) throws Exception;
+	User authenticate(String username, String password) throws Exception;
 	
-	public User authenticateForService(String username, String password) throws Exception;
+	User authenticateForService(String username, String password) throws Exception;
 	
 }

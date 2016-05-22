@@ -56,7 +56,7 @@ public class SecurityServiceImpl implements SecurityService {
 	@Override
 	public User authenticate(String username, String password) throws Exception {
 
-		List<UserEntity> users = null;
+		List<UserEntity> users;
 		try {
 			users = userDao.findByNamedQuery("UserEntity.findByName", username);
 		} catch (NoResultException nre) {
@@ -87,7 +87,7 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	public User authenticateForService(String username, String password) throws Exception {
-		List<UserEntity> users = null;
+		List<UserEntity> users;
 		try {
 			users = userDao.findByNamedQuery("UserEntity.findByName", username);
 		} catch (NoResultException nre) {

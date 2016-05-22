@@ -19,21 +19,15 @@
  */
 package org.techytax.log;
 
-import java.util.Date;
-
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.techytax.domain.FiscalPeriod;
 import org.techytax.domain.User;
 import org.techytax.domain.UserEntity;
 import org.techytax.jpa.dao.LogRecordDao;
 import org.techytax.jpa.entities.LogRecord;
-import org.techytax.util.DateHelper;
-import org.zkoss.zkplus.jpa.JpaUtil;
+
+import javax.transaction.Transactional;
+import java.util.Date;
 
 @Component
 public class AuditLogger {
