@@ -1,11 +1,31 @@
 package org.techytax.zk.vat;
 
-import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
-import static org.techytax.log.AuditType.ENTER_COST;
-import static org.techytax.log.AuditType.SEND_VAT_DECLARATION;
-import static org.techytax.log.AuditType.SPLIT_COST;
-import static org.techytax.log.AuditType.UPDATE_COST;
-import static org.techytax.log.AuditType.VAT_OVERVIEW;
+import org.springframework.core.env.Environment;
+import org.techytax.digipoort.DigipoortService;
+import org.techytax.digipoort.XbrlNtp8Helper;
+import org.techytax.digipoort.XbrlNtp9Helper;
+import org.techytax.domain.*;
+import org.techytax.helper.AmountHelper;
+import org.techytax.helper.BalanceCalculator;
+import org.techytax.jpa.dao.CostDao;
+import org.techytax.jpa.dao.VatDeclarationDao;
+import org.techytax.jpa.entities.VatDeclaration;
+import org.techytax.log.AuditLogger;
+import org.techytax.util.DateHelper;
+import org.techytax.ws.AanleverResponse;
+import org.techytax.ws.AanleverServiceFault;
+import org.techytax.zk.login.UserCredentialManager;
+import org.zkoss.bind.GlobalCommandEvent;
+import org.zkoss.bind.annotation.*;
+import org.zkoss.util.media.AMedia;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zkmax.ui.select.annotation.Subscribe;
+import org.zkoss.zkplus.spring.SpringUtil;
+import org.zkoss.zul.*;
+import org.zkoss.zul.Messagebox.ClickEvent;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -19,45 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.env.Environment;
-import org.techytax.digipoort.*;
-import org.techytax.domain.Cost;
-import org.techytax.domain.FiscalPeriod;
-import org.techytax.domain.User;
-import org.techytax.domain.VatBalanceWithinEu;
-import org.techytax.domain.VatDeclarationData;
-import org.techytax.helper.AmountHelper;
-import org.techytax.helper.BalanceCalculator;
-import org.techytax.jpa.dao.CostDao;
-import org.techytax.jpa.dao.VatDeclarationDao;
-import org.techytax.jpa.entities.VatDeclaration;
-import org.techytax.log.AuditLogger;
-import org.techytax.util.DateHelper;
-import org.techytax.ws.AanleverResponse;
-import org.techytax.ws.AanleverServiceFault;
-import org.techytax.zk.login.UserCredentialManager;
-import org.zkoss.bind.GlobalCommandEvent;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.GlobalCommand;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.media.AMedia;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zkmax.ui.select.annotation.Subscribe;
-import org.zkoss.zkplus.spring.SpringUtil;
-import org.zkoss.zul.Grid;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Messagebox.ClickEvent;
-import org.zkoss.zul.Popup;
-import org.zkoss.zul.Window;
+import static org.techytax.conf.EnvironmenProperties.DIGIPOORT;
+import static org.techytax.log.AuditType.*;
 
 public class VatOverviewVM {
 
@@ -242,16 +225,16 @@ public class VatOverviewVM {
 	}
 
 	private String createXbrlInstanceForEnvironment(VatDeclarationData vatDeclarationData, String digipoort) throws Exception {
-		String xbrlInstance;
-		if (digipoort.equals("prod")) {
-			if (DateHelper.isBefore2015(vatDeclarationData.getEndDate())) {
-				xbrlInstance = xbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
-			} else {
-				xbrlInstance = xbrlNtp9Helper.createXbrlInstance(vatDeclarationData);
-			}
-		} else {
-			xbrlInstance = xbrlNtp9Helper.createTestXbrlInstance();
-		}
+		String xbrlInstance = "";
+//		if (digipoort.equals("prod")) {
+//			if (DateHelper.isBefore2015(vatDeclarationData.getEndDate())) {
+//				xbrlInstance = xbrlNtp8Helper.createXbrlInstance(vatDeclarationData);
+//			} else {
+//				xbrlInstance = xbrlNtp9Helper.createXbrlInstance(vatDeclarationData);
+//			}
+//		} else {
+//			xbrlInstance = xbrlNtp9Helper.createTestXbrlInstance();
+//		}
 		return xbrlInstance;
 	}
 
