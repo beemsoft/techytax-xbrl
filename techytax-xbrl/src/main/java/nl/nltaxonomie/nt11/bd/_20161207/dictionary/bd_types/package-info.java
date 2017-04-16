@@ -5,5 +5,9 @@
 // Generated on: 2017.04.16 at 09:30:36 PM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.nltaxonomie.nl/nt11/bd/20161207/dictionary/bd-types")
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+  @XmlNs(prefix = "bd-alg", namespaceURI = "http://www.nltaxonomie.nl/nt11/bd/20161207/dictionary/bd-algemeen"),
+  @XmlNs(prefix = "bd-ob", namespaceURI = "http://www.nltaxonomie.nl/nt11/bd/20161207/dictionary/bd-omzetbelasting") }, namespace = "http://www.nltaxonomie.nl/nt11/bd/20161207/dictionary/bd-types")
 package nl.nltaxonomie.nt11.bd._20161207.dictionary.bd_types;
+
+import javax.xml.bind.annotation.XmlNs;
