@@ -3,7 +3,7 @@
 	<groupId>org.techytax</groupId>
 	<artifactId>techytax-xbrl</artifactId>
 	<name>TechyTax XBRL</name>
-	<version>9.4-SNAPSHOT</version>
+	<version>11.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<scm>
