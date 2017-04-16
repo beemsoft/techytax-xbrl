@@ -1,0 +1,15 @@
+<jxb:bindings version="1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+   <jxb:bindings schemaLocation = "http://www.xbrl.org/2003/xl-2003-12-31.xsd">
+<jxb:bindings node=".//xsd:complexType[@name='arcType']">
+<jxb:bindings node=".//xsd:element[@ref='xl:title']">
+	<jxb:property name="arcTypeTitle"/>
+	</jxb:bindings>
+	</jxb:bindings>
+<jxb:bindings node=".//xsd:complexType[@name='locatorType']">
+<jxb:bindings node=".//xsd:element[@ref='xl:title']">
+	<jxb:property name="locatorTypeTitle"/>
+	</jxb:bindings>
+	</jxb:bindings>
+	</jxb:bindings>
+</jxb:bindings>
