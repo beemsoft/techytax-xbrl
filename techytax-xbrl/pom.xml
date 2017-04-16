@@ -14,7 +14,7 @@
 	<distributionManagement>
 		<repository>
 			<id>repository</id>
-			<url>file:C:/repository/</url>
+			<url>file:///home/hans/repository/</url>
 		</repository>
 	</distributionManagement>
 
