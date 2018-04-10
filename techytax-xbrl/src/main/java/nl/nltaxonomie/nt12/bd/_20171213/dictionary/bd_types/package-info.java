@@ -4,6 +4,9 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2018.04.09 at 08:39:58 PM CEST 
 //
-
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.nltaxonomie.nl/nt12/bd/20171213/dictionary/bd-types")
+@javax.xml.bind.annotation.XmlSchema(xmlns = {
+  @XmlNs(prefix = "bd-i", namespaceURI = "http://www.nltaxonomie.nl/nt12/bd/20171213/dictionary/bd-data") },
+  namespace = "http://www.nltaxonomie.nl/nt12/bd/20171213/dictionary/bd-types")
 package nl.nltaxonomie.nt12.bd._20171213.dictionary.bd_types;
+
+import javax.xml.bind.annotation.XmlNs;
