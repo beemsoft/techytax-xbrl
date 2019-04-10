@@ -6,7 +6,7 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(xmlns = {
-        @XmlNs(prefix = "bd-i", namespaceURI = "http://www.nltaxonomie.nl/nt13/bd/20181212.b/dictionary/bd-types") },
+        @XmlNs(prefix = "bd-i", namespaceURI = "http://www.nltaxonomie.nl/nt13/bd/20181212.b/dictionary/bd-data") },
         namespace = "http://www.nltaxonomie.nl/nt13/bd/b20181212.b/dictionary/bd-types")
 package nl.nltaxonomie.nt13.bd._20181212_b.dictionary.bd_types;
 
